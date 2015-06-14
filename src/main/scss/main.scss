@@ -1,0 +1,289 @@
+$icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
+
+@import "_variables.scss";
+
+// bower:scss
+@import "bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+// endbower
+
+// customize bootstrap style defs
+$state-success-border: $state-success-text;
+$state-info-border: $state-info-text;
+$state-warning-border: $state-warning-text;
+$state-danger-border: $state-danger-text;
+
+// jhipster style defs
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+.development {
+    position: absolute;
+    width: 149px;
+    height: 149px;
+    top: 0;
+    left: 0;
+    border: 0;
+    z-index: 1000;
+    background-image: url("../images/development_ribbon.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.navbar-version {
+    font-size: 10px;
+    color: #ccc
+}
+
+.browserupgrade {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+.hero-unit {
+    margin: 50px auto 0 auto;
+    width: 300px;
+    font-size: 18px;
+    font-weight: 200;
+    line-height: 30px;
+    background-color: #eee;
+    border-radius: 6px;
+    padding: 60px;
+}
+
+.hero-unit h1 {
+    font-size: 60px;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.error {
+    color: white;
+    background-color: red;
+}
+
+.hipster {
+    display: inline-block;
+    width: 347px;
+    height: 497px;
+    background: url("../images/hipster.png") no-repeat center top;
+    background-size: contain;
+}
+
+/* wait autoprefixer update to allow simple generation of high pixel density media query */
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1),
+only screen and (        min-device-pixel-ratio: 2),
+only screen and (                min-resolution: 192dpi),
+only screen and (                min-resolution: 2dppx) {
+    .hipster {
+        background: url("../images/hipster2x.png") no-repeat center top;
+        background-size: contain;
+    }
+}
+
+/* make sure browsers use the pointer cursor for anchors, even with no href */
+a:hover {
+  cursor: pointer;
+}
+
+
+/* start Password strength bar style */
+ul#strength {
+    display:inline;
+    list-style:none;
+    margin:0;
+    margin-left:15px;
+    padding:0;
+    vertical-align:2px;
+}
+
+.point:last {
+    margin:0 !important;
+}
+.point {
+    background:#DDD;
+    border-radius:2px;
+    display:inline-block;
+    height:5px;
+    margin-right:1px;
+    width:20px;
+}
+/* end Password strength bar style */
+
+/* ========== override bootstrap ========== */
+/* customize body */
+body {
+    padding-top: $navbar-height;
+    font-weight: 300;
+    text-rendering: optimizelegibility;
+}
+
+.table > thead > tr > th, .table > thead > tr > td,
+.table > tbody > tr > th, .table > tbody > tr > td,
+.table > tfoot > tr > th, .table > tfoot > tr > td {
+    vertical-align: middle;
+}
+
+.form-control {
+    border-width: 2px;
+}
+.help-block {
+    margin: 5px 0;
+}
+
+/* customize navbar */
+.navbar-default {
+    border-color: $navbar-default-bg;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus,
+.navbar-default .navbar-nav > li > a,
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #ffffff;
+}
+
+/* customize dropdown */
+.dropdown-menu {
+    padding: 0;
+    border-radius: initial;
+}
+.dropdown-menu > li > a {
+    padding: 0.5em 5em 0.5em 1em;
+}
+
+/* ========== override sb-admin2 ========== */
+#page-wrapper {
+    padding: 0;
+}
+
+.sidebar {
+    margin-top: 1px;
+}
+.sidebar ul li {
+    border-bottom: none;
+}
+.sidebar ul li a {
+    white-space: nowrap;
+    color: lighten($text-color, 10%);
+}
+.sidebar ul li.active > a {
+    color: darken($text-color, 50%);
+    background-color: #eeeeee;
+}
+#sidebar-wrapper-wrapper {
+    height: auto !important;
+    margin: 0 auto -60px;
+    min-height: 100%;
+    padding: 0 0 60px;
+}
+
+/* ========== override fontawesome ========== */
+.fa-fw {
+    margin-right: 0.2em;
+}
+#side-menu .fa-fw {
+    margin-right: 0.7em;
+}
+
+/* ========== override ng-notify styles */
+.ngn {
+    font-size: $font-size-base;
+    padding: 1em 3em 1em 1em;
+}
+.ngn-top {
+    top: $navbar-height;
+}
+.ngn-success{
+    color: $state-success-text;
+    background-color: $state-success-bg;
+}
+.ngn-error {
+    color: $state-danger-text;
+    background-color: $state-danger-bg;
+}
+.ngn-dismiss:hover {
+    background-color: inherit;
+}
+.ngn-dismiss {
+    font-size: 1.5em;
+    color: $gray-light;
+    background-color: initial;
+    opacity: initial;
+    box-shadow: none;
+    text-shadow: none;
+    top: 0.4em;
+    right: 0.5em;
+}
+
+/* ========== custom styles ========== */
+/* container */
+.single-form-container {
+    max-width: $container-tablet;
+    padding-top: 20px;
+}
+
+/* sidebar menu and content defs */
+#page-wrapper.sidebar-collapse {
+    margin-left: 50px;
+    transition: $transition-all;
+}
+#page-wrapper.sidebar-fullsize {
+    margin-left: 250px;
+    transition: $transition-all;
+}
+#sidebar-wrapper.sidebar-fullsize {
+    transition: $transition-all;
+}
+#sidebar-wrapper.sidebar-collapse {
+}
+#sidebar-wrapper.sidebar.sidebar-collapse {
+    width: 50px;
+    transition: $transition-all;
+}
+#sidebar-wrapper.sidebar-collapse span {
+    display: none;
+}
+#sidebar-wrapper #sidebar-footer {
+    background-color: $body-bg;
+    font-size: $font-size-small;
+    width: 250px;
+    border-top: 1px solid #d8d8d8;
+    position: fixed;
+    bottom: 0;
+}
+@media screen and (max-width: 480px) {
+    #sidebar-wrapper #sidebar-footer {
+        display: none;
+    }
+}
+#sidebar-wrapper.sidebar-collapse #sidebar-footer {
+    width: 50px;
+    transition: $transition-all;
+}
+#sidebar-collapse-toggle {
+    width: 50px;
+    float: right;
+    display: block;
+    padding: 10px 15px;
+    text-align: center;
+}
+
+/* page header */
+.page-title {
+    @extend .page-header;
+    margin: 20px 0;
+}
+.page-title .description {
+    font-size: $font-size-small;
+    margin: 0;
+}

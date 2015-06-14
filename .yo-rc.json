@@ -1,0 +1,20 @@
+{
+  "generator-jhipster": {
+    "baseName": "majimenatest",
+    "packageName": "org.majimena.petz",
+    "packageFolder": "org/majimena/petz",
+    "authenticationType": "oauth2",
+    "hibernateCache": "ehcache",
+    "clusteredHttpSession": "no",
+    "websocket": "no",
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": "no",
+    "useCompass": true,
+    "buildTool": "maven",
+    "frontendBuilder": "grunt",
+    "javaVersion": "8",
+    "rememberMeKey": "9506054a324b72eacf218666fffefb7d897f7abb"
+  }
+}

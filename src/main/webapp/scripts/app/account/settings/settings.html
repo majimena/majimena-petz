@@ -1,0 +1,74 @@
+<div class="container single-form-container">
+
+    <div class="page-title">
+        <h3>アカウント設定</h3>
+        <p class="help-block">
+            <span>このアカウントの基本設定を行います。</span>
+        </p>
+    </div>
+
+    <form class="form-horizontal" name="form" role="form" novalidate ng-submit="save()">
+        <section class="form-group" ng-class="{'has-error': form.lastName.$invalid}">
+            <label for="lastName" class="col-sm-3 control-label">氏名（姓）</label>
+            <div class="col-sm-9">
+                <input id="lastName" name="lastName" type="text" class="form-control" placeholder="あなたのお名前（姓）" maxlength="50"
+                        ng-model="settingsAccount.lastName" ng-required="true" ng-minlength="1" ng-maxlength="50">
+                <div ng-show="form.lastName.$dirty && form.lastName.$invalid">
+                    <p class="help-block" ng-show="form.lastName.$error.required">
+                        氏名（姓）を入力してください。
+                    </p>
+                    <p class="help-block" ng-show="form.lastName.$error.minlength">
+                        氏名（姓）を１文字以上で入力してください。
+                    </p>
+                    <p class="help-block" ng-show="form.lastName.$error.maxlength">
+                        氏名（姓）を５０文字以内で入力してください。
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section class="form-group" ng-class="{'has-error': form.firstName.$invalid}">
+            <label for="firstName" class="col-sm-3 control-label">氏名（名）</label>
+            <div class="col-sm-9">
+                <input id="firstName" name="firstName" type="text" class="form-control" placeholder="あなたのお名前（名）" maxlength="50"
+                        ng-model="settingsAccount.firstName" ng-required="true" ng-minlength="1" ng-maxlength="50">
+                <div ng-show="form.firstName.$dirty && form.firstName.$invalid">
+                    <p class="help-block" ng-show="form.firstName.$error.required">
+                        氏名（名）を入力してください。
+                    </p>
+                    <p class="help-block" ng-show="form.firstName.$error.minlength">
+                        氏名（名）を１文字以上で入力してください。
+                    </p>
+                    <p class="help-block" ng-show="form.firstName.$error.maxlength">
+                        氏名（名）を５０文字以内で入力してください。
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section class="form-group" ng-class="{'has-error': form.email.$invalid}">
+            <label for="email" class="col-sm-3 control-label">メールアドレス</label>
+            <div class="col-sm-9">
+                <input id="email" name="email" type="email" class="form-control" placeholder="メールアドレス" maxlength="100"
+                        ng-model="settingsAccount.email" ng-required="true" ng-minlength="5" ng-maxlength="100">
+                <div ng-show="form.email.$invalid">
+                    <p class="help-block" ng-show="form.email.$error.required">
+                        メールアドレスを入力してください。
+                    </p>
+                    <p class="help-block" ng-show="form.email.$error.email">
+                        正しいメールアドレスを入力してください。
+                    </p>
+                    <p class="help-block" ng-show="form.email.$error.minlength">
+                        メールアドレスは５文字以上で入力してください。
+                    </p>
+                    <p class="help-block" ng-show="form.email.$error.maxlength">
+                        メールアドレスは１００文字以内で入力してください。
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">保存する</button>
+            </div>
+        </section>
+    </form>
+</div>

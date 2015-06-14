@@ -1,17 +1,15 @@
 language: java
 jdk:
-  - oraclejdk8
-
+- oraclejdk8
 before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - gem install sass
-  - gem install compass
-  - npm install -g bower grunt-cli karma
-  - bower install
-
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- gem install sass
+- gem install compass
+- npm install -g bower grunt-cli karma
+- bower install
 script:
-  - mvn test jacoco:report coveralls:report -B
-
+- mvn test jacoco:report coveralls:report -B
 notifications:
-  slack: majimenatest:L3BPfAVyCiFEXwQ6Q2qMI7c1
+  slack:
+    secure: vjWz4UhvbGEkmJnPvbe/k/E4lj9crd7pUOigIgiVTgEDcmFguA6qMDejJoXIOrxy8+qVn1A85xGcxQuuPdsdBuM/kOlfVxyCzsLo8DjEhmq0d3iE6vrgz2fE5YjNJYs4FhaR3XbE+ICf3ON/Skyf0Drogg7mKik88DoTohwyVe+rJNi9LT34jsnvvjiaihou+ZVqeoV3gN29emZPcs/wsIsSeeepUcTK2qTDjdOoUadj4U69FbrWH+9fdLW1FYfeqgRFQGAwzkSw6c6eTdd3+e49aamyxun6ZyHvvR/a5luedkeaQc/inOwYGvp1MLrzuXYYNzojHN4p6sffjOqFA68BNdjPRDIozZCV/tgeKfaYrRLD2j94DheRFTaG7ii2TFAESe6iCGw7Vvvu6LehVQWM41X/mYfj52SnR0p+Zcn7kYzyt8NUBTuIRGdjzre+fKvs2UK/dEKbk807mp9DKw3rAvJuGBO74mYKwLdM2RvfLOCcP6/MIx2LE0O6DIsLvPJenTIL5Iw57dROoBKi6Moqi0irOu2V2xiRce01ExFp+hCAs0VBlH6HoSnaek93T8Ym51wKOuP5glvZOAYVP6tgeKuDYOGe30cKe/wpMnc4LdgH7jRZQsetveL4pGULUb6nqfEtPsWwmvpKW7JaLPwMfmb0+zjTESEc3yno/8E=

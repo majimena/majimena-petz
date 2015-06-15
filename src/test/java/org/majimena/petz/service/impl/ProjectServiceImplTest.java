@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see ProjectService
  */
 @RunWith(Enclosed.class)
-public class ProjectServiceTest {
+public class ProjectServiceImplTest {
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @WebAppConfiguration

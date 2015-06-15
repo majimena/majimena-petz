@@ -14,7 +14,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>majimenatest</name>
+    <name>majimena-petz</name>
 
     <prerequisites>
         <maven>3.0.0</maven>
@@ -631,7 +631,7 @@
                         <configuration>
                             <propertyName>jacocoArgs</propertyName>
                             <includes>
-                                <include>org.majimena.test.*</include>
+                                <include>org.majimena.petz.*</include>
                             </includes>
                         </configuration>
                     </execution>
@@ -669,11 +669,11 @@
                     <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>
                     <diffChangeLogFile>src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://localhost:3306/majimenatest</url>
-                    <defaultSchemaName>majimenatest</defaultSchemaName>
+                    <url>jdbc:mysql://localhost:3306/petz</url>
+                    <defaultSchemaName>petz</defaultSchemaName>
                     <username>root</username>
                     <password />
-                    <referenceUrl>hibernate:spring:org.majimena.test.domain?dialect=org.hibernate.dialect.MySQLInnoDBDialect</referenceUrl>
+                    <referenceUrl>hibernate:spring:org.majimena.petz.domain?dialect=org.hibernate.dialect.MySQLInnoDBDialect</referenceUrl>
                     <verbose>true</verbose>
                     <logging>debug</logging>
                     <diffExcludeObjects>oauth_access_token, oauth_approvals, oauth_client_details, oauth_client_token, oauth_code, oauth_refresh_token</diffExcludeObjects>

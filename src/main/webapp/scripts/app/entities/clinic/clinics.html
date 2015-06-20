@@ -1,19 +1,19 @@
-<div class="container-fluid">
+<div class="container-fluid fluid-container">
 
-    <header>
-        <h3>プロジェクト一覧</h3>
+    <div class="page-title">
+        <h3>クリニック一覧</h3>
         <p class="help-block">
-            <span>このアカウントのパスワードを変更します。新しいパスワードは次のログインから適用されます。</span>
+            <span>あなたが所属しているクリニックの一覧を表示しています。</span>
         </p>
-    </header>
-
-<div class="row">
-    <div class="col-lg-12 text-right">
-        <button class="btn btn-primary" ui-sref="projectForm({id:'new'})">
-            <i class="fa fa-bolt fa-fw"></i><span translate="majimenatestApp.project.home.createLabel">Create a new Project</span>
-        </button>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-lg-12 text-right">
+            <button class="btn btn-primary" ui-sref="clinicForm({id:0})">
+                <span>新規作成</span>
+            </button>
+        </div>
+    </div>
 
     <div class="modal fade" id="deleteProjectConfirmation">
         <div class="modal-dialog">
@@ -44,28 +44,23 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th translate="majimenatestApp.project.name">Name</th>
-                    <th translate="majimenatestApp.project.description">Description</th>
-                    <th translate="majimenatestApp.project.owner">Project Owner</th>
+                    <th>コード</th>
+                    <th>クリニック名</th>
+                    <th>院長</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="project in projects">
-                    <td><a ui-sref="projectDetail({id:project.id})">{{project.id}}</a></td>
-                    <td>{{project.name}}</td>
-                    <td>{{project.description}}</td>
-                    <td>{{project.owner.lastName}} {{project.owner.firstName}}</td>
+                <tr ng-repeat="clinic in clinics">
+                    <td><a ui-sref="clinicDetail({id:clinic.id})">{{clinic.code}}</a></td>
+                    <td>{{clinic.name}}</td>
+                    <td>{{clinic.ownerUser.lastName}} {{clinic.ownerUser.firstName}}</td>
                     <td class="text-right">
-                        <button type="submit" ui-sref="projectDetail({id:project.id})" class="btn btn-default btn-sm">
+                        <button type="submit" ui-sref="clinicDetail({id:clinic.id})" class="btn btn-default btn-sm">
                             <i class="fa fa-eye fa-fw"></i><span translate="entity.action.view"> View</span>
                         </button>
-                        <button type="submit" ui-sref="projectForm({id: project.id})" class="btn btn-default btn-sm">
+                        <button type="submit" ui-sref="clinicForm({id: clinic.id})" class="btn btn-default btn-sm">
                             <i class="fa fa-pencil fa-fw"></i><span translate="entity.action.edit"> Edit</span>
-                        </button>
-                        <button type="submit" ng-click="delete(project.id)" class="btn btn-danger btn-sm">
-                            <i class="fa fa-trash fa-fw"></i><span translate="entity.action.delete"> Delete</span>
                         </button>
                     </td>
                 </tr>

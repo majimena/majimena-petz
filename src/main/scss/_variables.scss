@@ -1,15 +1,20 @@
 //$theme-color: darken(#5bc0de, 10%);
 $theme-color: #5bc0de;
 
-$font-family-sans-serif: "Roboto", Arial, Helvetica, sans-serif;
+$font-size-base: 14px;
+$font-family-sans-serif: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
 
-$gray-base: #000000;
+$gray-base: #000;
 $brand-primary: $theme-color;
 $link-color: darken(#5bc0de, 13.5%);
 
 $text-color: lighten($gray-base, 40.0%);
 $headings-color: lighten($gray-base, 13.5%);
 $input-border-focus: $theme-color;
+
+$btn-default-color: #fff;
+$btn-default-bg: lighten($gray-base, 60%);
+$btn-default-border: darken($btn-default-bg, 10%);
 
 $navbar-height: 40px;
 $navbar-margin-bottom: 0px;

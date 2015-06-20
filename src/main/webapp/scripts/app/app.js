@@ -160,3 +160,8 @@ angular.module('majimenatestApp', ['LocalStorageModule', 'tmh.dynamicLocale',
         tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-i18n/angular-locale_{{locale}}.js');
         tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');
     });
+
+// overwrite base app
+angular.module('petzioApp', ['majimenatestApp', 'LocalStorageModule', 'tmh.dynamicLocale',
+    'ngResource', 'ui.router', 'ngCookies', 'pascalprecht.translate', 'ngCacheBuster', 'infinite-scroll', 'ui.bootstrap', 'ngNotify']);
+

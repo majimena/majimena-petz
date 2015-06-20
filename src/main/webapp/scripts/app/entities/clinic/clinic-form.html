@@ -1,0 +1,63 @@
+<div class="container-fluid fluid-container">
+
+    <div class="page-title" ng-init="onLoad()">
+        <h3>クリニック作成</h3>
+        <p class="help-block">
+            <span>あなたが経営するクリニックの情報を作成します。</span>
+        </p>
+    </div>
+
+    <div class="fluid-form-container">
+        <form class="form-horizontal" name="form" role="form" novalidate ng-submit="save()">
+            <section class="form-group" ng-class="{'has-error': form.code.$dirty && form.code.$invalid}">
+                <label for="code" class="col-sm-3 control-label">クリニックコード</label>
+                <div class="col-sm-9">
+                    <input id="code" name="code" type="text" class="form-control" maxlength="60" 
+                            ng-model="clinic.code" ng-required="true" ng-minlength="1" ng-maxlength="60">
+                    <div ng-show="form.code.$dirty && form.code.$invalid">
+                        <p class="help-block" ng-show="form.code.$error.required">
+                            <span>This field is required.</span>
+                        </p>
+                        <p class="help-block" ng-show="form.code.$error.maxlength">
+                            <span>This field cannot be longer than 255 characters.</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section class="form-group" ng-class="{'has-error': form.name.$dirty && form.name.$invalid}">
+                <label for="name" class="col-sm-3 control-label">クリニック名</label>
+                <div class="col-sm-9">
+                    <input id="name" name="name" type="text" class="form-control" maxlength="60" 
+                            ng-model="clinic.name" ng-required="true" ng-minlength="1" ng-maxlength="60">
+                    <div ng-show="form.name.$dirty && form.name.$invalid">
+                        <p class="help-block" ng-show="form.name.$error.required">
+                            <span>This field is required.</span>
+                        </p>
+                        <p class="help-block" ng-show="form.name.$error.maxlength">
+                            <span>This field cannot be longer than 255 characters.</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section class="form-group" ng-class="{'has-error': form.description.$dirty && form.description.$invalid}">
+                <label for="description" class="col-sm-3 control-label">説明</label>
+                <div class="col-sm-9">
+                    <input id="description" name="description" type="text" class="form-control" maxlength="200" 
+                            ng-model="clinic.description" ng-minlength="1" ng-maxlength="200">
+                    <div ng-show="form.description.$dirty && form.description.$invalid">
+                        <p class="help-block" ng-show="form.description.$error.maxlength">
+                            <span>This field cannot be longer than 255 characters.</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">保存する</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ui-sref="clinic">キャンセル</button>
+                </div>
+            </section>
+        </form>
+    </div>
+
+</div>

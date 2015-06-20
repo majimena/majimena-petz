@@ -123,10 +123,20 @@ body {
     text-rendering: optimizelegibility;
 }
 
+/* tab style */
+.tab-content header > h4 {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+/* table style */
 .table > thead > tr > th, .table > thead > tr > td,
 .table > tbody > tr > th, .table > tbody > tr > td,
 .table > tfoot > tr > th, .table > tfoot > tr > td {
     vertical-align: middle;
+}
+.table-inner > thead > tr > th {
+    font-size: $font-size-small;
 }
 
 .form-control {
@@ -161,6 +171,11 @@ body {
     padding: 0.5em 5em 0.5em 1em;
 }
 
+/* customize button */
+.btn {
+    padding: 7px 12px 4px 12px;
+}
+
 /* ========== override sb-admin2 ========== */
 #page-wrapper {
     padding: 0;
@@ -170,6 +185,8 @@ body {
     margin-top: 1px;
 }
 .sidebar ul li {
+    font-size: 14px;
+    font-weight: 400;
     border-bottom: none;
 }
 .sidebar ul li a {
@@ -231,6 +248,15 @@ body {
     max-width: $container-tablet;
     padding-top: 20px;
 }
+.single-contents {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+.fluid-form-container {
+    max-width: $container-tablet;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 /* sidebar menu and content defs */
 #page-wrapper.sidebar-collapse {
@@ -278,12 +304,3 @@ body {
     text-align: center;
 }
 
-/* page header */
-.page-title {
-    @extend .page-header;
-    margin: 20px 0;
-}
-.page-title .description {
-    font-size: $font-size-small;
-    margin: 0;
-}

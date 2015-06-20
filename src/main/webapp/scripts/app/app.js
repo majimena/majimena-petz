@@ -1,7 +1,22 @@
 'use strict';
 
+angular.module('ui.gravatar').config([
+  'gravatarServiceProvider', function(gravatarServiceProvider) {
+    gravatarServiceProvider.defaults = {
+      size     : 30,
+      "default": 'retro'  // Mystery man as default for missing avatars
+    };
+
+    // Use https endpoint
+    gravatarServiceProvider.secure = true;
+
+    // Force protocol
+    gravatarServiceProvider.protocol = 'my-protocol';
+  }
+]);
+
 angular.module('majimenatestApp', ['LocalStorageModule', 'tmh.dynamicLocale',
-    'ngResource', 'ui.router', 'ngCookies', 'pascalprecht.translate', 'ngCacheBuster', 'infinite-scroll', 'ui.bootstrap', 'ngNotify'])
+    'ngResource', 'ui.router', 'ngCookies', 'pascalprecht.translate', 'ngCacheBuster', 'infinite-scroll', 'ui.bootstrap', 'ui.gravatar', 'ngNotify'])
 
     .run(function ($rootScope, $location, $window, $http, $state, $translate, Auth, Principal, Language, ENV, VERSION, localStorageService) {
         $rootScope.ENV = ENV;
@@ -109,41 +124,44 @@ angular.module('majimenatestApp', ['LocalStorageModule', 'tmh.dynamicLocale',
         // use html5 mode
         $locationProvider.html5Mode(false);
 
+        // base route
         $urlRouterProvider.otherwise('/');
-        $stateProvider.state('site', {
-            'abstract': true,
-            views: {
-                'navbar@': {
-                    templateUrl: 'scripts/components/navbar/navbar.html',
-                    controller: 'NavbarController'
-                }
-            },
-            resolve: {
-                authorize: ['Auth',
-                    function (Auth) {
-                        return Auth.authorize();
+        $stateProvider
+            .state('site', {
+                'abstract': true,
+                views: {
+                    'navbar@': {
+                        templateUrl: 'scripts/components/navbar/navbar.html',
+                        controller: 'NavbarController'
                     }
-                ],
-                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('global');
-                    $translatePartialLoader.addPart('language');
-                    return $translate.refresh();
-                }]
-            }
-        }).state('main', {
-            'abstract': true,
-            parent: 'site',
-            views: {
-                'sidebar@site': {
-                    templateUrl: 'scripts/components/navbar/sidebar/sidebar.html',
-                    controller: 'SidebarController'
                 },
-                'content@': {
-                    templateUrl: 'scripts/components/navbar/sidebar/content/content.html',
-                    controller: 'SidebarContentController'
+                resolve: {
+                    authorize: ['Auth',
+                        function (Auth) {
+                            return Auth.authorize();
+                        }
+                    ],
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                        $translatePartialLoader.addPart('global');
+                        $translatePartialLoader.addPart('language');
+                        return $translate.refresh();
+                    }]
                 }
-            }
-        });
+            })
+            .state('main', {
+                'abstract': true,
+                parent: 'site'
+                // views: {
+                //     'sidebar@site': {
+                //         templateUrl: 'scripts/components/navbar/sidebar/sidebar.html',
+                //         controller: 'SidebarController'
+                //     },
+                //     'content@': {
+                //         templateUrl: 'scripts/components/navbar/sidebar/content/content.html',
+                //         controller: 'SidebarContentController'
+                //     }
+                // }
+            });
 
         // Add interceptors
         $httpProvider.interceptors.push('authInterceptor');

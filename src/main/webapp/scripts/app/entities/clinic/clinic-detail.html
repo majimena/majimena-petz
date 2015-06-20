@@ -1,12 +1,48 @@
+<!-- Modal -->
+<div class="modal fade" id="invitation-modal" tabindex="-1" role="dialog" aria-labelledby="invitation-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">メンバーを招待</h4>
+            </div>
+            <div class="modal-body">
+                <form name="form" role="form" novalidate>
+                    <section class="form-group" ng-class="{'has-error': form.email.$dirty && form.email.$invalid}">
+                        <label for="code" class="control-label">メールアドレス</label>
+                        <div>
+                            <textarea id="email" name="email" class="form-control" maxlength="1000" rows="5" placeholder="カンマ区切りか改行区切りで、複数のメールアドレスを指定できます。"
+                                    ng-model="invitation.email" ng-required="true" ng-minlength="1" ng-maxlength="1000"></textarea>
+                            <small>Petz.ioにメンバー登録されていない場合は会員登録の案内も併せて送信されます。</small>
+                            <div ng-show="form.email.$dirty && form.email.$invalid">
+                                <p class="help-block" ng-show="form.email.$error.required">
+                                    <span>1つ以上のメールアドレスを入力してください</span>
+                                </p>
+                                <p class="help-block" ng-show="form.email.$error.maxlength">
+                                    <span>全てのメールアドレスを合わせて1000文字以内で入力してください</span>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="form-group text-right">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                        <button type="button" class="btn btn-primary" ng-disabled="form.$invalid">招待する</button>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid single-contents" ng-init="onLoad()">
 
     <header class="page-header">
         <div class="row">
             <div class="col-md-1">
-                <img src="" style="border:1px solid #eee; width:70px; height:70px;" />
+                <img gravatar-src="'ken.todoroki@gmail.com'" gravatar-size="75" class="img-gravatar">
             </div>
             <div class="col-md-11">
-                <h4><span>{{clinic.name}}</span></h4>
+                <h3><span>{{clinic.name}}</span></h3>
                 <small>{{clinic.description}}</small>
             </div>
         </div>
@@ -22,45 +58,64 @@
             <tab heading="メンバー">
                 <header>
                     <div style="float:right;">
-                        <button type="button" class="btn btn-default">招待する</button>
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#invitation-modal">招待する</button>
                     </div>
                     <h4>メンバー (11)</h4>
                 </header>
                 <div class="table-responsive">
-                    <table class="table table-striped table-inner">
+                    <table class="table table-hover table-inner">
                         <thead>
                             <tr>
-                                <th>メンバー</th>
-                                <th>ロール</th>
-                                <th>参加日</th>
-                                <th></th>
+                                <th style="width:55%;">メンバー</th>
+                                <th style="width:15%;">役割</th>
+                                <th style="width:15%;">登録日</th>
+                                <th style="width:15%;"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>早乙女　一郎</td>
+                                <td>
+                                    <img gravatar-src="'ken.todoroki@majimena.org'" class="img-gravatar margin-right">
+                                    早乙女　一郎
+                                </td>
                                 <td>管理者</td>
                                 <td>2015-06-10</td>
                                 <td class="text-right">
                                 </td>
                             </tr>
                             <tr>
-                                <td>山田　太郎</td>
+                                <td>
+                                    <img gravatar-src-once="user.email" class="img-gravatar margin-right">
+                                    山田　太郎
+                                </td>
                                 <td>医師</td>
                                 <td>2015-06-15</td>
                                 <td class="text-right">
+                                    <button type="submit" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-remove-circle"></span>
+                                        <span>編集</span>
+                                    </button>
                                     <button type="submit" class="btn btn-danger">
-                                        <span class="glyphicon glyphicon-remove-circle"></span><span>削除</span>
+                                        <span class="glyphicon glyphicon-remove-circle"></span>
+                                        <span>削除</span>
                                     </button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>山田　花子</td>
+                                <td>
+                                    <img gravatar-src="'hanako.yamada@majimena.org'" class="img-gravatar margin-right">
+                                    山田　花子
+                                </td>
                                 <td>スタッフ</td>
                                 <td>2015-06-16</td>
                                 <td class="text-right">
+                                    <button type="submit" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-remove-circle"></span>
+                                        <span>編集</span>
+                                    </button>
                                     <button type="submit" class="btn btn-danger">
-                                        <span class="glyphicon glyphicon-remove-circle"></span><span>削除</span>
+                                        <span class="glyphicon glyphicon-remove-circle"></span>
+                                        <span>削除</span>
                                     </button>
                                 </td>
                             </tr>

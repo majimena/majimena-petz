@@ -11,7 +11,7 @@ angular.module('petzioApp')
                     pageTitle: 'petzioApp.clinic.home.title'
                 },
                 views: {
-                    'content@main': {
+                    'content@entity': {
                         templateUrl: 'scripts/app/entities/clinic/clinics.html',
                         controller: 'ClinicController'
                     }
@@ -31,7 +31,7 @@ angular.module('petzioApp')
                     pageTitle: 'petzioApp.clinic.detail.title'
                 },
                 views: {
-                    'content@main': {
+                    'content@entity': {
                         templateUrl: 'scripts/app/entities/clinic/clinic-detail.html',
                         controller: 'ClinicDetailController'
                     }
@@ -51,7 +51,7 @@ angular.module('petzioApp')
                     pageTitle: 'petzioApp.clinic.form.title'
                 },
                 views: {
-                    'content@main': {
+                    'content@entity': {
                         templateUrl: 'scripts/app/entities/clinic/clinic-form.html',
                         controller: 'ClinicFormController'
                     }

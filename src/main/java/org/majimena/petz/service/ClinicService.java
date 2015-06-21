@@ -22,4 +22,6 @@ public interface ClinicService {
 
     void deleteClinic(Long clinicId);
 
+    void inviteStaff(Long clinicId, String[] emails);
+
 }

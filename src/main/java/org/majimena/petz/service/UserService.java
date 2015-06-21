@@ -1,7 +1,7 @@
 package org.majimena.petz.service;
 
 import org.joda.time.DateTime;
-import org.majimena.petz.util.RandomUtil;
+import org.majimena.petz.common.utils.RandomUtils;
 import org.majimena.petz.domain.Authority;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.repository.AuthorityRepository;
@@ -73,7 +73,7 @@ public class UserService {
     public Optional<User> requestPasswordReset(String mail) {
        return userRepository.findOneByEmail(mail)
            .map(user -> {
-               user.setResetKey(RandomUtil.generateResetKey());
+               user.setResetKey(RandomUtils.generateResetKey());
                user.setResetDate(DateTime.now());
                userRepository.save(user);
                return user;
@@ -97,7 +97,7 @@ public class UserService {
         // new user is not active
         newUser.setActivated(false);
         // new user gets registration key
-        newUser.setActivationKey(RandomUtil.generateActivationKey());
+        newUser.setActivationKey(RandomUtils.generateActivationKey());
         authorities.add(authority);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);

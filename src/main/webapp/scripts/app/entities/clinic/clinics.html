@@ -56,6 +56,9 @@
                     <td>{{clinic.name}}</td>
                     <td>{{clinic.ownerUser.lastName}} {{clinic.ownerUser.firstName}}</td>
                     <td class="text-right">
+                        <button type="submit" ui-sref="clinicDetail.dashboard({id:clinic.id})" class="btn btn-default btn-sm">
+                            <i class="fa fa-eye fa-fw"></i><span> Dashboard</span>
+                        </button>
                         <button type="submit" ui-sref="clinicDetail({id:clinic.id})" class="btn btn-default btn-sm">
                             <i class="fa fa-eye fa-fw"></i><span translate="entity.action.view"> View</span>
                         </button>

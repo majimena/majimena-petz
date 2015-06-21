@@ -1,9 +1,6 @@
 package org.majimena.petz.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -13,12 +10,13 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * A Project.
+ * クリニックドメイン.
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "CLINIC")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

@@ -23,7 +23,8 @@
             </column>
             <column name="owner" type="bigint"/>
         </createTable>
-        <createTable tableName="CLINIC">
+
+        <createTable tableName="clinic">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -37,7 +38,34 @@
             </column>
             <column name="owner_user_id" type="bigint">
             </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+        </createTable>
 
+        <createTable tableName="clinic_staff">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="clinic_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="role" type="varchar(60)">
+                <constraints nullable="false" />
+            </column>
+            <column name="activated" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="activation_key" type="varchar(20)"/>
+            <column name="activated_date" type="date"/>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false" />
             </column>

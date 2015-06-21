@@ -4,7 +4,7 @@ $theme-color: #5bc0de;
 $gray-base: #000;
 $brand-primary: $theme-color;
 $font-size-base: 14px;
-$font-family-sans-serif: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
+$font-family-sans-serif: "Roboto", "Droid Sans", "ヒラギノ角ゴ Pro W4", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Arial, sans-serif;
 
 // decoration text definitions
 $text-color: lighten($gray-base, 40.0%);
@@ -21,13 +21,12 @@ $btn-info-border: darken($btn-info-bg, 10%);
 
 // header navigation definitions
 $navbar-height: 40px;
-$navbar-margin-bottom: 0px;
 $navbar-default-bg: $theme-color;
 $navbar-default-link-hover-bg: darken($navbar-default-bg, 10%);
 $navbar-default-link-active-bg: darken($navbar-default-bg, 10%);
-$navbar-default-brand-color: #ffffff;
+$navbar-default-brand-color: #fff;
 
-$dropdown-link-active-bg: $navbar-default-bg;
+$dropdown-link-hover-bg: lighten($gray-base, 93.5%);
 
 
 // custom variables

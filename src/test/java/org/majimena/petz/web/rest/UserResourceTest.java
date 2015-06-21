@@ -1,5 +1,6 @@
 package org.majimena.petz.web.rest;
 
+import org.junit.Ignore;
 import org.majimena.petz.Application;
 import org.majimena.petz.repository.UserRepository;
 import org.junit.Before;
@@ -42,6 +43,7 @@ public class UserResourceTest {
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
     }
 
+    @Ignore
     @Test
     public void testGetExistingUser() throws Exception {
         restUserMockMvc.perform(get("/api/users/admin")

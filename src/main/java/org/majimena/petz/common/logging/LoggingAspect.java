@@ -1,4 +1,4 @@
-package org.majimena.petz.logging;
+package org.majimena.petz.common.logging;
 
 import org.majimena.petz.config.Constants;
 import org.aspectj.lang.JoinPoint;

@@ -1,15 +1,15 @@
-package org.majimena.petz.util;
+package org.majimena.petz.common.utils;
 
 import org.apache.commons.lang.RandomStringUtils;
 
 /**
  * Utility class for generating random Strings.
  */
-public final class RandomUtil {
+public final class RandomUtils {
 
     private static final int DEF_COUNT = 20;
 
-    private RandomUtil() {
+    private RandomUtils() {
     }
 
     /**

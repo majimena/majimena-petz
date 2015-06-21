@@ -17,7 +17,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 
-import org.majimena.petz.async.ExceptionHandlingAsyncTaskExecutor;
+import org.majimena.petz.common.async.ExceptionHandlingAsyncTaskExecutor;
 
 @Configuration
 @EnableAsync

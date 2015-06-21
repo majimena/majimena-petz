@@ -18,14 +18,13 @@ angular.module('petzioApp')
             if (angular.isDefined($scope.clinic.id)) {
                 Clinic.update($scope.clinic, function () {
                     Notify.success('クリニック情報を更新しました。');
-                    $state.go('clinic');
                 });
             } else {
                 Clinic.save($scope.clinic, function () {
                     Notify.success('新規クリニックを作成しました。');
-                    $state.go('clinic');
                 });
             }
+            $state.go('clinicList');
         };
 
         $scope.refresh = function () {

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <jhi_user id="1" login="login" password="password" activated="0" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic id="1" code="001" name="Name" description="Description" owner_user_id="1" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic_staff id="1" clinic_id="1" user_id="1" role="ROLE_ADMIN" activated="0" activated_date="2015-06-01" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+</dataset>

@@ -121,6 +121,7 @@ body {
     padding-top: $navbar-height;
     font-weight: 300;
     text-rendering: optimizelegibility;
+/*    -webkit-font-smoothing: antialiased;*/
 }
 
 /* margin style */
@@ -174,12 +175,8 @@ header h3 {
 }
 
 /* customize dropdown */
-.dropdown-menu {
-    padding: 0;
-    border-radius: initial;
-}
 .dropdown-menu > li > a {
-    padding: 0.5em 5em 0.5em 1em;
+    padding: 0.5em 4em 0.5em 1em;
 }
 
 /* modal style */
@@ -191,6 +188,9 @@ header h3 {
 /* ========== override fontawesome ========== */
 .fa-fw {
     margin-right: 0.2em;
+}
+.fa-af {
+    margin-left: 0.4em;
 }
 
 /* ========== override ng-notify styles */

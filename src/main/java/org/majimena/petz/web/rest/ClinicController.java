@@ -28,7 +28,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class ClinicController {
 
-    private final Logger log = LoggerFactory.getLogger(ClinicController.class);
+    private final Logger logger = LoggerFactory.getLogger(ClinicController.class);
 
     @Inject
     private ClinicService clinicService;

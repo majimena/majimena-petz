@@ -73,4 +73,9 @@ public class ClinicServiceImpl implements ClinicService {
     public void deleteClinic(Long clinicId) {
         clinicRepository.delete(clinicId);
     }
+
+    @Override
+    public void inviteStaff(Long clinicId, String[] emails) {
+    }
+
 }

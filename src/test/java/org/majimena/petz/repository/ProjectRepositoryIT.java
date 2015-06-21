@@ -1,6 +1,7 @@
 package org.majimena.petz.repository;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ public class ProjectRepositoryIT {
         @Inject
         private ProjectRepository sut;
 
+        @Ignore
         @Test
         @DatabaseSetup("classpath:/testdata/project.xml")
         public void sampleTest() throws Exception {

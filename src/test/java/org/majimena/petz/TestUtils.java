@@ -1,4 +1,4 @@
-package org.majimena.petz.web.rest;
+package org.majimena.petz;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +16,7 @@ import java.nio.charset.Charset;
 /**
  * Utility class for testing REST controllers.
  */
-public class TestUtil {
+public class TestUtils {
 
     /** MediaType for JSON UTF8 */
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(
@@ -44,4 +44,22 @@ public class TestUtil {
         mapper.registerModule(module);
         return mapper.writeValueAsBytes(object);
     }
+
+    public static class Type {
+        public static final String TYPE_400 = "http://httpstatus.es/400";
+    }
+
+    public static class Title {
+        public static final String VALIDATION_FAILED = "Validation Failed";
+    }
+
+    public static class Detail {
+        public static final String VALIDATION_FAILED = "The content you've send contains validation errors.";
+    }
+
+    public static class Message {
+        public static final String NULL = "may not be null";
+        public static final String EMAIL = "invalid email address";
+    }
+
 }

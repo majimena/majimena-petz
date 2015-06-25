@@ -1,4 +1,4 @@
-package org.majimena.beans.factory;
+package org.majimena.framework.beans.factory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

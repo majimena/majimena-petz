@@ -8,7 +8,9 @@
         </encoder>
     </appender>
 
-    <logger name="org.majimena.test" level="TRACE"/>
+    <logger name="org.majimena.petz" level="TRACE"/>
+    <logger name="org.majimena.framework" level="TRACE"/>
+
     <logger name="org.springframework" level="INFO"/>
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>

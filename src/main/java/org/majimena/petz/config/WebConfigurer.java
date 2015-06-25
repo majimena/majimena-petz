@@ -17,6 +17,7 @@ import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.inject.Inject;
 import javax.servlet.*;
@@ -30,7 +31,7 @@ import java.util.Map;
  */
 @Configuration
 @AutoConfigureAfter(CacheConfiguration.class)
-public class WebConfigurer implements ServletContextInitializer, EmbeddedServletContainerCustomizer {
+public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInitializer implements ServletContextInitializer, EmbeddedServletContainerCustomizer {
 
     private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
 
@@ -54,6 +55,11 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
         }
         initCharacterEncodingFilter(servletContext, disps);
         log.info("Web application fully configured");
+    }
+
+    @Override
+    protected String[] getServletMappings() {
+        return new String[0];
     }
 
     /**
@@ -156,5 +162,20 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
         FilterRegistration.Dynamic dynamic = context.addFilter("cachingHttpHeadersFilter", filter);
         dynamic.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
         dynamic.setAsyncSupported(true);
+    }
+
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return new Class<?>[0];
+    }
+
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class<?>[0];
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic reg) {
+        reg.setInitParameter("throwExceptionIfNoHandlerFound", "true");
     }
 }

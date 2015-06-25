@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
+import org.majimena.petz.TestUtils;
 import org.majimena.petz.domain.Project;
 import org.majimena.petz.domain.project.ProjectCriteria;
 import org.majimena.petz.service.ProjectService;
@@ -73,8 +74,8 @@ public class ProjectResourceTest {
             }};
 
             mockMvc.perform(post("/api/projects")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(testData)))
+                .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
                 .andExpect(status().isCreated());
         }
@@ -84,8 +85,8 @@ public class ProjectResourceTest {
             final Project testData = Project.builder().description(DEFAULT_DESCRIPTION).build();
 
             mockMvc.perform(post("/api/projects")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(testData)))
+                .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         }
@@ -95,8 +96,8 @@ public class ProjectResourceTest {
             final Project testData = Project.builder().name(DEFAULT_NAME).build();
 
             mockMvc.perform(post("/api/projects")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(testData)))
+                .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         }
@@ -219,8 +220,8 @@ public class ProjectResourceTest {
             }};
 
             mockMvc.perform(put("/api/projects")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(testData)))
+                .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
                 .andExpect(status().isOk());
         }
@@ -254,7 +255,7 @@ public class ProjectResourceTest {
             }};
 
             mockMvc.perform(delete("/api/projects/{id}", 1L)
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(TestUtils.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(status().isOk());
         }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * クリニックサービス.
@@ -22,6 +23,6 @@ public interface ClinicService {
 
     void deleteClinic(Long clinicId);
 
-    void inviteStaff(Long clinicId, String[] emails);
+    void inviteStaff(Long clinicId, Set<String> emails);
 
 }

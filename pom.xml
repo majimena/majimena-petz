@@ -26,6 +26,7 @@
         <awaitility.version>1.4.0</awaitility.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
+        <commons-validator.version>1.4.1</commons-validator.version>
         <gatling-maven-plugin.version>2.1.5</gatling-maven-plugin.version>
         <gatling.version>2.1.5</gatling.version>
         <hibernate.version>4.3.6.Final</hibernate.version>
@@ -45,15 +46,17 @@
         <metrics-spring.version>3.0.4</metrics-spring.version>
         <run.addResources>false</run.addResources>
 
+        <spring-security-oauth2.version>2.0.1.RELEASE</spring-security-oauth2.version>
+        <spring-security.version>4.0.0.RELEASE</spring-security.version>
+        <swagger-springmvc.version>0.9.5</swagger-springmvc.version>
+        <usertype-core.version>3.2.0.GA</usertype-core.version>
+        <aws.version>1.10.1</aws.version>
+
         <sonar-maven-plugin.version>2.6</sonar-maven-plugin.version>
         <sonar.host.url>http://192.168.59.103:9090</sonar.host.url>
         <sonar.jdbc.password>123qwe</sonar.jdbc.password>
         <sonar.jdbc.url>jdbc:mysql://192.168.59.103:3306/sonar?useUnicode=true&amp;characterEncoding=utf8&amp;rewriteBatchedStatements=true</sonar.jdbc.url>
         <sonar.jdbc.username>sonar</sonar.jdbc.username>
-        <spring-security-oauth2.version>2.0.1.RELEASE</spring-security-oauth2.version>
-        <spring-security.version>4.0.0.RELEASE</spring-security.version>
-        <swagger-springmvc.version>0.9.5</swagger-springmvc.version>
-        <usertype-core.version>3.2.0.GA</usertype-core.version>
     </properties>
 
     <dependencies>
@@ -182,11 +185,34 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>${commons-lang.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>${commons-validator.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- reporting -->
         <dependency>
@@ -314,6 +340,7 @@
             </exclusions>
         </dependency>
 
+        <!-- SPRING FRAMEWORK -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
@@ -395,6 +422,12 @@
             <artifactId>spring-security-oauth2</artifactId>
             <version>${spring-security-oauth2.version}</version>
         </dependency>
+        <!-- spring extension -->
+        <dependency>
+            <groupId>cz.jirutka.spring</groupId>
+            <artifactId>spring-rest-exception-handler</artifactId>
+            <version>1.0.3</version>
+        </dependency>
 
         <!-- lombok -->
         <dependency>
@@ -402,6 +435,18 @@
             <artifactId>lombok</artifactId>
             <version>1.16.4</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- AWS -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-core</artifactId>
+            <version>${aws.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-ses</artifactId>
+            <version>${aws.version}</version>
         </dependency>
 
         <!-- junit -->

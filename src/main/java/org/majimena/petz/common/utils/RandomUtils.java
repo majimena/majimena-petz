@@ -2,6 +2,9 @@ package org.majimena.petz.common.utils;
 
 import org.apache.commons.lang.RandomStringUtils;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
 /**
  * Utility class for generating random Strings.
  */
@@ -22,20 +25,31 @@ public final class RandomUtils {
     }
 
     /**
-     * Generates an activation key.
+     * 通常使用するアクティベーションキーを発行する.
      *
-     * @return the generated activation key
+     * @return アクティベーションキー
      */
     public static String generateActivationKey() {
-        return RandomStringUtils.randomNumeric(DEF_COUNT);
+        return RandomStringUtils.randomAlphanumeric(DEF_COUNT);
     }
 
     /**
-    * Generates a reset key.
-    *
-    * @return the generated reset key
-    */
-   public static String generateResetKey() {
-       return RandomStringUtils.randomNumeric(DEF_COUNT);
-   }
+     * セキュアなアクティベーションキーを発行する.
+     *
+     * @return アクティベーションキー
+     */
+    public static String generateSecureActivationKey() {
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(256, random).toString(32);
+    }
+
+    /**
+     * Generates a reset key.
+     *
+     * @return the generated reset key
+     */
+    public static String generateResetKey() {
+        return RandomStringUtils.randomNumeric(DEF_COUNT);
+    }
+
 }

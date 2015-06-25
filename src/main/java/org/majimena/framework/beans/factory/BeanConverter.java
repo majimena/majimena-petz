@@ -1,4 +1,4 @@
-package org.majimena.beans.factory;
+package org.majimena.framework.beans.factory;
 
 /**
  * custom Bean Converter interface.

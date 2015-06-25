@@ -1,4 +1,4 @@
-package org.majimena.beans.factory;
+package org.majimena.framework.beans.factory;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.InitializingBean;

@@ -1,0 +1,12 @@
+${email} 様
+
+${user.lastName}${user.firstName} 様から ${clinic.name} の招待状が届きました。
+以下のページにアクセスして、招待を承認してください。
+${clinic.name} の事業者専用ページがご利用可能になります。
+なお、 petz.io にアカウントがないお客様の場合は、以下のページからアカウント登録をお済ませください。
+
+@{http://localhost:3000/clinics/{clinicId}/invitations/{invitationId}(clinicId=${clinic.id},invitationId=${invitation.id},email=${email},activationKey=${activationKey})}
+
+----------
+ペットが中心のクラウドコミュニティ　Petz.io
+http://localhost:3000/

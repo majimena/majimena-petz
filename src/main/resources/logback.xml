@@ -27,7 +27,8 @@
     </appender>
 -->
 
-    <logger name="org.majimena.test" level="${logback.loglevel}"/>
+    <logger name="org.majimena.petz" level="${logback.loglevel}"/>
+    <logger name="org.majimena.framework" level="${logback.loglevel}"/>
 
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>

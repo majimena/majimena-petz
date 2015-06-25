@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
+import org.majimena.petz.TestUtils;
 import org.majimena.petz.domain.Clinic;
-import org.majimena.petz.domain.Project;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.service.ClinicService;
@@ -70,8 +70,8 @@ public class ClinicControllerTest {
             }};
 
             mockMvc.perform(post("/api/clinics")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(testData)))
+                .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
                 .andExpect(status().isCreated());
         }
@@ -81,8 +81,8 @@ public class ClinicControllerTest {
             final Clinic testData = Clinic.builder().name("テスト").build();
 
             mockMvc.perform(post("/api/clinics")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(testData)))
+                .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         }
@@ -92,8 +92,8 @@ public class ClinicControllerTest {
             final Clinic testData = Clinic.builder().code("test.clinic").build();
 
             mockMvc.perform(post("/api/clinics")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(testData)))
+                .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         }
@@ -225,8 +225,8 @@ public class ClinicControllerTest {
             }};
 
             mockMvc.perform(put("/api/clinics")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(testData)))
+                .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
                 .andExpect(status().isOk());
         }
@@ -258,7 +258,7 @@ public class ClinicControllerTest {
             }};
 
             mockMvc.perform(delete("/api/clinics/{id}", 1L)
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(TestUtils.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(status().isOk());
         }

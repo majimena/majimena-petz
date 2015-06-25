@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.majimena.persistence.converter.LocalDatePersistenceConverter;
+import org.majimena.framework.persistence.converter.LocalDatePersistenceConverter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -36,6 +36,11 @@ public class ClinicStaff extends AbstractAuditingEntity implements Serializable 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
+
+    @NotNull
+    @Size(max = 60)
+    @Column(name = "email", length = 50, nullable = false)
+    private String email;
 
     @NotNull
     @Size(max = 60)

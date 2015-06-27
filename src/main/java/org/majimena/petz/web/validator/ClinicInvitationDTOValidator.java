@@ -21,7 +21,7 @@ public class ClinicInvitationDTOValidator extends AbstractValidator<ClinicInvita
     private void validateEmails(String[] emails, Errors errors) {
         for (String email : emails) {
             if (!GenericValidator.isEmail(email)) {
-                errors.rejectValue("emails", "errors.validation.email", "invalid email address");
+                errors.rejectValue("emails", "errors.validation.email", "not a well-formed email address");
                 return;
             }
         }

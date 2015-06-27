@@ -42,7 +42,7 @@ public class ClinicStaffRepositoryIT {
             Clinic clinic = entityManager.find(Clinic.class, 1L);
             User user = entityManager.find(User.class, 1L);
 
-            sut.save(new ClinicStaff(null, clinic, user, "hoge@hoge.com", "ROLE_DOCTOR", Boolean.FALSE, "1234567890", LocalDate.now()));
+            sut.save(new ClinicStaff(null, clinic, user, "ROLE_DOCTOR", LocalDate.now()));
 
             List<ClinicStaff> results = sut.findAll();
             assertThat(results.size(), is(2));
@@ -50,9 +50,7 @@ public class ClinicStaffRepositoryIT {
             assertThat(result.getId(), is(notNullValue()));
             assertThat(result.getClinic().getId(), is(1L));
             assertThat(result.getUser().getId(), is(1L));
-            assertThat(result.getEmail(), is("hoge@hoge.com"));
             assertThat(result.getRole(), is("ROLE_DOCTOR"));
-            assertThat(result.getActivated(), is(false));
         }
     }
 

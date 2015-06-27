@@ -1,8 +1,7 @@
 package org.majimena.petz.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import org.majimena.petz.domain.Clinic;
-import org.majimena.petz.service.ClinicService;
+import org.majimena.petz.service.ClinicStaffService;
 import org.majimena.petz.web.rest.dto.ClinicInvitationAcceptionDTO;
 import org.majimena.petz.web.rest.dto.ClinicInvitationDTO;
 import org.majimena.petz.web.validator.ClinicInvitationDTOValidator;
@@ -16,7 +15,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -27,13 +25,13 @@ import java.util.Set;
 public class ClinicInvitationController {
 
     @Inject
-    private ClinicService clinicService;
+    private ClinicStaffService clinicStaffService;
 
     @Inject
     private ClinicInvitationDTOValidator clinicInvitationDTOValidator;
 
-    public void setClinicService(ClinicService clinicService) {
-        this.clinicService = clinicService;
+    public void setClinicStaffService(ClinicStaffService clinicStaffService) {
+        this.clinicStaffService = clinicStaffService;
     }
 
     public void setClinicInvitationDTOValidator(ClinicInvitationDTOValidator clinicInvitationDTOValidator) {
@@ -49,19 +47,16 @@ public class ClinicInvitationController {
         }
 
         Set<String> emails = new HashSet<>(Arrays.asList(invitation.getEmails()));
-        clinicService.inviteStaff(clinicId, emails);
+        clinicStaffService.inviteStaff(clinicId, emails);
         return ResponseEntity.created(URI.create("/v1/clinics/" + clinicId + "/invitations")).build();
     }
 
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/invitations/{invitationId}", method = RequestMethod.GET)
-    public ResponseEntity<List<Clinic>> getAll(@PathVariable Long clinicId, @PathVariable Long invitationId, @Valid ClinicInvitationAcceptionDTO acception, BindingResult errors) throws BindException {
-//        Pageable pageable = PaginationUtil.generatePageRequest(offset, limit);
-//        Page<Clinic> page = clinicService.getClinics(new ClinicCriteria(), pageable);
-//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/clinics", offset, limit);
-//        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-        List<Clinic> clinics = null;
-        return ResponseEntity.ok().body(clinics);
+    public ResponseEntity<Void> getAll(@PathVariable Long clinicId, @PathVariable Long invitationId,
+                                       @Valid ClinicInvitationAcceptionDTO acception) throws BindException {
+        clinicStaffService.activate(acception.getActivationKey());
+        return ResponseEntity.ok().build();
     }
 
 }

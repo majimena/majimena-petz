@@ -14,6 +14,7 @@ public abstract class AbstractValidator<T> implements Validator {
 
     private Class<T> beanClass;
 
+    @SuppressWarnings("unchecked")
     public AbstractValidator() {
         Type type = getClass().getGenericSuperclass();
         if (type instanceof ParameterizedType) {

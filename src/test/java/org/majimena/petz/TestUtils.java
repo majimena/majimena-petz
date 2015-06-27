@@ -59,7 +59,8 @@ public class TestUtils {
 
     public static class Message {
         public static final String NULL = "may not be null";
-        public static final String EMAIL = "invalid email address";
+        public static final String EMPTY = "may not be empty";
+        public static final String EMAIL = "not a well-formed email address";
     }
 
 }

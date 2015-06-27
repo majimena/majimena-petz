@@ -39,7 +39,7 @@ public class ClinicRepositoryIT {
         public void sampleTest() throws Exception {
             User user = entityManager.find(User.class, 1L);
 
-            sut.save(new Clinic(null, "code", "name", "description", user));
+            sut.save(new Clinic(null, "code", "name", "description"));
 
             List<Clinic> results = sut.findAll();
             assertThat(results.size(), is(3));
@@ -48,7 +48,6 @@ public class ClinicRepositoryIT {
             assertThat(result.getCode(), is("code"));
             assertThat(result.getName(), is("name"));
             assertThat(result.getDescription(), is("description"));
-            assertThat(result.getOwnerUser(), is(notNullValue()));
         }
     }
 

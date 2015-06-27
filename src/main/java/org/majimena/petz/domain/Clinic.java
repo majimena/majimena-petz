@@ -40,8 +40,4 @@ public class Clinic extends AbstractAuditingEntity implements Serializable {
     @Column(name = "description", length = 200, nullable = true)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_user_id", nullable = false)
-    private User ownerUser;
-
 }

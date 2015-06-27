@@ -61,8 +61,7 @@ public class ClinicControllerTest {
         @Test
         public void サービスが呼び出されて正常終了すること() throws Exception {
             final Clinic testData = Clinic.builder().code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
-            final Clinic resultData = Clinic.builder().id(1L).code("test.clinic").name("テストクリニック").description("テストクリニックの説明")
-                .ownerUser(User.builder().id(1L).email("test@test.clinic").firstName("太郎").lastName("試験").build()).build();
+            final Clinic resultData = Clinic.builder().id(1L).code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
 
             new NonStrictExpectations() {{
                 clinicService.saveClinic(testData);
@@ -163,8 +162,7 @@ public class ClinicControllerTest {
         public void データが取得できること() throws Exception {
             new NonStrictExpectations() {{
                 clinicService.getClinicById(1L);
-                result = Optional.of(Clinic.builder().id(1L).code("test.clinic").name("テストクリニック").description("テストクリニックの説明")
-                    .ownerUser(User.builder().id(1L).email("test@test.clinic").firstName("太郎").lastName("試験").build()).build());
+                result = Optional.of(Clinic.builder().id(1L).code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build());
             }};
 
             mockMvc.perform(get("/api/clinics/{id}", 1L))
@@ -174,11 +172,7 @@ public class ClinicControllerTest {
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.code", is("test.clinic")))
                 .andExpect(jsonPath("$.name", is("テストクリニック")))
-                .andExpect(jsonPath("$.description", is("テストクリニックの説明")))
-                .andExpect(jsonPath("$.ownerUser.id", is(1)))
-                .andExpect(jsonPath("$.ownerUser.firstName", is("太郎")))
-                .andExpect(jsonPath("$.ownerUser.lastName", is("試験")))
-                .andExpect(jsonPath("$.ownerUser.email", is("test@test.clinic")));
+                .andExpect(jsonPath("$.description", is("テストクリニックの説明")));
         }
 
         @Test
@@ -216,8 +210,7 @@ public class ClinicControllerTest {
         @Test
         public void updateProject() throws Exception {
             final Clinic testData = Clinic.builder().id(1L).code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
-            final Clinic resultData = Clinic.builder().id(1L).code("test.clinic").name("テストクリニック").description("テストクリニックの説明")
-                .ownerUser(User.builder().id(1L).email("test@test.clinic").firstName("太郎").lastName("試験").build()).build();
+            final Clinic resultData = Clinic.builder().id(1L).code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
 
             new NonStrictExpectations() {{
                 clinicService.updateClinic(testData);

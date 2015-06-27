@@ -1,5 +1,6 @@
 package org.majimena.petz.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -20,29 +21,45 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "clinic_staff")
+@Table(name = "clinic_invitation")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ClinicStaff extends AbstractAuditingEntity implements Serializable {
+public class ClinicInvitation extends AbstractAuditingEntity implements Serializable {
 
+    /**
+     * ID.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    /**
+     * クリニックID.
+     */
     @ManyToOne
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 
+    /**
+     * 招待状送信者ID.
+     */
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    /**
+     * 招待状送信先メールアドレス.
+     */
     @NotNull
-    @Size(max = 60)
-    @Column(name = "role", length = 60, nullable = false)
-    private String role;
+    @Size(max = 50)
+    @Column(name = "email", length = 50, nullable = false)
+    private String email;
 
-    @Column(name = "activated_date", nullable = true)
-    @Convert(converter = LocalDatePersistenceConverter.class)
-    private LocalDate activatedDate;
+    /**
+     * 招待状承認用アクティベーションキー.
+     */
+    @JsonIgnore
+    @Size(max = 20)
+    @Column(name = "activation_key", length = 20, nullable = true)
+    private String activationKey;
 
 }

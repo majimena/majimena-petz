@@ -72,13 +72,13 @@ public class ProjectServiceImplTest {
             assertThat(result.isPresent()).isTrue();
             assertThat(result.get().getName()).isEqualTo("test project");
             assertThat(result.get().getDescription()).isEqualTo("desc");
-            assertThat(result.get().getOwner().getId()).isEqualTo(1L);
+            assertThat(result.get().getOwner().getId()).isEqualTo("1");
             assertThat(result.get().getOwner().getLogin()).isEqualTo("test");
         }
 
         private User createTestUser() {
             User user = new User();
-            user.setId(1L);
+            user.setId("1");
             user.setLogin("test");
             return user;
         }

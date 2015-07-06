@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 public interface ClinicService {
 
-    Optional<Clinic> getClinicById(Long clinicId);
+    Optional<Clinic> getClinicById(String clinicId);
 
     Page<Clinic> getClinics(ClinicCriteria criteria, Pageable pageable);
 
@@ -20,6 +20,6 @@ public interface ClinicService {
 
     Optional<Clinic> updateClinic(Clinic clinic);
 
-    void deleteClinic(Long clinicId);
+    void deleteClinic(String clinicId);
 
 }

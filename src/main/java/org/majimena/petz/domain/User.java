@@ -4,20 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
-
-import org.hibernate.annotations.Type;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.joda.time.DateTime;
 
 /**
  * A user.
@@ -34,8 +32,9 @@ import org.joda.time.DateTime;
 public class User extends AbstractAuditingEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    private String id;
 
     @NotNull
     @Pattern(regexp = "^[a-z0-9]*$")
@@ -82,7 +81,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "reset_date", nullable = true)
     private DateTime resetDate = null;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(
         name = "JHI_USER_AUTHORITY",

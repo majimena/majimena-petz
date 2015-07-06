@@ -6,18 +6,14 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.domain.Clinic;
-import org.majimena.petz.domain.ClinicStaff;
-import org.majimena.petz.domain.User;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -28,30 +24,26 @@ public class ClinicStaffRepositoryIT {
 
     @WebAppConfiguration
     @SpringApplicationConfiguration(classes = Application.class)
-    public static class SampleTest extends AbstractSpringDBUnitTest {
+    public static class FindClinicsByUserIdTest extends AbstractSpringDBUnitTest {
 
         @Inject
         private ClinicStaffRepository sut;
 
-        @Inject
-        private EntityManager entityManager;
-
         @Test
         @DatabaseSetup("classpath:/testdata/clinic_staff.xml")
-        public void sampleTest() throws Exception {
-            Clinic clinic = entityManager.find(Clinic.class, 1L);
-            User user = entityManager.find(User.class, 1L);
+        public void データベースの内容が正しく取得できること() throws Exception {
+            Page<Clinic> results = sut.findClinicsByUserId("1", new PageRequest(0, 10));
 
-            sut.save(new ClinicStaff(null, clinic, user, "ROLE_DOCTOR", LocalDate.now()));
-
-            List<ClinicStaff> results = sut.findAll();
-            assertThat(results.size(), is(2));
-            ClinicStaff result = results.get(results.size() - 1);
-            assertThat(result.getId(), is(notNullValue()));
-            assertThat(result.getClinic().getId(), is(1L));
-            assertThat(result.getUser().getId(), is(1L));
-            assertThat(result.getRole(), is("ROLE_DOCTOR"));
+            assertThat(results.getTotalPages(), is(1));
+            assertThat(results.getSize(), is(10));
+            assertThat(results.getTotalElements(), is(2L));
+            assertThat(results.getContent().size(), is(2));
+            assertThat(results.getContent().get(0).getId(), is("1"));
+            assertThat(results.getContent().get(0).getName(), is("Name1"));
+            assertThat(results.getContent().get(0).getDescription(), is("Description1"));
+            assertThat(results.getContent().get(1).getId(), is("2"));
+            assertThat(results.getContent().get(1).getName(), is("Name2"));
+            assertThat(results.getContent().get(1).getDescription(), is("Description2"));
         }
     }
-
 }

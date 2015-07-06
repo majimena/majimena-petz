@@ -86,7 +86,7 @@ public class ClinicStaffServiceImpl implements ClinicStaffService {
      * {@inheritDoc}
      */
     @Override
-    public void inviteStaff(Long clinicId, Set<String> emails) {
+    public void inviteStaff(String  clinicId, Set<String> emails) {
         String loginId = SecurityUtils.getCurrentLogin();
         Optional<User> login = userRepository.findOneByLogin(loginId);
 

@@ -81,14 +81,14 @@ public class ClinicStaffServiceImplTest {
                 SecurityUtils.getCurrentLogin();
                 result = "login";
                 userRepository.findOneByLogin("login");
-                result = Optional.of(User.builder().id(1L).login("login").langKey("ja").build());
-                clinicRepository.findOne(10L);
-                result = Clinic.builder().id(10L).code("clinic.com").name("テストクリニック").description("テストクリニックの説明").build();
+                result = Optional.of(User.builder().id("1").login("login").langKey("ja").build());
+                clinicRepository.findOne("10");
+                result = Clinic.builder().id("10").code("clinic.com").name("テストクリニック").description("テストクリニックの説明").build();
                 userRepository.findOneByEmail("test@mail.com");
-                result = Optional.of(User.builder().id(100L).email("test@mail.com").build());
+                result = Optional.of(User.builder().id("100").email("test@mail.com").build());
             }};
 
-            sut.inviteStaff(10L, new HashSet<>(Arrays.asList("test@mail.com")));
+            sut.inviteStaff("10", new HashSet<>(Arrays.asList("test@mail.com")));
 
             new Verifications() {{
                 ClinicInvitation invitation;
@@ -119,7 +119,7 @@ public class ClinicStaffServiceImplTest {
                 result = Optional.empty();
             }};
 
-            sut.inviteStaff(10L, new HashSet<>(Arrays.asList("test@mail.com")));
+            sut.inviteStaff("10", new HashSet<>(Arrays.asList("test@mail.com")));
         }
     }
 
@@ -160,11 +160,11 @@ public class ClinicStaffServiceImplTest {
                 SecurityUtils.getCurrentLogin();
                 result = "foo";
                 clinicInvitationRepository.findOneByActivationKey("1234567890");
-                result = ClinicInvitation.builder().id(1L).email("").activationKey("1234567890")
-                    .user(User.builder().id(10L).login("login").build())
-                    .clinic(Clinic.builder().id(100L).name("テストクリニック").build()).build();
+                result = ClinicInvitation.builder().id("1").email("").activationKey("1234567890")
+                    .user(User.builder().id("10").login("login").build())
+                    .clinic(Clinic.builder().id("100").name("テストクリニック").build()).build();
                 userRepository.findOneByLogin("foo");
-                result = Optional.of(User.builder().id(1000L).login("foo").langKey("ja").build());
+                result = Optional.of(User.builder().id("1000").login("foo").langKey("ja").build());
             }};
 
             sut.activate("1234567890");
@@ -172,16 +172,16 @@ public class ClinicStaffServiceImplTest {
             new Verifications() {{
                 ClinicStaff staff;
                 clinicStaffRepository.save(staff = withCapture());
-                assertThat(staff.getClinic().getId(), is(100L));
+                assertThat(staff.getClinic().getId(), is("100"));
                 assertThat(staff.getClinic().getName(), is("テストクリニック"));
-                assertThat(staff.getUser().getId(), is(1000L));
+                assertThat(staff.getUser().getId(), is("1000"));
                 assertThat(staff.getUser().getLogin(), is("foo"));
                 assertThat(staff.getRole(), is(Roles.ROLE_STAFF.name()));
                 assertThat(staff.getActivatedDate(), is(notNullValue()));
 
                 ClinicInvitation invitation;
                 clinicInvitationRepository.delete(invitation = withCapture());
-                assertThat(invitation.getId(), is(1L));
+                assertThat(invitation.getId(), is("1"));
             }};
         }
 
@@ -209,9 +209,9 @@ public class ClinicStaffServiceImplTest {
                 SecurityUtils.getCurrentLogin();
                 result = "foo";
                 clinicInvitationRepository.findOneByActivationKey("1234567890");
-                result = ClinicInvitation.builder().id(1L).email("").activationKey("1234567890")
-                    .user(User.builder().id(10L).login("login").build())
-                    .clinic(Clinic.builder().id(100L).name("テストクリニック").build()).build();
+                result = ClinicInvitation.builder().id("1").email("").activationKey("1234567890")
+                    .user(User.builder().id("10").login("login").build())
+                    .clinic(Clinic.builder().id("100").name("テストクリニック").build()).build();
                 userRepository.findOneByLogin("foo");
                 result = Optional.empty();
             }};

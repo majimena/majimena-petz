@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * クリニックリポジトリ.
  */
-public interface ClinicRepository extends JpaRepository<Clinic, Long> {
+public interface ClinicRepository extends JpaRepository<Clinic, String> {
 
 }

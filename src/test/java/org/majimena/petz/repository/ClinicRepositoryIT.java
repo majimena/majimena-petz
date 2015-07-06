@@ -37,7 +37,7 @@ public class ClinicRepositoryIT {
         @Test
         @DatabaseSetup("classpath:/testdata/clinic.xml")
         public void sampleTest() throws Exception {
-            User user = entityManager.find(User.class, 1L);
+            User user = entityManager.find(User.class, "1");
 
             sut.save(new Clinic(null, "code", "name", "description"));
 

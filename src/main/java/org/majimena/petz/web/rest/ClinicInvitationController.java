@@ -40,7 +40,7 @@ public class ClinicInvitationController {
 
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/invitations", method = RequestMethod.POST)
-    public ResponseEntity<Void> invite(@PathVariable Long clinicId, @Valid @RequestBody ClinicInvitationDTO invitation, BindingResult errors) throws BindException {
+    public ResponseEntity<Void> invite(@PathVariable String clinicId, @Valid @RequestBody ClinicInvitationDTO invitation, BindingResult errors) throws BindException {
         clinicInvitationDTOValidator.validate(invitation, errors);
         if (errors.hasErrors()) {
             throw new BindException(errors);

@@ -7,7 +7,7 @@ import java.util.Set;
  */
 public interface ClinicStaffService {
 
-    void inviteStaff(Long clinicId, Set<String> emails);
+    void inviteStaff(String clinicId, Set<String> emails);
 
     void activate(String activationKey);
 

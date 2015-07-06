@@ -743,32 +743,32 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.github.trecloux</groupId>
-                        <artifactId>yeoman-maven-plugin</artifactId>
-                        <version>0.4</version>
-                        <executions>
-                            <execution>
-                                <id>run-grunt</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                                <configuration>
-                                    <skipTests>true</skipTests>
-                                    <buildTool>grunt</buildTool>
-                                    <buildArgs>compass:server --force</buildArgs>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <yeomanProjectDirectory>${project.basedir}</yeomanProjectDirectory>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
+            <!--<build>-->
+                <!--<plugins>-->
+                    <!--<plugin>-->
+                        <!--<groupId>com.github.trecloux</groupId>-->
+                        <!--<artifactId>yeoman-maven-plugin</artifactId>-->
+                        <!--<version>0.4</version>-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<id>run-grunt</id>-->
+                                <!--<phase>generate-resources</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>build</goal>-->
+                                <!--</goals>-->
+                                <!--<configuration>-->
+                                    <!--<skipTests>true</skipTests>-->
+                                    <!--<buildTool>grunt</buildTool>-->
+                                    <!--<buildArgs>compass:server &#45;&#45;force</buildArgs>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                        <!--<configuration>-->
+                            <!--<yeomanProjectDirectory>${project.basedir}</yeomanProjectDirectory>-->
+                        <!--</configuration>-->
+                    <!--</plugin>-->
+                <!--</plugins>-->
+            <!--</build>-->
             <properties>
                 <!-- log configuration -->
                 <logback.loglevel>DEBUG</logback.loglevel>
@@ -810,27 +810,27 @@
             <id>prod</id>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>com.github.trecloux</groupId>
-                        <artifactId>yeoman-maven-plugin</artifactId>
-                        <version>0.4</version>
-                        <executions>
-                            <execution>
-                                <id>run-frontend-build</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                                <configuration>
-                                    <buildTool>grunt</buildTool>
-                                    <buildArgs>build --force --no-color</buildArgs>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <yeomanProjectDirectory>${project.basedir}</yeomanProjectDirectory>
-                        </configuration>
-                    </plugin>
+                    <!--<plugin>-->
+                        <!--<groupId>com.github.trecloux</groupId>-->
+                        <!--<artifactId>yeoman-maven-plugin</artifactId>-->
+                        <!--<version>0.4</version>-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<id>run-frontend-build</id>-->
+                                <!--<phase>generate-resources</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>build</goal>-->
+                                <!--</goals>-->
+                                <!--<configuration>-->
+                                    <!--<buildTool>grunt</buildTool>-->
+                                    <!--<buildArgs>build &#45;&#45;force &#45;&#45;no-color</buildArgs>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                        <!--<configuration>-->
+                            <!--<yeomanProjectDirectory>${project.basedir}</yeomanProjectDirectory>-->
+                        <!--</configuration>-->
+                    <!--</plugin>-->
                     <plugin>
                         <artifactId>maven-clean-plugin</artifactId>
                         <version>2.5</version>

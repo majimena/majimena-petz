@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.TestUtils;
 import org.majimena.petz.domain.Clinic;
-import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.service.ClinicService;
 import org.majimena.petz.web.rest.util.PaginationUtil;
@@ -61,7 +60,7 @@ public class ClinicControllerTest {
         @Test
         public void サービスが呼び出されて正常終了すること() throws Exception {
             final Clinic testData = Clinic.builder().code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
-            final Clinic resultData = Clinic.builder().id(1L).code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
+            final Clinic resultData = Clinic.builder().id("1").code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
 
             new NonStrictExpectations() {{
                 clinicService.saveClinic(testData);
@@ -161,15 +160,15 @@ public class ClinicControllerTest {
         @Test
         public void データが取得できること() throws Exception {
             new NonStrictExpectations() {{
-                clinicService.getClinicById(1L);
-                result = Optional.of(Clinic.builder().id(1L).code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build());
+                clinicService.getClinicById("1");
+                result = Optional.of(Clinic.builder().id("1").code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build());
             }};
 
-            mockMvc.perform(get("/api/clinics/{id}", 1L))
+            mockMvc.perform(get("/api/clinics/{id}", "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"))
-                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.id", is("1")))
                 .andExpect(jsonPath("$.code", is("test.clinic")))
                 .andExpect(jsonPath("$.name", is("テストクリニック")))
                 .andExpect(jsonPath("$.description", is("テストクリニックの説明")));
@@ -178,11 +177,11 @@ public class ClinicControllerTest {
         @Test
         public void 該当するデータがない場合は404エラーになること() throws Exception {
             new NonStrictExpectations() {{
-                clinicService.getClinicById(Long.MAX_VALUE);
+                clinicService.getClinicById("0");
                 result = Optional.empty();
             }};
 
-            mockMvc.perform(get("/api/clinics/{id}", Long.MAX_VALUE))
+            mockMvc.perform(get("/api/clinics/{id}", "0"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
         }
@@ -209,8 +208,8 @@ public class ClinicControllerTest {
 
         @Test
         public void updateProject() throws Exception {
-            final Clinic testData = Clinic.builder().id(1L).code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
-            final Clinic resultData = Clinic.builder().id(1L).code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
+            final Clinic testData = Clinic.builder().id("1").code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
+            final Clinic resultData = Clinic.builder().id("1").code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
 
             new NonStrictExpectations() {{
                 clinicService.updateClinic(testData);
@@ -247,10 +246,10 @@ public class ClinicControllerTest {
         @Test
         public void deleteProject() throws Exception {
             new NonStrictExpectations() {{
-                clinicService.deleteClinic(1L);
+                clinicService.deleteClinic("1");
             }};
 
-            mockMvc.perform(delete("/api/clinics/{id}", 1L)
+            mockMvc.perform(delete("/api/clinics/{id}", "1")
                 .accept(TestUtils.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(status().isOk());

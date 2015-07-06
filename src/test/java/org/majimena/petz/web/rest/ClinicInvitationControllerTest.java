@@ -62,7 +62,7 @@ public class ClinicInvitationControllerTest {
             ClinicInvitationDTO testData = new ClinicInvitationDTO(new String[]{"foo@localhost.com", "bar@localhost.com"});
 
             new NonStrictExpectations() {{
-                clinicStaffService.inviteStaff(100L, new HashSet<>(Arrays.asList("foo@localhost.com", "bar@localhost.com")));
+                clinicStaffService.inviteStaff("100", new HashSet<>(Arrays.asList("foo@localhost.com", "bar@localhost.com")));
             }};
 
             mockMvc.perform(post("/v1/clinics/100/invitations")

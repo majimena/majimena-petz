@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 import org.majimena.framework.persistence.converter.LocalDatePersistenceConverter;
 
 import javax.persistence.*;
@@ -29,8 +30,9 @@ public class ClinicInvitation extends AbstractAuditingEntity implements Serializ
      * ID.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    private String id;
 
     /**
      * クリニックID.

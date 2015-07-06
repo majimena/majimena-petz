@@ -4,6 +4,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.MetricsServlet;
 import org.majimena.petz.web.filter.CachingHttpHeadersFilter;
+import org.majimena.petz.web.filter.CrossOriginResourceSharingFilter;
 import org.majimena.petz.web.filter.StaticResourcesProductionFilter;
 import org.majimena.petz.web.filter.gzip.GZipServletFilter;
 import org.slf4j.Logger;
@@ -45,6 +46,7 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
     public void onStartup(ServletContext servletContext) throws ServletException {
         log.info("Web application configuration, using profiles: {}", Arrays.toString(env.getActiveProfiles()));
         EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
+
         if (!env.acceptsProfiles(Constants.SPRING_PROFILE_FAST)) {
             initMetrics(servletContext, disps);
         }
@@ -54,6 +56,8 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
             initGzipFilter(servletContext, disps);
         }
         initCharacterEncodingFilter(servletContext, disps);
+        initCrossOriginResourceSharingFilter(servletContext);
+
         log.info("Web application fully configured");
     }
 
@@ -162,6 +166,13 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         FilterRegistration.Dynamic dynamic = context.addFilter("cachingHttpHeadersFilter", filter);
         dynamic.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
         dynamic.setAsyncSupported(true);
+    }
+
+    private void initCrossOriginResourceSharingFilter(ServletContext context) {
+        CrossOriginResourceSharingFilter filter = new CrossOriginResourceSharingFilter();
+
+        FilterRegistration registration = context.addFilter("crossOriginResourceSharingFilter", filter);
+        registration.addMappingForUrlPatterns(null, false, "/*");
     }
 
     @Override

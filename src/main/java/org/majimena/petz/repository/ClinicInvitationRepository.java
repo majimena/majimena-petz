@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * クリニックスタッフ招待リポジトリ.
  */
-public interface ClinicInvitationRepository extends JpaRepository<ClinicInvitation, Long> {
+public interface ClinicInvitationRepository extends JpaRepository<ClinicInvitation, String> {
 
     ClinicInvitation findOneByActivationKey(String activationKey);
 

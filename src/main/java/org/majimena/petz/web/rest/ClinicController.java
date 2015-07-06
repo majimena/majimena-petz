@@ -71,7 +71,7 @@ public class ClinicController {
 
     @Timed
     @RequestMapping(value = "/clinics/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Clinic> get(@PathVariable Long id) {
+    public ResponseEntity<Clinic> get(@PathVariable String id) {
         Optional<Clinic> one = clinicService.getClinicById(id);
         return one
             .map(clinic -> new ResponseEntity<>(clinic, HttpStatus.OK))
@@ -80,7 +80,7 @@ public class ClinicController {
 
     @Timed
     @RequestMapping(value = "/clinics/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         clinicService.deleteClinic(id);
         return ResponseEntity.ok().build();
     }

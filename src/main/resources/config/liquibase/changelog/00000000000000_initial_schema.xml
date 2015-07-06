@@ -17,7 +17,7 @@
     -->
     <changeSet id="00000000000001" author="jhipster">
         <createTable tableName="JHI_USER">
-            <column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="login" type="varchar(50)">
@@ -67,7 +67,7 @@
         </createTable>
 
         <createTable tableName="JHI_USER_AUTHORITY">
-            <column name="user_id" type="bigint">
+            <column name="user_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="authority_name" type="varchar(50)">

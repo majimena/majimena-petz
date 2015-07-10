@@ -20,6 +20,8 @@ import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.ClinicStaffRepository;
 import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.security.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -35,17 +37,19 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
- * @see ClinicStaffServiceImpl
+ * @see ClinicInvitationServiceImpl
  */
 @RunWith(Enclosed.class)
-public class ClinicStaffServiceImplTest {
+public class ClinicInvitationServiceImplTest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClinicInvitationServiceImplTest.class);
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @WebAppConfiguration
     @SpringApplicationConfiguration(classes = Application.class)
     public static class InviteStaffTest {
 
-        private ClinicStaffServiceImpl sut = new ClinicStaffServiceImpl();
+        private ClinicInvitationServiceImpl sut = new ClinicInvitationServiceImpl();
 
         @Inject
         private SpringTemplateEngine templateEngine;
@@ -107,6 +111,8 @@ public class ClinicStaffServiceImplTest {
                 assertThat(from, is("noreply@majimena.org"));
                 assertThat(subject, is(notNullValue()));
                 assertThat(content, is(notNullValue()));
+
+                LOGGER.debug(content);
             }};
         }
 
@@ -128,7 +134,7 @@ public class ClinicStaffServiceImplTest {
     @SpringApplicationConfiguration(classes = Application.class)
     public static class ActivateTest {
 
-        private ClinicStaffServiceImpl sut = new ClinicStaffServiceImpl();
+        private ClinicInvitationServiceImpl sut = new ClinicInvitationServiceImpl();
 
         @Mocked
         private ClinicRepository clinicRepository;

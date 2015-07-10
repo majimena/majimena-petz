@@ -2,6 +2,8 @@ package org.majimena.petz.config;
 
 import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import cz.jirutka.spring.exhandler.support.HttpMessageConverterUtils;
+import org.majimena.petz.common.exceptions.ResourceConflictException;
+import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.web.servlet.handler.BindExceptionErrorMessageRestExceptionHandler;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +38,8 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
             .messageSource(httpErrorMessageSource())
             .defaultContentType(MediaType.APPLICATION_JSON)
             .addErrorMessageHandler(EmptyResultDataAccessException.class, HttpStatus.NOT_FOUND)
+            .addErrorMessageHandler(ResourceNotFoundException.class, HttpStatus.NOT_FOUND)
+            .addErrorMessageHandler(ResourceConflictException.class, HttpStatus.CONFLICT)
             .addHandler(new BindExceptionErrorMessageRestExceptionHandler())
             .build();
     }

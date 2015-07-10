@@ -55,6 +55,7 @@ public class TestUtils {
 
     public static class Detail {
         public static final String VALIDATION_FAILED = "The content you've send contains validation errors.";
+        public static final String ONE_VALIDATION_FAILED = "The content you've send contains 1 validation errors.";
     }
 
     public static class Message {

@@ -21,7 +21,8 @@ mail:
     protocol: smtp
     tls: false
     auth: false
-    from: noreply@petz.io
+# FIXME    from: noreply@petz.io
+    from: ken.todoroki@majimena.org
 
 authentication:
     oauth:

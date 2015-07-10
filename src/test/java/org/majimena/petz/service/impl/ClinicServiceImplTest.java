@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
+import org.majimena.petz.domain.Authority;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.ClinicStaff;
 import org.majimena.petz.domain.User;
@@ -19,6 +20,9 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
@@ -95,4 +99,45 @@ public class ClinicServiceImplTest {
         }
     }
 
+    @RunWith(SpringJUnit4ClassRunner.class)
+    @WebAppConfiguration
+    @SpringApplicationConfiguration(classes = Application.class)
+    public static class GetClinicStaffsByIdTest {
+
+        private ClinicServiceImpl sut = new ClinicServiceImpl();
+
+        @Mocked
+        private ClinicStaffRepository clinicStaffRepository;
+
+        @Mocked
+        private SecurityUtils securityUtils;
+
+        @Before
+        public void before() {
+            sut.setClinicStaffRepository(clinicStaffRepository);
+        }
+
+        @Test
+        public void クリニックに所属するスタッフが取得できること() throws Exception {
+            new NonStrictExpectations() {{
+                SecurityUtils.getCurrentUserId();
+                result = "u1";
+                clinicStaffRepository.findByClinicIdAndUserId("c1", "u1");
+                result = Optional.of(ClinicStaff.builder().id("1").build());
+                clinicStaffRepository.findByClinicId("c1");
+                result = Arrays.asList(ClinicStaff.builder().id("cs1")
+                    .clinic(Clinic.builder().id("c1").build())
+                    .user(User.builder().id("u1").authorities(new HashSet<>(Arrays.asList(new Authority("ROLE_USER")))).build())
+                    .role("ROLE_TEST").build());
+            }};
+
+            List<ClinicStaff> result = sut.getClinicStaffsById("c1");
+
+            assertThat(result.get(0).getId(), is("cs1"));
+            assertThat(result.get(0).getClinic().getId(), is("c1"));
+            assertThat(result.get(0).getUser().getId(), is("u1"));
+            assertThat(result.get(0).getUser().getAuthorities().size(), is(1));
+            assertThat(result.get(0).getRole(), is("ROLE_TEST"));
+        }
+    }
 }

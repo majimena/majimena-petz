@@ -29,7 +29,7 @@ public class AmazonSESEmailManager implements EmailManager {
         Content textContent = new Content().withData(content);
 
         // send text base email
-        Message message = new Message().withSubject(textSubject).withBody(new Body().withText(textContent));
+        Message message = new Message().withSubject(textSubject).withBody(new Body().withHtml(textContent));
         SendEmailRequest request = new SendEmailRequest().withSource(from).withDestination(destination).withMessage(message);
         logger.debug("TO: " + to);
         logger.debug("FROM: " + from);

@@ -13,7 +13,7 @@ import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.ClinicStaffRepository;
 import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.security.SecurityUtils;
-import org.majimena.petz.service.ClinicStaffService;
+import org.majimena.petz.service.ClinicInvitationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +31,7 @@ import java.util.Set;
  */
 @Service
 @Transactional
-public class ClinicStaffServiceImpl implements ClinicStaffService {
+public class ClinicInvitationServiceImpl implements ClinicInvitationService {
 
     @Inject
     private ClinicRepository clinicRepository;
@@ -86,7 +86,19 @@ public class ClinicStaffServiceImpl implements ClinicStaffService {
      * {@inheritDoc}
      */
     @Override
-    public void inviteStaff(String  clinicId, Set<String> emails) {
+    public Optional<ClinicInvitation> findClinicInvitationById(String invitationId) {
+        ClinicInvitation invitation = clinicInvitationRepository.findOne(invitationId);
+        if (invitation != null) {
+            invitation.getUser().getAuthorities().size();
+        }
+        return Optional.ofNullable(invitation);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void inviteStaff(String clinicId, Set<String> emails) {
         String loginId = SecurityUtils.getCurrentLogin();
         Optional<User> login = userRepository.findOneByLogin(loginId);
 
@@ -107,6 +119,7 @@ public class ClinicStaffServiceImpl implements ClinicStaffService {
             context.setVariable("email", email);
             context.setVariable("clinic", clinic);
             context.setVariable("user", login.get());
+            context.setVariable("invitation", invitation);
             context.setVariable("activationKey", activationKey);
             String subject = templateEngine.process("ClinicInvitation-subject", context);
             String content = templateEngine.process("ClinicInvitation-content", context);
@@ -133,5 +146,4 @@ public class ClinicStaffServiceImpl implements ClinicStaffService {
             clinicInvitationRepository.delete(one);
         }
     }
-
 }

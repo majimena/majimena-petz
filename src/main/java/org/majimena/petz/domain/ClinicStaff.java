@@ -1,5 +1,6 @@
 package org.majimena.petz.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -30,6 +31,7 @@ public class ClinicStaff extends AbstractAuditingEntity implements Serializable 
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;

@@ -1,5 +1,7 @@
 package org.majimena.petz.service.impl;
 
+import org.majimena.petz.common.exceptions.ResourceConflictException;
+import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.ClinicStaff;
 import org.majimena.petz.domain.User;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -68,6 +71,21 @@ public class ClinicServiceImpl implements ClinicService {
      * {@inheritDoc}
      */
     @Override
+    public List<ClinicStaff> getClinicStaffsById(String clinicId) {
+        // 自分が所属するクリニックのスタッフだけが取得できるようにチェックする
+        String currentUserId = SecurityUtils.getCurrentUserId();
+        Optional<ClinicStaff> staff = clinicStaffRepository.findByClinicIdAndUserId(clinicId, currentUserId);
+        staff.orElseThrow(() -> new ResourceNotFoundException("cannot read ClinicStaff for clinicId=[" + clinicId + "]"));
+
+        List<ClinicStaff> clinics = clinicStaffRepository.findByClinicId(clinicId);
+        clinics.stream().forEach(cs -> cs.getUser().getAuthorities().size()); // lazy loading authorities
+        return clinics;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Optional<Clinic> saveClinic(Clinic clinic) {
         // クリニックを登録
         Clinic save = clinicRepository.save(clinic);
@@ -100,7 +118,24 @@ public class ClinicServiceImpl implements ClinicService {
      */
     @Override
     public void deleteClinic(String clinicId) {
+        clinicStaffRepository.deleteAll();
         clinicRepository.delete(clinicId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteClinicStaff(String clinicId, String userId) {
+        // 自分が所属するクリニックのスタッフだけが取得できるようにチェックする
+        String currentUserId = SecurityUtils.getCurrentUserId();
+        Optional<ClinicStaff> staff = clinicStaffRepository.findByClinicIdAndUserId(clinicId, currentUserId);
+        staff.orElseThrow(() -> new ResourceNotFoundException("cannot read ClinicStaff for clinicId=[" + clinicId + "]")); // FIXME Exception type
+
+        // 該当ユーザーのクリニック紐付けを削除する
+        Optional<ClinicStaff> target = clinicStaffRepository.findByClinicIdAndUserId(clinicId, userId);
+        target.ifPresent(s -> clinicStaffRepository.delete(s));
+        target.orElseThrow(() -> new ResourceConflictException("conflict ClinicStaff resource for clinicId=[" + clinicId + "] and userId=[" + userId + "]"));
     }
 
 }

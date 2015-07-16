@@ -56,6 +56,7 @@
     <logger name="com.wordnik.swagger" level="WARN"/>
     <logger name="liquibase" level="WARN"/>
     <logger name="sun.rmi.transport" level="WARN"/>
+    <logger name="cz.jirutka.spring.exhandler.handlers.ErrorMessageRestExceptionHandler" level="INFO"/>
 
     <!-- log4jdbc-log4j2 -->
     <logger name="jdbc.sqlonly" level="WARN"/>

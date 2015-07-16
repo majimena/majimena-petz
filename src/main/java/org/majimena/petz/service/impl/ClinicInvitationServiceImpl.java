@@ -1,12 +1,17 @@
 package org.majimena.petz.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.majimena.framework.core.managers.EmailManager;
+import org.majimena.petz.common.exceptions.ApplicationException;
+import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
+import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.common.utils.RandomUtils;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.ClinicInvitation;
 import org.majimena.petz.domain.ClinicStaff;
 import org.majimena.petz.domain.User;
+import org.majimena.petz.domain.errors.ErrorCode;
 import org.majimena.petz.domain.user.Roles;
 import org.majimena.petz.repository.ClinicInvitationRepository;
 import org.majimena.petz.repository.ClinicRepository;
@@ -86,12 +91,14 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
      * {@inheritDoc}
      */
     @Override
-    public Optional<ClinicInvitation> findClinicInvitationById(String invitationId) {
+    public ClinicInvitation findClinicInvitationById(String invitationId) {
         ClinicInvitation invitation = clinicInvitationRepository.findOne(invitationId);
-        if (invitation != null) {
-            invitation.getUser().getAuthorities().size();
+        if (invitation == null) {
+            throw new ResourceCannotAccessException();
         }
-        return Optional.ofNullable(invitation);
+
+        invitation.getUser().getAuthorities().size();
+        return invitation;
     }
 
     /**
@@ -102,7 +109,7 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
         String loginId = SecurityUtils.getCurrentLogin();
         Optional<User> login = userRepository.findOneByLogin(loginId);
 
-        for (String email : emails) {
+        emails.stream().forEach(email -> {
             // クリニックへの招待待ちとして保存
             String activationKey = RandomUtils.generateActivationKey();
             Clinic clinic = clinicRepository.findOne(clinicId);
@@ -124,26 +131,31 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
             String subject = templateEngine.process("ClinicInvitation-subject", context);
             String content = templateEngine.process("ClinicInvitation-content", context);
             emailManager.send(email, fromEmail, subject, content);
-        }
+        });
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void activate(String activationKey) {
+    public void activate(String invitationId, String activationKey) {
         String login = SecurityUtils.getCurrentLogin();
-        ClinicInvitation one = clinicInvitationRepository.findOneByActivationKey(activationKey);
-        if (one != null) {
-            // クリニックスタッフとして紐付け登録して招待データは削除
-            Optional<User> user = userRepository.findOneByLogin(login);
-            ClinicStaff staff = ClinicStaff.builder()
-                .clinic(one.getClinic())
-                .user(user.orElseThrow(() -> new SystemException("get unsaved user.")))
-                .role(Roles.ROLE_STAFF.name())
-                .activatedDate(LocalDate.now()).build();
-            clinicStaffRepository.save(staff);
-            clinicInvitationRepository.delete(one);
+        ClinicInvitation invitation = clinicInvitationRepository.findOne(invitationId);
+
+        // 招待を承認してアクティベートする（validation済みであること）
+        Optional<User> user = userRepository.findOneByLogin(login);
+        ClinicStaff staff = ClinicStaff.builder()
+            .clinic(invitation.getClinic())
+            .user(user.orElseThrow(() -> new SystemException("get unsaved user.")))
+            .role(Roles.ROLE_STAFF.name())
+            .activatedDate(LocalDate.now()).build();
+
+        // アクティベーションキーの入力間違いがないかチェックする
+        if (!StringUtils.equals(activationKey, invitation.getActivationKey())) {
+            throw new ApplicationException(ErrorCode.PTZ_001203);
         }
+
+        clinicStaffRepository.save(staff);
+        clinicInvitationRepository.delete(invitation);
     }
 }

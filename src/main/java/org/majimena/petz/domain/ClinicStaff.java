@@ -28,7 +28,7 @@ public class ClinicStaff extends AbstractAuditingEntity implements Serializable 
 
     @Id
     @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
     @JsonIgnore

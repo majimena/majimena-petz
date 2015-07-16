@@ -1,22 +1,19 @@
 package org.majimena.petz.web.servlet.handler;
 
-import cz.jirutka.spring.exhandler.handlers.ErrorMessageRestExceptionHandler;
 import cz.jirutka.spring.exhandler.messages.ErrorMessage;
 import cz.jirutka.spring.exhandler.messages.ValidationErrorMessage;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
 
 /**
  * Created by todoken on 2015/06/25.
  */
-public class BindExceptionErrorMessageRestExceptionHandler extends ErrorMessageRestExceptionHandler<BindException> {
+public class BindExceptionRestExceptionHandler extends AbstractCustomRestExceptionHandler<BindException> {
 
-    public BindExceptionErrorMessageRestExceptionHandler() {
+    public BindExceptionRestExceptionHandler() {
         super(BindException.class, HttpStatus.BAD_REQUEST);
     }
 
@@ -34,13 +31,4 @@ public class BindExceptionErrorMessageRestExceptionHandler extends ErrorMessageR
 
         return message;
     }
-
-    protected String getMessage(ObjectError error, Locale locale) {
-        String message = super.getMessage(error.getCode(), locale);
-        if (StringUtils.isEmpty(message)) {
-            return error.getDefaultMessage();
-        }
-        return message;
-    }
-
 }

@@ -2,9 +2,11 @@ package org.majimena.petz.config;
 
 import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import cz.jirutka.spring.exhandler.support.HttpMessageConverterUtils;
+import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
 import org.majimena.petz.common.exceptions.ResourceConflictException;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
-import org.majimena.petz.web.servlet.handler.BindExceptionErrorMessageRestExceptionHandler;
+import org.majimena.petz.web.servlet.handler.ApplicationExceptionRestExceptionHandler;
+import org.majimena.petz.web.servlet.handler.BindExceptionRestExceptionHandler;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,14 +42,22 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
             .addErrorMessageHandler(EmptyResultDataAccessException.class, HttpStatus.NOT_FOUND)
             .addErrorMessageHandler(ResourceNotFoundException.class, HttpStatus.NOT_FOUND)
             .addErrorMessageHandler(ResourceConflictException.class, HttpStatus.CONFLICT)
-            .addHandler(new BindExceptionErrorMessageRestExceptionHandler())
+            .addErrorMessageHandler(ResourceCannotAccessException.class, HttpStatus.UNAUTHORIZED)
+            .addHandler(new BindExceptionRestExceptionHandler())
+            .addHandler(applicationExceptionRestExceptionHandler())
             .build();
+    }
+
+    public ApplicationExceptionRestExceptionHandler applicationExceptionRestExceptionHandler() {
+        ApplicationExceptionRestExceptionHandler handler = new ApplicationExceptionRestExceptionHandler();
+        handler.setMessageSource(httpErrorMessageSource());
+        return handler;
     }
 
     @Bean
     public MessageSource httpErrorMessageSource() {
         ReloadableResourceBundleMessageSource m = new ReloadableResourceBundleMessageSource();
-        m.setBasename("classpath:/i18n/messages");
+        m.setBasenames("classpath:/i18n/messages", "classpath:/i18n/errors");
         m.setDefaultEncoding("UTF-8");
         return m;
     }

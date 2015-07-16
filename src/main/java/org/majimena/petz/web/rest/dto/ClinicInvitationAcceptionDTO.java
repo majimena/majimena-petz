@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class ClinicInvitationAcceptionDTO implements Serializable {
 
     @NotEmpty
-    @Size(min = 20, max = 20)
+    @Size(max = 60)
     private String activationKey;
 
 }

@@ -165,7 +165,7 @@ public class ClinicInvitationServiceImplTest {
             new NonStrictExpectations() {{
                 SecurityUtils.getCurrentLogin();
                 result = "foo";
-                clinicInvitationRepository.findOneByActivationKey("1234567890");
+                clinicInvitationRepository.findOne("1");
                 result = ClinicInvitation.builder().id("1").email("").activationKey("1234567890")
                     .user(User.builder().id("10").login("login").build())
                     .clinic(Clinic.builder().id("100").name("テストクリニック").build()).build();
@@ -173,7 +173,7 @@ public class ClinicInvitationServiceImplTest {
                 result = Optional.of(User.builder().id("1000").login("foo").langKey("ja").build());
             }};
 
-            sut.activate("1234567890");
+            sut.activate("1", "1234567890");
 
             new Verifications() {{
                 ClinicStaff staff;
@@ -191,30 +191,12 @@ public class ClinicInvitationServiceImplTest {
             }};
         }
 
-        @Test
-        public void 招待が見つからない場合は何もしないこと() throws Exception {
-            new NonStrictExpectations() {{
-                SecurityUtils.getCurrentLogin();
-                result = "foo";
-                clinicInvitationRepository.findOneByActivationKey("1234567890");
-                result = null;
-                userRepository.findOneByLogin(anyString);
-                times = 0;
-                clinicStaffRepository.save((ClinicStaff) any);
-                times = 0;
-                clinicInvitationRepository.delete((ClinicInvitation) any);
-                times = 0;
-            }};
-
-            sut.activate("1234567890");
-        }
-
         @Test(expected = SystemException.class)
         public void ログインユーザが存在しない場合はシステムエラーになること() throws Exception {
             new NonStrictExpectations() {{
                 SecurityUtils.getCurrentLogin();
                 result = "foo";
-                clinicInvitationRepository.findOneByActivationKey("1234567890");
+                clinicInvitationRepository.findOne("1");
                 result = ClinicInvitation.builder().id("1").email("").activationKey("1234567890")
                     .user(User.builder().id("10").login("login").build())
                     .clinic(Clinic.builder().id("100").name("テストクリニック").build()).build();
@@ -222,7 +204,7 @@ public class ClinicInvitationServiceImplTest {
                 result = Optional.empty();
             }};
 
-            sut.activate("1234567890");
+            sut.activate("1", "1234567890");
         }
     }
 

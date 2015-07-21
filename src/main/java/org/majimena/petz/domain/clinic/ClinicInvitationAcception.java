@@ -1,4 +1,4 @@
-package org.majimena.petz.web.rest.dto;
+package org.majimena.petz.domain.clinic;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,11 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClinicInvitationAcceptionDTO implements Serializable {
+public class ClinicInvitationAcception implements Serializable {
+
+    private String clinicId;
+
+    private String clinicInvitationId;
 
     @NotEmpty
     @Size(max = 60)

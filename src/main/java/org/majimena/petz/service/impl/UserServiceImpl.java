@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.majimena.petz.common.utils.RandomUtils;
 import org.majimena.petz.domain.Authority;
 import org.majimena.petz.domain.User;
+import org.majimena.petz.domain.user.SignupRegistry;
 import org.majimena.petz.repository.AuthorityRepository;
 import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.security.SecurityUtils;
@@ -106,6 +107,30 @@ public class UserServiceImpl implements UserService {
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void saveUser(SignupRegistry registry) {
+        Authority authority = authorityRepository.findOne("ROLE_USER");
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(authority);
+
+        String encryptedPassword = passwordEncoder.encode(registry.getPassword());
+
+        User newUser = new User();
+        newUser.setLogin(registry.getEmail());
+        newUser.setPassword(encryptedPassword);
+        newUser.setEmail(registry.getEmail());
+        newUser.setLangKey("ja");
+        // new user is not active
+        newUser.setActivated(false);
+        // new user gets registration key
+        newUser.setActivationKey(RandomUtils.generateActivationKey());
+        newUser.setAuthorities(authorities);
+        userRepository.save(newUser);
     }
 
     @Override

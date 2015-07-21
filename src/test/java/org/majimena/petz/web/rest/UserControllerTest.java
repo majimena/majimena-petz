@@ -6,6 +6,7 @@ import org.majimena.petz.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.majimena.petz.web.api.user.UserController;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
@@ -23,13 +24,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Test class for the UserResource REST controller.
  *
- * @see UserResource
+ * @see UserController
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest
-public class UserResourceTest {
+public class UserControllerTest {
 
     @Inject
     private UserRepository userRepository;
@@ -38,9 +39,9 @@ public class UserResourceTest {
 
     @Before
     public void setup() {
-        UserResource userResource = new UserResource();
-        ReflectionTestUtils.setField(userResource, "userRepository", userRepository);
-        this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
+        UserController userController = new UserController();
+        ReflectionTestUtils.setField(userController, "userRepository", userRepository);
+        this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
     @Ignore

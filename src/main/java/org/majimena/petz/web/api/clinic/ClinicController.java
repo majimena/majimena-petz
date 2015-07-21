@@ -1,4 +1,4 @@
-package org.majimena.petz.web.rest;
+package org.majimena.petz.web.api.clinic;
 
 import com.codahale.metrics.annotation.Timed;
 import org.majimena.petz.domain.Clinic;

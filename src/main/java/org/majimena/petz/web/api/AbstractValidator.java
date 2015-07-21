@@ -1,4 +1,4 @@
-package org.majimena.petz.web.validator;
+package org.majimena.petz.web.api;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

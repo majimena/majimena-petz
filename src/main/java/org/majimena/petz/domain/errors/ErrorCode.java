@@ -5,12 +5,16 @@ package org.majimena.petz.domain.errors;
  */
 public enum ErrorCode {
 
+    // User
+    PTZ_000101,
+
     // Clinic
     // Clinic Invitation
     PTZ_001201,
     PTZ_001202,
     PTZ_001203,
+    PTZ_001204,
 
-    PTZ_999999
+    PTZ_999999;
 
 }

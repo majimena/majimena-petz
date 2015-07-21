@@ -1,4 +1,4 @@
-package org.majimena.petz.web.rest;
+package org.majimena.petz.web.api.clinic;
 
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -11,6 +11,8 @@ import org.majimena.petz.TestUtils;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.service.ClinicService;
+import org.majimena.petz.web.api.clinic.ClinicController;
+import org.majimena.petz.web.rest.ProjectResource;
 import org.majimena.petz.web.rest.util.PaginationUtil;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.PageImpl;

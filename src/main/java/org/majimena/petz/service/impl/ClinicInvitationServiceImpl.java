@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.majimena.framework.core.managers.EmailManager;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
-import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.common.utils.RandomUtils;
 import org.majimena.petz.domain.Clinic;

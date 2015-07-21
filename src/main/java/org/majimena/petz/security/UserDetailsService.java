@@ -34,9 +34,10 @@ public class UserDetailsService implements org.springframework.security.core.use
         userFromDatabase.orElseThrow(() -> new UsernameNotFoundException("User " + login + " was not found in the database"));
 
         User user = userFromDatabase.get();
-        if (!user.getActivated()) {
-            throw new UserNotActivatedException("User " + login + " was not activated");
-        }
+        // TODO アクティベートされていなくてもWARNINGで入れる？
+//        if (!user.getActivated()) {
+//            throw new UserNotActivatedException("User " + login + " was not activated");
+//        }
 
         List<GrantedAuthority> authorities = user.getAuthorities().stream()
             .map(authority -> new SimpleGrantedAuthority(authority.getName()))

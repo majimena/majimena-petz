@@ -1,6 +1,7 @@
 package org.majimena.petz.service;
 
 import org.majimena.petz.domain.User;
+import org.majimena.petz.domain.user.SignupRegistry;
 
 import java.util.Optional;
 
@@ -15,7 +16,10 @@ public interface UserService {
 
     Optional<User> requestPasswordReset(String mail);
 
+    @Deprecated
     User createUserInformation(String login, String password, String firstName, String lastName, String email, String langKey);
+
+    void saveUser(SignupRegistry registry);
 
     void updateUserInformation(String firstName, String lastName, String email);
 

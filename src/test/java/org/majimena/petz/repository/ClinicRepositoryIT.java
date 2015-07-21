@@ -9,6 +9,7 @@ import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.User;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -35,20 +36,18 @@ public class ClinicRepositoryIT {
         private EntityManager entityManager;
 
         @Test
+        @Transactional
         @DatabaseSetup("classpath:/testdata/clinic.xml")
         public void sampleTest() throws Exception {
-            User user = entityManager.find(User.class, "1");
-
-            sut.save(new Clinic(null, "name", "description", "email"));
+            sut.save(new Clinic(null, "name", "description", "email@localhost.com"));
 
             List<Clinic> results = sut.findAll();
             assertThat(results.size(), is(3));
             Clinic result = results.get(results.size() - 1);
             assertThat(result.getId(), is(notNullValue()));
-            assertThat(result.getEmail(), is("email"));
+            assertThat(result.getEmail(), is("email@localhost.com"));
             assertThat(result.getName(), is("name"));
             assertThat(result.getDescription(), is("description"));
         }
     }
-
 }

@@ -20,7 +20,7 @@ public interface ClinicService {
 
     List<ClinicStaff> getClinicStaffsById(String clinicId);
 
-    Optional<Clinic> saveClinic(Clinic clinic);
+    Clinic saveClinic(Clinic clinic);
 
     Optional<Clinic> updateClinic(Clinic clinic);
 

@@ -73,11 +73,11 @@ public class ClinicServiceImplTest {
                 result = User.builder().id("1").build();
             }};
 
-            Optional<Clinic> result = sut.saveClinic(testData);
+            Clinic result = sut.saveClinic(testData);
 
-            assertThat(result.get().getEmail(), is("test.clinic"));
-            assertThat(result.get().getName(), is("テストクリニック"));
-            assertThat(result.get().getDescription(), is("テストクリニックの説明"));
+            assertThat(result.getEmail(), is("test.clinic"));
+            assertThat(result.getName(), is("テストクリニック"));
+            assertThat(result.getDescription(), is("テストクリニックの説明"));
 
             new Verifications() {{
                 ClinicStaff staff;

@@ -86,7 +86,7 @@ public class ClinicServiceImpl implements ClinicService {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Clinic> saveClinic(Clinic clinic) {
+    public Clinic saveClinic(Clinic clinic) {
         // クリニックを登録
         Clinic save = clinicRepository.save(clinic);
 
@@ -96,7 +96,7 @@ public class ClinicServiceImpl implements ClinicService {
         ClinicStaff staff = new ClinicStaff(null, save, user, "ROLE_OWNER", LocalDate.now());
         clinicStaffRepository.save(staff);
 
-        return Optional.ofNullable(save);
+        return save;
     }
 
     /**

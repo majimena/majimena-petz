@@ -65,10 +65,10 @@ public class ClinicControllerTest {
 
             new NonStrictExpectations() {{
                 clinicService.saveClinic(testData);
-                result = Optional.of(resultData);
+                result = resultData;
             }};
 
-            mockMvc.perform(post("/api/clinics")
+            mockMvc.perform(post("/api/v1/clinics")
                 .contentType(TestUtils.APPLICATION_JSON_UTF8)
                 .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
@@ -79,7 +79,7 @@ public class ClinicControllerTest {
         public void 名称が入力されていない場合はエラーになること() throws Exception {
             final Clinic testData = Clinic.builder().email("test@test.clinic").build();
 
-            mockMvc.perform(post("/api/clinics")
+            mockMvc.perform(post("/api/v1/clinics")
                 .contentType(TestUtils.APPLICATION_JSON_UTF8)
                 .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
@@ -90,7 +90,7 @@ public class ClinicControllerTest {
         public void メールアドレス形式ではない場合はエラーになること() throws Exception {
             final Clinic testData = Clinic.builder().name("テストクリニック").description("説明").email("test.clinic").build();
 
-            mockMvc.perform(post("/api/clinics")
+            mockMvc.perform(post("/api/v1/clinics")
                 .contentType(TestUtils.APPLICATION_JSON_UTF8)
                 .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
@@ -127,7 +127,7 @@ public class ClinicControllerTest {
                 result = new PageImpl(Arrays.asList(testData1, testData2), pageable, 2);
             }};
 
-            mockMvc.perform(get("/api/clinics")
+            mockMvc.perform(get("/api/v1/clinics")
                 .param("page", "1")
                 .param("per_page", "1"))
                 .andDo(print())
@@ -165,7 +165,7 @@ public class ClinicControllerTest {
                 result = Optional.of(Clinic.builder().id("1").email("test.clinic").name("テストクリニック").description("テストクリニックの説明").build());
             }};
 
-            mockMvc.perform(get("/api/clinics/{id}", "1"))
+            mockMvc.perform(get("/api/v1/clinics/{id}", "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"))
@@ -182,7 +182,7 @@ public class ClinicControllerTest {
                 result = Optional.empty();
             }};
 
-            mockMvc.perform(get("/api/clinics/{id}", "0"))
+            mockMvc.perform(get("/api/v1/clinics/{id}", "0"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
         }
@@ -217,7 +217,7 @@ public class ClinicControllerTest {
                 result = Optional.of(resultData);
             }};
 
-            mockMvc.perform(put("/api/clinics")
+            mockMvc.perform(put("/api/v1/clinics/1")
                 .contentType(TestUtils.APPLICATION_JSON_UTF8)
                 .content(TestUtils.convertObjectToJsonBytes(testData)))
                 .andDo(print())
@@ -250,7 +250,7 @@ public class ClinicControllerTest {
                 clinicService.deleteClinic("1");
             }};
 
-            mockMvc.perform(delete("/api/clinics/{id}", "1")
+            mockMvc.perform(delete("/api/v1/clinics/{id}", "1")
                 .accept(TestUtils.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(status().isOk());

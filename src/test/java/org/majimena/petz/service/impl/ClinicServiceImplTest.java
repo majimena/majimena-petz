@@ -62,11 +62,11 @@ public class ClinicServiceImplTest {
 
         @Test
         public void 正しく登録されること() throws Exception {
-            Clinic testData = Clinic.builder().code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
+            Clinic testData = Clinic.builder().email("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
 
             new NonStrictExpectations() {{
                 clinicRepository.save(testData);
-                result = Clinic.builder().id("1").code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
+                result = Clinic.builder().id("1").email("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
                 SecurityUtils.getCurrentUserId();
                 result = 1L;
                 userRepository.findOne("1");
@@ -75,7 +75,7 @@ public class ClinicServiceImplTest {
 
             Optional<Clinic> result = sut.saveClinic(testData);
 
-            assertThat(result.get().getCode(), is("test.clinic"));
+            assertThat(result.get().getEmail(), is("test.clinic"));
             assertThat(result.get().getName(), is("テストクリニック"));
             assertThat(result.get().getDescription(), is("テストクリニックの説明"));
 

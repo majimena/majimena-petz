@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.majimena.framework.persistence.converter.LocalDatePersistenceConverter;
+import org.majimena.framework.persistence.converters.LocalDatePersistenceConverter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

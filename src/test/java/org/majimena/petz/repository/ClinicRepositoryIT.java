@@ -39,13 +39,13 @@ public class ClinicRepositoryIT {
         public void sampleTest() throws Exception {
             User user = entityManager.find(User.class, "1");
 
-            sut.save(new Clinic(null, "code", "name", "description"));
+            sut.save(new Clinic(null, "name", "description", "email"));
 
             List<Clinic> results = sut.findAll();
             assertThat(results.size(), is(3));
             Clinic result = results.get(results.size() - 1);
             assertThat(result.getId(), is(notNullValue()));
-            assertThat(result.getCode(), is("code"));
+            assertThat(result.getEmail(), is("email"));
             assertThat(result.getName(), is("name"));
             assertThat(result.getDescription(), is("description"));
         }

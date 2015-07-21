@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,16 +31,16 @@ public class Clinic extends AbstractAuditingEntity implements Serializable {
 
     @NotNull
     @Size(max = 60)
-    @Column(name = "code", length = 60, nullable = false)
-    private String code;
-
-    @NotNull
-    @Size(max = 60)
     @Column(name = "name", length = 60, nullable = false)
     private String name;
 
     @Size(max = 200)
     @Column(name = "description", length = 200, nullable = true)
     private String description;
+
+    @Email
+    @Size(max = 100)
+    @Column(name = "email", length = 100, nullable = true)
+    private String email;
 
 }

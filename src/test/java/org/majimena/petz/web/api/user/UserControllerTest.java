@@ -1,4 +1,4 @@
-package org.majimena.petz.web.rest;
+package org.majimena.petz.web.api.user;
 
 import org.junit.Ignore;
 import org.majimena.petz.Application;
@@ -47,7 +47,7 @@ public class UserControllerTest {
     @Ignore
     @Test
     public void testGetExistingUser() throws Exception {
-        restUserMockMvc.perform(get("/api/users/admin")
+        restUserMockMvc.perform(get("/api/v1/users/admin")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -56,7 +56,7 @@ public class UserControllerTest {
 
     @Test
     public void testGetUnknownUser() throws Exception {
-        restUserMockMvc.perform(get("/api/users/unknown")
+        restUserMockMvc.perform(get("/api/v1/users/unknown")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }

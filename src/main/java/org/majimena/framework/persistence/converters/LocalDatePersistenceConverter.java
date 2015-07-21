@@ -1,4 +1,4 @@
-package org.majimena.framework.persistence.converter;
+package org.majimena.framework.persistence.converters;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

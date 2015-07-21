@@ -11,7 +11,6 @@ import org.majimena.petz.TestUtils;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.service.ClinicService;
-import org.majimena.petz.web.api.clinic.ClinicController;
 import org.majimena.petz.web.rest.ProjectResource;
 import org.majimena.petz.web.rest.util.PaginationUtil;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -61,8 +60,8 @@ public class ClinicControllerTest {
 
         @Test
         public void サービスが呼び出されて正常終了すること() throws Exception {
-            final Clinic testData = Clinic.builder().code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
-            final Clinic resultData = Clinic.builder().id("1").code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
+            final Clinic testData = Clinic.builder().email("test@test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
+            final Clinic resultData = Clinic.builder().id("1").email("test@test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
 
             new NonStrictExpectations() {{
                 clinicService.saveClinic(testData);
@@ -77,8 +76,8 @@ public class ClinicControllerTest {
         }
 
         @Test
-        public void コードが入力されていない場合はエラーになること() throws Exception {
-            final Clinic testData = Clinic.builder().name("テスト").build();
+        public void 名称が入力されていない場合はエラーになること() throws Exception {
+            final Clinic testData = Clinic.builder().email("test@test.clinic").build();
 
             mockMvc.perform(post("/api/clinics")
                 .contentType(TestUtils.APPLICATION_JSON_UTF8)
@@ -88,8 +87,8 @@ public class ClinicControllerTest {
         }
 
         @Test
-        public void 名称が入力されていない場合はエラーになること() throws Exception {
-            final Clinic testData = Clinic.builder().code("test.clinic").build();
+        public void メールアドレス形式ではない場合はエラーになること() throws Exception {
+            final Clinic testData = Clinic.builder().name("テストクリニック").description("説明").email("test.clinic").build();
 
             mockMvc.perform(post("/api/clinics")
                 .contentType(TestUtils.APPLICATION_JSON_UTF8)
@@ -120,8 +119,8 @@ public class ClinicControllerTest {
 
         @Test
         public void ページングされてデータが取得できること() throws Exception {
-            final Clinic testData1 = Clinic.builder().code("test1.clinic").name("テストクリニック1").description("テストクリニック1の説明").build();
-            final Clinic testData2 = Clinic.builder().code("test2.clinic").name("テストクリニック2").description("テストクリニック2の説明").build();
+            final Clinic testData1 = Clinic.builder().email("test1.clinic").name("テストクリニック1").description("テストクリニック1の説明").build();
+            final Clinic testData2 = Clinic.builder().email("test2.clinic").name("テストクリニック2").description("テストクリニック2の説明").build();
             final Pageable pageable = PaginationUtil.generatePageRequest(1, 1);
             new NonStrictExpectations() {{
                 clinicService.getClinics(new ClinicCriteria(), pageable);
@@ -163,7 +162,7 @@ public class ClinicControllerTest {
         public void データが取得できること() throws Exception {
             new NonStrictExpectations() {{
                 clinicService.getClinicById("1");
-                result = Optional.of(Clinic.builder().id("1").code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build());
+                result = Optional.of(Clinic.builder().id("1").email("test.clinic").name("テストクリニック").description("テストクリニックの説明").build());
             }};
 
             mockMvc.perform(get("/api/clinics/{id}", "1"))
@@ -171,7 +170,7 @@ public class ClinicControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"))
                 .andExpect(jsonPath("$.id", is("1")))
-                .andExpect(jsonPath("$.code", is("test.clinic")))
+                .andExpect(jsonPath("$.email", is("test.clinic")))
                 .andExpect(jsonPath("$.name", is("テストクリニック")))
                 .andExpect(jsonPath("$.description", is("テストクリニックの説明")));
         }
@@ -210,8 +209,8 @@ public class ClinicControllerTest {
 
         @Test
         public void updateProject() throws Exception {
-            final Clinic testData = Clinic.builder().id("1").code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
-            final Clinic resultData = Clinic.builder().id("1").code("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
+            final Clinic testData = Clinic.builder().id("1").email("test@test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
+            final Clinic resultData = Clinic.builder().id("1").email("test@test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
 
             new NonStrictExpectations() {{
                 clinicService.updateClinic(testData);

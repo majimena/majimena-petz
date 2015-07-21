@@ -108,6 +108,7 @@ public class ClinicServiceImpl implements ClinicService {
         one.ifPresent(c -> {
             c.setName(clinic.getName());
             c.setDescription(clinic.getDescription());
+            c.setEmail(clinic.getEmail());
             clinicRepository.save(c);
         });
         return one;

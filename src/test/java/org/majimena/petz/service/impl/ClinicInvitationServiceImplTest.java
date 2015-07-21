@@ -87,7 +87,7 @@ public class ClinicInvitationServiceImplTest {
                 userRepository.findOneByLogin("login");
                 result = Optional.of(User.builder().id("1").login("login").langKey("ja").build());
                 clinicRepository.findOne("10");
-                result = Clinic.builder().id("10").code("clinic.com").name("テストクリニック").description("テストクリニックの説明").build();
+                result = Clinic.builder().id("10").name("テストクリニック").description("テストクリニックの説明").build();
                 userRepository.findOneByEmail("test@mail.com");
                 result = Optional.of(User.builder().id("100").email("test@mail.com").build());
             }};

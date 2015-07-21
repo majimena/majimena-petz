@@ -1700,7 +1700,7 @@ html {
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/webapp\/bower_components\/bootstrap-sass\/assets\/stylesheets\/bootstrap\/_scaffolding\.scss}line{font-family:\0000327}}
 body {
-  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-family: "Roboto", "Droid Sans", "ヒラギノ角ゴ Pro W4", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.42857;
   color: #666666;
@@ -2087,7 +2087,7 @@ a.bg-danger:hover {
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/webapp\/bower_components\/bootstrap-sass\/assets\/stylesheets\/bootstrap\/_type\.scss}line{font-family:\00003138}}
-.page-header, .page-title {
+.page-header {
   padding-bottom: 9px;
   margin: 40px 0 20px;
   border-bottom: 1px solid #eeeeee;
@@ -4499,14 +4499,14 @@ select[multiple].input-lg,
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/webapp\/bower_components\/bootstrap-sass\/assets\/stylesheets\/bootstrap\/_buttons\.scss}line{font-family:\0000371}}
 .btn-info {
   color: #fff;
-  background-color: #5bc0de;
-  border-color: #46b8da;
+  background-color: #999999;
+  border-color: gray;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/webapp\/bower_components\/bootstrap-sass\/assets\/stylesheets\/bootstrap\/mixins\/_buttons\.scss}line{font-family:\0000311}}
 .btn-info:hover, .btn-info:focus, .btn-info.focus, .btn-info:active, .btn-info.active, .open > .btn-info.dropdown-toggle {
   color: #fff;
-  background-color: #31b0d5;
-  border-color: #269abc;
+  background-color: gray;
+  border-color: #616161;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/webapp\/bower_components\/bootstrap-sass\/assets\/stylesheets\/bootstrap\/mixins\/_buttons\.scss}line{font-family:\0000321}}
 .btn-info:active, .btn-info.active, .open > .btn-info.dropdown-toggle {
@@ -4514,12 +4514,12 @@ select[multiple].input-lg,
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/webapp\/bower_components\/bootstrap-sass\/assets\/stylesheets\/bootstrap\/mixins\/_buttons\.scss}line{font-family:\0000329}}
 .btn-info.disabled, .btn-info.disabled:hover, .btn-info.disabled:focus, .btn-info.disabled.focus, .btn-info.disabled:active, .btn-info.disabled.active, .btn-info[disabled], .btn-info[disabled]:hover, .btn-info[disabled]:focus, .btn-info[disabled].focus, .btn-info[disabled]:active, .btn-info[disabled].active, fieldset[disabled] .btn-info, fieldset[disabled] .btn-info:hover, fieldset[disabled] .btn-info:focus, fieldset[disabled] .btn-info.focus, fieldset[disabled] .btn-info:active, fieldset[disabled] .btn-info.active {
-  background-color: #5bc0de;
-  border-color: #46b8da;
+  background-color: #999999;
+  border-color: gray;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/webapp\/bower_components\/bootstrap-sass\/assets\/stylesheets\/bootstrap\/mixins\/_buttons\.scss}line{font-family:\0000340}}
 .btn-info .badge {
-  color: #5bc0de;
+  color: #999999;
   background-color: #fff;
 }
 
@@ -4765,7 +4765,7 @@ tbody.collapse.in {
 .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
   text-decoration: none;
   color: #262626;
-  background-color: #f5f5f5;
+  background-color: #eeeeee;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/webapp\/bower_components\/bootstrap-sass\/assets\/stylesheets\/bootstrap\/_dropdowns\.scss}line{font-family:\0000387}}
@@ -5447,7 +5447,7 @@ tbody.collapse.in {
 .navbar {
   position: relative;
   min-height: 40px;
-  margin-bottom: 0px;
+  margin-bottom: 20px;
   border: 1px solid transparent;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/webapp\/bower_components\/bootstrap-sass\/assets\/stylesheets\/bootstrap\/mixins\/_clearfix\.scss}line{font-family:\0000314}}
@@ -5879,7 +5879,7 @@ tbody.collapse.in {
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/webapp\/bower_components\/bootstrap-sass\/assets\/stylesheets\/bootstrap\/_navbar\.scss}line{font-family:\00003402}}
 .navbar-default .navbar-brand {
-  color: #ffffff;
+  color: #fff;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/webapp\/bower_components\/bootstrap-sass\/assets\/stylesheets\/bootstrap\/_navbar\.scss}line{font-family:\00003404}}
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
@@ -7649,7 +7649,7 @@ button.close {
   z-index: 1070;
   display: block;
   visibility: visible;
-  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-family: "Roboto", "Droid Sans", "ヒラギノ角ゴ Pro W4", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Arial, sans-serif;
   font-size: 12px;
   font-weight: normal;
   line-height: 1.4;
@@ -7776,7 +7776,7 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-family: "Roboto", "Droid Sans", "ヒラギノ角ゴ Pro W4", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Arial, sans-serif;
   font-size: 14px;
   font-weight: normal;
   line-height: 1.42857;
@@ -8654,32 +8654,59 @@ body {
   padding-top: 40px;
   font-weight: 300;
   text-rendering: optimizelegibility;
+  /*    -webkit-font-smoothing: antialiased;*/
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003126}}
+/* margin style */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003128}}
+.margin-right {
+  margin-right: 0.5em;
+}
+
+/* header style */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003133}}
+header h3 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+/* tab style */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003139}}
+.tab-content header > h4 {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+/* table style */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003145}}
 .table > thead > tr > th, .table > thead > tr > td,
 .table > tbody > tr > th, .table > tbody > tr > td,
 .table > tfoot > tr > th, .table > tfoot > tr > td {
   vertical-align: middle;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003132}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003150}}
+.table-inner > thead > tr > th {
+  font-size: 12px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003154}}
 .form-control {
   border-width: 2px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003135}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003157}}
 .help-block {
   margin: 5px 0;
 }
 
 /* customize navbar */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003140}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003162}}
 .navbar-default {
   border-color: #5bc0de;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003143}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003165}}
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus,
@@ -8693,94 +8720,59 @@ body {
 }
 
 /* customize dropdown */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003156}}
-.dropdown-menu {
-  padding: 0;
-  border-radius: initial;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003160}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003178}}
 .dropdown-menu > li > a {
-  padding: 0.5em 5em 0.5em 1em;
+  padding: 0.5em 4em 0.5em 1em;
 }
 
-/* ========== override sb-admin2 ========== */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003165}}
-#page-wrapper {
-  padding: 0;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003169}}
-.sidebar {
-  margin-top: 1px;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003172}}
-.sidebar ul li {
-  border-bottom: none;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003175}}
-.sidebar ul li a {
-  white-space: nowrap;
-  color: gray;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003179}}
-.sidebar ul li.active > a {
-  color: black;
-  background-color: #eeeeee;
-}
-
+/* modal style */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003183}}
-#sidebar-wrapper-wrapper {
-  height: auto !important;
-  margin: 0 auto -60px;
-  min-height: 100%;
-  padding: 0 0 60px;
+.modal-header {
+  background-color: #eee;
+  border-radius: 4px 4px 0 0;
 }
 
 /* ========== override fontawesome ========== */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003191}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003189}}
 .fa-fw {
   margin-right: 0.2em;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003194}}
-#side-menu .fa-fw {
-  margin-right: 0.7em;
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003192}}
+.fa-af {
+  margin-left: 0.4em;
 }
 
 /* ========== override ng-notify styles */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003199}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003197}}
 .ngn {
   font-size: 14px;
   padding: 1em 3em 1em 1em;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003203}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003201}}
 .ngn-top {
   top: 40px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003206}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003204}}
 .ngn-success {
   color: #3c763d;
   background-color: #dff0d8;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003210}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003208}}
 .ngn-error {
   color: #a94442;
   background-color: #f2dede;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003214}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003212}}
 .ngn-dismiss:hover {
   background-color: inherit;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003217}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003215}}
 .ngn-dismiss {
   font-size: 1.5em;
   color: #777777;
@@ -8794,80 +8786,27 @@ body {
 
 /* ========== custom styles ========== */
 /* container */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003230}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003228}}
 .single-form-container {
   max-width: 750px;
   padding-top: 20px;
 }
 
-/* sidebar menu and content defs */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003232}}
+.single-contents {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003236}}
-#page-wrapper.sidebar-collapse {
-  margin-left: 50px;
-  transition: all 0.2s ease-out 0s;
+.fluid-form-container {
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003240}}
-#page-wrapper.sidebar-fullsize {
-  margin-left: 250px;
-  transition: all 0.2s ease-out 0s;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003244}}
-#sidebar-wrapper.sidebar-fullsize {
-  transition: all 0.2s ease-out 0s;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003249}}
-#sidebar-wrapper.sidebar.sidebar-collapse {
-  width: 50px;
-  transition: all 0.2s ease-out 0s;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003253}}
-#sidebar-wrapper.sidebar-collapse span {
-  display: none;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003256}}
-#sidebar-wrapper #sidebar-footer {
-  background-color: #fff;
-  font-size: 12px;
-  width: 250px;
-  border-top: 1px solid #d8d8d8;
-  position: fixed;
-  bottom: 0;
-}
-
-@media screen and (max-width: 480px) {
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003265}}
-  #sidebar-wrapper #sidebar-footer {
-    display: none;
-  }
-}
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003269}}
-#sidebar-wrapper.sidebar-collapse #sidebar-footer {
-  width: 50px;
-  transition: all 0.2s ease-out 0s;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003273}}
-#sidebar-collapse-toggle {
-  width: 50px;
-  float: right;
-  display: block;
-  padding: 10px 15px;
-  text-align: center;
-}
-
-/* page header */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003282}}
-.page-title {
-  margin: 20px 0;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003286}}
-.page-title .description {
-  font-size: 12px;
-  margin: 0;
+/* images */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/todoken\/Projects\/majimena\/majimena-petz\/src\/main\/scss\/main\.scss}line{font-family:\00003243}}
+img.img-gravatar {
+  border-radius: 3px;
 }

@@ -1,10 +1,15 @@
 'use strict';
 
-angular.module('majimenatestApp')
+angular.module('petzioApp')
     .config(function ($stateProvider) {
         $stateProvider
             .state('entity', {
                 abstract: true,
-                parent: 'main'
+                parent: 'main',
+                views: {
+                    'content@': {
+                        templateUrl: 'scripts/app/entities/entity.html'
+                    }
+                },
             });
     });

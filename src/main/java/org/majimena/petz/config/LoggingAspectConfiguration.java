@@ -1,6 +1,6 @@
 package org.majimena.petz.config;
 
-import org.majimena.petz.logging.LoggingAspect;
+import org.majimena.petz.common.logging.LoggingAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;

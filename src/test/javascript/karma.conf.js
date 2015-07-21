@@ -47,6 +47,7 @@ module.exports = function (config) {
             'main/webapp/bower_components/flot.tooltip/js/jquery.flot.tooltip.js',
             'main/webapp/bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js',
             'main/webapp/bower_components/ng-notify/src/scripts/ng-notify.js',
+            'main/webapp/bower_components/angular-gravatar/build/angular-gravatar.js',
             'main/webapp/bower_components/angular-mocks/angular-mocks.js',
             // endbower
             'main/webapp/scripts/app/app.js',

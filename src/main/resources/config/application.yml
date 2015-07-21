@@ -21,19 +21,20 @@ mail:
     protocol: smtp
     tls: false
     auth: false
-    from: noreply@petzclinic.io
+# FIXME    from: noreply@petz.io
+    from: ken.todoroki@majimena.org
 
 authentication:
     oauth:
         clientid: majimenatestapp
         secret: mySecretOAuthSecret
-        # Token is valid 30 minutes
-        tokenValidityInSeconds: 1800
+        # Token is valid 10 hours
+        tokenValidityInSeconds: 36000
 
 swagger:
-    title: majimenatest API
-    description: majimenatest applications and beyond!
-    termsOfServiceUrl: http://jhipster.github.io/
+    title: petz.io API
+    description: petz.io applications and beyond!
+    termsOfServiceUrl: http://petz.io/
     contact:
-    license: Apache 2.0
-    licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
+    license: CC BY-NC
+    licenseUrl: https://creativecommons.org/licenses/by-nc/4.0/legalcode

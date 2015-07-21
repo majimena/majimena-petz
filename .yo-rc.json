@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "baseName": "majimenatest",
+    "baseName": "petzio",
     "packageName": "org.majimena.petz",
     "packageFolder": "org/majimena/petz",
     "authenticationType": "oauth2",

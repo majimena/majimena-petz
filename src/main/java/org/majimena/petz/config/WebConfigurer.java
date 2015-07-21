@@ -4,6 +4,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.MetricsServlet;
 import org.majimena.petz.web.filter.CachingHttpHeadersFilter;
+import org.majimena.petz.web.filter.CrossOriginResourceSharingFilter;
 import org.majimena.petz.web.filter.StaticResourcesProductionFilter;
 import org.majimena.petz.web.filter.gzip.GZipServletFilter;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.inject.Inject;
 import javax.servlet.*;
@@ -30,7 +32,7 @@ import java.util.Map;
  */
 @Configuration
 @AutoConfigureAfter(CacheConfiguration.class)
-public class WebConfigurer implements ServletContextInitializer, EmbeddedServletContainerCustomizer {
+public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInitializer implements ServletContextInitializer, EmbeddedServletContainerCustomizer {
 
     private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
 
@@ -44,6 +46,7 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
     public void onStartup(ServletContext servletContext) throws ServletException {
         log.info("Web application configuration, using profiles: {}", Arrays.toString(env.getActiveProfiles()));
         EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
+
         if (!env.acceptsProfiles(Constants.SPRING_PROFILE_FAST)) {
             initMetrics(servletContext, disps);
         }
@@ -53,7 +56,14 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
             initGzipFilter(servletContext, disps);
         }
         initCharacterEncodingFilter(servletContext, disps);
+        initCrossOriginResourceSharingFilter(servletContext);
+
         log.info("Web application fully configured");
+    }
+
+    @Override
+    protected String[] getServletMappings() {
+        return new String[0];
     }
 
     /**
@@ -156,5 +166,27 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
         FilterRegistration.Dynamic dynamic = context.addFilter("cachingHttpHeadersFilter", filter);
         dynamic.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
         dynamic.setAsyncSupported(true);
+    }
+
+    private void initCrossOriginResourceSharingFilter(ServletContext context) {
+        CrossOriginResourceSharingFilter filter = new CrossOriginResourceSharingFilter();
+
+        FilterRegistration registration = context.addFilter("crossOriginResourceSharingFilter", filter);
+        registration.addMappingForUrlPatterns(null, false, "/*");
+    }
+
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return new Class<?>[0];
+    }
+
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class<?>[0];
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic reg) {
+        reg.setInitParameter("throwExceptionIfNoHandlerFound", "true");
     }
 }

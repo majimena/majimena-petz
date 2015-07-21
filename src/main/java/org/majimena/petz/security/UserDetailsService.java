@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.List;
 
 /**
  * Authenticate a user from the database.
@@ -30,19 +30,18 @@ public class UserDetailsService implements org.springframework.security.core.use
     @Override
     @Transactional
     public UserDetails loadUserByUsername(final String login) {
-        log.debug("Authenticating {}", login);
-        String lowercaseLogin = login.toLowerCase();
-        Optional<User> userFromDatabase =  userRepository.findOneByLogin(lowercaseLogin);
-        return userFromDatabase.map(user -> {
-            if (!user.getActivated()) {
-                throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
-            }
-            List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
-                    .map(authority -> new SimpleGrantedAuthority(authority.getName()))
-                    .collect(Collectors.toList());
-            return new org.springframework.security.core.userdetails.User(lowercaseLogin,
-                    user.getPassword(),
-                    grantedAuthorities);
-        }).orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
+        Optional<User> userFromDatabase = userRepository.findOneByLogin(login);
+        userFromDatabase.orElseThrow(() -> new UsernameNotFoundException("User " + login + " was not found in the database"));
+
+        User user = userFromDatabase.get();
+        // TODO アクティベートされていなくてもWARNINGで入れる？
+//        if (!user.getActivated()) {
+//            throw new UserNotActivatedException("User " + login + " was not activated");
+//        }
+
+        List<GrantedAuthority> authorities = user.getAuthorities().stream()
+            .map(authority -> new SimpleGrantedAuthority(authority.getName()))
+            .collect(Collectors.toList());
+        return new PetzUser(user.getId(), user.getLogin(), user.getPassword(), authorities);
     }
 }

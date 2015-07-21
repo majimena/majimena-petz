@@ -17,7 +17,7 @@
     -->
     <changeSet id="00000000000001" author="jhipster">
         <createTable tableName="JHI_USER">
-            <column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="login" type="varchar(50)">
@@ -67,7 +67,7 @@
         </createTable>
 
         <createTable tableName="JHI_USER_AUTHORITY">
-            <column name="user_id" type="bigint">
+            <column name="user_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="authority_name" type="varchar(50)">
@@ -77,17 +77,17 @@
 
         <addPrimaryKey columnNames="user_id, authority_name" tableName="JHI_USER_AUTHORITY"/>
 
-        <addForeignKeyConstraint baseColumnNames="authority_name"
-                                 baseTableName="JHI_USER_AUTHORITY"
-                                 constraintName="fk_authority_name"
-                                 referencedColumnNames="name"
-                                 referencedTableName="JHI_AUTHORITY"/>
+        <!--<addForeignKeyConstraint baseColumnNames="authority_name"-->
+                                 <!--baseTableName="JHI_USER_AUTHORITY"-->
+                                 <!--constraintName="fk_authority_name"-->
+                                 <!--referencedColumnNames="name"-->
+                                 <!--referencedTableName="JHI_AUTHORITY"/>-->
 
-        <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="JHI_USER_AUTHORITY"
-                                 constraintName="fk_user_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="JHI_USER"/>
+        <!--<addForeignKeyConstraint baseColumnNames="user_id"-->
+                                 <!--baseTableName="JHI_USER_AUTHORITY"-->
+                                 <!--constraintName="fk_user_id"-->
+                                 <!--referencedColumnNames="id"-->
+                                 <!--referencedTableName="JHI_USER"/>-->
 
         <loadData encoding="UTF-8"
                   file="config/liquibase/users.csv"
@@ -143,13 +143,13 @@
             <column name="event_id" type="bigint"/>
         </createIndex>
 
-        <addForeignKeyConstraint baseColumnNames="event_id"
-                                 baseTableName="JHI_PERSISTENT_AUDIT_EVENT_DATA"
-                                 constraintName="FK_event_persistent_audit_event_data"
-                                 referencedColumnNames="event_id"
-                                 referencedTableName="JHI_PERSISTENT_AUDIT_EVENT"/>
+        <!--<addForeignKeyConstraint baseColumnNames="event_id"-->
+                                 <!--baseTableName="JHI_PERSISTENT_AUDIT_EVENT_DATA"-->
+                                 <!--constraintName="FK_event_persistent_audit_event_data"-->
+                                 <!--referencedColumnNames="event_id"-->
+                                 <!--referencedTableName="JHI_PERSISTENT_AUDIT_EVENT"/>-->
     </changeSet>
-    
+
     <!-- Manage the OAuth authentication -->
     <changeSet id="2" author="jhipster">
         <createTable tableName="oauth_client_details">
@@ -176,11 +176,11 @@
             <column name="client_id" type="varchar(255)"/>
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="user_name"
-            baseTableName="oauth_client_token"
-            constraintName="fk_oauth_client_token_user_name"
-            referencedColumnNames="login"
-            referencedTableName="JHI_USER"/>
+        <!--<addForeignKeyConstraint baseColumnNames="user_name"-->
+            <!--baseTableName="oauth_client_token"-->
+            <!--constraintName="fk_oauth_client_token_user_name"-->
+            <!--referencedColumnNames="login"-->
+            <!--referencedTableName="JHI_USER"/>-->
 
         <createTable tableName="oauth_access_token">
             <column name="token_id" type="varchar(255)"/>
@@ -192,11 +192,11 @@
             <column name="refresh_token" type="varchar(255)"/>
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="user_name"
-            baseTableName="oauth_access_token"
-            constraintName="fk_oauth_access_token_user_name"
-            referencedColumnNames="login"
-            referencedTableName="JHI_USER"/>
+        <!--<addForeignKeyConstraint baseColumnNames="user_name"-->
+            <!--baseTableName="oauth_access_token"-->
+            <!--constraintName="fk_oauth_access_token_user_name"-->
+            <!--referencedColumnNames="login"-->
+            <!--referencedTableName="JHI_USER"/>-->
 
         <createTable tableName="oauth_refresh_token">
             <column name="token_id" type="varchar(255)"/>

@@ -1,30 +1,32 @@
-//$theme-color: darken(#5bc0de, 10%);
 $theme-color: #5bc0de;
 
-$font-family-sans-serif: "Roboto", Arial, Helvetica, sans-serif;
-
-$gray-base: #000000;
+// base definitions
+$gray-base: #000;
 $brand-primary: $theme-color;
-$link-color: darken(#5bc0de, 13.5%);
+$font-size-base: 14px;
+$font-family-sans-serif: "Roboto", "Droid Sans", "ヒラギノ角ゴ Pro W4", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Arial, sans-serif;
 
+// decoration text definitions
 $text-color: lighten($gray-base, 40.0%);
+$link-color: darken(#5bc0de, 13.5%);
 $headings-color: lighten($gray-base, 13.5%);
+
+// form definitions
 $input-border-focus: $theme-color;
 
+// button definitions
+$btn-info-color: #fff;
+$btn-info-bg: lighten($gray-base, 60%);
+$btn-info-border: darken($btn-info-bg, 10%);
+
+// header navigation definitions
 $navbar-height: 40px;
-$navbar-margin-bottom: 0px;
 $navbar-default-bg: $theme-color;
-//$navbar-default-color: #ffffff;
-//$navbar-defalut-link-color: #ffffff;
-//$navbar-default-link-hover-color: $base-text-color - 60;
-//$navbar-default-link-active-color: darken($base-text-color, 5%);
 $navbar-default-link-hover-bg: darken($navbar-default-bg, 10%);
 $navbar-default-link-active-bg: darken($navbar-default-bg, 10%);
-$navbar-default-brand-color: #ffffff;
+$navbar-default-brand-color: #fff;
 
-$dropdown-link-active-bg: $navbar-default-bg;
-
-//$hr-border: darken($base-color, 10%);
+$dropdown-link-hover-bg: lighten($gray-base, 93.5%);
 
 
 // custom variables

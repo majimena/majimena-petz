@@ -27,7 +27,8 @@
     </appender>
 -->
 
-    <logger name="org.majimena.test" level="${logback.loglevel}"/>
+    <logger name="org.majimena.petz" level="${logback.loglevel}"/>
+    <logger name="org.majimena.framework" level="${logback.loglevel}"/>
 
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>
@@ -47,7 +48,7 @@
     <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
     <logger name="org.springframework" level="WARN"/>
     <logger name="org.springframework.web" level="WARN"/>
-    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.springframework.security" level="INFO"/>
     <logger name="org.springframework.cache" level="WARN"/>
     <logger name="org.thymeleaf" level="WARN"/>
     <logger name="org.xnio" level="WARN"/>
@@ -55,14 +56,15 @@
     <logger name="com.wordnik.swagger" level="WARN"/>
     <logger name="liquibase" level="WARN"/>
     <logger name="sun.rmi.transport" level="WARN"/>
+    <logger name="cz.jirutka.spring.exhandler.handlers.ErrorMessageRestExceptionHandler" level="INFO"/>
 
     <!-- log4jdbc-log4j2 -->
-    <logger name="jdbc.sqlonly" level="DEBUG"/>
+    <logger name="jdbc.sqlonly" level="WARN"/>
     <logger name="jdbc.sqltiming" level="INFO"/>
-    <logger name="jdbc.audit" level="INFO"/>
-    <logger name="jdbc.resultset" level="ERROR"/>
-    <logger name="jdbc.resultsettable" level="ERROR"/>
-    <logger name="jdbc.connection" level="DEBUG"/>
+    <logger name="jdbc.audit" level="WARN"/>
+    <logger name="jdbc.resultset" level="WARN"/>
+    <logger name="jdbc.resultsettable" level="WARN"/>
+    <logger name="jdbc.connection" level="WARN"/>
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>

@@ -121,12 +121,34 @@ body {
     padding-top: $navbar-height;
     font-weight: 300;
     text-rendering: optimizelegibility;
+/*    -webkit-font-smoothing: antialiased;*/
 }
 
+/* margin style */
+.margin-right {
+    margin-right: 0.5em;
+}
+
+/* header style */
+header h3 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+/* tab style */
+.tab-content header > h4 {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+/* table style */
 .table > thead > tr > th, .table > thead > tr > td,
 .table > tbody > tr > th, .table > tbody > tr > td,
 .table > tfoot > tr > th, .table > tfoot > tr > td {
     vertical-align: middle;
+}
+.table-inner > thead > tr > th {
+    font-size: $font-size-small;
 }
 
 .form-control {
@@ -153,46 +175,22 @@ body {
 }
 
 /* customize dropdown */
-.dropdown-menu {
-    padding: 0;
-    border-radius: initial;
-}
 .dropdown-menu > li > a {
-    padding: 0.5em 5em 0.5em 1em;
+    padding: 0.5em 4em 0.5em 1em;
 }
 
-/* ========== override sb-admin2 ========== */
-#page-wrapper {
-    padding: 0;
-}
-
-.sidebar {
-    margin-top: 1px;
-}
-.sidebar ul li {
-    border-bottom: none;
-}
-.sidebar ul li a {
-    white-space: nowrap;
-    color: lighten($text-color, 10%);
-}
-.sidebar ul li.active > a {
-    color: darken($text-color, 50%);
-    background-color: #eeeeee;
-}
-#sidebar-wrapper-wrapper {
-    height: auto !important;
-    margin: 0 auto -60px;
-    min-height: 100%;
-    padding: 0 0 60px;
+/* modal style */
+.modal-header {
+    background-color: #eee;
+    border-radius: $border-radius-base $border-radius-base 0 0;
 }
 
 /* ========== override fontawesome ========== */
 .fa-fw {
     margin-right: 0.2em;
 }
-#side-menu .fa-fw {
-    margin-right: 0.7em;
+.fa-af {
+    margin-left: 0.4em;
 }
 
 /* ========== override ng-notify styles */
@@ -231,59 +229,17 @@ body {
     max-width: $container-tablet;
     padding-top: 20px;
 }
-
-/* sidebar menu and content defs */
-#page-wrapper.sidebar-collapse {
-    margin-left: 50px;
-    transition: $transition-all;
+.single-contents {
+    padding-left: 25px;
+    padding-right: 25px;
 }
-#page-wrapper.sidebar-fullsize {
-    margin-left: 250px;
-    transition: $transition-all;
-}
-#sidebar-wrapper.sidebar-fullsize {
-    transition: $transition-all;
-}
-#sidebar-wrapper.sidebar-collapse {
-}
-#sidebar-wrapper.sidebar.sidebar-collapse {
-    width: 50px;
-    transition: $transition-all;
-}
-#sidebar-wrapper.sidebar-collapse span {
-    display: none;
-}
-#sidebar-wrapper #sidebar-footer {
-    background-color: $body-bg;
-    font-size: $font-size-small;
-    width: 250px;
-    border-top: 1px solid #d8d8d8;
-    position: fixed;
-    bottom: 0;
-}
-@media screen and (max-width: 480px) {
-    #sidebar-wrapper #sidebar-footer {
-        display: none;
-    }
-}
-#sidebar-wrapper.sidebar-collapse #sidebar-footer {
-    width: 50px;
-    transition: $transition-all;
-}
-#sidebar-collapse-toggle {
-    width: 50px;
-    float: right;
-    display: block;
-    padding: 10px 15px;
-    text-align: center;
+.fluid-form-container {
+    max-width: $container-tablet;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* page header */
-.page-title {
-    @extend .page-header;
-    margin: 20px 0;
-}
-.page-title .description {
-    font-size: $font-size-small;
-    margin: 0;
+/* images */
+img.img-gravatar {
+    border-radius: $border-radius-small;
 }

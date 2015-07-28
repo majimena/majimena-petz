@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <jhi_authority name="ROLE_USER"/>
+    <jhi_user id="1" login="login1" password="password" activated="0" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <jhi_user_authority user_id="1" authority_name="ROLE_USER"/>
+    <type name="トイプードル"/>
+    <type name="柴犬"/>
+    <tag name="室内犬"/>
+    <tag name="忠犬"/>
+
+    <clinic/>
+    <clinic_staff/>
+
+    <pet id="1" name="ハチ" profile="渋谷ハチ公" sex="MALE" birth_date="2000-01-01" user_id="1" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <pet_type pet_id="1" type_name="柴犬"/>
+    <pet_tag pet_id="1" tag_name="忠犬"/>
+</dataset>

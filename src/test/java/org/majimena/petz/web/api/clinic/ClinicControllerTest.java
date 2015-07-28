@@ -11,7 +11,6 @@ import org.majimena.petz.TestUtils;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.service.ClinicService;
-import org.majimena.petz.web.rest.ProjectResource;
 import org.majimena.petz.web.rest.util.PaginationUtil;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.PageImpl;
@@ -34,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Test class for the ProjectResource REST controller.
  *
- * @see ProjectResource
+ * @see ClinicController
  */
 @RunWith(Enclosed.class)
 public class ClinicControllerTest {

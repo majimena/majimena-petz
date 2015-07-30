@@ -2,6 +2,7 @@ package org.majimena.petz.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.collect.Sets;
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -73,7 +74,7 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
         joinColumns = {@JoinColumn(name = "pet_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "type_name", referencedColumnName = "name")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Type> types;
+    private Set<Type> types = Sets.newHashSet();
 
     @ManyToMany
     @JoinTable(
@@ -81,6 +82,6 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
         joinColumns = {@JoinColumn(name = "pet_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "tag_name", referencedColumnName = "name")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Tag> tags;
+    private Set<Tag> tags = Sets.newHashSet();
 
 }

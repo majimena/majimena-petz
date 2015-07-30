@@ -20,7 +20,7 @@ public class ISO8601LocalDateDeserializer extends JsonDeserializer<LocalDate> {
         JsonToken token = parser.getCurrentToken();
         if (token == JsonToken.VALUE_STRING) {
             String value = parser.getText().trim();
-            return LocalDate.parse(value, DateTimeFormatter.ISO_DATE_TIME);
+            return LocalDate.parse(value, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         }
         throw context.mappingException(handledType());
     }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -15,7 +15,9 @@ import java.time.format.DateTimeFormatter;
 public class ISO8601LocalDateSerializer extends JsonSerializer<LocalDate> {
     @Override
     public void serialize(LocalDate value, JsonGenerator generator, SerializerProvider provider) throws IOException {
-        String d = DateTimeFormatter.ISO_INSTANT.format(value);
-        generator.writeString(d);
+        LocalDateTime dateTime = value.atTime(LocalTime.MIN);
+        ZonedDateTime atZone = dateTime.atZone(ZoneId.systemDefault());
+        String format = atZone.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        generator.writeString(format);
     }
 }

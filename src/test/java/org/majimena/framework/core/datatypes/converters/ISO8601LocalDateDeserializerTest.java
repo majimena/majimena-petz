@@ -32,18 +32,18 @@ public class ISO8601LocalDateDeserializerTest {
             jp.getCurrentToken();
             result = JsonToken.VALUE_STRING;
             jp.getText();
-            result = "2015-02-27T15:00:00.000Z";
+            result = "2015-09-06T00:00:00+09:00";
         }};
 
         LocalDate result = sut.deserialize(jp, context);
-        assertThat(result.toString(), is("2015-02-27"));
+        assertThat(result.toString(), is("2015-09-06"));
     }
 
     @Test(expected = JsonMappingException.class)
     public void 文字列以外の場合は変換できないこと() throws Exception {
         new NonStrictExpectations() {{
             jp.getCurrentToken();
-            result = JsonToken.VALUE_NUMBER_INT;
+            result = JsonToken.START_OBJECT;
             context.mappingException(LocalDate.class);
             result = new JsonMappingException("test");
         }};

@@ -51,14 +51,10 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-//    @JsonSerialize(using = ISO8601LocalDateSerializer.class)
-//    @JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
     @Column(name = "birth_date", nullable = true)
     @Convert(converter = LocalDatePersistenceConverter.class)
     private LocalDate birthDate;
 
-//    @JsonSerialize(using = EnumDataTypeSerializer.class)
-//    @JsonDeserialize(using = SexTypeDeserializer.class)
     @Column(name = "sex", length = 10, nullable = true)
     @Convert(converter = SexTypeConverter.class)
     private SexType sex;

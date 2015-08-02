@@ -11,21 +11,25 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * Created by todoken on 2015/07/20.
+ * Created by todoken on 2015/08/02.
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignupRegistry implements Serializable {
+public class UserPatchRegistry implements Serializable {
+
+    private String userId;
+
+    @Size(max = 50)
+    private String firstName;
+
+    @Size(max = 50)
+    private String lastName;
 
     @NotEmpty
     @Email
-    @Size(min = 1, max = 100)
+    @Size(max = 100)
     private String email;
-
-    @NotEmpty
-    @Size(min = 5, max = 100)
-    private String password;
 
 }

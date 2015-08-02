@@ -7,6 +7,7 @@ public enum ErrorCode {
 
     // User
     PTZ_000101,
+    PTZ_000102,
 
     // Clinic
     // Clinic Invitation

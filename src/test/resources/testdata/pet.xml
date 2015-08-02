@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-    <jhi_authority name="ROLE_USER"/>
-    <jhi_user id="1" login="login1" password="password" activated="0" created_by="hoge@hoge.com" created_date="2015-01-01"/>
-    <jhi_user_authority user_id="1" authority_name="ROLE_USER"/>
+    <authority name="ROLE_USER"/>
+    <user id="1" login="login1" password="password" activated="0" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <user_authority user_id="1" authority_name="ROLE_USER"/>
     <type name="トイプードル"/>
     <type name="柴犬"/>
     <tag name="室内犬"/>

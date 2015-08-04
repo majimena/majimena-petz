@@ -32,12 +32,9 @@ public class SexTypeDeserializerTest {
     public void 性別型にデシリアライズできること() throws Exception {
         new NonStrictExpectations() {{
             jp.getCurrentToken();
-            result = JsonToken.START_OBJECT;
-            jp.readValueAs(HashMap.class);
-            Map<String, String> map = new HashMap<>();
-            map.put("name", "オス");
-            map.put("value", "MALE");
-            result = map;
+            result = JsonToken.VALUE_STRING;
+            jp.getText();
+            result = "MALE";
         }};
 
         SexType result = sut.deserialize(jp, context);
@@ -49,7 +46,7 @@ public class SexTypeDeserializerTest {
         new NonStrictExpectations() {{
             jp.getCurrentToken();
             result = JsonToken.VALUE_NUMBER_INT;
-            context.mappingException(LocalDate.class);
+            context.mappingException(SexType.class);
             result = new JsonMappingException("test");
         }};
 

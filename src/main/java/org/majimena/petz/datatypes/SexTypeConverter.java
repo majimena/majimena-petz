@@ -8,11 +8,17 @@ import javax.persistence.AttributeConverter;
 public class SexTypeConverter implements AttributeConverter<SexType, String> {
     @Override
     public String convertToDatabaseColumn(SexType attribute) {
+        if (attribute == null) {
+            return null;
+        }
         return attribute.getValue();
     }
 
     @Override
     public SexType convertToEntityAttribute(String dbData) {
+        if (dbData == null) {
+            return null;
+        }
         return SexType.valueOf(dbData);
     }
 }

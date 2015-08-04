@@ -18,13 +18,13 @@ public abstract class EnumDataTypeDeserializer<T extends EnumDataType> extends J
     @Override
     public T deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         JsonToken token = parser.getCurrentToken();
-        if (token == JsonToken.START_OBJECT) {
-            Map<String, String> map = parser.readValueAs(HashMap.class);
-            return newEnumDataType(map);
+        if (token == JsonToken.VALUE_STRING) {
+            String value = parser.getText().trim();
+            return newEnumDataType(value);
         }
         throw context.mappingException(handledType());
     }
 
-    protected abstract T newEnumDataType(Map<String, String> map);
+    protected abstract T newEnumDataType(String name);
 
 }

@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class SexTypeDeserializer extends EnumDataTypeDeserializer<SexType> {
     @Override
-    protected SexType newEnumDataType(Map<String, String> map) {
-        return SexType.valueOf(map.get("value"));
+    protected SexType newEnumDataType(String name) {
+        return SexType.valueOf(name);
     }
 }

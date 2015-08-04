@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -53,9 +54,9 @@ public class PetServiceImplIT {
             assertThat(result.get(0).getBirthDate(), is(LocalDate.of(2000, 1, 1)));
             assertThat(result.get(0).getSex(), is(SexType.MALE));
             assertThat(result.get(0).getTypes().size(), is(1));
-            assertThat(result.get(0).getTypes().contains(new Type("柴犬")), is(true));
+            assertThat(result.get(0).getTypes().contains("柴犬"), is(true));
             assertThat(result.get(0).getTags().size(), is(1));
-            assertThat(result.get(0).getTags().contains(new Tag("忠犬")), is(true));
+            assertThat(result.get(0).getTags().contains("忠犬"), is(true));
         }
 
         @Test
@@ -86,9 +87,9 @@ public class PetServiceImplIT {
             assertThat(result.getBirthDate(), is(LocalDate.of(2000, 1, 1)));
             assertThat(result.getSex(), is(SexType.MALE));
             assertThat(result.getTypes().size(), is(1));
-            assertThat(result.getTypes().contains(new Type("柴犬")), is(true));
+            assertThat(result.getTypes().contains("柴犬"), is(true));
             assertThat(result.getTags().size(), is(1));
-            assertThat(result.getTags().contains(new Tag("忠犬")), is(true));
+            assertThat(result.getTags().contains("忠犬"), is(true));
         }
 
         @Test(expected = ResourceNotFoundException.class)
@@ -108,12 +109,12 @@ public class PetServiceImplIT {
         @Test
         @Transactional
         @DatabaseSetup("classpath:/testdata/pet.xml")
-        public void sampleTest() throws Exception {
+        public void 全ての項目が入力されている場合にペットが保存できること() throws Exception {
             LocalDate now = LocalDate.now();
             final Pet testData = Pet.builder().name("ポチ").profile("プロファイル").birthDate(now).sex(SexType.MALE)
                 .user(User.builder().id("1").build())
-                .types(Sets.newHashSet(new Type("トイプードル"), new Type("マルチーズ")))
-                .tags(Sets.newHashSet(new Tag("室内犬"), new Tag("血統書"))).build();
+                .types(Sets.newHashSet("トイプードル", "マルチーズ"))
+                .tags(Sets.newHashSet("室内犬", "血統書")).build();
 
             Pet result = sut.savePet(testData);
 
@@ -124,12 +125,35 @@ public class PetServiceImplIT {
             assertThat(result.getUser().getLogin(), is("login1"));
             assertThat(result.getBirthDate(), is(now));
             assertThat(result.getSex(), is(SexType.MALE));
-            assertThat(result.getTypes().size(), is(2));
-            assertThat(result.getTypes().contains(new Type("トイプードル")), is(true));
-            assertThat(result.getTypes().contains(new Type("マルチーズ")), is(true));
-            assertThat(result.getTags().size(), is(2));
-            assertThat(result.getTags().contains(new Tag("室内犬")), is(true));
-            assertThat(result.getTags().contains(new Tag("血統書")), is(true));
+            assertThat(result.getTypeEntities().size(), is(2));
+            assertThat(result.getTypeEntities().contains(new Type("トイプードル")), is(true));
+            assertThat(result.getTypeEntities().contains(new Type("マルチーズ")), is(true));
+            assertThat(result.getTagEntities().size(), is(2));
+            assertThat(result.getTagEntities().contains(new Tag("室内犬")), is(true));
+            assertThat(result.getTagEntities().contains(new Tag("血統書")), is(true));
+        }
+
+        @Test
+        @Transactional
+        @DatabaseSetup("classpath:/testdata/pet.xml")
+        public void 任意項目が入力されていない場合にペットが保存できること() throws Exception {
+            final Pet testData = Pet.builder().name("ポチ")
+                .user(User.builder().id("1").build())
+                .types(Sets.newHashSet("トイプードル", "マルチーズ")).build();
+
+            Pet result = sut.savePet(testData);
+
+            assertThat(result.getId(), is(notNullValue()));
+            assertThat(result.getName(), is("ポチ"));
+            assertThat(result.getProfile(), is(nullValue()));
+            assertThat(result.getUser().getId(), is("1"));
+            assertThat(result.getUser().getLogin(), is("login1"));
+            assertThat(result.getBirthDate(), is(nullValue()));
+            assertThat(result.getSex(), is(nullValue()));
+            assertThat(result.getTypeEntities().size(), is(2));
+            assertThat(result.getTypeEntities().contains(new Type("トイプードル")), is(true));
+            assertThat(result.getTypeEntities().contains(new Type("マルチーズ")), is(true));
+            assertThat(result.getTagEntities(), is(nullValue()));
         }
     }
 }

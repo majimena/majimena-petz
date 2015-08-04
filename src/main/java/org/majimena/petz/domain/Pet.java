@@ -1,5 +1,6 @@
 package org.majimena.petz.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.Sets;
@@ -8,13 +9,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.majimena.framework.core.datatypes.converters.EnumDataTypeSerializer;
-import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateDeserializer;
-import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateSerializer;
+import org.majimena.framework.core.datatypes.converters.StringSetDeserializer;
+import org.majimena.framework.core.datatypes.converters.StringSetSerializer;
 import org.majimena.framework.persistence.converters.LocalDatePersistenceConverter;
 import org.majimena.petz.datatypes.SexType;
 import org.majimena.petz.datatypes.SexTypeConverter;
-import org.majimena.petz.datatypes.SexTypeDeserializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -63,6 +62,7 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
     @Column(name = "profile", length = 2000, nullable = true)
     private String profile;
 
+    @JsonIgnore
     @NotNull
     @ManyToMany
     @JoinTable(
@@ -70,14 +70,26 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
         joinColumns = {@JoinColumn(name = "pet_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "type_name", referencedColumnName = "name")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Type> types = Sets.newHashSet();
+    private Set<Type> typeEntities = Sets.newHashSet();
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
         name = "pet_tag",
         joinColumns = {@JoinColumn(name = "pet_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "tag_name", referencedColumnName = "name")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Tag> tags = Sets.newHashSet();
+    private Set<Tag> tagEntities = Sets.newHashSet();
 
+    // not table columns
+
+    @Transient
+    @JsonSerialize(using = StringSetSerializer.class)
+    @JsonDeserialize(using = StringSetDeserializer.class)
+    private Set<String> types = Sets.newHashSet();
+
+    @Transient
+    @JsonSerialize(using = StringSetSerializer.class)
+    @JsonDeserialize(using = StringSetDeserializer.class)
+    private Set<String> tags = Sets.newHashSet();
 }

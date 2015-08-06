@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import cz.jirutka.spring.exhandler.support.HttpMessageConverterUtils;
 import org.majimena.framework.core.datatypes.EnumDataType;
-import org.majimena.framework.core.datatypes.converters.EnumDataTypeSerializer;
-import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateDeserializer;
-import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateSerializer;
+import org.majimena.framework.core.datatypes.converters.*;
 import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
 import org.majimena.petz.common.exceptions.ResourceConflictException;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
@@ -31,6 +29,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -96,8 +95,10 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
         SimpleModule module = new SimpleModule("PetzioModule");
 
         module.addSerializer(LocalDate.class, new ISO8601LocalDateSerializer());
+        module.addSerializer(LocalDateTime.class, new ISO8601LocalDateTimeSerializer());
         module.addSerializer(EnumDataType.class, new EnumDataTypeSerializer());
         module.addDeserializer(LocalDate.class, new ISO8601LocalDateDeserializer());
+        module.addDeserializer(LocalDateTime.class, new ISO8601LocalDateTimeDeserializer());
         module.addDeserializer(SexType.class, new SexTypeDeserializer());
 
         return module;

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -51,7 +52,7 @@ public class PetServiceImplIT {
             assertThat(result.get(0).getProfile(), is("渋谷ハチ公"));
             assertThat(result.get(0).getUser().getId(), is("1"));
             assertThat(result.get(0).getUser().getLogin(), is("login1"));
-            assertThat(result.get(0).getBirthDate(), is(LocalDate.of(2000, 1, 1)));
+            assertThat(result.get(0).getBirthDate(), is(LocalDateTime.of(2000, 1, 1, 0, 0)));
             assertThat(result.get(0).getSex(), is(SexType.MALE));
             assertThat(result.get(0).getTypes().size(), is(1));
             assertThat(result.get(0).getTypes().contains("柴犬"), is(true));
@@ -84,7 +85,7 @@ public class PetServiceImplIT {
             assertThat(result.getProfile(), is("渋谷ハチ公"));
             assertThat(result.getUser().getId(), is("1"));
             assertThat(result.getUser().getLogin(), is("login1"));
-            assertThat(result.getBirthDate(), is(LocalDate.of(2000, 1, 1)));
+            assertThat(result.getBirthDate(), is(LocalDateTime.of(2000, 1, 1, 0, 0)));
             assertThat(result.getSex(), is(SexType.MALE));
             assertThat(result.getTypes().size(), is(1));
             assertThat(result.getTypes().contains("柴犬"), is(true));
@@ -110,7 +111,7 @@ public class PetServiceImplIT {
         @Transactional
         @DatabaseSetup("classpath:/testdata/pet.xml")
         public void 全ての項目が入力されている場合にペットが保存できること() throws Exception {
-            LocalDate now = LocalDate.now();
+            LocalDateTime now = LocalDateTime.now();
             final Pet testData = Pet.builder().name("ポチ").profile("プロファイル").birthDate(now).sex(SexType.MALE)
                 .user(User.builder().id("1").build())
                 .types(Sets.newHashSet("トイプードル", "マルチーズ"))

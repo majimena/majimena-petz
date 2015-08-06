@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.majimena.framework.core.datatypes.converters.StringSetDeserializer;
 import org.majimena.framework.core.datatypes.converters.StringSetSerializer;
 import org.majimena.framework.persistence.converters.LocalDatePersistenceConverter;
+import org.majimena.framework.persistence.converters.LocalDateTimePersistenceConverter;
 import org.majimena.petz.datatypes.SexType;
 import org.majimena.petz.datatypes.SexTypeConverter;
 
@@ -20,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -51,8 +53,8 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
     private User user;
 
     @Column(name = "birth_date", nullable = true)
-    @Convert(converter = LocalDatePersistenceConverter.class)
-    private LocalDate birthDate;
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
+    private LocalDateTime birthDate;
 
     @Column(name = "sex", length = 10, nullable = true)
     @Convert(converter = SexTypeConverter.class)

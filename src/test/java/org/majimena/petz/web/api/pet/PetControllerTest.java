@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -84,7 +84,7 @@ public class PetControllerTest {
                 assertThat(pet.getName(), is("ポチ"));
                 assertThat(pet.getProfile(), is("プロファイル"));
                 assertThat(pet.getSex(), is(SexType.MALE));
-                assertThat(pet.getBirthDate(), is(LocalDate.of(2015, 2, 27)));
+                assertThat(pet.getBirthDate(), is(LocalDateTime.of(2015, 2, 27, 15, 0, 0)));
                 assertThat(pet.getUser().getId(), is("1"));
                 assertThat(pet.getTags(), is(Sets.newHashSet("タグ１", "タグ２")));
                 assertThat(pet.getTypes(), is(Sets.newHashSet("タイプ１", "タイプ２")));

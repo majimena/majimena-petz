@@ -5,8 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import cz.jirutka.spring.exhandler.support.HttpMessageConverterUtils;
+import org.majimena.framework.beans.factory.JacksonJsonFactory;
+import org.majimena.framework.beans.factory.JsonFactory;
 import org.majimena.framework.core.datatypes.EnumDataType;
-import org.majimena.framework.core.datatypes.converters.*;
+import org.majimena.framework.core.datatypes.converters.EnumDataTypeSerializer;
+import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateDeserializer;
+import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateSerializer;
+import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateTimeDeserializer;
+import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateTimeSerializer;
 import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
 import org.majimena.petz.common.exceptions.ResourceConflictException;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
@@ -32,7 +38,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by todoken on 2015/06/25.
@@ -40,6 +45,8 @@ import java.util.Set;
 @EnableWebMvc
 @Configuration
 public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
+
+    // ExceptionHandler Configurations
 
     @Override
     public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
@@ -82,6 +89,8 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
         return resolver;
     }
 
+    // Jackson Configurations
+
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
@@ -110,6 +119,13 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
         jacksonConverter.setSupportedMediaTypes(Arrays.asList(MediaType.valueOf("application/json")));
         jacksonConverter.setObjectMapper(objectMapper());
         return jacksonConverter;
+    }
+
+    @Bean
+    public JsonFactory jsonFactory() {
+        JacksonJsonFactory factory = new JacksonJsonFactory();
+        factory.setObjectMapper(objectMapper());
+        return factory;
     }
 
     @Override

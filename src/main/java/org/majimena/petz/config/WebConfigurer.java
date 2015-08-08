@@ -3,6 +3,8 @@ package org.majimena.petz.config;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.MetricsServlet;
+import org.majimena.framework.beans.factory.JsonFactory;
+import org.majimena.framework.web.servlet.filter.AccessLogFilter;
 import org.majimena.petz.web.filter.CachingHttpHeadersFilter;
 import org.majimena.petz.web.filter.CrossOriginResourceSharingFilter;
 import org.majimena.petz.web.filter.StaticResourcesProductionFilter;
@@ -21,7 +23,11 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.inject.Inject;
-import javax.servlet.*;
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -42,6 +48,9 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
     @Autowired(required = false)
     private MetricRegistry metricRegistry;
 
+    @Autowired
+    private JsonFactory jsonFactory;
+
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         log.info("Web application configuration, using profiles: {}", Arrays.toString(env.getActiveProfiles()));
@@ -55,9 +64,13 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
             initStaticResourcesProductionFilter(servletContext, disps);
             initGzipFilter(servletContext, disps);
         }
+
+        // Original ServletFilter
         initCharacterEncodingFilter(servletContext, disps);
         initCrossOriginResourceSharingFilter(servletContext);
+        initAccessLogFilter(servletContext);
 
+        super.onStartup(servletContext);
         log.info("Web application fully configured");
     }
 
@@ -106,8 +119,8 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
 
         log.debug("Registering static resources production Filter");
         FilterRegistration.Dynamic staticResourcesProductionFilter =
-            servletContext.addFilter("staticResourcesProductionFilter",
-                new StaticResourcesProductionFilter());
+                servletContext.addFilter("staticResourcesProductionFilter",
+                        new StaticResourcesProductionFilter());
 
         staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/");
         staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/index.html");
@@ -123,8 +136,8 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
                                               EnumSet<DispatcherType> disps) {
         log.debug("Registering Caching HTTP Headers Filter");
         FilterRegistration.Dynamic cachingHttpHeadersFilter =
-            servletContext.addFilter("cachingHttpHeadersFilter",
-                new CachingHttpHeadersFilter(env));
+                servletContext.addFilter("cachingHttpHeadersFilter",
+                        new CachingHttpHeadersFilter(env));
 
         cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/assets/*");
         cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
@@ -137,20 +150,20 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
     private void initMetrics(ServletContext servletContext, EnumSet<DispatcherType> disps) {
         log.debug("Initializing Metrics registries");
         servletContext.setAttribute(InstrumentedFilter.REGISTRY_ATTRIBUTE,
-            metricRegistry);
+                metricRegistry);
         servletContext.setAttribute(MetricsServlet.METRICS_REGISTRY,
-            metricRegistry);
+                metricRegistry);
 
         log.debug("Registering Metrics Filter");
         FilterRegistration.Dynamic metricsFilter = servletContext.addFilter("webappMetricsFilter",
-            new InstrumentedFilter());
+                new InstrumentedFilter());
 
         metricsFilter.addMappingForUrlPatterns(disps, true, "/*");
         metricsFilter.setAsyncSupported(true);
 
         log.debug("Registering Metrics Servlet");
         ServletRegistration.Dynamic metricsAdminServlet =
-            servletContext.addServlet("metricsServlet", new MetricsServlet());
+                servletContext.addServlet("metricsServlet", new MetricsServlet());
 
         metricsAdminServlet.addMapping("/metrics/metrics/*");
         metricsAdminServlet.setAsyncSupported(true);
@@ -166,6 +179,14 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         FilterRegistration.Dynamic dynamic = context.addFilter("cachingHttpHeadersFilter", filter);
         dynamic.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
         dynamic.setAsyncSupported(true);
+    }
+
+    private void initAccessLogFilter(ServletContext context) {
+        AccessLogFilter filter = new AccessLogFilter();
+        filter.setJsonFactory(jsonFactory);
+
+        FilterRegistration registration = context.addFilter("accessLogFilter", filter);
+        registration.addMappingForUrlPatterns(null, false, "/*");
     }
 
     private void initCrossOriginResourceSharingFilter(ServletContext context) {

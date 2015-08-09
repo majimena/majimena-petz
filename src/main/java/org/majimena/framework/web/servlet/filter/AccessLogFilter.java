@@ -63,15 +63,15 @@ public class AccessLogFilter extends OncePerRequestFilter {
 
         try {
             // 処理開始ログの出力
-            LOGGER.info("[{0}] [{1}] is starting.", method, url);
+            LOGGER.info("[{}] [{}] is starting.", method, url);
             if (LOGGER.isDebugEnabled()) {
                 String params = jsonFactory.to(req.getParameterMap());
                 String body;
-                try (BufferedReader reader = request.getReader()) {
+                try (BufferedReader reader = req.getReader()) {
                     body = reader.readLine();
                 }
-                LOGGER.debug("[{0}] [{1}] request params: {2}", method, url, params);
-                LOGGER.debug("[{0}] [{1}] request body: {2}", method, url, body);
+                LOGGER.debug("[{}] [{}] request params: {}", method, url, params);
+                LOGGER.debug("[{}] [{}] request body: {}", method, url, body);
             }
 
             // 実処理を実行する
@@ -82,9 +82,9 @@ public class AccessLogFilter extends OncePerRequestFilter {
             watch.stop();
             if (LOGGER.isDebugEnabled()) {
                 String body = res.getStringResponse();
-                LOGGER.debug("[{0}] [{1}] response body: {2}", body);
+                LOGGER.debug("[{}] [{}] response body: {}", method, url, body);
             }
-            LOGGER.info("[{0}] [{1}] has ended. Process time is [{2}ms]", method, url, watch.getTime());
+            LOGGER.info("[{}] [{}] has ended. Process time is [{}ms]", method, url, watch.getTime());
         }
     }
 

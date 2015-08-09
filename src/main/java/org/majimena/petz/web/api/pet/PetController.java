@@ -48,4 +48,14 @@ public class PetController {
         Pet save = petService.savePet(pet);
         return ResponseEntity.created(URI.create("/api/v1/pets")).body(save);
     }
+
+    @Timed
+    @RequestMapping(value = "/pets/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Pet> put(@PathVariable String id, @Valid @RequestBody Pet pet) {
+        // TODO add validator
+        pet.setId(id);
+        pet.getUser().setId(SecurityUtils.getCurrentUserId());
+        Pet save = petService.savePet(pet);
+        return ResponseEntity.ok().body(save);
+    }
 }

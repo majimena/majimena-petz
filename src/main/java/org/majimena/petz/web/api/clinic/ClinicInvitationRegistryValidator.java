@@ -8,16 +8,16 @@ import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.ClinicStaffRepository;
 import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.web.api.AbstractValidator;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Optional;
 
 /**
  * クリニック招待状送付バリデータ.
  */
-@Component
+@Named("clinicInvitationRegistryValidator")
 public class ClinicInvitationRegistryValidator extends AbstractValidator<ClinicInvitationRegistry> {
 
     @Inject

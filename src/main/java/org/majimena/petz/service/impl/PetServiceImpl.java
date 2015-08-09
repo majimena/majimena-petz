@@ -89,6 +89,6 @@ public class PetServiceImpl implements PetService {
         // 飼い主を親キーにしてペットを登録
         User user = userRepository.findOne(pet.getUser().getId());
         pet.setUser(user);
-        return petRepository.saveAndFlush(pet);
+        return petRepository.save(pet);
     }
 }

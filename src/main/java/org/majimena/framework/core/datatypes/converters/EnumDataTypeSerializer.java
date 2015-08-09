@@ -13,9 +13,6 @@ import java.io.IOException;
 public class EnumDataTypeSerializer extends JsonSerializer<EnumDataType> {
     @Override
     public void serialize(EnumDataType value, JsonGenerator generator, SerializerProvider provider) throws IOException {
-        generator.writeStartObject();
-        generator.writeStringField("name", value.getName());
-        generator.writeStringField("value", value.getValue());
-        generator.writeEndObject();
+        generator.writeString(value.getValue());
     }
 }

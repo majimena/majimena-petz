@@ -33,11 +33,12 @@ public class ISO8601LocalDateTimeDeserializerTest {
             jp.getCurrentToken();
             result = JsonToken.VALUE_STRING;
             jp.getText();
-            result = "2015-09-06T00:00:00+09:00";
+//            result = "2015-09-06T00:00:00+09:00";
+            result = "2015-02-27T15:00:00.000Z";
         }};
 
         LocalDateTime result = sut.deserialize(jp, context);
-        assertThat(result.toString(), is("2015-09-06T00:00"));
+        assertThat(result.toString(), is("2015-02-27T15:00"));
     }
 
     @Test(expected = JsonMappingException.class)

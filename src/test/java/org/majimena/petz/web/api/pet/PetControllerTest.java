@@ -71,8 +71,8 @@ public class PetControllerTest {
 
             mockMvc.perform(post("/api/v1/pets")
                 .contentType(TestUtils.APPLICATION_JSON_UTF8)
-//                .content("{\"birthDate\":\"2015-02-27T15:00:00.000Z\",\"user\":{\"id\":\"1\"},\"sex\":\"MALE\",\"tags\":[\"タグ２\",\"タグ１\"],\"types\":[\"タイプ１\",\"タイプ２\"],\"name\":\"ポチ\",\"profile\":\"プロファイル\"}"))
-                .content("{\"user\":{\"id\":\"1\"},\"sex\":\"MALE\",\"tags\":[\"タグ２\",\"タグ１\"],\"types\":[\"タイプ１\",\"タイプ２\"],\"name\":\"ポチ\",\"profile\":\"プロファイル\"}"))
+                .content("{\"birthDate\":\"2015-02-27T15:00:00.000Z\",\"user\":{\"id\":\"1\"},\"sex\":\"MALE\",\"tags\":[\"タグ２\",\"タグ１\"],\"types\":[\"タイプ１\",\"タイプ２\"],\"name\":\"ポチ\",\"profile\":\"プロファイル\"}"))
+//                .content("{\"user\":{\"id\":\"1\"},\"sex\":\"MALE\",\"tags\":[\"タグ２\",\"タグ１\"],\"types\":[\"タイプ１\",\"タイプ２\"],\"name\":\"ポチ\",\"profile\":\"プロファイル\"}"))
                 .andDo(print())
                 .andExpect(status().isCreated());
 

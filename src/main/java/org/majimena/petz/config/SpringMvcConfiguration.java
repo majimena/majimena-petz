@@ -20,6 +20,7 @@ import org.majimena.petz.datatypes.SexType;
 import org.majimena.petz.datatypes.SexTypeDeserializer;
 import org.majimena.petz.web.servlet.handler.ApplicationExceptionRestExceptionHandler;
 import org.majimena.petz.web.servlet.handler.BindExceptionRestExceptionHandler;
+import org.majimena.petz.web.servlet.handler.HttpMessageNotReadableExceptionHandler;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -65,6 +66,7 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
                 .addErrorMessageHandler(ResourceCannotAccessException.class, HttpStatus.UNAUTHORIZED)
                 .addHandler(new BindExceptionRestExceptionHandler())
                 .addHandler(applicationExceptionRestExceptionHandler())
+                .addHandler(new HttpMessageNotReadableExceptionHandler())
                 .build();
     }
 

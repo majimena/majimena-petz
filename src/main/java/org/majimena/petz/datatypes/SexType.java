@@ -13,7 +13,7 @@ public enum SexType implements EnumDataType {
 
     private String name;
 
-    private SexType(String name) {
+    SexType(String name) {
         this.name = name;
     }
 

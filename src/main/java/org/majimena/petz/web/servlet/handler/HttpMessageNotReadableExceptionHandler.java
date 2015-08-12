@@ -9,19 +9,27 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by todoken on 2015/08/12.
+ * HttpMessageNotReadableExceptionのハンドラ.
  */
 public class HttpMessageNotReadableExceptionHandler extends AbstractCustomRestExceptionHandler<HttpMessageNotReadableException> {
-
+    /**
+     * ログ.
+     */
     private static final Logger LOG = LoggerFactory.getLogger(HttpMessageNotReadableExceptionHandler.class);
 
+    /**
+     * コンストラクタ.
+     */
     public HttpMessageNotReadableExceptionHandler() {
         super(HttpMessageNotReadableException.class, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ErrorMessage createBody(HttpMessageNotReadableException ex, HttpServletRequest req) {
-        LOG.warn("", ex);
+        LOG.warn("json to object deserialization failure", ex);
         return super.createBody(ex, req);
     }
 }

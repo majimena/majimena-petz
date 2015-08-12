@@ -9,6 +9,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateTimeDeserializer;
+import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateTimeSerializer;
 import org.majimena.framework.core.datatypes.converters.StringSetDeserializer;
 import org.majimena.framework.core.datatypes.converters.StringSetSerializer;
 import org.majimena.framework.persistence.converters.LocalDateTimePersistenceConverter;
@@ -50,6 +52,8 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
     private User user;
 
     @Convert(converter = LocalDateTimePersistenceConverter.class)
+    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
     @Column(name = "birth_date", nullable = true)
     private LocalDateTime birthDate;
 

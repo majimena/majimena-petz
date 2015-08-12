@@ -108,6 +108,7 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
         module.addSerializer(LocalDate.class, new ISO8601LocalDateSerializer());
         module.addSerializer(LocalDateTime.class, new ISO8601LocalDateTimeSerializer());
         module.addSerializer(EnumDataType.class, new EnumDataTypeSerializer());
+
         module.addDeserializer(LocalDate.class, new ISO8601LocalDateDeserializer());
         module.addDeserializer(LocalDateTime.class, new ISO8601LocalDateTimeDeserializer());
         module.addDeserializer(SexType.class, new SexTypeDeserializer());

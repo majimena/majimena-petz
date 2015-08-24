@@ -4,8 +4,11 @@ import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.UserContact;
 import org.majimena.petz.domain.user.PasswordRegistry;
 import org.majimena.petz.domain.user.SignupRegistry;
+import org.majimena.petz.domain.user.UserCriteria;
+import org.majimena.petz.domain.user.UserOutline;
 import org.majimena.petz.domain.user.UserPatchRegistry;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,6 +26,14 @@ public interface UserService {
     User createUserInformation(String login, String password, String firstName, String lastName, String email, String langKey);
 
     void updateUserInformation(String firstName, String lastName, String email);
+
+    /**
+     * ユーザークライテリアをもとにユーザーを検索する.
+     *
+     * @param criteria ユーザークライテリア
+     * @return 該当するユーザーの一覧（該当がない場合は空の一覧）
+     */
+    List<UserOutline> getUsersByUserCriteria(UserCriteria criteria);
 
     /**
      * ユーザーIDをもとにユーザーを取得する.

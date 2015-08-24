@@ -3,6 +3,7 @@ package org.majimena.petz.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -19,7 +20,7 @@ import javax.inject.Inject;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Inject
     private UserDetailsService userDetailsService;
@@ -44,8 +45,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/i18n/**")
             .antMatchers("/assets/**")
             .antMatchers("/swagger-ui/**")
-            .antMatchers("/api/v1/users")
-            .antMatchers("/api/v1/activate")
+            .antMatchers(HttpMethod.POST, "/api/v1/account")
+            .antMatchers(HttpMethod.POST, "/api/v1/activate")
             .antMatchers("/test/**");
     }
 

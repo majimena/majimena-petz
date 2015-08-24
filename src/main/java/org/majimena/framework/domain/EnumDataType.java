@@ -1,4 +1,4 @@
-package org.majimena.framework.core.datatypes;
+package org.majimena.framework.domain;
 
 /**
  * Created by todoken on 2015/07/26.

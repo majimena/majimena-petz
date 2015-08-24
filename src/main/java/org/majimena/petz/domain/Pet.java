@@ -9,10 +9,10 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateTimeDeserializer;
-import org.majimena.framework.core.datatypes.converters.ISO8601LocalDateTimeSerializer;
-import org.majimena.framework.core.datatypes.converters.StringSetDeserializer;
-import org.majimena.framework.core.datatypes.converters.StringSetSerializer;
+import org.majimena.framework.domain.converters.ISO8601LocalDateTimeDeserializer;
+import org.majimena.framework.domain.converters.ISO8601LocalDateTimeSerializer;
+import org.majimena.framework.domain.converters.StringSetDeserializer;
+import org.majimena.framework.domain.converters.StringSetSerializer;
 import org.majimena.framework.persistence.converters.LocalDateTimePersistenceConverter;
 import org.majimena.petz.datatypes.SexType;
 
@@ -64,6 +64,10 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
     @Size(max = 2000)
     @Column(name = "profile", length = 2000, nullable = true)
     private String profile;
+
+    @Size(max = 200)
+    @Column(name = "image", length = 200, nullable = true)
+    private String image;
 
     @JsonIgnore
     @NotNull

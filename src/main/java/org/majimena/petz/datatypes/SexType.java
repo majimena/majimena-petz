@@ -1,6 +1,6 @@
 package org.majimena.petz.datatypes;
 
-import org.majimena.framework.core.datatypes.EnumDataType;
+import org.majimena.framework.domain.EnumDataType;
 
 /**
  * Created by todoken on 2015/07/26.

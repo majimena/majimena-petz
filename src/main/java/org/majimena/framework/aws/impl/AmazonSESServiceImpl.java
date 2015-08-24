@@ -1,8 +1,8 @@
-package org.majimena.framework.aws;
+package org.majimena.framework.aws.impl;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.*;
-import org.majimena.framework.core.managers.EmailManager;
+import org.majimena.framework.aws.AmazonSESService;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +11,9 @@ import org.springframework.scheduling.annotation.Async;
 /**
  * Created by todoken on 2015/06/22.
  */
-public class AmazonSESEmailManager implements EmailManager {
+public class AmazonSESServiceImpl implements AmazonSESService {
 
-    private final Logger logger = LoggerFactory.getLogger(AmazonSESEmailManager.class);
+    private final Logger logger = LoggerFactory.getLogger(AmazonSESServiceImpl.class);
 
     private AmazonSimpleEmailService amazonSimpleEmailService;
 

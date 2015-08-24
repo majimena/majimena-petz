@@ -37,6 +37,7 @@
             <column name="birth_date" type="timestamp"/>
             <column name="sex" type="varchar(10)"/>
             <column name="profile" type="varchar(2000)"/>
+            <column name="image" type="varchar(200)"/>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>

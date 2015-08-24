@@ -1,4 +1,4 @@
-package org.majimena.framework.core.datatypes.converters;
+package org.majimena.framework.domain.converters;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;

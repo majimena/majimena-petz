@@ -1,4 +1,4 @@
-package org.majimena.framework.core.datatypes.converters;
+package org.majimena.framework.domain.converters;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -6,7 +6,7 @@ import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import mockit.Verifications;
 import org.junit.Test;
-import org.majimena.framework.core.datatypes.EnumDataType;
+import org.majimena.framework.domain.EnumDataType;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

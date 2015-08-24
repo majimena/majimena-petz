@@ -8,10 +8,6 @@ import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -39,6 +35,19 @@ public class SexTypeDeserializerTest {
 
         SexType result = sut.deserialize(jp, context);
         assertThat(result, is(SexType.MALE));
+    }
+
+    @Test
+    public void 値が入っていない場合は性別不明にデシリアライズできること() throws Exception {
+        new NonStrictExpectations() {{
+            jp.getCurrentToken();
+            result = JsonToken.VALUE_STRING;
+            jp.getText();
+            result = "";
+        }};
+
+        SexType result = sut.deserialize(jp, context);
+        assertThat(result, is(SexType.NONE));
     }
 
     @Test(expected = JsonMappingException.class)

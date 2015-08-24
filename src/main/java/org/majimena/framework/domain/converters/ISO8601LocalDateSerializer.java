@@ -1,4 +1,4 @@
-package org.majimena.framework.core.datatypes.converters;
+package org.majimena.framework.domain.converters;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

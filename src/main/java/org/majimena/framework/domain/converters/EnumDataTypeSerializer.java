@@ -1,9 +1,9 @@
-package org.majimena.framework.core.datatypes.converters;
+package org.majimena.framework.domain.converters;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import org.majimena.framework.core.datatypes.EnumDataType;
+import org.majimena.framework.domain.EnumDataType;
 
 import java.io.IOException;
 

@@ -1,14 +1,12 @@
-package org.majimena.framework.core.datatypes.converters;
+package org.majimena.framework.domain.converters;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import org.majimena.framework.core.datatypes.EnumDataType;
+import org.majimena.framework.domain.EnumDataType;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by todoken on 2015/07/26.

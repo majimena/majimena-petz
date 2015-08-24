@@ -15,4 +15,6 @@ public interface PetService {
 
     Pet savePet(Pet pet);
 
+    Pet uploadImage(String userId, String petId, byte[] binary);
+
 }

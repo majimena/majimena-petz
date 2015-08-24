@@ -1,8 +1,7 @@
 package org.majimena.petz.datatypes;
 
-import org.majimena.framework.core.datatypes.converters.EnumDataTypeDeserializer;
-
-import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
+import org.majimena.framework.domain.converters.EnumDataTypeDeserializer;
 
 /**
  * Created by todoken on 2015/07/26.
@@ -10,6 +9,9 @@ import java.util.Map;
 public class SexTypeDeserializer extends EnumDataTypeDeserializer<SexType> {
     @Override
     protected SexType newEnumDataType(String name) {
+        if (StringUtils.isBlank(name)) {
+            return SexType.NONE;
+        }
         return SexType.valueOf(name);
     }
 }

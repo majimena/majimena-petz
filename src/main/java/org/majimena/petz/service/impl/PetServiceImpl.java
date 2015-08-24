@@ -1,5 +1,6 @@
 package org.majimena.petz.service.impl;
 
+import org.majimena.framework.aws.AmazonS3Service;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.Tag;
@@ -37,6 +38,9 @@ public class PetServiceImpl implements PetService {
 
     @Inject
     private TagRepository tagRepository;
+
+    @Inject
+    private AmazonS3Service amazonS3Service;
 
     @Override
     public List<Pet> findPetsByUserId(String userId) {
@@ -90,5 +94,19 @@ public class PetServiceImpl implements PetService {
         User user = userRepository.findOne(pet.getUser().getId());
         pet.setUser(user);
         return petRepository.save(pet);
+    }
+
+    @Override
+    public Pet uploadImage(String userId, String petId, byte[] binary) {
+        // 先にS3にファイルを保存
+        String filename = "pets/" + petId + "/profile/" + System.currentTimeMillis() + ".jpg";
+        String url = amazonS3Service.upload(filename, binary);
+
+        // 該当ペットのイメージとしてURLを紐付けする
+        Pet pet = petRepository.findOne(petId);
+        pet.setImage(url);
+        petRepository.save(pet);
+
+        return findPetByPetId(petId);
     }
 }

@@ -1,4 +1,4 @@
-package org.majimena.petz.web.api.user;
+package org.majimena.petz.web.api.clinic;
 
 import com.codahale.metrics.annotation.Timed;
 import org.majimena.petz.domain.UserContact;
@@ -15,12 +15,9 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 
-/**
- * Created by todoken on 2015/08/02.
- */
 @RestController
 @RequestMapping("/api/v1")
-public class UserContactController {
+public class ClinicUserContactController {
 
     @Inject
     private UserService userService;
@@ -30,9 +27,10 @@ public class UserContactController {
     }
 
     @Timed
-    @RequestMapping(value = "/users/{userId}/contact", method = RequestMethod.GET)
-    public ResponseEntity<UserContact> get(@PathVariable String userId) {
-        // TODO 権限チェックが必要
+    @RequestMapping(value = "/clinics/{clinicId}/users/{userId}/contact", method = RequestMethod.GET)
+    public ResponseEntity<UserContact> get(@PathVariable String clinicId, @PathVariable String userId) {
+        // TODO 自分の顧客以外は見られないように権限チェック
+        // クリニックの顧客の連絡先を登録・更新
         Optional<UserContact> contact = userService.getUserContactByUserId(userId);
         return contact
                 .map(c -> ResponseEntity.ok(c))
@@ -40,9 +38,10 @@ public class UserContactController {
     }
 
     @Timed
-    @RequestMapping(value = "/users/{userId}/contact", method = RequestMethod.POST)
-    public ResponseEntity<?> create(@PathVariable String userId, @RequestBody @Valid UserContact registry) {
-        // TODO 権限チェックが必要
+    @RequestMapping(value = "/clinics/{clinicId}/users/{userId}/contact", method = RequestMethod.POST)
+    public ResponseEntity<?> post(@PathVariable String clinicId, @PathVariable String userId, @RequestBody @Valid UserContact registry) {
+        // TODO 自分の顧客以外は見られないように権限チェック
+        // クリニックの顧客の連絡先を登録・更新
         registry.setId(userId);
         userService.saveUserContact(registry);
         return ResponseEntity.created(URI.create("/api/v1/users/" + userId + "/contact")).build();

@@ -61,7 +61,7 @@ public class UserControllerTest {
         public void 検索条件に該当するユーザーが取得できること() throws Exception {
             new NonStrictExpectations() {{
                 userService.getUsersByUserCriteria(new UserCriteria("test@example.com"));
-                result = Arrays.asList(new UserOutline("u1", "Taro", "Test", "test@example.com"));
+                result = Arrays.asList(new UserOutline("u1", "Taro", "Test", Boolean.FALSE));
             }};
 
             mockMvc.perform(get("/api/v1/users")

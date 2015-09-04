@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserOutline> getUsersByUserCriteria(final UserCriteria criteria) {
         // 今はメアド検索しかないのでこのままでもOK
-        Optional<User> user = userRepository.findOneByEmail(criteria.getEmail());
+        Optional<User> user = userRepository.findOneByLogin(criteria.getEmail());
         return user
                 .map(u -> Arrays.asList(BeanFactory.create(u, new UserOutline())))
                 .orElse(Arrays.asList());

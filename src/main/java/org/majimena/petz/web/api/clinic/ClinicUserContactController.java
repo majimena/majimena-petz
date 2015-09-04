@@ -27,7 +27,7 @@ public class ClinicUserContactController {
     }
 
     @Timed
-    @RequestMapping(value = "/clinics/{clinicId}/users/{userId}/contact", method = RequestMethod.GET)
+    @RequestMapping(value = "/clinics/{clinicId}/users/{userId}/contacts", method = RequestMethod.GET)
     public ResponseEntity<UserContact> get(@PathVariable String clinicId, @PathVariable String userId) {
         // TODO 自分の顧客以外は見られないように権限チェック
         // クリニックの顧客の連絡先を登録・更新
@@ -38,7 +38,7 @@ public class ClinicUserContactController {
     }
 
     @Timed
-    @RequestMapping(value = "/clinics/{clinicId}/users/{userId}/contact", method = RequestMethod.POST)
+    @RequestMapping(value = "/clinics/{clinicId}/users/{userId}/contacts", method = RequestMethod.POST)
     public ResponseEntity<?> post(@PathVariable String clinicId, @PathVariable String userId, @RequestBody @Valid UserContact registry) {
         // TODO 自分の顧客以外は見られないように権限チェック
         // クリニックの顧客の連絡先を登録・更新

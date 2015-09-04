@@ -31,7 +31,7 @@ public class UserOutline implements Serializable {
     private String lastName;
 
     /**
-     * メールアドレス.
+     * アクティベートされているか.
      */
-    private String email;
+    private Boolean activated;
 }

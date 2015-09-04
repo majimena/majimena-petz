@@ -1,4 +1,4 @@
-package org.majimena.petz.domain.user;
+package org.majimena.petz.domain.clinic;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +9,15 @@ import org.hibernate.validator.constraints.Email;
 import java.io.Serializable;
 
 /**
- * ユーザークライテリア.
+ * クリニックユーザークライテリア.
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCriteria implements Serializable {
+public class ClinicUserCriteria implements Serializable {
+
+    private String clinicId;
 
     @Email
     private String email;

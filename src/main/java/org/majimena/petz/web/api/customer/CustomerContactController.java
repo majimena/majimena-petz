@@ -1,4 +1,4 @@
-package org.majimena.petz.web.api.clinic;
+package org.majimena.petz.web.api.customer;
 
 import com.codahale.metrics.annotation.Timed;
 import org.majimena.petz.domain.UserContact;
@@ -17,14 +17,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")
-public class ClinicUserContactController {
+public class CustomerContactController {
 
     @Inject
-    private UserService userService;
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
+    protected UserService userService;
 
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/users/{userId}/contacts", method = RequestMethod.GET)

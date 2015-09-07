@@ -9,7 +9,7 @@
 
     <changeSet id="20150827000000" author="custom">
 
-        <createTable tableName="clinic_user">
+        <createTable tableName="customer">
             <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -17,6 +17,9 @@
                 <constraints nullable="false" />
             </column>
             <column name="user_id" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="blocked" type="boolean" valueBoolean="false">
                 <constraints nullable="false" />
             </column>
             <column name="created_by" type="varchar(50)">
@@ -29,8 +32,8 @@
             <column name="last_modified_date" type="timestamp"/>
         </createTable>
 
-        <createIndex indexName="idx1_clinic_user"
-                     tableName="clinic_user"
+        <createIndex indexName="idx1_customer"
+                     tableName="customer"
                      unique="true">
             <column name="clinic_id" type="varchar(50)"/>
             <column name="user_id" type="varchar(50)"/>

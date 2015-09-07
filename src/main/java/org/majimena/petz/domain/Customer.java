@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "clinic_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ClinicUser extends AbstractAuditingEntity implements Serializable {
+public class Customer extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -35,7 +35,9 @@ public class ClinicUser extends AbstractAuditingEntity implements Serializable {
     private Clinic clinic;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "blocked", nullable = false)
+    private Boolean blocked = Boolean.FALSE;
 }

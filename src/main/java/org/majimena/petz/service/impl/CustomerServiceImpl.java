@@ -42,7 +42,7 @@ public class CustomerServiceImpl implements CustomerService {
     private UserContactRepository userContactRepository;
 
     @Override
-    public Page<Customer> getUsersByClinicUserCriteria(CustomerCriteria criteria, Pageable pageable) {
+    public Page<Customer> getCustomersByCustomerCriteria(CustomerCriteria criteria, Pageable pageable) {
         return customerRepository.findAll(CustomerRepository.Spec.of(criteria), pageable);
     }
 

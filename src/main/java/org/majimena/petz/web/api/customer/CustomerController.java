@@ -39,10 +39,28 @@ public class CustomerController {
     protected CustomerService customerService;
 
     /**
-     * 顧客登録簿のバリデータ.
+     * 顧客レジスタバリデータ.
      */
     @Inject
     protected CustomerRegistryValidator customerRegistryValidator;
+
+    /**
+     * 顧客サービスを設定する.
+     *
+     * @param customerService 顧客サービス
+     */
+    public void setCustomerService(final CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
+    /**
+     * 顧客レジスタバリデータを設定する.
+     *
+     * @param customerRegistryValidator 顧客レジスタバリデータ
+     */
+    public void setCustomerRegistryValidator(final CustomerRegistryValidator customerRegistryValidator) {
+        this.customerRegistryValidator = customerRegistryValidator;
+    }
 
     /**
      * 自分のクリニックの顧客を検索する.
@@ -64,7 +82,7 @@ public class CustomerController {
         Pageable pageable = PaginationUtil.generatePageRequest(offset, limit);
         criteria.setClinicId(clinicId);
 
-        Page<Customer> users = customerService.getUsersByClinicUserCriteria(criteria, pageable);
+        Page<Customer> users = customerService.getCustomersByCustomerCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(users, "/api/v1/clinics/" + clinicId + "/users", offset, limit);
         return new ResponseEntity<>(users.getContent(), headers, HttpStatus.OK);
     }

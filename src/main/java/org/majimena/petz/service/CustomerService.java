@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
  */
 public interface CustomerService {
 
-    Page<Customer> getUsersByClinicUserCriteria(CustomerCriteria criteria, Pageable pageable);
+    Page<Customer> getCustomersByCustomerCriteria(CustomerCriteria criteria, Pageable pageable);
 
     void authorize(CustomerAuthorizationToken token) throws ApplicationException;
 

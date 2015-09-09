@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-    <authority/>
+    <authority name="ROLE_USER"/>
     <user id="1" login="hoge@hoge.com" password="password" activated="0" email="hoge@hoge.com" created_by="hoge@hoge.com" created_date="2015-01-01"/>
     <user id="2" login="foo@hoge.com" password="password" activated="0" email="foo@hoge.com" created_by="hoge@hoge.com" created_date="2015-01-01"/>
     <user id="3" login="bar@hoge.com" password="$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC" activated="0" email="bar@hoge.com" created_by="hoge@hoge.com" created_date="2015-01-01"/>

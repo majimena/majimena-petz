@@ -1,5 +1,6 @@
 package org.majimena.petz.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.majimena.framework.beans.factory.BeanFactory;
 import org.majimena.framework.beans.utils.BeanFactoryUtils;
@@ -8,14 +9,12 @@ import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.common.utils.RandomUtils;
 import org.majimena.petz.domain.Authority;
 import org.majimena.petz.domain.User;
-import org.majimena.petz.domain.UserContact;
 import org.majimena.petz.domain.errors.ErrorCode;
 import org.majimena.petz.domain.user.PasswordRegistry;
 import org.majimena.petz.domain.user.SignupRegistry;
 import org.majimena.petz.domain.user.UserCriteria;
 import org.majimena.petz.domain.user.UserOutline;
 import org.majimena.petz.repository.AuthorityRepository;
-import org.majimena.petz.repository.UserContactRepository;
 import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.UserService;
@@ -42,9 +41,6 @@ public class UserServiceImpl implements UserService {
 
     @Inject
     private UserRepository userRepository;
-
-    @Inject
-    private UserContactRepository userContactRepository;
 
     @Inject
     private AuthorityRepository authorityRepository;
@@ -146,16 +142,6 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
-    public Optional<UserContact> getUserContactByUserId(String userId) {
-        UserContact contact = userContactRepository.findOne(userId);
-        return Optional.ofNullable(contact);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void saveUser(SignupRegistry registry) {
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
@@ -186,10 +172,15 @@ public class UserServiceImpl implements UserService {
         Set<Authority> authorities = new HashSet<>();
         authorities.add(authority);
 
-        // TODO メール送信するのでパスワードをランダムに発行してそこに記載する
-        String encryptedPassword = passwordEncoder.encode("password");
-
+        // TODO メール送信したらパスワードをランダムに発行してそこに記載する
+        String encryptedPassword;
+        if (StringUtils.isEmpty(user.getPassword())) {
+            encryptedPassword = passwordEncoder.encode("password");
+        } else {
+            encryptedPassword = passwordEncoder.encode(user.getPassword());
+        }
         user.setPassword(encryptedPassword);
+
         user.setLangKey("ja"); // FIXME 他言語対応
         user.setCountry("JP"); // FIXME 海外対応
         user.setActivated(false);
@@ -198,15 +189,6 @@ public class UserServiceImpl implements UserService {
         User created = userRepository.save(user);
 
         return created;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public UserContact saveUserContact(UserContact contact) {
-        contact.setCountry("JP");
-        return userContactRepository.save(contact);
     }
 
     /**

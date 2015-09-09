@@ -8,7 +8,6 @@ import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.domain.User;
-import org.majimena.petz.domain.UserContact;
 import org.majimena.petz.domain.user.PasswordRegistry;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
 import org.majimena.petz.service.UserService;
@@ -20,6 +19,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -91,86 +91,39 @@ public class UserServiceImplIT {
 
     @WebAppConfiguration
     @SpringApplicationConfiguration(classes = Application.class)
-    public static class GetUserContactByUserIdTest extends AbstractSpringDBUnitTest {
+    public static class SaveUserTest extends AbstractSpringDBUnitTest {
 
         @Inject
         private UserService sut;
 
         @Test
-        @DatabaseSetup("classpath:/testdata/user_contact.xml")
-        public void ユーザー連絡先が取得できること() throws Exception {
-            Optional<UserContact> contact = sut.getUserContactByUserId("1");
+        @DatabaseSetup("classpath:/testdata/user.xml")
+        public void ユーザー情報を保存できること() throws Exception {
+            User user = new User();
+            user.setId("9");
+            user.setUsername("テストデータ");
+            user.setLogin("test@test.com");
+            user.setPassword("password");
+            user.setZipCode("1110000");
+            user.setState("東京都");
+            user.setCity("新宿区");
+            user.setStreet("新宿１−１−１");
+            user.setPhoneNo("0311112222");
+            user.setMobilePhoneNo("09011112222");
 
-            UserContact result = contact.get();
-            assertThat(result.getId(), is("1"));
-            assertThat(result.getCountry(), is("JP"));
-            assertThat(result.getZipCode(), is("1230000"));
-            assertThat(result.getState(), is("東京都"));
-            assertThat(result.getCity(), is("新宿区"));
-            assertThat(result.getStreet(), is("ペット町１丁目１番地１号　ペッツハイツ１００"));
-            assertThat(result.getPhoneNo(), is("0311110000"));
-            assertThat(result.getMobilePhoneNo(), is("09011112222"));
-        }
+            User result = sut.saveUser(user);
 
-        @Test
-        @DatabaseSetup("classpath:/testdata/user_contact.xml")
-        public void ユーザー連絡先が存在しない場合は何も取得できないこと() throws Exception {
-            Optional<UserContact> result = sut.getUserContactByUserId("999");
-
-            assertThat(result.isPresent(), is(false));
-        }
-    }
-
-    @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
-    public static class SaveUserContactTest extends AbstractSpringDBUnitTest {
-
-        @Inject
-        private UserService sut;
-
-        @Test
-        @DatabaseSetup("classpath:/testdata/user_contact.xml")
-        public void データが存在しない場合はユーザー連絡先が保存できること() throws Exception {
-            Optional<UserContact> exists = sut.getUserContactByUserId("9");
-            assertThat(exists.isPresent(), is(false));
-
-            UserContact c = new UserContact("9", null, "1110000", "東京都", "新宿区", "ペット町１丁目１番地１号　ペッツハイツ１１１", "0311110000", "09011112222");
-            UserContact result = sut.saveUserContact(c);
-
-            assertThat(result.getId(), is("9"));
+            assertThat(result.getId(), is(notNullValue()));
+            assertThat(result.getUsername(), is("テストデータ"));
+            assertThat(result.getLogin(), is("test@test.com"));
+            assertThat(result.getPassword(), is(notNullValue()));
+            assertThat(result.getLangKey(), is("ja"));
             assertThat(result.getCountry(), is("JP"));
             assertThat(result.getZipCode(), is("1110000"));
             assertThat(result.getState(), is("東京都"));
             assertThat(result.getCity(), is("新宿区"));
-            assertThat(result.getStreet(), is("ペット町１丁目１番地１号　ペッツハイツ１１１"));
-            assertThat(result.getPhoneNo(), is("0311110000"));
-            assertThat(result.getMobilePhoneNo(), is("09011112222"));
-        }
-
-        @Test
-        @DatabaseSetup("classpath:/testdata/user_contact.xml")
-        public void データが存在する場合はユーザー連絡先が更新できること() throws Exception {
-            Optional<UserContact> exists = sut.getUserContactByUserId("1");
-            UserContact result = exists.get();
-            assertThat(result.getId(), is("1"));
-            assertThat(result.getCountry(), is("JP"));
-            assertThat(result.getZipCode(), is("1230000"));
-            assertThat(result.getState(), is("東京都"));
-            assertThat(result.getCity(), is("新宿区"));
-            assertThat(result.getStreet(), is("ペット町１丁目１番地１号　ペッツハイツ１００"));
-            assertThat(result.getPhoneNo(), is("0311110000"));
-            assertThat(result.getMobilePhoneNo(), is("09011112222"));
-
-            UserContact c = new UserContact("1", null, "1110000", "東京都", "新宿区", "ペット町１丁目１番地１号　ペッツハイツ１１１", "0311110000", "09011112222");
-            result = sut.saveUserContact(c);
-
-            assertThat(result.getId(), is("1"));
-            assertThat(result.getCountry(), is("JP"));
-            assertThat(result.getZipCode(), is("1110000"));
-            assertThat(result.getState(), is("東京都"));
-            assertThat(result.getCity(), is("新宿区"));
-            assertThat(result.getStreet(), is("ペット町１丁目１番地１号　ペッツハイツ１１１"));
-            assertThat(result.getPhoneNo(), is("0311110000"));
+            assertThat(result.getStreet(), is("新宿１−１−１"));
+            assertThat(result.getPhoneNo(), is("0311112222"));
             assertThat(result.getMobilePhoneNo(), is("09011112222"));
         }
     }

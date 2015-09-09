@@ -14,7 +14,6 @@ import org.majimena.petz.domain.user.PasswordRegistry;
 import org.majimena.petz.domain.user.SignupRegistry;
 import org.majimena.petz.domain.user.UserCriteria;
 import org.majimena.petz.domain.user.UserOutline;
-import org.majimena.petz.domain.user.UserPatchRegistry;
 import org.majimena.petz.repository.AuthorityRepository;
 import org.majimena.petz.repository.UserContactRepository;
 import org.majimena.petz.repository.UserRepository;
@@ -27,11 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Service class for managing users.
@@ -58,14 +53,14 @@ public class UserServiceImpl implements UserService {
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         userRepository.findOneByActivationKey(key)
-                .map(user -> {
-                    // activate given user for the registration key.
-                    user.setActivated(true);
-                    user.setActivationKey(null);
-                    userRepository.save(user);
-                    log.debug("Activated user: {}", user);
-                    return user;
-                });
+            .map(user -> {
+                // activate given user for the registration key.
+                user.setActivated(true);
+                user.setActivationKey(null);
+                userRepository.save(user);
+                log.debug("Activated user: {}", user);
+                return user;
+            });
         return Optional.empty();
     }
 
@@ -74,29 +69,29 @@ public class UserServiceImpl implements UserService {
         log.debug("Reset user password for reset key {}", key);
 
         return userRepository.findOneByResetKey(key)
-                .filter(user -> {
-                    DateTime oneDayAgo = DateTime.now().minusHours(24);
-                    return user.getResetDate().isAfter(oneDayAgo.toInstant().getMillis());
-                })
-                .map(user -> {
-                    user.setActivated(true);
-                    user.setPassword(passwordEncoder.encode(newPassword));
-                    user.setResetKey(null);
-                    user.setResetDate(null);
-                    userRepository.save(user);
-                    return user;
-                });
+            .filter(user -> {
+                DateTime oneDayAgo = DateTime.now().minusHours(24);
+                return user.getResetDate().isAfter(oneDayAgo.toInstant().getMillis());
+            })
+            .map(user -> {
+                user.setActivated(true);
+                user.setPassword(passwordEncoder.encode(newPassword));
+                user.setResetKey(null);
+                user.setResetDate(null);
+                userRepository.save(user);
+                return user;
+            });
     }
 
     @Override
     public Optional<User> requestPasswordReset(String mail) {
         return userRepository.findOneByEmail(mail)
-                .map(user -> {
-                    user.setResetKey(RandomUtils.generateResetKey());
-                    user.setResetDate(DateTime.now());
-                    userRepository.save(user);
-                    return user;
-                });
+            .map(user -> {
+                user.setResetKey(RandomUtils.generateResetKey());
+                user.setResetDate(DateTime.now());
+                userRepository.save(user);
+                return user;
+            });
     }
 
     @Override
@@ -133,8 +128,8 @@ public class UserServiceImpl implements UserService {
         // 今はメアド検索しかないのでこのままでもOK
         Optional<User> user = userRepository.findOneByLogin(criteria.getEmail());
         return user
-                .map(u -> Arrays.asList(BeanFactory.create(u, new UserOutline())))
-                .orElse(Arrays.asList());
+            .map(u -> Arrays.asList(BeanFactory.create(u, new UserOutline())))
+            .orElse(Arrays.asList());
     }
 
     /**
@@ -173,12 +168,36 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(encryptedPassword);
         newUser.setEmail(registry.getEmail());
         newUser.setLangKey("ja");
+
         // new user is not active
         newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtils.generateActivationKey());
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User saveUser(User user) {
+        Authority authority = authorityRepository.findOne("ROLE_USER");
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(authority);
+
+        // TODO メール送信するのでパスワードをランダムに発行してそこに記載する
+        String encryptedPassword = passwordEncoder.encode("password");
+
+        user.setPassword(encryptedPassword);
+        user.setLangKey("ja"); // FIXME 他言語対応
+        user.setCountry("JP"); // FIXME 海外対応
+        user.setActivated(false);
+        user.setActivationKey(RandomUtils.generateActivationKey());
+        user.setAuthorities(authorities);
+        User created = userRepository.save(user);
+
+        return created;
     }
 
     /**
@@ -210,17 +229,14 @@ public class UserServiceImpl implements UserService {
         userRepository.save(one);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public User updateUser(UserPatchRegistry registry) {
-        User one = userRepository.findOne(registry.getUserId());
+    public User patchUser(User user) {
+        User one = userRepository.findOne(user.getId());
         if (one == null) {
-            throw new SystemException("user not found [" + registry.getUserId() + "]");
+            throw new SystemException("user not found [" + user.getId() + "]");
         }
 
-        BeanFactoryUtils.copyNonNullProperties(registry, one);
+        BeanFactoryUtils.copyNonNullProperties(user, one);
         userRepository.save(one);
         return one;
     }

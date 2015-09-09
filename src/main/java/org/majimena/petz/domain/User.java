@@ -10,14 +10,13 @@ import org.hibernate.validator.constraints.Email;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A user.
+ * ユーザーエンティティ.
  */
 @Data
 @Builder
@@ -35,22 +34,26 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @NotNull
     @Email
     @Size(max = 100)
     @Column(length = 100, unique = true, nullable = false)
     private String login;
 
     @JsonIgnore
-    @NotNull
     @Size(min = 5, max = 100)
     @Column(length = 100)
     private String password;
 
     @Size(max = 50)
+    @Column(name = "username", length = 50)
+    private String username;
+
+    @Deprecated
+    @Size(max = 50)
     @Column(name = "first_name", length = 50)
     private String firstName;
 
+    @Deprecated
     @Size(max = 50)
     @Column(name = "last_name", length = 50)
     private String lastName;
@@ -79,6 +82,33 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Column(name = "reset_date", nullable = true)
     private DateTime resetDate = null;
+
+    @Size(max = 2)
+    @Column(name = "country", length = 2, nullable = false)
+    private String country;
+
+    @Size(max = 10)
+    @Column(name = "zip_code", length = 10, nullable = false)
+    private String zipCode;
+
+    @Size(max = 50)
+    @Column(name = "state", length = 50, nullable = false)
+    private String state;
+
+    @Size(max = 50)
+    @Column(name = "city", length = 50, nullable = false)
+    private String city;
+
+    @Size(max = 50)
+    @Column(name = "street", length = 50, nullable = false)
+    private String street;
+
+    @Size(max = 15)
+    @Column(name = "phone_no", length = 15, nullable = false)
+    private String phoneNo;
+
+    @Column(name = "mobile_phone_no", length = 15, nullable = true)
+    private String mobilePhoneNo;
 
     @JsonIgnore
     @ManyToMany

@@ -29,19 +29,12 @@ public class UserController {
     @Inject
     private SignupRegistryValidator signupRegistryValidator;
 
-    @Inject
-    private UserPatchRegistryValidator userPatchRegistryValidator;
-
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
     public void setSignupRegistryValidator(SignupRegistryValidator signupRegistryValidator) {
         this.signupRegistryValidator = signupRegistryValidator;
-    }
-
-    public void setUserPatchRegistryValidator(UserPatchRegistryValidator userPatchRegistryValidator) {
-        this.userPatchRegistryValidator = userPatchRegistryValidator;
     }
 
     @Timed
@@ -61,7 +54,7 @@ public class UserController {
     @RequestMapping(value = "/activate", method = RequestMethod.GET)
     public ResponseEntity<String> activateAccount(@RequestParam(value = "key") String key) {
         return Optional.ofNullable(userService.activateRegistration(key))
-                .map(user -> new ResponseEntity<String>(HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+            .map(user -> new ResponseEntity<String>(HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 }

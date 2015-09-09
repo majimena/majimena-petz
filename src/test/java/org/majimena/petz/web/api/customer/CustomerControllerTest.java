@@ -60,8 +60,8 @@ public class CustomerControllerTest {
             Pageable pageable = PaginationUtil.generatePageRequest(1, 1);
 
             final Clinic clinic = Clinic.builder().id("c123").build();
-            final Customer d1 = new Customer("c111", clinic, User.builder().id("u111").build(), Boolean.FALSE);
-            final Customer d2 = new Customer("c222", clinic, User.builder().id("u222").build(), Boolean.FALSE);
+            final Customer d1 = Customer.builder().id("c111").clinic(clinic).user(User.builder().id("u111").build()).build();
+            final Customer d2 = Customer.builder().id("c222").clinic(clinic).user(User.builder().id("u222").build()).build();
 
             new NonStrictExpectations() {{
                 customerService.getCustomersByCustomerCriteria(criteria, pageable);

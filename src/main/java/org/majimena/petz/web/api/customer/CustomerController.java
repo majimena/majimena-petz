@@ -3,7 +3,6 @@ package org.majimena.petz.web.api.customer;
 import com.codahale.metrics.annotation.Timed;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.customer.CustomerCriteria;
-import org.majimena.petz.domain.customer.CustomerRegistry;
 import org.majimena.petz.service.CustomerService;
 import org.majimena.petz.web.rest.util.PaginationUtil;
 import org.springframework.data.domain.Page;
@@ -13,12 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -39,10 +33,10 @@ public class CustomerController {
     protected CustomerService customerService;
 
     /**
-     * 顧客レジスタバリデータ.
+     * 顧客バリデータ.
      */
     @Inject
-    protected CustomerRegistryValidator customerRegistryValidator;
+    protected CustomerValidator customerValidator;
 
     /**
      * 顧客サービスを設定する.
@@ -54,12 +48,12 @@ public class CustomerController {
     }
 
     /**
-     * 顧客レジスタバリデータを設定する.
+     * 顧客バリデータを設定する.
      *
-     * @param customerRegistryValidator 顧客レジスタバリデータ
+     * @param customerValidator 顧客レジスタバリデータ
      */
-    public void setCustomerRegistryValidator(final CustomerRegistryValidator customerRegistryValidator) {
-        this.customerRegistryValidator = customerRegistryValidator;
+    public void setCustomerValidator(final CustomerValidator customerValidator) {
+        this.customerValidator = customerValidator;
     }
 
     /**
@@ -75,7 +69,8 @@ public class CustomerController {
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/customers", method = RequestMethod.GET)
     public ResponseEntity<List<Customer>> getAll(@PathVariable String clinicId,
-                                                 @RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page", required = false) Integer limit,
+                                                 @RequestParam(value = "page", required = false) Integer offset,
+                                                 @RequestParam(value = "per_page", required = false) Integer limit,
                                                  @Valid CustomerCriteria criteria) throws URISyntaxException {
         // TODO 権限チェックが必要
 
@@ -91,24 +86,43 @@ public class CustomerController {
      * 自分のクリニックに新規顧客を登録する.
      *
      * @param clinicId クリニックID
-     * @param registry 顧客登録情報
+     * @param customer 顧客登録情報
      * @param errors   エラーオブジェクト
      * @return 登録結果
      * @throws BindException バリデーションエラーがある場合に発生する例外
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/customers", method = RequestMethod.POST)
-    public ResponseEntity<Void> post(@PathVariable String clinicId, @RequestBody @Valid CustomerRegistry registry, BindingResult errors) throws BindException {
+    public ResponseEntity<Customer> post(@PathVariable String clinicId,
+                                         @RequestBody @Valid Customer customer, BindingResult errors) throws BindException {
         // TODO 権限チェックが必要
 
-        customerRegistryValidator.validate(registry, errors);
+        customerValidator.validate(customer, errors);
         if (errors.hasErrors()) {
             throw new BindException(errors);
         }
 
         // 新規顧客を登録する
-        Customer customer = customerService.saveCustomer(registry);
+        Customer created = customerService.saveCustomer(clinicId, customer);
         return ResponseEntity.created(
-                URI.create("/api/v1/clinics/" + clinicId + "/customers/" + customer.getId())).build();
+            URI.create("/api/v1/clinics/" + clinicId + "/customers/" + created.getId())).body(created);
+    }
+
+    /**
+     * 自分のクリニックの顧客情報を更新する.
+     *
+     * @param clinicId   クリニックID
+     * @param customerId 顧客ID
+     * @param customer   顧客登録情報
+     * @param errors     エラーオブジェクト
+     * @return 登録結果
+     * @throws BindException バリデーションエラーがある場合に発生する例外
+     */
+    @Timed
+    @RequestMapping(value = "/clinics/{clinicId}/customers/{customerId}", method = RequestMethod.PUT)
+    public ResponseEntity<Customer> put(@PathVariable String clinicId, @PathVariable String customerId,
+                                        @RequestBody @Valid Customer customer, BindingResult errors) throws BindException {
+        ResponseEntity<Customer> post = post(clinicId, customer, errors);
+        return ResponseEntity.ok().body(post.getBody());
     }
 }

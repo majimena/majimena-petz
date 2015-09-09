@@ -1,6 +1,7 @@
 package org.majimena.petz.web.api.clinic;
 
 import com.codahale.metrics.annotation.Timed;
+import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.customer.CustomerAuthorizationToken;
 import org.majimena.petz.service.CustomerService;
 import org.springframework.http.ResponseEntity;
@@ -39,11 +40,11 @@ public class ClinicUserController {
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/users/{userId}", method = RequestMethod.POST)
-    public ResponseEntity<Void> authorize(@Valid @RequestBody CustomerAuthorizationToken token) {
+    public ResponseEntity<Customer> authorize(@Valid @RequestBody CustomerAuthorizationToken token) {
         // TODO クリニックの権限チェックが必要
 
         // 電話番号で認証して、クリニックと紐付けする
-        customerService.authorize(token);
-        return ResponseEntity.ok().build();
+        Customer customer = customerService.authorize(token);
+        return ResponseEntity.ok().body(customer);
     }
 }

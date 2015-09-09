@@ -1,20 +1,20 @@
 package org.majimena.petz.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.framework.beans.factory.BeanFactory;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.User;
-import org.majimena.petz.domain.UserContact;
 import org.majimena.petz.domain.customer.CustomerAuthorizationToken;
 import org.majimena.petz.domain.customer.CustomerCriteria;
-import org.majimena.petz.domain.customer.CustomerRegistry;
 import org.majimena.petz.domain.errors.ErrorCode;
+import org.majimena.petz.domain.user.SignupRegistry;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.CustomerRepository;
-import org.majimena.petz.repository.UserContactRepository;
 import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.service.CustomerService;
+import org.majimena.petz.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,42 +39,67 @@ public class CustomerServiceImpl implements CustomerService {
     private UserRepository userRepository;
 
     @Inject
-    private UserContactRepository userContactRepository;
+    private UserService userService;
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Customer> getCustomersByCustomerCriteria(CustomerCriteria criteria, Pageable pageable) {
         return customerRepository.findAll(CustomerRepository.Spec.of(criteria), pageable);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void authorize(CustomerAuthorizationToken token) throws ApplicationException {
+    public Customer authorize(CustomerAuthorizationToken token) throws ApplicationException {
+        // 関連情報を取得する
         Clinic clinic = clinicRepository.findOne(token.getClinicId());
-        if (clinic == null) {
-            throw new ApplicationException(ErrorCode.PTZ_001999);
-        }
         User user = userRepository.findOne(token.getUserId());
-        if (user == null) {
-            throw new ApplicationException(ErrorCode.PTZ_000999);
-        }
 
         // 既に連絡先が登録されており、それを流用する場合は電話番号をキーに認証する
-        UserContact contact = userContactRepository.findOne(token.getUserId());
-        if (contact != null && !StringUtils.equals(contact.getPhoneNo(), token.getPhoneNo())) {
+        String phone = token.getPhoneNo();
+        if (StringUtils.isNotEmpty(user.getPhoneNo()) &&
+            !(StringUtils.equals(user.getPhoneNo(), phone) || StringUtils.equals(user.getMobilePhoneNo(), phone))) {
             throw new ApplicationException(ErrorCode.PTZ_000201);
         }
 
-        // 登録情報と合っていればクリニックのユーザーに追加
-        customerRepository.findByClinicIdAndUserId(token.getClinicId(), token.getUserId())
-                .map(u -> {
-                    u.setClinic(clinic);
-                    u.setUser(user);
-                    return customerRepository.save(u);
-                })
-                .orElseGet(() -> customerRepository.save(new Customer(null, clinic, user, Boolean.FALSE)));
+        // 登録情報と合っていればクリニック顧客として追加（但し、この時点ではアクティベートしていない）
+        Customer customer = customerRepository.findByClinicIdAndUserId(token.getClinicId(), token.getUserId())
+            .map(u -> {
+                u.setClinic(clinic);
+                u.setUser(user);
+                return customerRepository.save(u);
+            })
+            .orElseGet(() -> customerRepository.save(Customer.builder()
+                .clinic(clinic).user(user).activated(false).blocked(false).build()));
+        return customer;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Customer saveCustomer(final CustomerRegistry registry) throws ApplicationException {
-        return null;
+    public Customer saveCustomer(String clinicId, Customer customer) throws ApplicationException {
+        User user;
+        // ユーザーが既にいるなら更新し、そうでなければ新規でアカウントを作成する
+        if (StringUtils.isNotEmpty(customer.getUser().getId())) {
+            user = userService.patchUser(customer.getUser());
+        } else {
+            // FIXME 海外対応した場合は考える
+            customer.getUser().setUsername(customer.getLastName() + " " + customer.getFirstName());
+            user = userService.saveUser(customer.getUser());
+        }
+
+        // 顧客とするクリニックを取得する
+        Clinic clinic = clinicRepository.getOne(clinicId);
+
+        // 顧客情報を更新してアクティベートする
+        customer.setUser(user);
+        customer.setClinic(clinic);
+        customer.setActivated(Boolean.TRUE);
+        Customer created = customerRepository.save(customer);
+
+        // TODO 顧客に登録完了のメールを送信
+        return created;
     }
 }

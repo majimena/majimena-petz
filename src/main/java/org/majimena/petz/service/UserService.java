@@ -6,7 +6,6 @@ import org.majimena.petz.domain.user.PasswordRegistry;
 import org.majimena.petz.domain.user.SignupRegistry;
 import org.majimena.petz.domain.user.UserCriteria;
 import org.majimena.petz.domain.user.UserOutline;
-import org.majimena.petz.domain.user.UserPatchRegistry;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +55,16 @@ public interface UserService {
      *
      * @param registry 新規ユーザー
      */
+    @Deprecated
     void saveUser(SignupRegistry registry);
+
+    /**
+     * ユーザーを新規登録する.
+     *
+     * @param user ユーザー情報
+     * @return 登録したユーザー情報
+     */
+    User saveUser(User user);
 
     /**
      * ユーザー連絡先を保存する.
@@ -64,6 +72,7 @@ public interface UserService {
      * @param contact ユーザー連絡先情報
      * @return 保存したユーザー連絡先
      */
+    @Deprecated
     UserContact saveUserContact(UserContact contact);
 
     /**
@@ -76,9 +85,9 @@ public interface UserService {
     /**
      * ユーザーを更新する.
      *
-     * @param registry 更新情報
-     * @return 更新したユーザー
+     * @param user 更するユーザー情報
+     * @return 更新後のユーザー情報
      */
-    User updateUser(UserPatchRegistry registry);
+    User patchUser(User user);
 
 }

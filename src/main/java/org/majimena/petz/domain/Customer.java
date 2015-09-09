@@ -4,16 +4,14 @@ import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.majimena.framework.persistence.converters.LocalDatePersistenceConverter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 /**
- * クリニックユーザードメイン.
+ * 顧客ドメイン.
  */
 @Data
 @Builder
@@ -21,7 +19,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "clinic_user")
+@Table(name = "customer")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Customer extends AbstractAuditingEntity implements Serializable {
 
@@ -38,6 +36,19 @@ public class Customer extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Size(max = 50)
+    @Column(name = "first_name", length = 50)
+    private String firstName;
+
+    @Size(max = 50)
+    @Column(name = "last_name", length = 50)
+    private String lastName;
+
+    @NotNull
+    @Column(name = "activated", nullable = false)
+    private Boolean activated = Boolean.FALSE;
+
+    @NotNull
     @Column(name = "blocked", nullable = false)
     private Boolean blocked = Boolean.FALSE;
 }

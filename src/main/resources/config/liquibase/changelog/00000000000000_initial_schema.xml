@@ -24,6 +24,7 @@
                 <constraints unique="true" nullable="false"/>
             </column>
             <column name="password" type="varchar(100)"/>
+            <column name="username" type="varchar(50)"></column>
             <column name="first_name" type="varchar(50)"/>
             <column name="last_name" type="varchar(50)"/>
             <column name="email" type="varchar(100)">
@@ -35,6 +36,13 @@
             <column name="lang_key" type="varchar(5)"/>
             <column name="activation_key" type="varchar(20)"/>
             <column name="reset_key" type="varchar(20)"/>
+            <column name="zip_code" type="varchar(10)"></column>
+            <column name="country" type="varchar(2)"></column>
+            <column name="state" type="varchar(50)"></column>
+            <column name="city" type="varchar(50)"></column>
+            <column name="street" type="varchar(50)"></column>
+            <column name="phone_no" type="varchar(15)"></column>
+            <column name="mobile_phone_no" type="varchar(15)"></column>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
@@ -55,8 +63,7 @@
         </createIndex>
 
         <createIndex indexName="idx_user_email"
-            tableName="user"
-            unique="true">
+            tableName="user">
             <column name="email" type="varchar(100)"/>
         </createIndex>
 

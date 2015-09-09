@@ -8,5 +8,5 @@
     <include file="classpath:config/liquibase/changelog/20150512163654_added_entity_Clinic.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150726000000_added_entity_Pet.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150802000000_added_entity_Contact.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20150827000000_added_entity_ClinicUser.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20150827000000_added_entity_Customer.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

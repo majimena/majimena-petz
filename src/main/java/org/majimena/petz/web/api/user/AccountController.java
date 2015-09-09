@@ -5,7 +5,6 @@ import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.user.PasswordRegistry;
 import org.majimena.petz.domain.user.SignupRegistry;
-import org.majimena.petz.domain.user.UserPatchRegistry;
 import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.MailService;
@@ -41,9 +40,6 @@ public class AccountController {
     @Inject
     private SignupRegistryValidator signupRegistryValidator;
 
-    @Inject
-    private UserPatchRegistryValidator userPatchRegistryValidator;
-
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -60,10 +56,6 @@ public class AccountController {
         this.signupRegistryValidator = signupRegistryValidator;
     }
 
-    public void setUserPatchRegistryValidator(UserPatchRegistryValidator userPatchRegistryValidator) {
-        this.userPatchRegistryValidator = userPatchRegistryValidator;
-    }
-
     @Timed
     @RequestMapping(value = "/account", method = RequestMethod.GET)
     public ResponseEntity<User> get() {
@@ -75,11 +67,11 @@ public class AccountController {
 
     @Timed
     @RequestMapping(value = "/account", method = RequestMethod.PATCH)
-    public ResponseEntity<User> patch(@RequestBody @Valid UserPatchRegistry registry) {
+    public ResponseEntity<User> patch(@RequestBody @Valid User user) {
         String userId = SecurityUtils.getCurrentUserId();
-        registry.setUserId(userId);
-        User user = userService.updateUser(registry);
-        return ResponseEntity.ok().body(user);
+        user.setId(userId);
+        User created = userService.patchUser(user);
+        return ResponseEntity.ok().body(created);
     }
 
     @Timed

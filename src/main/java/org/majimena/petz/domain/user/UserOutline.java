@@ -23,12 +23,19 @@ public class UserOutline implements Serializable {
     /**
      * 氏名（姓）.
      */
+    @Deprecated
     private String firstName;
 
     /**
      * 氏名（名）.
      */
+    @Deprecated
     private String lastName;
+
+    /**
+     * ユーザー名.
+     */
+    private String username;
 
     /**
      * アクティベートされているか.

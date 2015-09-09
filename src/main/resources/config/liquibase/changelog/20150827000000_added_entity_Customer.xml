@@ -19,6 +19,13 @@
             <column name="user_id" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
+            <column name="first_name" type="varchar(50)">
+            </column>
+            <column name="last_name" type="varchar(50)">
+            </column>
+            <column name="activated" type="boolean" valueBoolean="false">
+                <constraints nullable="false" />
+            </column>
             <column name="blocked" type="boolean" valueBoolean="false">
                 <constraints nullable="false" />
             </column>

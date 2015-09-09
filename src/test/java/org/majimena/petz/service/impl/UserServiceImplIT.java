@@ -10,7 +10,6 @@ import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.UserContact;
 import org.majimena.petz.domain.user.PasswordRegistry;
-import org.majimena.petz.domain.user.UserPatchRegistry;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
 import org.majimena.petz.service.UserService;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -20,7 +19,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -61,7 +59,7 @@ public class UserServiceImplIT {
 
     @WebAppConfiguration
     @SpringApplicationConfiguration(classes = Application.class)
-    public static class UpdateUserTest extends AbstractSpringDBUnitTest {
+    public static class PatchUserTest extends AbstractSpringDBUnitTest {
 
         @Inject
         private UserService sut;
@@ -69,9 +67,9 @@ public class UserServiceImplIT {
         @Test
         @DatabaseSetup("classpath:/testdata/user.xml")
         public void ユーザーが更新できること() throws Exception {
-            UserPatchRegistry r = new UserPatchRegistry("1", "FirstName", "LastName", "todoken@example.com");
+            User r = User.builder().id("1").firstName("FirstName").lastName("LastName").email("todoken@example.com").build();
 
-            User result = sut.updateUser(r);
+            User result = sut.patchUser(r);
 
             assertThat(result.getId(), is("1"));
             assertThat(result.getLogin(), is("hoge@hoge.com"));
@@ -85,9 +83,9 @@ public class UserServiceImplIT {
         @Test(expected = SystemException.class)
         @DatabaseSetup("classpath:/testdata/user.xml")
         public void ユーザーが存在しない場合はシステム例外が発生すること() throws Exception {
-            UserPatchRegistry r = new UserPatchRegistry("999", "FirstName", "LastName", "todoken@example.com");
+            User r = User.builder().id("999").firstName("FirstName").lastName("LastName").email("todoken@example.com").build();
 
-            sut.updateUser(r);
+            sut.patchUser(r);
         }
     }
 

@@ -1,8 +1,10 @@
 package org.majimena.petz.web.api.customer;
 
 import com.codahale.metrics.annotation.Timed;
+import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.customer.CustomerCriteria;
+import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.CustomerService;
 import org.majimena.petz.web.rest.util.PaginationUtil;
 import org.springframework.data.domain.Page;
@@ -12,7 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -72,7 +79,10 @@ public class CustomerController {
                                                  @RequestParam(value = "page", required = false) Integer offset,
                                                  @RequestParam(value = "per_page", required = false) Integer limit,
                                                  @Valid CustomerCriteria criteria) throws URISyntaxException {
-        // TODO 権限チェックが必要
+        // クリニックの権限チェック
+        if (SecurityUtils.isUserInClinic(clinicId)) {
+            throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
+        }
 
         Pageable pageable = PaginationUtil.generatePageRequest(offset, limit);
         criteria.setClinicId(clinicId);
@@ -95,7 +105,10 @@ public class CustomerController {
     @RequestMapping(value = "/clinics/{clinicId}/customers", method = RequestMethod.POST)
     public ResponseEntity<Customer> post(@PathVariable String clinicId,
                                          @RequestBody @Valid Customer customer, BindingResult errors) throws BindException {
-        // TODO 権限チェックが必要
+        // クリニックの権限チェック
+        if (SecurityUtils.isUserInClinic(clinicId)) {
+            throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
+        }
 
         customerValidator.validate(customer, errors);
         if (errors.hasErrors()) {
@@ -105,7 +118,7 @@ public class CustomerController {
         // 新規顧客を登録する
         Customer created = customerService.saveCustomer(clinicId, customer);
         return ResponseEntity.created(
-            URI.create("/api/v1/clinics/" + clinicId + "/customers/" + created.getId())).body(created);
+                URI.create("/api/v1/clinics/" + clinicId + "/customers/" + created.getId())).body(created);
     }
 
     /**
@@ -122,6 +135,7 @@ public class CustomerController {
     @RequestMapping(value = "/clinics/{clinicId}/customers/{customerId}", method = RequestMethod.PUT)
     public ResponseEntity<Customer> put(@PathVariable String clinicId, @PathVariable String customerId,
                                         @RequestBody @Valid Customer customer, BindingResult errors) throws BindException {
+        customer.setId(customerId);
         ResponseEntity<Customer> post = post(clinicId, customer, errors);
         return ResponseEntity.ok().body(post.getBody());
     }

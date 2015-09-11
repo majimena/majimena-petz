@@ -22,6 +22,8 @@ public interface ClinicStaffRepository extends JpaRepository<ClinicStaff, String
     @Query("select cs from ClinicStaff cs inner join fetch cs.user us where cs.clinic.id = :clinicId order by cs.activatedDate")
     List<ClinicStaff> findByClinicId(@Param("clinicId") String clinicId);
 
+    List<ClinicStaff> findByUserId(String userId);
+
     Optional<ClinicStaff> findByClinicIdAndUserId(String clinicId, String userId);
 
     void deleteByClinicId(String clinicId);

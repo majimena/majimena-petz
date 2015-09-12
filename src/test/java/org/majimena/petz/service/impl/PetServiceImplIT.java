@@ -7,11 +7,8 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
+import org.majimena.petz.domain.*;
 import org.majimena.petz.domain.common.SexType;
-import org.majimena.petz.domain.Pet;
-import org.majimena.petz.domain.Tag;
-import org.majimena.petz.domain.Type;
-import org.majimena.petz.domain.User;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
 import org.majimena.petz.service.PetService;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -22,9 +19,7 @@ import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -53,10 +48,9 @@ public class PetServiceImplIT {
             assertThat(result.get(0).getUser().getLogin(), is("login1"));
             assertThat(result.get(0).getBirthDate(), is(LocalDateTime.of(2000, 1, 1, 0, 0)));
             assertThat(result.get(0).getSex(), is(SexType.MALE));
-            assertThat(result.get(0).getTypes().size(), is(1));
-            assertThat(result.get(0).getTypes().contains("柴犬"), is(true));
+            assertThat(result.get(0).getType(), is(new Type("柴犬")));
             assertThat(result.get(0).getTags().size(), is(1));
-            assertThat(result.get(0).getTags().contains("忠犬"), is(true));
+            assertThat(result.get(0).getTags().contains(new Tag("忠犬")), is(true));
         }
 
         @Test
@@ -86,10 +80,9 @@ public class PetServiceImplIT {
             assertThat(result.getUser().getLogin(), is("login1"));
             assertThat(result.getBirthDate(), is(LocalDateTime.of(2000, 1, 1, 0, 0)));
             assertThat(result.getSex(), is(SexType.MALE));
-            assertThat(result.getTypes().size(), is(1));
-            assertThat(result.getTypes().contains("柴犬"), is(true));
+            assertThat(result.getType(), is(new Type("柴犬")));
             assertThat(result.getTags().size(), is(1));
-            assertThat(result.getTags().contains("忠犬"), is(true));
+            assertThat(result.getTags().contains(new Tag("忠犬")), is(true));
         }
 
         @Test(expected = ResourceNotFoundException.class)
@@ -113,8 +106,8 @@ public class PetServiceImplIT {
             LocalDateTime now = LocalDateTime.now();
             final Pet testData = Pet.builder().name("ポチ").profile("プロファイル").birthDate(now).sex(SexType.MALE)
                 .user(User.builder().id("1").build())
-                .types(Sets.newHashSet("トイプードル", "マルチーズ"))
-                .tags(Sets.newHashSet("室内犬", "血統書")).build();
+                .type(new Type("トイプードル")).color(new Color("ホワイト"))
+                .tags(Sets.newHashSet(new Tag("室内犬"), new Tag("血統書"))).build();
 
             Pet result = sut.savePet(testData);
 
@@ -125,12 +118,11 @@ public class PetServiceImplIT {
             assertThat(result.getUser().getLogin(), is("login1"));
             assertThat(result.getBirthDate(), is(now));
             assertThat(result.getSex(), is(SexType.MALE));
-            assertThat(result.getTypeEntities().size(), is(2));
-            assertThat(result.getTypeEntities().contains(new Type("トイプードル")), is(true));
-            assertThat(result.getTypeEntities().contains(new Type("マルチーズ")), is(true));
-            assertThat(result.getTagEntities().size(), is(2));
-            assertThat(result.getTagEntities().contains(new Tag("室内犬")), is(true));
-            assertThat(result.getTagEntities().contains(new Tag("血統書")), is(true));
+            assertThat(result.getType(), is(new Type("トイプードル")));
+            assertThat(result.getColor(), is(new Color("ホワイト")));
+            assertThat(result.getTags().size(), is(2));
+            assertThat(result.getTags().contains(new Tag("室内犬")), is(true));
+            assertThat(result.getTags().contains(new Tag("血統書")), is(true));
         }
 
         @Test
@@ -139,7 +131,7 @@ public class PetServiceImplIT {
         public void 任意項目が入力されていない場合にペットが保存できること() throws Exception {
             final Pet testData = Pet.builder().name("ポチ")
                 .user(User.builder().id("1").build())
-                .types(Sets.newHashSet("トイプードル", "マルチーズ")).build();
+                .type(new Type("トイプードル")).color(new Color("ホワイト")).build();
 
             Pet result = sut.savePet(testData);
 
@@ -150,10 +142,9 @@ public class PetServiceImplIT {
             assertThat(result.getUser().getLogin(), is("login1"));
             assertThat(result.getBirthDate(), is(nullValue()));
             assertThat(result.getSex(), is(nullValue()));
-            assertThat(result.getTypeEntities().size(), is(2));
-            assertThat(result.getTypeEntities().contains(new Type("トイプードル")), is(true));
-            assertThat(result.getTypeEntities().contains(new Type("マルチーズ")), is(true));
-            assertThat(result.getTagEntities(), is(nullValue()));
+            assertThat(result.getType(), is(new Type("トイプードル")));
+            assertThat(result.getColor(), is(new Color("ホワイト")));
+            assertThat(result.getTags(), is(nullValue()));
         }
     }
 }

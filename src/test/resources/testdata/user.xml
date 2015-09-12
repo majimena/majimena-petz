@@ -8,8 +8,9 @@
 
     <tag/>
     <type/>
+    <color/>
+    <blood/>
     <pet/>
-    <pet_type/>
     <pet_tag/>
 
     <clinic/>

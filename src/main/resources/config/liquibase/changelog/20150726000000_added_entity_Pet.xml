@@ -18,6 +18,18 @@
             </column>
         </createTable>
 
+        <createTable tableName="color">
+            <column name="name" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="blood">
+            <column name="name" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+
         <createTable tableName="tag">
             <column name="name" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
@@ -34,9 +46,22 @@
             <column name="user_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="birth_date" type="timestamp"/>
+            <column name="type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="color" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="blood" type="varchar(50)"/>
             <column name="sex" type="varchar(10)"/>
+            <column name="microchipNo" type="varchar(50)"/>
+            <column name="microchipDate" type="timestamp"/>
+            <column name="birth_date" type="timestamp"/>
+            <column name="neutral" type="boolean"/>
             <column name="profile" type="varchar(2000)"/>
+            <column name="allergia" type="varchar(2000)"/>
+            <column name="drug" type="varchar(2000)"/>
+            <column name="other" type="varchar(2000)"/>
             <column name="image" type="varchar(200)"/>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
@@ -47,16 +72,6 @@
             <column name="last_modified_by" type="varchar(50)"/>
             <column name="last_modified_date" type="timestamp"/>
         </createTable>
-
-        <createTable tableName="pet_type">
-            <column name="pet_id" type="varchar(50)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="type_name" type="varchar(50)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <addPrimaryKey columnNames="pet_id, type_name" tableName="pet_type"/>
 
         <createTable tableName="pet_tag">
             <column name="pet_id" type="varchar(50)">

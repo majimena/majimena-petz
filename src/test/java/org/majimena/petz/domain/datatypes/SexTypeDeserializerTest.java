@@ -1,4 +1,4 @@
-package org.majimena.petz.datatypes;
+package org.majimena.petz.domain.datatypes;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import org.junit.Test;
+import org.majimena.petz.domain.common.SexType;
+import org.majimena.petz.domain.common.SexTypeDeserializer;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

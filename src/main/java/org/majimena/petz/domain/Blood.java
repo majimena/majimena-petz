@@ -22,9 +22,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "type")
+@Table(name = "blood")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Type implements Serializable {
+public class Blood implements Serializable {
 
     @Id
     @Size(max = 50)

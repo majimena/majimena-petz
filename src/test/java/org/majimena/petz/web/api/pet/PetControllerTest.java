@@ -10,7 +10,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.TestUtils;
-import org.majimena.petz.datatypes.SexType;
+import org.majimena.petz.domain.common.SexType;
 import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.security.SecurityUtils;

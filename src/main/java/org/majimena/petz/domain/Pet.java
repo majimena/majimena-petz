@@ -14,7 +14,7 @@ import org.majimena.framework.domain.converters.ISO8601LocalDateTimeSerializer;
 import org.majimena.framework.domain.converters.StringSetDeserializer;
 import org.majimena.framework.domain.converters.StringSetSerializer;
 import org.majimena.framework.persistence.converters.LocalDateTimePersistenceConverter;
-import org.majimena.petz.datatypes.SexType;
+import org.majimena.petz.domain.common.SexType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

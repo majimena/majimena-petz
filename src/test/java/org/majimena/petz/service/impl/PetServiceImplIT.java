@@ -7,7 +7,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
-import org.majimena.petz.datatypes.SexType;
+import org.majimena.petz.domain.common.SexType;
 import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.Tag;
 import org.majimena.petz.domain.Type;
@@ -19,7 +19,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

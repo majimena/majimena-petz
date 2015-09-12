@@ -1,4 +1,4 @@
-package org.majimena.petz.datatypes;
+package org.majimena.petz.domain.common;
 
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.framework.domain.converters.EnumDataTypeDeserializer;

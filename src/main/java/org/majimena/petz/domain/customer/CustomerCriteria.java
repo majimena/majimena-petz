@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Email;
-import org.majimena.petz.datatypes.defs.ID;
-import org.majimena.petz.datatypes.defs.MailAddress;
+import org.majimena.petz.domain.common.defs.ID;
+import org.majimena.petz.domain.common.defs.MailAddress;
 
 import javax.validation.constraints.Size;
 import java.io.Serializable;

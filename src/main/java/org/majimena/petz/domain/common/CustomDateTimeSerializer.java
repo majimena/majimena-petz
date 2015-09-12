@@ -1,4 +1,4 @@
-package org.majimena.petz.domain.util;
+package org.majimena.petz.domain.common;
 
 import java.io.IOException;
 

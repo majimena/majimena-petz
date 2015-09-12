@@ -1,4 +1,4 @@
-package org.majimena.petz.datatypes;
+package org.majimena.petz.domain.common;
 
 import org.majimena.framework.domain.EnumDataType;
 

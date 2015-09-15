@@ -16,10 +16,16 @@
             <column name="clinic_id" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
+            <column name="customer_id" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
             <column name="pet_id" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
             <column name="chart_no" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp">
                 <constraints nullable="false" />
             </column>
             <column name="created_by" type="varchar(50)">
@@ -36,14 +42,22 @@
                      tableName="chart"
                      unique="true">
             <column name="clinic_id" type="varchar(50)"/>
-            <column name="pet_id" type="varchar(50)"/>
+            <column name="chart_no" type="varchar(50)"/>
         </createIndex>
 
         <createIndex indexName="idx2_chart"
-                     tableName="chart"
-                     unique="true">
+                     tableName="chart">
             <column name="clinic_id" type="varchar(50)"/>
-            <column name="chart_no" type="varchar(50)"/>
+        </createIndex>
+
+        <createIndex indexName="idx3_chart"
+                     tableName="chart">
+            <column name="customer_id" type="varchar(50)"/>
+        </createIndex>
+
+        <createIndex indexName="idx4_chart"
+                     tableName="chart">
+            <column name="pet_id" type="varchar(50)"/>
         </createIndex>
 
     </changeSet>

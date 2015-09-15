@@ -84,30 +84,30 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private DateTime resetDate = null;
 
     @Size(max = 2)
-    @Column(name = "country", length = 2)
+    @Column(name = "country", length = 2, nullable = true)
     private String country;
 
     @Size(max = 10)
-    @Column(name = "zip_code", length = 10)
+    @Column(name = "zip_code", length = 10, nullable = true)
     private String zipCode;
 
     @Size(max = 50)
-    @Column(name = "state", length = 50)
+    @Column(name = "state", length = 50, nullable = true)
     private String state;
 
     @Size(max = 50)
-    @Column(name = "city", length = 50)
+    @Column(name = "city", length = 50, nullable = true)
     private String city;
 
     @Size(max = 50)
-    @Column(name = "street", length = 50)
+    @Column(name = "street", length = 50, nullable = true)
     private String street;
 
     @Size(max = 15)
-    @Column(name = "phone_no", length = 15)
+    @Column(name = "phone_no", length = 15, nullable = true)
     private String phoneNo;
 
-    @Column(name = "mobile_phone_no", length = 15)
+    @Column(name = "mobile_phone_no", length = 15, nullable = true)
     private String mobilePhoneNo;
 
     @JsonIgnore

@@ -174,7 +174,10 @@ public class PetControllerTest {
 
             mockMvc.perform(post("/api/v1/pets")
                 .contentType(TestUtils.APPLICATION_JSON_UTF8)
-                .content("{\"birthDate\":\"2015-02-27T15:00:00.000+09:00\",\"user\":{\"id\":\"1\"},\"sex\":\"MALE\",\"tags\":[\"タグ２\",\"タグ１\"],\"type\":\"トイプードル\",\"color\":\"ホワイト\",\"name\":\"ポチ\",\"profile\":\"プロファイル\"}"))
+                .content("{\"birthDate\":\"2015-02-27T15:00:00.000+09:00\",\"microchipDate\":\"2015-02-27T15:00:00.000+09:00\",\"microchipNo\":\"1234567890\"," +
+                    "\"user\":{\"id\":\"1\"},\"type\":\"トイプードル\",\"color\":\"ホワイト\",\"blood\":\"DEA1.1\"," +
+                    "\"sex\":\"MALE\",\"tags\":[\"血統書付き\",\"室内犬\"],\"neutral\":\"true\"," +
+                    "\"name\":\"ポチ\",\"profile\":\"プロファイル\",\"allergia\":\"アレルギー\",\"drug\":\"薬剤\",\"other\":\"その他\"}"))
                 .andDo(print())
                 .andExpect(status().isCreated());
 
@@ -185,13 +188,19 @@ public class PetControllerTest {
 
                 assertThat(pet.getId(), is(nullValue()));
                 assertThat(pet.getName(), is("ポチ"));
-                assertThat(pet.getProfile(), is("プロファイル"));
-                assertThat(pet.getSex(), is(SexType.MALE));
-                assertThat(pet.getBirthDate(), is(LocalDateTime.of(2015, 2, 27, 15, 0, 0)));
                 assertThat(pet.getUser().getId(), is("1"));
-                assertThat(pet.getTags(), is(Sets.newHashSet(new Tag("タグ１"), new Tag("タグ２"))));
+                assertThat(pet.getTags(), is(Sets.newHashSet(new Tag("血統書付き"), new Tag("室内犬"))));
                 assertThat(pet.getColor(), is(new Color("ホワイト")));
                 assertThat(pet.getType(), is(new Type("トイプードル")));
+                assertThat(pet.getBlood(), is(new Blood("DEA1.1")));
+                assertThat(pet.getProfile(), is("プロファイル"));
+                assertThat(pet.getAllergia(), is("アレルギー"));
+                assertThat(pet.getDrug(), is("薬剤"));
+                assertThat(pet.getOther(), is("その他"));
+                assertThat(pet.getSex(), is(SexType.MALE));
+                assertThat(pet.getBirthDate(), is(LocalDateTime.of(2015, 2, 27, 15, 0, 0)));
+                assertThat(pet.getMicrochipDate(), is(LocalDateTime.of(2015, 2, 27, 15, 0, 0)));
+                assertThat(pet.getMicrochipNo(), is("1234567890"));
             }};
         }
     }
@@ -230,7 +239,10 @@ public class PetControllerTest {
 
             mockMvc.perform(put("/api/v1/pets/p1")
                 .contentType(TestUtils.APPLICATION_JSON_UTF8)
-                .content("{\"id\":\"p1\",\"birthDate\":\"2015-02-27T15:00:00.000+09:00\",\"user\":{\"id\":\"1\"},\"sex\":\"MALE\",\"tags\":[\"タグ２\",\"タグ１\"],\"type\":\"トイプードル\",\"color\":\"ホワイト\",\"name\":\"ポチ\",\"profile\":\"プロファイル\"}"))
+                .content("{\"birthDate\":\"2015-02-27T15:00:00.000+09:00\",\"microchipDate\":\"2015-02-27T15:00:00.000+09:00\",\"microchipNo\":\"1234567890\"," +
+                    "\"user\":{\"id\":\"1\"},\"type\":\"トイプードル\",\"color\":\"ホワイト\",\"blood\":\"DEA1.1\"," +
+                    "\"sex\":\"MALE\",\"tags\":[\"血統書付き\",\"室内犬\"],\"neutral\":\"true\"," +
+                    "\"name\":\"ポチ\",\"profile\":\"プロファイル\",\"allergia\":\"アレルギー\",\"drug\":\"薬剤\",\"other\":\"その他\"}"))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -240,13 +252,19 @@ public class PetControllerTest {
 
                 assertThat(pet.getId(), is("p1"));
                 assertThat(pet.getName(), is("ポチ"));
-                assertThat(pet.getProfile(), is("プロファイル"));
-                assertThat(pet.getSex(), is(SexType.MALE));
-                assertThat(pet.getBirthDate(), is(LocalDateTime.of(2015, 2, 27, 15, 0, 0)));
                 assertThat(pet.getUser().getId(), is("1"));
-                assertThat(pet.getTags(), is(Sets.newHashSet(new Tag("タグ１"), new Tag("タグ２"))));
+                assertThat(pet.getTags(), is(Sets.newHashSet(new Tag("血統書付き"), new Tag("室内犬"))));
                 assertThat(pet.getColor(), is(new Color("ホワイト")));
                 assertThat(pet.getType(), is(new Type("トイプードル")));
+                assertThat(pet.getBlood(), is(new Blood("DEA1.1")));
+                assertThat(pet.getProfile(), is("プロファイル"));
+                assertThat(pet.getAllergia(), is("アレルギー"));
+                assertThat(pet.getDrug(), is("薬剤"));
+                assertThat(pet.getOther(), is("その他"));
+                assertThat(pet.getSex(), is(SexType.MALE));
+                assertThat(pet.getBirthDate(), is(LocalDateTime.of(2015, 2, 27, 15, 0, 0)));
+                assertThat(pet.getMicrochipDate(), is(LocalDateTime.of(2015, 2, 27, 15, 0, 0)));
+                assertThat(pet.getMicrochipNo(), is("1234567890"));
             }};
         }
     }

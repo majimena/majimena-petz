@@ -36,7 +36,7 @@ public class UserServiceImplIT {
         private UserService sut;
 
         @Test
-        @DatabaseSetup("classpath:/testdata/user.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/user.xml"})
         public void ユーザーが取得できること() throws Exception {
             Optional<User> user = sut.getUserByUserId("1");
 
@@ -49,7 +49,7 @@ public class UserServiceImplIT {
         }
 
         @Test
-        @DatabaseSetup("classpath:/testdata/user.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/user.xml"})
         public void ユーザーが存在しない場合は何も取得できないこと() throws Exception {
             Optional<User> result = sut.getUserByUserId("999");
 
@@ -65,7 +65,7 @@ public class UserServiceImplIT {
         private UserService sut;
 
         @Test
-        @DatabaseSetup("classpath:/testdata/user.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/user.xml"})
         public void ユーザーが更新できること() throws Exception {
             User r = User.builder().id("1").firstName("FirstName").lastName("LastName").email("todoken@example.com").build();
 
@@ -81,7 +81,7 @@ public class UserServiceImplIT {
         }
 
         @Test(expected = SystemException.class)
-        @DatabaseSetup("classpath:/testdata/user.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/user.xml"})
         public void ユーザーが存在しない場合はシステム例外が発生すること() throws Exception {
             User r = User.builder().id("999").firstName("FirstName").lastName("LastName").email("todoken@example.com").build();
 
@@ -97,7 +97,7 @@ public class UserServiceImplIT {
         private UserService sut;
 
         @Test
-        @DatabaseSetup("classpath:/testdata/user.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/user.xml"})
         public void ユーザー情報を保存できること() throws Exception {
             User user = new User();
             user.setId("9");
@@ -139,7 +139,7 @@ public class UserServiceImplIT {
         private PasswordEncoder encoder;
 
         @Test
-        @DatabaseSetup("classpath:/testdata/user.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/user.xml"})
         public void パスワードが変更できること() throws Exception {
             sut.changePassword(new PasswordRegistry("3", "admin", "drowssap"));
 
@@ -150,13 +150,13 @@ public class UserServiceImplIT {
         }
 
         @Test(expected = ApplicationException.class)
-        @DatabaseSetup("classpath:/testdata/user.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/user.xml"})
         public void パスワードが異なる場合はアプリ例外が発生すること() throws Exception {
             sut.changePassword(new PasswordRegistry("3", "password", "drowssap"));
         }
 
         @Test(expected = SystemException.class)
-        @DatabaseSetup("classpath:/testdata/user.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/user.xml"})
         public void ユーザーが存在しない場合はシステム例外が発生すること() throws Exception {
             sut.changePassword(new PasswordRegistry("999", "admin", "drowssap"));
         }

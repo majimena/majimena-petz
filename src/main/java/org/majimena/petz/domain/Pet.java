@@ -48,7 +48,7 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
     private String name;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -67,7 +67,7 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
     @JsonSerialize(using = BloodSerializer.class)
     @JsonDeserialize(using = BloodDeserializer.class)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "blood", nullable = false)
+    @JoinColumn(name = "blood", nullable = true)
     private Blood blood;
 
     @Enumerated(EnumType.STRING)

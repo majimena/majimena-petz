@@ -1,4 +1,4 @@
-package org.majimena.petz.web.api.tag;
+package org.majimena.petz.web.api.pet;
 
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -8,8 +8,10 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.TestUtils;
-import org.majimena.petz.domain.Tag;
-import org.majimena.petz.repository.TagRepository;
+import org.majimena.petz.domain.Blood;
+import org.majimena.petz.domain.Color;
+import org.majimena.petz.repository.BloodRepository;
+import org.majimena.petz.repository.ColorRepository;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -30,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by todoken on 2015/07/26.
  */
 @RunWith(Enclosed.class)
-public class TagControllerTest {
+public class ColorControllerTest {
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @SpringApplicationConfiguration(classes = Application.class)
@@ -40,28 +42,28 @@ public class TagControllerTest {
         private MockMvc mockMvc;
 
         @Inject
-        private TagController sut;
+        private ColorController sut;
 
         @Inject
         private WebApplicationContext wac;
 
         @Mocked
-        private TagRepository tagRepository;
+        private ColorRepository colorRepository;
 
         @Before
         public void setup() {
             mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-            sut.setTagRepository(tagRepository);
+            sut.setColorRepository(colorRepository);
         }
 
         @Test
         public void サービスが呼び出されて正常終了すること() throws Exception {
             new NonStrictExpectations() {{
-                tagRepository.findAll();
-                result = Arrays.asList(new Tag("foo"), new Tag("bar"));
+                colorRepository.findAll();
+                result = Arrays.asList(new Color("foo"), new Color("bar"));
             }};
 
-            mockMvc.perform(get("/api/v1/tags")
+            mockMvc.perform(get("/api/v1/colors")
                 .contentType(TestUtils.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(status().isOk())

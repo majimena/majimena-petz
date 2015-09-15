@@ -1,7 +1,7 @@
-package org.majimena.petz.web.api.tag;
+package org.majimena.petz.web.api.pet;
 
 import com.codahale.metrics.annotation.Timed;
-import org.majimena.petz.repository.TagRepository;
+import org.majimena.petz.repository.ColorRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,23 +12,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 種別コントローラ.
+ * 毛色コントローラ.
  */
 @RestController
 @RequestMapping("/api/v1")
-public class TagController {
+public class ColorController {
 
     @Inject
-    private TagRepository tagRepository;
+    private ColorRepository colorRepository;
 
-    public void setTagRepository(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
+    public void setColorRepository(ColorRepository colorRepository) {
+        this.colorRepository = colorRepository;
     }
 
     @Timed
-    @RequestMapping(value = "/tags", method = RequestMethod.GET)
+    @RequestMapping(value = "/colors", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getAll() {
-        List<String> list = tagRepository.findAll().stream()
+        List<String> list = colorRepository.findAll().stream()
             .map(t -> t.getName()).collect(Collectors.toList());
         return ResponseEntity.ok().body(list);
     }

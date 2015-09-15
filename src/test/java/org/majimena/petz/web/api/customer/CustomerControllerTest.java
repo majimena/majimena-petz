@@ -11,6 +11,7 @@ import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.customer.CustomerCriteria;
+import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.CustomerService;
 import org.majimena.petz.web.rest.util.PaginationUtil;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -28,16 +29,17 @@ import java.util.Arrays;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * @see CustomerController
+ */
 @RunWith(Enclosed.class)
 public class CustomerControllerTest {
 
     @RunWith(SpringJUnit4ClassRunner.class)
-    @SpringApplicationConfiguration(classes = Application.class)
     @WebAppConfiguration
+    @SpringApplicationConfiguration(classes = Application.class)
     public static class GetListTest {
 
         private MockMvc mockMvc;
@@ -47,6 +49,9 @@ public class CustomerControllerTest {
 
         @Mocked
         private CustomerService customerService;
+
+        @Mocked
+        private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
@@ -64,22 +69,24 @@ public class CustomerControllerTest {
             final Customer d2 = Customer.builder().id("c222").clinic(clinic).user(User.builder().id("u222").build()).build();
 
             new NonStrictExpectations() {{
+                SecurityUtils.isUserInClinic("c123");
+                result = true;
                 customerService.getCustomersByCustomerCriteria(criteria, pageable);
                 result = new PageImpl(Arrays.asList(d1, d2), pageable, 2);
             }};
 
             mockMvc.perform(get("/api/v1/clinics/c123/customers")
-                    .param("page", "1")
-                    .param("per_page", "1"))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"))
-                    .andExpect(jsonPath("$.[0].id", is("c111")))
-                    .andExpect(jsonPath("$.[0].clinic.id", is("c123")))
-                    .andExpect(jsonPath("$.[0].user.id", is("u111")))
-                    .andExpect(jsonPath("$.[1].id", is("c222")))
-                    .andExpect(jsonPath("$.[1].clinic.id", is("c123")))
-                    .andExpect(jsonPath("$.[1].user.id", is("u222")));
+                .param("page", "1")
+                .param("per_page", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"))
+                .andExpect(jsonPath("$.[0].id", is("c111")))
+                .andExpect(jsonPath("$.[0].clinic.id", is("c123")))
+                .andExpect(jsonPath("$.[0].user.id", is("u111")))
+                .andExpect(jsonPath("$.[1].id", is("c222")))
+                .andExpect(jsonPath("$.[1].clinic.id", is("c123")))
+                .andExpect(jsonPath("$.[1].user.id", is("u222")));
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.majimena.petz.domain.datatypes;
+package org.majimena.petz.domain;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -8,17 +8,17 @@ import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import org.junit.Test;
 import org.majimena.petz.domain.common.SexType;
-import org.majimena.petz.domain.common.SexTypeDeserializer;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
- * Created by todoken on 2015/07/27.
+ * @see ColorDeserializer
  */
-public class SexTypeDeserializerTest {
+public class ColorDeserializerTest {
 
-    private SexTypeDeserializer sut = new SexTypeDeserializer();
+    private ColorDeserializer sut = new ColorDeserializer();
 
     @Mocked
     private JsonParser jp;
@@ -27,20 +27,20 @@ public class SexTypeDeserializerTest {
     private DeserializationContext context;
 
     @Test
-    public void 性別型にデシリアライズできること() throws Exception {
+    public void 毛色ドメインにデシリアライズできること() throws Exception {
         new NonStrictExpectations() {{
             jp.getCurrentToken();
             result = JsonToken.VALUE_STRING;
             jp.getText();
-            result = "MALE";
+            result = "white";
         }};
 
-        SexType result = sut.deserialize(jp, context);
-        assertThat(result, is(SexType.MALE));
+        Color result = sut.deserialize(jp, context);
+        assertThat(result, is(new Color("white")));
     }
 
     @Test
-    public void 値が入っていない場合は性別不明にデシリアライズできること() throws Exception {
+    public void 値が入っていない場合はnulになること() throws Exception {
         new NonStrictExpectations() {{
             jp.getCurrentToken();
             result = JsonToken.VALUE_STRING;
@@ -48,8 +48,8 @@ public class SexTypeDeserializerTest {
             result = "";
         }};
 
-        SexType result = sut.deserialize(jp, context);
-        assertThat(result, is(SexType.NONE));
+        Color result = sut.deserialize(jp, context);
+        assertThat(result, is(nullValue()));
     }
 
     @Test(expected = JsonMappingException.class)

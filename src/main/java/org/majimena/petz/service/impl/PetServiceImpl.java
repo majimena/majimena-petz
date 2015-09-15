@@ -2,8 +2,7 @@ package org.majimena.petz.service.impl;
 
 import org.majimena.framework.aws.AmazonS3Service;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
-import org.majimena.petz.domain.Pet;
-import org.majimena.petz.domain.User;
+import org.majimena.petz.domain.*;
 import org.majimena.petz.repository.*;
 import org.majimena.petz.service.PetService;
 import org.springframework.stereotype.Service;
@@ -11,12 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * ペットサービスの実装.
  */
 @Service
-@Transactional
 public class PetServiceImpl implements PetService {
 
     @Inject
@@ -41,12 +42,14 @@ public class PetServiceImpl implements PetService {
     private AmazonS3Service amazonS3Service;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Pet> findPetsByUserId(String userId) {
         List<Pet> pets = petRepository.findByUserId(userId);
         return pets;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Pet findPetByPetId(String id) {
         // ペットを取得する
         Pet pet = petRepository.findOne(id);
@@ -57,26 +60,35 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    @Transactional
     public Pet savePet(Pet pet) {
         // ペットの種別、毛色、血液型を登録してペットと紐付けする（既にあれば登録しない）
-        typeRepository.save(pet.getType());
-        colorRepository.save(pet.getColor());
+        Type type = typeRepository.save(pet.getType());
+        Color color = colorRepository.save(pet.getColor());
+        Blood blood = null;
         if (pet.getBlood() != null) {
-            bloodRepository.save(pet.getBlood());
+            blood = bloodRepository.save(pet.getBlood());
         }
 
         // ペットのタグを登録してペットと紐付けする（既にあれば登録しない）
+        Set<Tag> tags = null;
         if (pet.getTags() != null) {
-            pet.getTags().stream().forEach(tag -> tagRepository.save(tag));
+            tags = pet.getTags().stream()
+                .map(tag -> tagRepository.save(tag)).collect(Collectors.toSet());
         }
 
         // 飼い主を親キーにしてペットを登録
         User user = userRepository.findOne(pet.getUser().getId());
         pet.setUser(user);
+        pet.setType(type);
+        pet.setColor(color);
+        pet.setBlood(blood);
+        pet.setTags(tags);
         return petRepository.save(pet);
     }
 
     @Override
+    @Transactional
     public Pet uploadImage(String userId, String petId, byte[] binary) {
         // 先にS3にファイルを保存
         String filename = "pets/" + petId + "/profile/" + System.currentTimeMillis() + ".jpg";

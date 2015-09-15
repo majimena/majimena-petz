@@ -54,8 +54,8 @@
             </column>
             <column name="blood" type="varchar(50)"/>
             <column name="sex" type="varchar(10)"/>
-            <column name="microchipNo" type="varchar(50)"/>
-            <column name="microchipDate" type="timestamp"/>
+            <column name="microchip_no" type="varchar(50)"/>
+            <column name="microchip_date" type="timestamp"/>
             <column name="birth_date" type="timestamp"/>
             <column name="neutral" type="boolean"/>
             <column name="profile" type="varchar(2000)"/>

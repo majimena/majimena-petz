@@ -49,7 +49,7 @@ public class SecurityUtilsTest {
     }
 
     @Test
-    public void ユーザー権限チェックができること() {
+    public void ユーザーの役割権限チェックができること() {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new PetzGrantedAuthority("ROLE_USER"));
@@ -63,7 +63,7 @@ public class SecurityUtilsTest {
     }
 
     @Test
-    public void クリニック権限チェックができること() {
+    public void クリニックの役割権限チェックができること() {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new PetzGrantedAuthority("ROLE_USER"));
@@ -84,12 +84,12 @@ public class SecurityUtilsTest {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new PetzGrantedAuthority("ROLE_USER"));
         authorities.add(new PetzGrantedAuthority("1", "ROLE_CLINIC_ADMIN"));
-        authorities.add(new PetzGrantedAuthority("2", "ROLE_CLINIC_ADMIN"));
+        authorities.add(new PetzGrantedAuthority("d8272af2-75cc-47b3-97e9-8ba631a569f0", "ROLE_CLINIC_ADMIN"));
         context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", authorities), "anonymous"));
         SecurityContextHolder.setContext(context);
 
         assertThat(SecurityUtils.isUserInClinic("1"), is(true));
-        assertThat(SecurityUtils.isUserInClinic("2"), is(true));
+        assertThat(SecurityUtils.isUserInClinic("d8272af2-75cc-47b3-97e9-8ba631a569f0"), is(true));
         assertThat(SecurityUtils.isUserInClinic("3"), is(false));
     }
 }

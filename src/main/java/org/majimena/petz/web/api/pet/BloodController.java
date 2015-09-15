@@ -1,7 +1,7 @@
-package org.majimena.petz.web.api.tag;
+package org.majimena.petz.web.api.pet;
 
 import com.codahale.metrics.annotation.Timed;
-import org.majimena.petz.repository.TagRepository;
+import org.majimena.petz.repository.BloodRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,19 +16,19 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/v1")
-public class TagController {
+public class BloodController {
 
     @Inject
-    private TagRepository tagRepository;
+    private BloodRepository bloodRepository;
 
-    public void setTagRepository(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
+    public void setBloodRepository(BloodRepository bloodRepository) {
+        this.bloodRepository = bloodRepository;
     }
 
     @Timed
-    @RequestMapping(value = "/tags", method = RequestMethod.GET)
+    @RequestMapping(value = "/bloods", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getAll() {
-        List<String> list = tagRepository.findAll().stream()
+        List<String> list = bloodRepository.findAll().stream()
             .map(t -> t.getName()).collect(Collectors.toList());
         return ResponseEntity.ok().body(list);
     }

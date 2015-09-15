@@ -88,8 +88,8 @@ public final class SecurityUtils {
      */
     public static boolean isUserInRole(String clinicId, String role) {
         return getPrincipal()
-                .map(u -> u.getAuthorities().contains(new PetzGrantedAuthority(clinicId, role)))
-                .orElse(false);
+            .map(u -> u.getAuthorities().contains(new PetzGrantedAuthority(clinicId, role)))
+            .orElse(false);
     }
 
     /**
@@ -100,8 +100,8 @@ public final class SecurityUtils {
      */
     public static boolean isUserInClinic(String clinicId) {
         return getPrincipal()
-                .map(u -> u.getAuthorities().stream()
-                        .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId)))
-                .orElse(false);
+            .map(u -> u.getAuthorities().stream()
+                .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId)))
+            .orElse(false);
     }
 }

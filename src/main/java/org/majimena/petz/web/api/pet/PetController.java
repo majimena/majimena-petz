@@ -1,6 +1,7 @@
 package org.majimena.petz.web.api.pet;
 
 import com.codahale.metrics.annotation.Timed;
+import org.apache.commons.lang3.StringUtils;
 import org.majimena.framework.aws.AmazonS3Service;
 import org.majimena.petz.domain.Pet;
 import org.majimena.petz.security.SecurityUtils;
@@ -32,11 +33,14 @@ public class PetController {
         this.petService = petService;
     }
 
+    // FIXME 検索条件を設ける必要あり（ページングどうしようか）
     @Timed
     @RequestMapping(value = "/pets", method = RequestMethod.GET)
-    public ResponseEntity<List<Pet>> get() {
-        // FIXME 検索されていないときはログインユーザのペット一覧
-        String userId = SecurityUtils.getCurrentUserId();
+    public ResponseEntity<List<Pet>> get(@RequestParam(required = false) String userId) {
+        if (StringUtils.isEmpty(userId)) {
+            userId = SecurityUtils.getCurrentUserId();
+        }
+
         List<Pet> list = petService.findPetsByUserId(userId);
         return ResponseEntity.ok().body(list);
     }

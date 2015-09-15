@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
- * Created by todoken on 2015/07/28.
+ * @see PetServiceImpl
  */
 @RunWith(Enclosed.class)
 public class PetServiceImplIT {
@@ -36,7 +36,7 @@ public class PetServiceImplIT {
         private PetService sut;
 
         @Test
-        @DatabaseSetup("classpath:/testdata/pet.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
         public void ユーザーのペット一覧が取得できること() throws Exception {
             List<Pet> result = sut.findPetsByUserId("1");
 
@@ -44,8 +44,6 @@ public class PetServiceImplIT {
             assertThat(result.get(0).getId(), is("1"));
             assertThat(result.get(0).getName(), is("ハチ"));
             assertThat(result.get(0).getProfile(), is("渋谷ハチ公"));
-            assertThat(result.get(0).getUser().getId(), is("1"));
-            assertThat(result.get(0).getUser().getLogin(), is("login1"));
             assertThat(result.get(0).getBirthDate(), is(LocalDateTime.of(2000, 1, 1, 0, 0)));
             assertThat(result.get(0).getSex(), is(SexType.MALE));
             assertThat(result.get(0).getType(), is(new Type("柴犬")));
@@ -54,7 +52,7 @@ public class PetServiceImplIT {
         }
 
         @Test
-        @DatabaseSetup("classpath:/testdata/pet.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
         public void ユーザーが存在しない場合は何も取得できないこと() throws Exception {
             List<Pet> result = sut.findPetsByUserId("999");
             assertThat(result.size(), is(0));
@@ -69,15 +67,13 @@ public class PetServiceImplIT {
         private PetService sut;
 
         @Test
-        @DatabaseSetup("classpath:/testdata/pet.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
         public void 該当するペットが取得できること() throws Exception {
             Pet result = sut.findPetByPetId("1");
 
             assertThat(result.getId(), is("1"));
             assertThat(result.getName(), is("ハチ"));
             assertThat(result.getProfile(), is("渋谷ハチ公"));
-            assertThat(result.getUser().getId(), is("1"));
-            assertThat(result.getUser().getLogin(), is("login1"));
             assertThat(result.getBirthDate(), is(LocalDateTime.of(2000, 1, 1, 0, 0)));
             assertThat(result.getSex(), is(SexType.MALE));
             assertThat(result.getType(), is(new Type("柴犬")));
@@ -86,7 +82,7 @@ public class PetServiceImplIT {
         }
 
         @Test(expected = ResourceNotFoundException.class)
-        @DatabaseSetup("classpath:/testdata/pet.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
         public void 該当するペットがいない場合は例外が発生すること() throws Exception {
             sut.findPetByPetId("999");
         }
@@ -100,8 +96,7 @@ public class PetServiceImplIT {
         private PetService sut;
 
         @Test
-        @Transactional
-        @DatabaseSetup("classpath:/testdata/pet.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
         public void 全ての項目が入力されている場合にペットが保存できること() throws Exception {
             LocalDateTime now = LocalDateTime.now();
             final Pet testData = Pet.builder().name("ポチ").profile("プロファイル").birthDate(now).sex(SexType.MALE)
@@ -126,8 +121,7 @@ public class PetServiceImplIT {
         }
 
         @Test
-        @Transactional
-        @DatabaseSetup("classpath:/testdata/pet.xml")
+        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
         public void 任意項目が入力されていない場合にペットが保存できること() throws Exception {
             final Pet testData = Pet.builder().name("ポチ")
                 .user(User.builder().id("1").build())

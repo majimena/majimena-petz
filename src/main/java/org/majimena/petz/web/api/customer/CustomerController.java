@@ -80,7 +80,7 @@ public class CustomerController {
                                                  @RequestParam(value = "per_page", required = false) Integer limit,
                                                  @Valid CustomerCriteria criteria) throws URISyntaxException {
         // クリニックの権限チェック
-        if (SecurityUtils.isUserInClinic(clinicId)) {
+        if (!SecurityUtils.isUserInClinic(clinicId)) {
             throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
         }
 
@@ -106,7 +106,7 @@ public class CustomerController {
     public ResponseEntity<Customer> post(@PathVariable String clinicId,
                                          @RequestBody @Valid Customer customer, BindingResult errors) throws BindException {
         // クリニックの権限チェック
-        if (SecurityUtils.isUserInClinic(clinicId)) {
+        if (!SecurityUtils.isUserInClinic(clinicId)) {
             throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
         }
 

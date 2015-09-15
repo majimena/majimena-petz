@@ -1,4 +1,4 @@
-package org.majimena.petz.web.api.type;
+package org.majimena.petz.web.api.pet;
 
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -8,11 +8,9 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.TestUtils;
-import org.majimena.petz.domain.Tag;
 import org.majimena.petz.domain.Type;
-import org.majimena.petz.repository.TagRepository;
 import org.majimena.petz.repository.TypeRepository;
-import org.majimena.petz.web.api.tag.TagController;
+import org.majimena.petz.web.api.pet.TypeController;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -68,8 +66,8 @@ public class TypeControllerTest {
                 .contentType(TestUtils.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].name", is("foo")))
-                .andExpect(jsonPath("$.[1].name", is("bar")));
+                .andExpect(jsonPath("$.[0]", is("foo")))
+                .andExpect(jsonPath("$.[1]", is("bar")));
         }
     }
 }

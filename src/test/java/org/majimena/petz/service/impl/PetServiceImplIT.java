@@ -7,7 +7,11 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
-import org.majimena.petz.domain.*;
+import org.majimena.petz.domain.Color;
+import org.majimena.petz.domain.Pet;
+import org.majimena.petz.domain.Tag;
+import org.majimena.petz.domain.Type;
+import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.common.SexType;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
 import org.majimena.petz.service.PetService;
@@ -19,7 +23,9 @@ import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -28,6 +34,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(Enclosed.class)
 public class PetServiceImplIT {
 
+    @Transactional
     @WebAppConfiguration
     @SpringApplicationConfiguration(classes = Application.class)
     public static class FindPetsByUserIdTest extends AbstractSpringDBUnitTest {
@@ -36,7 +43,7 @@ public class PetServiceImplIT {
         private PetService sut;
 
         @Test
-        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
+        @DatabaseSetup("classpath:/fixture/base.xml")
         public void ユーザーのペット一覧が取得できること() throws Exception {
             List<Pet> result = sut.findPetsByUserId("1");
 
@@ -52,13 +59,14 @@ public class PetServiceImplIT {
         }
 
         @Test
-        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
+        @DatabaseSetup("classpath:/fixture/base.xml")
         public void ユーザーが存在しない場合は何も取得できないこと() throws Exception {
             List<Pet> result = sut.findPetsByUserId("999");
             assertThat(result.size(), is(0));
         }
     }
 
+    @Transactional
     @WebAppConfiguration
     @SpringApplicationConfiguration(classes = Application.class)
     public static class FindPetByPetIdTest extends AbstractSpringDBUnitTest {
@@ -67,7 +75,7 @@ public class PetServiceImplIT {
         private PetService sut;
 
         @Test
-        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
+        @DatabaseSetup("classpath:/fixture/base.xml")
         public void 該当するペットが取得できること() throws Exception {
             Pet result = sut.findPetByPetId("1");
 
@@ -82,12 +90,13 @@ public class PetServiceImplIT {
         }
 
         @Test(expected = ResourceNotFoundException.class)
-        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
+        @DatabaseSetup("classpath:/fixture/base.xml")
         public void 該当するペットがいない場合は例外が発生すること() throws Exception {
             sut.findPetByPetId("999");
         }
     }
 
+    @Transactional
     @WebAppConfiguration
     @SpringApplicationConfiguration(classes = Application.class)
     public static class SavePetTest extends AbstractSpringDBUnitTest {
@@ -96,13 +105,13 @@ public class PetServiceImplIT {
         private PetService sut;
 
         @Test
-        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
+        @DatabaseSetup("classpath:/fixture/base.xml")
         public void 全ての項目が入力されている場合にペットが保存できること() throws Exception {
             LocalDateTime now = LocalDateTime.now();
             final Pet testData = Pet.builder().name("ポチ").profile("プロファイル").birthDate(now).sex(SexType.MALE)
-                .user(User.builder().id("1").build())
-                .type(new Type("トイプードル")).color(new Color("ホワイト"))
-                .tags(Sets.newHashSet(new Tag("室内犬"), new Tag("血統書"))).build();
+                    .user(User.builder().id("1").build())
+                    .type(new Type("トイプードル")).color(new Color("ホワイト"))
+                    .tags(Sets.newHashSet(new Tag("室内犬"), new Tag("血統書"))).build();
 
             Pet result = sut.savePet(testData);
 
@@ -110,7 +119,7 @@ public class PetServiceImplIT {
             assertThat(result.getName(), is("ポチ"));
             assertThat(result.getProfile(), is("プロファイル"));
             assertThat(result.getUser().getId(), is("1"));
-            assertThat(result.getUser().getLogin(), is("login1"));
+            assertThat(result.getUser().getLogin(), is("hoge@hoge.com"));
             assertThat(result.getBirthDate(), is(now));
             assertThat(result.getSex(), is(SexType.MALE));
             assertThat(result.getType(), is(new Type("トイプードル")));
@@ -121,11 +130,11 @@ public class PetServiceImplIT {
         }
 
         @Test
-        @DatabaseSetup({"classpath:/testdata/cleanup.xml", "classpath:/testdata/pet.xml"})
+        @DatabaseSetup("classpath:/fixture/base.xml")
         public void 任意項目が入力されていない場合にペットが保存できること() throws Exception {
             final Pet testData = Pet.builder().name("ポチ")
-                .user(User.builder().id("1").build())
-                .type(new Type("トイプードル")).color(new Color("ホワイト")).build();
+                    .user(User.builder().id("1").build())
+                    .type(new Type("トイプードル")).color(new Color("ホワイト")).build();
 
             Pet result = sut.savePet(testData);
 
@@ -133,7 +142,7 @@ public class PetServiceImplIT {
             assertThat(result.getName(), is("ポチ"));
             assertThat(result.getProfile(), is(nullValue()));
             assertThat(result.getUser().getId(), is("1"));
-            assertThat(result.getUser().getLogin(), is("login1"));
+            assertThat(result.getUser().getLogin(), is("hoge@hoge.com"));
             assertThat(result.getBirthDate(), is(nullValue()));
             assertThat(result.getSex(), is(nullValue()));
             assertThat(result.getType(), is(new Type("トイプードル")));

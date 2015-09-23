@@ -1,15 +1,16 @@
 package org.majimena.petz.service;
 
 import org.majimena.petz.domain.Pet;
-
-import java.util.List;
+import org.majimena.petz.domain.pet.PetCriteria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
- * Created by todoken on 2015/07/27.
+ * ペットサービス.
  */
 public interface PetService {
 
-    List<Pet> findPetsByUserId(String userId);
+    Page<Pet> getPetsByPetCriteria(PetCriteria criteria, Pageable pageable);
 
     Pet findPetByPetId(String id);
 

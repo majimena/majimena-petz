@@ -3,16 +3,18 @@ package org.majimena.petz.service.impl;
 import org.majimena.framework.aws.AmazonS3Service;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.domain.*;
+import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.repository.*;
+import org.majimena.petz.repository.spec.PetSpecs;
 import org.majimena.petz.service.PetService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * ペットサービスの実装.
@@ -43,9 +45,8 @@ public class PetServiceImpl implements PetService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Pet> findPetsByUserId(String userId) {
-        List<Pet> pets = petRepository.findByUserId(userId);
-        return pets;
+    public Page<Pet> getPetsByPetCriteria(PetCriteria criteria, Pageable pageable) {
+        return petRepository.findAll(PetSpecs.of(criteria), pageable);
     }
 
     @Override

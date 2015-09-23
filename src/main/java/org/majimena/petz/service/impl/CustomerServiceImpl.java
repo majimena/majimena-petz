@@ -13,6 +13,7 @@ import org.majimena.petz.domain.user.SignupRegistry;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.CustomerRepository;
 import org.majimena.petz.repository.UserRepository;
+import org.majimena.petz.repository.spec.CustomerCriteriaSpec;
 import org.majimena.petz.service.CustomerService;
 import org.majimena.petz.service.UserService;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * 顧客サービスの実装.
@@ -41,10 +43,23 @@ public class CustomerServiceImpl implements CustomerService {
     @Inject
     private UserService userService;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<Customer> getCustomersByCustomerCriteria(CustomerCriteria criteria, Pageable pageable) {
-        return customerRepository.findAll(CustomerRepository.Spec.of(criteria), pageable);
+        return customerRepository.findAll(new CustomerCriteriaSpec(criteria), pageable);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Customer> getCustomerByCustomerId(String customerId) {
+        Customer one = customerRepository.findOne(customerId);
+        return Optional.ofNullable(one);
     }
 
     /**

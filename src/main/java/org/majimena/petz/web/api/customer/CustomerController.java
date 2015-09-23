@@ -1,6 +1,7 @@
 package org.majimena.petz.web.api.customer;
 
 import com.codahale.metrics.annotation.Timed;
+import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.customer.CustomerCriteria;
@@ -14,18 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 顧客コントローラ.
@@ -93,6 +90,32 @@ public class CustomerController {
     }
 
     /**
+     * 自分のクリニックの顧客（飼い主）を取得する.
+     *
+     * @param clinicId   クリニックID
+     * @param customerId 顧客ID
+     * @return 該当する顧客
+     */
+    @Timed
+    @RequestMapping(value = "/clinics/{clinicId}/customers/{customerId}", method = RequestMethod.GET)
+    public ResponseEntity<Customer> show(@PathVariable String clinicId, @PathVariable String customerId) {
+        // クリニックの権限チェック
+        if (!SecurityUtils.isUserInClinic(clinicId)) {
+            throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
+        }
+
+        Optional<Customer> result = customerService.getCustomerByCustomerId(customerId);
+        return result
+            .map(customer -> {
+                if (!StringUtils.equals(clinicId, customer.getClinic().getId())) {
+                    throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
+                }
+                return ResponseEntity.ok().body(customer);
+            })
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * 自分のクリニックに新規顧客を登録する.
      *
      * @param clinicId クリニックID
@@ -118,7 +141,7 @@ public class CustomerController {
         // 新規顧客を登録する
         Customer created = customerService.saveCustomer(clinicId, customer);
         return ResponseEntity.created(
-                URI.create("/api/v1/clinics/" + clinicId + "/customers/" + created.getId())).body(created);
+            URI.create("/api/v1/clinics/" + clinicId + "/customers/" + created.getId())).body(created);
     }
 
     /**

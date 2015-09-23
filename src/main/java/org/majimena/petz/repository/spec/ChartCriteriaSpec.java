@@ -6,19 +6,26 @@ import org.majimena.petz.domain.chart.ChartCriteria;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 /**
  * カルテスペック.
  */
-public class ChartSpecs {
+public class ChartCriteriaSpec implements Specification<Chart> {
 
-    public static Specification<Chart> of(ChartCriteria criteria) {
-        return Specifications
+    private Specification<Chart> specification;
+
+    public ChartCriteriaSpec(ChartCriteria criteria) {
+        this.specification = Specifications
             .where(equalClinicId(criteria))
             .and(equalCustomerId(criteria))
             .and(likeAnywhereCustomerName(criteria));
     }
 
-    private static Specification equalClinicId(ChartCriteria criteria) {
+    private Specification equalClinicId(ChartCriteria criteria) {
         if (StringUtils.isEmpty(criteria.getClinicId())) {
             return null;
         }
@@ -28,7 +35,7 @@ public class ChartSpecs {
         };
     }
 
-    private static Specification equalCustomerId(ChartCriteria criteria) {
+    private Specification equalCustomerId(ChartCriteria criteria) {
         if (StringUtils.isEmpty(criteria.getCustomerId())) {
             return null;
         }
@@ -36,7 +43,7 @@ public class ChartSpecs {
             cb.equal(root.get("customer").get("id"), criteria.getCustomerId());
     }
 
-    private static Specification likeAnywhereCustomerName(ChartCriteria criteria) {
+    private Specification likeAnywhereCustomerName(ChartCriteria criteria) {
         if (StringUtils.isEmpty(criteria.getCustomerName()) || StringUtils.isNotEmpty(criteria.getCustomerId())) {
             return null;
         }
@@ -44,5 +51,10 @@ public class ChartSpecs {
             cb.like(root.get("customer").get("lastName"), "%" + criteria.getCustomerName() + "%"),
             cb.like(root.get("customer").get("firstName"), "%" + criteria.getCustomerName() + "%")
         );
+    }
+
+    @Override
+    public Predicate toPredicate(Root<Chart> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        return specification.toPredicate(root, query, cb);
     }
 }

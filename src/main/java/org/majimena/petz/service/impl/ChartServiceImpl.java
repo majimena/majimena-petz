@@ -10,6 +10,7 @@ import org.majimena.petz.domain.chart.ChartCriteria;
 import org.majimena.petz.repository.ChartRepository;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.CustomerRepository;
+import org.majimena.petz.repository.spec.ChartCriteriaSpec;
 import org.majimena.petz.repository.spec.ChartSpecs;
 import org.majimena.petz.service.ChartService;
 import org.majimena.petz.service.PetService;
@@ -58,7 +59,7 @@ public class ChartServiceImpl implements ChartService {
     @Override
     @Transactional(readOnly = true)
     public Page<Chart> findChartsByChartCriteria(ChartCriteria criteria, Pageable pageable) {
-        Page<Chart> charts = chartRepository.findAll(ChartSpecs.of(criteria), pageable);
+        Page<Chart> charts = chartRepository.findAll(new ChartCriteriaSpec(criteria), pageable);
         // lazy load for relational entities
         charts.forEach(c -> {
             c.getClinic().getId();

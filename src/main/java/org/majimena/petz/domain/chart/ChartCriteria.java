@@ -2,6 +2,7 @@ package org.majimena.petz.domain.chart;
 
 import lombok.*;
 import org.majimena.petz.domain.common.defs.ID;
+import org.majimena.petz.domain.common.defs.Name;
 
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -23,4 +24,7 @@ public class ChartCriteria implements Serializable {
 
     @Size(max = ID.MAX_LENGTH)
     private String customerId;
+
+    @Size(max = Name.MAX_LENGTH)
+    private String customerName;
 }

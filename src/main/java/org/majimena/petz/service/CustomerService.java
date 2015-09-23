@@ -7,12 +7,16 @@ import org.majimena.petz.domain.customer.CustomerCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 /**
  * 顧客サービス.
  */
 public interface CustomerService {
 
     Page<Customer> getCustomersByCustomerCriteria(CustomerCriteria criteria, Pageable pageable);
+
+    Optional<Customer> getCustomerByCustomerId(String customerId);
 
     /**
      * 認証トークンの情報で登録情報と合致しているかチェックして認証する.

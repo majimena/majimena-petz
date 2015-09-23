@@ -81,8 +81,7 @@ public class AccessLogFilter extends OncePerRequestFilter {
             // 処理計測の終了と処理完了ログの出力
             watch.stop();
             if (LOGGER.isDebugEnabled()) {
-                String body = res.getStringResponse();
-                LOGGER.debug("[{}] [{}] response body: {}", method, url, body);
+                LOGGER.debug("[{}] [{}] [{}] response: {}", method, url, res.getStatus(), res.getStringResponse());
             }
             LOGGER.info("[{}] [{}] has ended. Process time is [{}ms]", method, url, watch.getTime());
         }

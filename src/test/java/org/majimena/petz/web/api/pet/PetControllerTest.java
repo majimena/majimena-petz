@@ -12,9 +12,13 @@ import org.majimena.petz.Application;
 import org.majimena.petz.TestUtils;
 import org.majimena.petz.domain.*;
 import org.majimena.petz.domain.common.SexType;
+import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.PetService;
+import org.majimena.petz.web.rest.util.PaginationUtil;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,7 +46,7 @@ public class PetControllerTest {
     @RunWith(SpringJUnit4ClassRunner.class)
     @SpringApplicationConfiguration(classes = Application.class)
     @WebAppConfiguration
-    public static class GetTest {
+    public static class GetAllTest {
 
         private MockMvc mockMvc;
 
@@ -65,19 +69,20 @@ public class PetControllerTest {
         }
 
         @Test
-        public void ログインユーザのペットが取得できること() throws Exception {
+        public void ペットが検索できること() throws Exception {
             new NonStrictExpectations() {{
-                SecurityUtils.getCurrentUserId();
-                result = "u1";
-                petService.findPetsByUserId("u1");
-                result = Arrays.asList(Pet.builder().id("p1").name("test data").profile("test data's profile")
+                final Pageable pageable = PaginationUtil.generatePageRequest(1, 1);
+                petService.getPetsByPetCriteria(new PetCriteria(), pageable);
+                result = new PageImpl<>(Arrays.asList(Pet.builder().id("p1").name("test data").profile("test data's profile")
                     .birthDate(LocalDateTime.of(2015, 2, 27, 15, 0)).sex(SexType.MALE)
                     .type(new Type("type1")).tags(Sets.newHashSet(new Tag("tag1"), new Tag("tag2")))
                     .user(User.builder().id("u1").build())
-                    .build());
+                    .build()), pageable, 2);
             }};
 
-            mockMvc.perform(get("/api/v1/pets"))
+            mockMvc.perform(get("/api/v1/pets")
+                .param("page", "1")
+                .param("per_page", "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id", is("p1")))

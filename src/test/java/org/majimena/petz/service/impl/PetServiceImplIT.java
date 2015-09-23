@@ -7,25 +7,22 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
-import org.majimena.petz.domain.Color;
-import org.majimena.petz.domain.Pet;
-import org.majimena.petz.domain.Tag;
-import org.majimena.petz.domain.Type;
-import org.majimena.petz.domain.User;
+import org.majimena.petz.domain.*;
 import org.majimena.petz.domain.common.SexType;
+import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
 import org.majimena.petz.service.PetService;
+import org.majimena.petz.web.rest.util.PaginationUtil;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
-import java.util.List;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -37,7 +34,7 @@ public class PetServiceImplIT {
     @Transactional
     @WebAppConfiguration
     @SpringApplicationConfiguration(classes = Application.class)
-    public static class FindPetsByUserIdTest extends AbstractSpringDBUnitTest {
+    public static class GetPetsByPetCriteriaTest extends AbstractSpringDBUnitTest {
 
         @Inject
         private PetService sut;
@@ -45,24 +42,27 @@ public class PetServiceImplIT {
         @Test
         @DatabaseSetup("classpath:/fixture/base.xml")
         public void ユーザーのペット一覧が取得できること() throws Exception {
-            List<Pet> result = sut.findPetsByUserId("1");
+            Pageable pageable = PaginationUtil.generatePageRequest(null, null);
+            Page<Pet> result = sut.getPetsByPetCriteria(new PetCriteria("1", null), pageable);
 
-            assertThat(result.size(), is(1));
-            assertThat(result.get(0).getId(), is("1"));
-            assertThat(result.get(0).getName(), is("ハチ"));
-            assertThat(result.get(0).getProfile(), is("渋谷ハチ公"));
-            assertThat(result.get(0).getBirthDate(), is(LocalDateTime.of(2000, 1, 1, 0, 0)));
-            assertThat(result.get(0).getSex(), is(SexType.MALE));
-            assertThat(result.get(0).getType(), is(new Type("柴犬")));
-            assertThat(result.get(0).getTags().size(), is(1));
-            assertThat(result.get(0).getTags().contains(new Tag("忠犬")), is(true));
+            assertThat(result.hasContent(), is(true));
+            assertThat(result.getContent().size(), is(1));
+            assertThat(result.getContent().get(0).getId(), is("1"));
+            assertThat(result.getContent().get(0).getName(), is("ハチ"));
+            assertThat(result.getContent().get(0).getProfile(), is("渋谷ハチ公"));
+            assertThat(result.getContent().get(0).getBirthDate(), is(LocalDateTime.of(2000, 1, 1, 0, 0)));
+            assertThat(result.getContent().get(0).getSex(), is(SexType.MALE));
+            assertThat(result.getContent().get(0).getType(), is(new Type("柴犬")));
+            assertThat(result.getContent().get(0).getTags().size(), is(1));
+            assertThat(result.getContent().get(0).getTags().contains(new Tag("忠犬")), is(true));
         }
 
         @Test
         @DatabaseSetup("classpath:/fixture/base.xml")
         public void ユーザーが存在しない場合は何も取得できないこと() throws Exception {
-            List<Pet> result = sut.findPetsByUserId("999");
-            assertThat(result.size(), is(0));
+            Pageable pageable = PaginationUtil.generatePageRequest(null, null);
+            Page<Pet> result = sut.getPetsByPetCriteria(new PetCriteria("999", null), pageable);
+            assertThat(result.hasContent(), is(false));
         }
     }
 
@@ -109,9 +109,9 @@ public class PetServiceImplIT {
         public void 全ての項目が入力されている場合にペットが保存できること() throws Exception {
             LocalDateTime now = LocalDateTime.now();
             final Pet testData = Pet.builder().name("ポチ").profile("プロファイル").birthDate(now).sex(SexType.MALE)
-                    .user(User.builder().id("1").build())
-                    .type(new Type("トイプードル")).color(new Color("ホワイト"))
-                    .tags(Sets.newHashSet(new Tag("室内犬"), new Tag("血統書"))).build();
+                .user(User.builder().id("1").build())
+                .type(new Type("トイプードル")).color(new Color("ホワイト"))
+                .tags(Sets.newHashSet(new Tag("室内犬"), new Tag("血統書"))).build();
 
             Pet result = sut.savePet(testData);
 
@@ -133,8 +133,8 @@ public class PetServiceImplIT {
         @DatabaseSetup("classpath:/fixture/base.xml")
         public void 任意項目が入力されていない場合にペットが保存できること() throws Exception {
             final Pet testData = Pet.builder().name("ポチ")
-                    .user(User.builder().id("1").build())
-                    .type(new Type("トイプードル")).color(new Color("ホワイト")).build();
+                .user(User.builder().id("1").build())
+                .type(new Type("トイプードル")).color(new Color("ホワイト")).build();
 
             Pet result = sut.savePet(testData);
 

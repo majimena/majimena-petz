@@ -1,11 +1,16 @@
 package org.majimena.petz.web.api.pet;
 
 import com.codahale.metrics.annotation.Timed;
-import org.apache.commons.lang3.StringUtils;
 import org.majimena.framework.aws.AmazonS3Service;
 import org.majimena.petz.domain.Pet;
+import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.PetService;
+import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +19,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -33,16 +39,15 @@ public class PetController {
         this.petService = petService;
     }
 
-    // FIXME 検索条件を設ける必要あり（ページングどうしようか）
     @Timed
     @RequestMapping(value = "/pets", method = RequestMethod.GET)
-    public ResponseEntity<List<Pet>> get(@RequestParam(required = false) String userId) {
-        if (StringUtils.isEmpty(userId)) {
-            userId = SecurityUtils.getCurrentUserId();
-        }
-
-        List<Pet> list = petService.findPetsByUserId(userId);
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<List<Pet>> getAll(@RequestParam(value = "page", required = false) Integer offset,
+                                            @RequestParam(value = "per_page", required = false) Integer limit,
+                                            @Valid PetCriteria criteria) throws URISyntaxException {
+        Pageable pageable = PaginationUtil.generatePageRequest(offset, limit);
+        Page<Pet> pets = petService.getPetsByPetCriteria(criteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pets, "/api/v1/pets", offset, limit);
+        return new ResponseEntity<>(pets.getContent(), headers, HttpStatus.OK);
     }
 
     @Timed

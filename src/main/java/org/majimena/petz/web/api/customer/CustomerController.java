@@ -98,7 +98,7 @@ public class CustomerController {
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/customers/{customerId}", method = RequestMethod.GET)
-    public ResponseEntity<Customer> show(@PathVariable String clinicId, @PathVariable String customerId) {
+    public ResponseEntity<Customer> get(@PathVariable String clinicId, @PathVariable String customerId) {
         // クリニックの権限チェック
         if (!SecurityUtils.isUserInClinic(clinicId)) {
             throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
@@ -133,6 +133,7 @@ public class CustomerController {
             throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
         }
 
+        // 顧客のデータ整合性チェック
         customerValidator.validate(customer, errors);
         if (errors.hasErrors()) {
             throw new BindException(errors);

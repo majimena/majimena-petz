@@ -22,11 +22,11 @@ public class ClinicPetCriteriaSpec implements Specification<Pet> {
 
     private Specification equalClinicId(String clinicId) {
         return (root, query, cb) -> {
-            Subquery<String> subquery = query.subquery(String.class);
-            Root<Customer> customer = subquery.from(Customer.class);
-            subquery.select(customer.get("user").get("id"));
-            subquery.where(cb.equal(customer.get("clinic").get("id"), clinicId));
-            return root.get("user").get("id").in(subquery);
+            Subquery<String> subQuery = query.subquery(String.class);
+            Root<Customer> customer = subQuery.from(Customer.class);
+            subQuery.select(customer.get("user").get("id"));
+            subQuery.where(cb.equal(customer.get("clinic").get("id"), clinicId));
+            return root.get("user").get("id").in(subQuery);
         };
     }
 

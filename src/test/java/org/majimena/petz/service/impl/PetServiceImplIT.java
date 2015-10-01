@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.domain.*;
-import org.majimena.petz.domain.clinic.ClinicPetCriteria;
 import org.majimena.petz.domain.common.SexType;
 import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
@@ -72,41 +71,6 @@ public class PetServiceImplIT {
             Pageable pageable = PaginationUtil.generatePageRequest(null, null);
             Page<Pet> result = sut.getPetsByPetCriteria(new PetCriteria("999", null), pageable);
             assertThat(result.hasContent(), is(false));
-        }
-    }
-
-    @Transactional
-    @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
-    public static class GetPetsByClinicPetCriteriaTest extends AbstractSpringDBUnitTest {
-
-        @Inject
-        private PetService sut;
-
-        @Test
-        @DatabaseSetup("classpath:/fixture/base.xml")
-        public void クリニックのペット一覧が取得できること() throws Exception {
-            Pageable pageable = PaginationUtil.generatePageRequest(null, null);
-            Page<Pet> result = sut.getPetsByClinicPetCriteria(new ClinicPetCriteria("0", null, null), pageable);
-
-            assertThat(result.hasContent(), is(true));
-            assertThat(result.getContent().size(), is(2));
-            assertThat(result.getContent().get(0).getId(), is("1"));
-            assertThat(result.getContent().get(0).getName(), is("ハチ"));
-            assertThat(result.getContent().get(0).getProfile(), is("渋谷ハチ公"));
-            assertThat(result.getContent().get(0).getBirthDate(), is(LocalDateTime.of(2000, 1, 1, 0, 0)));
-            assertThat(result.getContent().get(0).getSex(), is(SexType.MALE));
-            assertThat(result.getContent().get(0).getType(), is(new Type("柴犬")));
-            assertThat(result.getContent().get(0).getTags().size(), is(1));
-            assertThat(result.getContent().get(0).getTags().contains(new Tag("忠犬")), is(true));
-            assertThat(result.getContent().get(1).getId(), is("2"));
-            assertThat(result.getContent().get(1).getName(), is("ポチ"));
-            assertThat(result.getContent().get(1).getProfile(), is("なにか"));
-            assertThat(result.getContent().get(1).getBirthDate(), is(LocalDateTime.of(2000, 1, 1, 0, 0)));
-            assertThat(result.getContent().get(1).getSex(), is(SexType.MALE));
-            assertThat(result.getContent().get(1).getType(), is(new Type("トイプードル")));
-            assertThat(result.getContent().get(1).getTags().size(), is(1));
-            assertThat(result.getContent().get(1).getTags().contains(new Tag("室内犬")), is(true));
         }
     }
 

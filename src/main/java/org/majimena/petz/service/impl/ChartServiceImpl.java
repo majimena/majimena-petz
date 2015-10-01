@@ -1,5 +1,6 @@
 package org.majimena.petz.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.domain.Chart;
@@ -104,11 +105,13 @@ public class ChartServiceImpl implements ChartService {
         Pet pet = petService.savePet(chart.getPet());
 
         // カルテを保存する
-        chart.setChartNo(String.valueOf(System.currentTimeMillis()));
+        if (StringUtils.isEmpty(chart.getId())) {
+            chart.setChartNo(String.valueOf(System.currentTimeMillis()));
+            chart.setCreationDate(LocalDateTime.now());
+        }
         chart.setClinic(clinic);
         chart.setCustomer(customer);
         chart.setPet(pet);
-        chart.setCreationDate(LocalDateTime.now());
         return chartRepository.save(chart);
     }
 }

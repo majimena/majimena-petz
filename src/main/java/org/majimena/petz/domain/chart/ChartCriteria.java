@@ -25,6 +25,9 @@ public class ChartCriteria implements Serializable {
     @Size(max = ID.MAX_LENGTH)
     private String customerId;
 
+    @Size(max = ID.MAX_LENGTH)
+    private String petId;
+
     @Size(max = Name.MAX_LENGTH)
     private String customerName;
 }

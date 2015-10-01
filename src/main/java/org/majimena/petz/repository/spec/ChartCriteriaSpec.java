@@ -21,18 +21,24 @@ public class ChartCriteriaSpec implements Specification<Chart> {
     public ChartCriteriaSpec(ChartCriteria criteria) {
         this.specification = Specifications
             .where(equalClinicId(criteria))
+            .and(equalPetId(criteria))
             .and(equalCustomerId(criteria))
             .and(likeAnywhereCustomerName(criteria));
     }
 
     private Specification equalClinicId(ChartCriteria criteria) {
-        if (StringUtils.isEmpty(criteria.getClinicId())) {
-            return null;
-        }
         return (root, query, cb) -> {
             query.orderBy(cb.asc(root.get("chartNo")));
             return cb.equal(root.get("clinic").get("id"), criteria.getClinicId());
         };
+    }
+
+    private Specification equalPetId(ChartCriteria criteria) {
+        if (StringUtils.isEmpty(criteria.getPetId())) {
+            return null;
+        }
+        return (root, query, cb) ->
+            cb.equal(root.get("pet").get("id"), criteria.getPetId());
     }
 
     private Specification equalCustomerId(ChartCriteria criteria) {

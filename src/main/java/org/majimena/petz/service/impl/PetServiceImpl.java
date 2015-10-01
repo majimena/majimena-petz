@@ -3,10 +3,8 @@ package org.majimena.petz.service.impl;
 import org.majimena.framework.aws.AmazonS3Service;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.domain.*;
-import org.majimena.petz.domain.clinic.ClinicPetCriteria;
 import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.repository.*;
-import org.majimena.petz.repository.spec.ClinicPetCriteriaSpec;
 import org.majimena.petz.repository.spec.PetSpecs;
 import org.majimena.petz.service.PetService;
 import org.springframework.data.domain.Page;
@@ -31,6 +29,9 @@ public class PetServiceImpl implements PetService {
     private PetRepository petRepository;
 
     @Inject
+    private CustomerRepository customerRepository;
+
+    @Inject
     private TypeRepository typeRepository;
 
     @Inject
@@ -49,12 +50,6 @@ public class PetServiceImpl implements PetService {
     @Transactional(readOnly = true)
     public Page<Pet> getPetsByPetCriteria(PetCriteria criteria, Pageable pageable) {
         return petRepository.findAll(PetSpecs.of(criteria), pageable);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<Pet> getPetsByClinicPetCriteria(ClinicPetCriteria criteria, Pageable pageable) {
-        return petRepository.findAll(new ClinicPetCriteriaSpec(criteria), pageable);
     }
 
     @Override

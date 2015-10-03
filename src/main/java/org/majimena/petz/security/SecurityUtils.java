@@ -1,8 +1,8 @@
 package org.majimena.petz.security;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -70,17 +70,38 @@ public final class SecurityUtils {
 
 
     /**
-     * If the current user has a specific security role.
+     * 認証ユーザーがロールを持っているかチェックする.
+     *
+     * @param role ロール
+     * @return 認証ユーザーがロールを持っていればTRUE
      */
     public static boolean isUserInRole(String role) {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        if (authentication != null) {
-            if (authentication.getPrincipal() instanceof UserDetails) {
-                UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
-                return springSecurityUser.getAuthorities().contains(new SimpleGrantedAuthority(role));
-            }
-        }
-        return false;
+        return isUserInRole(null, role);
+    }
+
+    /**
+     * 認証ユーザーがクリニック限定のロールを持っているかチェックする.
+     *
+     * @param clinicId クリニックID
+     * @param role     ロール
+     * @return 認証ユーザーがロールを持っていればTRUE
+     */
+    public static boolean isUserInRole(String clinicId, String role) {
+        return getPrincipal()
+            .map(u -> u.getAuthorities().contains(new PetzGrantedAuthority(clinicId, role)))
+            .orElse(false);
+    }
+
+    /**
+     * 認証ユーザーが何かしらのクリニック限定のロールを持っているかチェックする.
+     *
+     * @param clinicId クリニックID
+     * @return 認証ユーザーがロールを持っていればTRUE
+     */
+    public static boolean isUserInClinic(String clinicId) {
+        return getPrincipal()
+            .map(u -> u.getAuthorities().stream()
+                .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId)))
+            .orElse(false);
     }
 }

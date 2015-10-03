@@ -25,7 +25,7 @@ public class LoggingAspect {
     @Inject
     private Environment env;
 
-    @Pointcut("within(org.majimena.petz.repository..*) || within(org.majimena.petz.service..*) || within(org.majimena.petz.web.rest..*)")
+    @Pointcut("within(org.majimena.petz.repository..*) || within(org.majimena.petz.service..*)")
     public void loggingPointcut() {}
 
     @AfterThrowing(pointcut = "loggingPointcut()", throwing = "e")

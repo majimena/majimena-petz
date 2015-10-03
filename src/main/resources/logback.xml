@@ -4,7 +4,7 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>utf-8</charset>
-            <Pattern>[%p] %c - %m%n</Pattern>
+            <Pattern>%d %-5level [%thread] %msg - %logger{0}%n</Pattern>
         </encoder>
     </appender>
 
@@ -27,8 +27,8 @@
     </appender>
 -->
 
-    <logger name="org.majimena.petz" level="${logback.loglevel}"/>
-    <logger name="org.majimena.framework" level="${logback.loglevel}"/>
+    <logger name="org.majimena.petz" level="TRACE"/>
+    <logger name="org.majimena.framework" level="TRACE"/>
 
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>

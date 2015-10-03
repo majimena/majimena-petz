@@ -1,7 +1,7 @@
 package org.majimena.petz.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.framework.core.managers.EmailManager;
+import org.majimena.framework.aws.AmazonSESService;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
 import org.majimena.petz.common.exceptions.SystemException;
@@ -53,7 +53,7 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
     private SpringTemplateEngine templateEngine;
 
     @Inject
-    private EmailManager emailManager;
+    private AmazonSESService amazonSESService;
 
     @Value("${mail.from:noreply@petz.io}")
     private String fromEmail;
@@ -78,8 +78,8 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
         this.templateEngine = templateEngine;
     }
 
-    public void setEmailManager(EmailManager emailManager) {
-        this.emailManager = emailManager;
+    public void setAmazonSESService(AmazonSESService amazonSESService) {
+        this.amazonSESService = amazonSESService;
     }
 
     public void setFromEmail(String fromEmail) {
@@ -129,7 +129,7 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
             context.setVariable("activationKey", activationKey);
             String subject = templateEngine.process("ClinicInvitation-subject", context);
             String content = templateEngine.process("ClinicInvitation-content", context);
-            emailManager.send(email, fromEmail, subject, content);
+            amazonSESService.send(email, fromEmail, subject, content);
         });
     }
 

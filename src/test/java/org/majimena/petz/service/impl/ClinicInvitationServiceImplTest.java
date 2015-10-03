@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.framework.core.managers.EmailManager;
+import org.majimena.framework.aws.AmazonSESService;
 import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.domain.Clinic;
@@ -64,7 +64,7 @@ public class ClinicInvitationServiceImplTest {
         private UserRepository userRepository;
 
         @Mocked
-        private EmailManager emailManager;
+        private AmazonSESService amazonSESService;
 
         @Mocked
         private SecurityUtils securityUtils;
@@ -74,7 +74,7 @@ public class ClinicInvitationServiceImplTest {
             sut.setClinicRepository(clinicRepository);
             sut.setClinicInvitationRepository(clinicInvitationRepository);
             sut.setUserRepository(userRepository);
-            sut.setEmailManager(emailManager);
+            sut.setAmazonSESService(amazonSESService);
             sut.setTemplateEngine(templateEngine);
             sut.setFromEmail("noreply@majimena.org");
         }
@@ -106,7 +106,7 @@ public class ClinicInvitationServiceImplTest {
                 String from;
                 String subject;
                 String content;
-                emailManager.send(to = withCapture(), from = withCapture(), subject = withCapture(), content = withCapture());
+                amazonSESService.send(to = withCapture(), from = withCapture(), subject = withCapture(), content = withCapture());
                 assertThat(to, is("test@mail.com"));
                 assertThat(from, is("noreply@majimena.org"));
                 assertThat(subject, is(notNullValue()));

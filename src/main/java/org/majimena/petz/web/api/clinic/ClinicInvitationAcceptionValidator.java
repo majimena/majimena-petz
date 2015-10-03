@@ -13,12 +13,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Optional;
 
 /**
  * Created by todoken on 2015/07/13.
  */
-@Component
+@Named("clinicInvitationAcceptionValidator")
 public class ClinicInvitationAcceptionValidator extends AbstractValidator<ClinicInvitationAcception> {
 
     @Inject

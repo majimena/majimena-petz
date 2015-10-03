@@ -16,11 +16,13 @@ import java.util.Optional;
  */
 public interface ClinicStaffRepository extends JpaRepository<ClinicStaff, String> {
 
-    @Query("select cl from ClinicStaff cs inner join cs.clinic cl where cs.user.id = :userId order by cl.id")
+    @Query("select cl from ClinicStaff cs inner join cs.clinic cl where cs.user.id = :userId order by cl.name, cl.id")
     Page<Clinic> findClinicsByUserId(@Param("userId") String userId, Pageable pageable);
 
-    @Query("select cs from ClinicStaff cs inner join fetch cs.user us where cs.clinic.id = :clinicId order by cs.activatedDate desc")
+    @Query("select cs from ClinicStaff cs inner join fetch cs.user us where cs.clinic.id = :clinicId order by cs.activatedDate")
     List<ClinicStaff> findByClinicId(@Param("clinicId") String clinicId);
+
+    List<ClinicStaff> findByUserId(String userId);
 
     Optional<ClinicStaff> findByClinicIdAndUserId(String clinicId, String userId);
 

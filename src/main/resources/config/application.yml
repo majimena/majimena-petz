@@ -38,3 +38,11 @@ swagger:
     contact:
     license: CC BY-NC
     licenseUrl: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+
+aws:
+    ses:
+        region: us-west-2
+    s3:
+        region: ap-northeast-1
+        bucket: images.petz.io
+        type: image/jpeg

@@ -1,10 +1,19 @@
 package org.majimena.petz.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.majimena.framework.beans.factory.BeanFactory;
+import org.majimena.framework.beans.utils.BeanFactoryUtils;
+import org.majimena.petz.common.exceptions.ApplicationException;
+import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.common.utils.RandomUtils;
 import org.majimena.petz.domain.Authority;
 import org.majimena.petz.domain.User;
+import org.majimena.petz.domain.errors.ErrorCode;
+import org.majimena.petz.domain.user.PasswordRegistry;
 import org.majimena.petz.domain.user.SignupRegistry;
+import org.majimena.petz.domain.user.UserCriteria;
+import org.majimena.petz.domain.user.UserOutline;
 import org.majimena.petz.repository.AuthorityRepository;
 import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.security.SecurityUtils;
@@ -16,9 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Service class for managing users.
@@ -113,6 +120,28 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
+    public List<UserOutline> getUsersByUserCriteria(final UserCriteria criteria) {
+        // 今はメアド検索しかないのでこのままでもOK
+        Optional<User> user = userRepository.findOneByLogin(criteria.getEmail());
+        return user
+            .map(u -> Arrays.asList(BeanFactory.create(u, new UserOutline())))
+            .orElse(Arrays.asList());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<User> getUserByUserId(String userId) {
+        User currentUser = userRepository.findOne(userId);
+        return Optional.ofNullable(currentUser);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void saveUser(SignupRegistry registry) {
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
@@ -125,12 +154,73 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(encryptedPassword);
         newUser.setEmail(registry.getEmail());
         newUser.setLangKey("ja");
+
         // new user is not active
         newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtils.generateActivationKey());
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User saveUser(User user) {
+        Authority authority = authorityRepository.findOne("ROLE_USER");
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(authority);
+
+        // TODO メール送信したらパスワードをランダムに発行してそこに記載する
+        String encryptedPassword;
+        if (StringUtils.isEmpty(user.getPassword())) {
+            encryptedPassword = passwordEncoder.encode("password");
+        } else {
+            encryptedPassword = passwordEncoder.encode(user.getPassword());
+        }
+        user.setPassword(encryptedPassword);
+
+        user.setLangKey("ja"); // FIXME 他言語対応
+        user.setCountry("JP"); // FIXME 海外対応
+        user.setActivated(false);
+        user.setActivationKey(RandomUtils.generateActivationKey());
+        user.setAuthorities(authorities);
+        User created = userRepository.save(user);
+
+        return created;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changePassword(PasswordRegistry registry) {
+        User one = userRepository.findOne(registry.getUserId());
+        if (one == null) {
+            throw new SystemException("user not found [" + registry.getUserId() + "]");
+        }
+
+        // パスワードチェック
+        if (!passwordEncoder.matches(registry.getOldPassword(), one.getPassword())) {
+            throw new ApplicationException(ErrorCode.PTZ_000102);
+        }
+
+        String newPassword = passwordEncoder.encode(registry.getNewPassword());
+        one.setPassword(newPassword);
+        userRepository.save(one);
+    }
+
+    @Override
+    public User patchUser(User user) {
+        User one = userRepository.findOne(user.getId());
+        if (one == null) {
+            throw new SystemException("user not found [" + user.getId() + "]");
+        }
+
+        BeanFactoryUtils.copyNonNullProperties(user, one);
+        userRepository.save(one);
+        return one;
     }
 
     @Override
@@ -142,27 +232,5 @@ public class UserServiceImpl implements UserService {
             userRepository.save(u);
             log.debug("Changed Information for User: {}", u);
         });
-    }
-
-    @Override
-    public void changePassword(String password) {
-        userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).ifPresent(u -> {
-            String encryptedPassword = passwordEncoder.encode(password);
-            u.setPassword(encryptedPassword);
-            userRepository.save(u);
-            log.debug("Changed password for User: {}", u);
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public User getUserWithAuthorities() {
-        String login = SecurityUtils.getCurrentLogin();
-        User currentUser = userRepository.findOneByLogin(login).get();
-        currentUser.getAuthorities().size(); // eagerly load the association
-        return currentUser;
     }
 }

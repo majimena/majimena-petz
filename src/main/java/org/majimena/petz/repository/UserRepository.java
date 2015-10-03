@@ -1,8 +1,7 @@
 package org.majimena.petz.repository;
 
-import org.majimena.petz.domain.User;
-
 import org.joda.time.DateTime;
+import org.majimena.petz.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -19,6 +18,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findOneByResetKey(String resetKey);
 
+    @Deprecated
     Optional<User> findOneByEmail(String email);
 
     Optional<User> findOneByLogin(String login);

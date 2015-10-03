@@ -16,7 +16,7 @@
         The initial schema has the '00000000000001' id, so that it is over-written if we re-generate it.
     -->
     <changeSet id="00000000000001" author="jhipster">
-        <createTable tableName="JHI_USER">
+        <createTable tableName="user">
             <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -24,17 +24,23 @@
                 <constraints unique="true" nullable="false"/>
             </column>
             <column name="password" type="varchar(100)"/>
+            <column name="username" type="varchar(50)"></column>
             <column name="first_name" type="varchar(50)"/>
             <column name="last_name" type="varchar(50)"/>
-            <column name="email" type="varchar(100)">
-                <constraints unique="true"/>
-            </column>
+            <column name="email" type="varchar(100)"/>
             <column name="activated" type="boolean" valueBoolean="false">
                 <constraints nullable="false" />
             </column>
             <column name="lang_key" type="varchar(5)"/>
             <column name="activation_key" type="varchar(20)"/>
             <column name="reset_key" type="varchar(20)"/>
+            <column name="zip_code" type="varchar(10)"></column>
+            <column name="country" type="varchar(2)"></column>
+            <column name="state" type="varchar(50)"></column>
+            <column name="city" type="varchar(50)"></column>
+            <column name="street" type="varchar(50)"></column>
+            <column name="phone_no" type="varchar(15)"></column>
+            <column name="mobile_phone_no" type="varchar(15)"></column>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
@@ -49,24 +55,23 @@
         </createTable>
 
         <createIndex indexName="idx_user_login"
-            tableName="JHI_USER"
+            tableName="user"
             unique="true">
             <column name="login" type="varchar(50)"/>
         </createIndex>
 
         <createIndex indexName="idx_user_email"
-            tableName="JHI_USER"
-            unique="true">
+            tableName="user">
             <column name="email" type="varchar(100)"/>
         </createIndex>
 
-        <createTable tableName="JHI_AUTHORITY">
+        <createTable tableName="authority">
             <column name="name" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
         </createTable>
 
-        <createTable tableName="JHI_USER_AUTHORITY">
+        <createTable tableName="user_authority">
             <column name="user_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
@@ -75,7 +80,7 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="user_id, authority_name" tableName="JHI_USER_AUTHORITY"/>
+        <addPrimaryKey columnNames="user_id, authority_name" tableName="user_authority"/>
 
         <!--<addForeignKeyConstraint baseColumnNames="authority_name"-->
                                  <!--baseTableName="JHI_USER_AUTHORITY"-->
@@ -92,23 +97,23 @@
         <loadData encoding="UTF-8"
                   file="config/liquibase/users.csv"
                   separator=";"
-                  tableName="JHI_USER">
+                  tableName="user">
             <column name="activated" type="boolean"/>
             <column name="created_date" type="timestamp"/>
         </loadData>
-        <dropDefaultValue tableName="JHI_USER" columnName="created_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="user" columnName="created_date" columnDataType="datetime"/>
 
         <loadData encoding="UTF-8"
                   file="config/liquibase/authorities.csv"
                   separator=";"
-                  tableName="JHI_AUTHORITY"/>
+                  tableName="authority"/>
 
         <loadData encoding="UTF-8"
                   file="config/liquibase/users_authorities.csv"
                   separator=";"
-                  tableName="JHI_USER_AUTHORITY"/>
+                  tableName="user_authority"/>
 
-        <createTable tableName="JHI_PERSISTENT_AUDIT_EVENT">
+        <createTable tableName="audit_event">
             <column name="event_id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -119,7 +124,7 @@
             <column name="event_type" type="varchar(255)"/>
         </createTable>
 
-        <createTable tableName="JHI_PERSISTENT_AUDIT_EVENT_DATA">
+        <createTable tableName="audit_event_data">
             <column name="event_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
@@ -128,17 +133,17 @@
             </column>
             <column name="value" type="varchar(255)"/>
         </createTable>
-        <addPrimaryKey columnNames="event_id, name" tableName="JHI_PERSISTENT_AUDIT_EVENT_DATA"/>
+        <addPrimaryKey columnNames="event_id, name" tableName="audit_event_data"/>
 
         <createIndex indexName="idx_persistent_audit_event"
-                     tableName="JHI_PERSISTENT_AUDIT_EVENT"
+                     tableName="audit_event"
                      unique="false">
             <column name="principal" type="varchar(255)"/>
             <column name="event_date" type="timestamp"/>
         </createIndex>
 
         <createIndex indexName="idx_persistent_audit_event_data"
-                     tableName="JHI_PERSISTENT_AUDIT_EVENT_DATA"
+                     tableName="audit_event_data"
                      unique="false">
             <column name="event_id" type="bigint"/>
         </createIndex>

@@ -17,7 +17,7 @@ import java.util.List;
  * クリニックスタッフのAPIコントローラ.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class ClinicStaffController {
 
     @Inject
@@ -29,7 +29,7 @@ public class ClinicStaffController {
 
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/staffs", method = RequestMethod.GET)
-    public ResponseEntity<List<ClinicStaff>> query(@PathVariable String clinicId) throws URISyntaxException {
+    public ResponseEntity<List<ClinicStaff>> get(@PathVariable String clinicId) throws URISyntaxException {
         List<ClinicStaff> staffs = clinicService.getClinicStaffsById(clinicId);
         return ResponseEntity.ok().body(staffs);
     }
@@ -37,6 +37,7 @@ public class ClinicStaffController {
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/staffs/{staffId}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> delete(@PathVariable String clinicId, @PathVariable String staffId) {
+        // TODO 権限チェックが必要
         clinicService.deleteClinicStaff(clinicId, staffId);
         return ResponseEntity.ok().build();
     }

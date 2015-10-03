@@ -31,7 +31,6 @@ public class ClinicStaff extends AbstractAuditingEntity implements Serializable 
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;

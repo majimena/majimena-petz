@@ -7,6 +7,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.majimena.framework.aws.impl.AmazonSESServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,7 @@ public class AmazonSESEmailManagerIT {
 
     private final Logger logger = LoggerFactory.getLogger(AmazonSESEmailManagerIT.class);
 
-    private AmazonSESEmailManager sut = new AmazonSESEmailManager();
+    private AmazonSESServiceImpl sut = new AmazonSESServiceImpl();
 
     @Before
     public void setup() {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <authority name="ROLE_USER"/>
+    <user id="1" login="hoge@hoge.com" password="password" activated="0" email="hoge@hoge.com" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <user id="2" login="foo@hoge.com" password="password" activated="0" email="foo@hoge.com" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <user id="3" login="bar@hoge.com" password="$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC" activated="0" email="bar@hoge.com" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <user_authority user_id="1" authority_name="ROLE_USER"/>
+    <user_authority user_id="2" authority_name="ROLE_USER"/>
+    <user_authority user_id="3" authority_name="ROLE_USER"/>
+
+    <type name="トイプードル"/>
+    <type name="シベリアンハスキー"/>
+    <type name="柴犬"/>
+    <color name="ホワイト"/>
+    <color name="ブラウン"/>
+    <color name="ブラック"/>
+    <blood name="DEA1.1"/>
+    <blood name="DEA1.2"/>
+    <blood name="DEA1.3"/>
+    <tag name="室内犬"/>
+    <tag name="忠犬"/>
+
+    <clinic id="0" email="foo@localhost.com" name="Name 1" description="Description 1" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic id="1" email="bar@localhost.com" name="Name 2" description="Description 2" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+
+    <clinic_staff id="1" clinic_id="0" user_id="1" role="ROLE_CLINIC_OWNER" activated_date="2015-06-01" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic_staff id="2" clinic_id="0" user_id="2" role="ROLE_CLINIC_STAFF" activated_date="2015-06-01" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic_staff id="3" clinic_id="1" user_id="1" role="ROLE_CLINIC_OWNER" activated_date="2015-06-01" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+
+    <pet id="1" name="ハチ" type="柴犬" color="ブラウン" blood="DEA1.1" profile="渋谷ハチ公" sex="MALE" birth_date="2000-01-01" user_id="1" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <pet id="2" name="ポチ" type="トイプードル" color="ホワイト" blood="DEA1.2" profile="なにか" sex="MALE" birth_date="2000-01-01" user_id="1" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <pet id="3" name="ハスキー" type="シベリアンハスキー" color="ホワイト" blood="DEA1.3" profile="ほげ" sex="MALE" birth_date="2000-01-01" user_id="2" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <pet_tag pet_id="1" tag_name="忠犬"/>
+    <pet_tag pet_id="2" tag_name="室内犬"/>
+
+    <customer id="customer1" clinic_id="0" user_id="1" first_name="TARO" last_name="PET" activated="false" blocked="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <customer id="customer2" clinic_id="1" user_id="2" first_name="FOO" last_name="PET" activated="false" blocked="false" created_by="foo@hoge.com" created_date="2015-01-01"/>
+
+    <chart/>
+
+    <schedule id="schedule1" clinic_id="0" user_id="1" customer_id="customer1" pet_id="1" memo="とりあえず１" status="RESERVED" start_date_time="2015-11-01 00:00:00" end_date_time="2015-11-01 00:30:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+    <schedule id="schedule2" clinic_id="0" user_id="1" customer_id="customer1" pet_id="1" memo="とりあえず２" status="RESERVED" start_date_time="2015-12-01 00:00:00" end_date_time="2015-12-01 00:30:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+    <schedule id="schedule3" clinic_id="1" user_id="2" customer_id="customer2" pet_id="3" memo="クリニック別" status="RESERVED" start_date_time="2015-11-02 10:30:00" end_date_time="2015-11-03 10:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+    <schedule id="schedule4" clinic_id="0" user_id="1" customer_id="customer1" pet_id="1" memo="重複" status="RESERVED" start_date_time="2015-11-30 23:59:00" end_date_time="2015-12-01 23:59:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+    <schedule id="schedule5" clinic_id="0" user_id="1" customer_id="customer1" pet_id="1" memo="ぎりぎり１" status="RESERVED" start_date_time="2015-10-29 23:59:00" end_date_time="2015-10-29 00:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+    <schedule id="schedule6" clinic_id="0" user_id="1" customer_id="customer1" pet_id="1" memo="ぎりぎり２" status="RESERVED" start_date_time="2015-10-30 23:59:00" end_date_time="2015-11-01 00:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+</dataset>

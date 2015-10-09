@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <authority name="ROLE_USER"/>
+    <user id="1" login="login1" password="password" activated="0" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <user id="2" login="login2" password="password" activated="0" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <user_authority user_id="1" authority_name="ROLE_USER"/>
+    <user_authority user_id="2" authority_name="ROLE_USER"/>
+    <clinic id="0" email="foo@localhost.com" name="Name 1" description="Description 1" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic id="1" email="bar@localhost.com" name="Name 2" description="Description 2" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+</dataset>

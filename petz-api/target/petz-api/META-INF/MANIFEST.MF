@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: petz-api Maven Webapp
+Implementation-Version: 1.0-SNAPSHOT
+Built-By: todoken
+Implementation-Vendor-Id: org.majimena.petz
+Created-By: IntelliJ IDEA
+Build-Jdk: 1.8.0_25
+Main-Class: ${start-class}
+

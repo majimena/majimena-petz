@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <authority/>
+    <user/>
+    <user_authority/>
+
+    <clinic/>
+    <clinic_staff/>
+    <clinic_invitation/>
+
+    <customer/>
+
+    <type/>
+    <color/>
+    <blood/>
+    <tag/>
+
+    <pet/>
+    <pet_tag/>
+
+    <chart/>
+</dataset>

@@ -68,5 +68,4 @@ public class BeanFactory implements InitializingBean {
         BeanUtils.copyProperties(original, destination);
         return destination;
     }
-
 }

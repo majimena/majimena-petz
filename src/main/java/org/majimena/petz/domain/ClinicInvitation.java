@@ -50,8 +50,8 @@ public class ClinicInvitation extends AbstractAuditingEntity implements Serializ
      * 招待状送信先メールアドレス.
      */
     @NotNull
-    @Size(max = 50)
-    @Column(name = "email", length = 50, nullable = false)
+    @Size(max = 100)
+    @Column(name = "email", length = 100, nullable = false)
     private String email;
 
     /**

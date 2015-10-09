@@ -1,6 +1,7 @@
 package org.majimena.petz.security;
 
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -103,5 +104,18 @@ public final class SecurityUtils {
             .map(u -> u.getAuthorities().stream()
                 .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId)))
             .orElse(false);
+    }
+
+    /**
+     * 認証済みユーザーが指定したクリニックのロールを持っていない場合に例外を投げる.
+     *
+     * @param clinicId クリニックID
+     * @throws ResourceCannotAccessException クリニックのロールを持っていない場合
+     */
+    public static void throwIfDoNotHaveClinicRoles(String clinicId) {
+        if (isUserInClinic(clinicId)) {
+            return;
+        }
+        throw new ResourceCannotAccessException();
     }
 }

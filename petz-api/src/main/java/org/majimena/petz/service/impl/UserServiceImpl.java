@@ -2,8 +2,8 @@ package org.majimena.petz.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.majimena.framework.beans.factory.BeanFactory;
-import org.majimena.framework.beans.utils.BeanFactoryUtils;
+import org.majimena.petz.common.factory.BeanFactory;
+import org.majimena.petz.common.utils.BeanFactoryUtils;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.common.utils.RandomUtils;

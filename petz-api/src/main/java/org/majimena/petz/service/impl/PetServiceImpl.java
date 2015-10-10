@@ -1,6 +1,6 @@
 package org.majimena.petz.service.impl;
 
-import org.majimena.framework.aws.AmazonS3Service;
+import org.majimena.petz.common.aws.AmazonS3Service;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.domain.*;
 import org.majimena.petz.domain.pet.PetCriteria;

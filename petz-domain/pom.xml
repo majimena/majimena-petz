@@ -12,9 +12,8 @@
 
     <groupId>org.majimena.petz</groupId>
     <artifactId>petz-domain</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <name>petz-domain</name>
-    <url>http://maven.apache.org</url>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>PETZ: Petz Domain Project</name>
 
     <dependencies>
         <!-- json -->

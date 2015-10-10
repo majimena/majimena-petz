@@ -7,16 +7,15 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
+import org.majimena.petz.datatype.SexType;
 import org.majimena.petz.domain.Color;
 import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.Tag;
 import org.majimena.petz.domain.Type;
 import org.majimena.petz.domain.User;
-import org.majimena.petz.domain.common.SexType;
 import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
 import org.majimena.petz.service.PetService;
-import org.majimena.petz.service.impl.PetServiceImpl;
 import org.majimena.petz.web.rest.util.PaginationUtil;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.Page;
@@ -124,9 +123,9 @@ public class PetServiceImplIT {
         public void 全ての項目が入力されている場合にペットが保存できること() throws Exception {
             LocalDateTime now = LocalDateTime.now();
             final Pet testData = Pet.builder().name("ポチ").profile("プロファイル").birthDate(now).sex(SexType.MALE)
-                .user(User.builder().id("1").build())
-                .type(new Type("トイプードル")).color(new Color("ホワイト"))
-                .tags(Sets.newHashSet(new Tag("室内犬"), new Tag("血統書"))).build();
+                    .user(User.builder().id("1").build())
+                    .type(new Type("トイプードル")).color(new Color("ホワイト"))
+                    .tags(Sets.newHashSet(new Tag("室内犬"), new Tag("血統書"))).build();
 
             Pet result = sut.savePet(testData);
 
@@ -148,8 +147,8 @@ public class PetServiceImplIT {
         @DatabaseSetup("classpath:/fixture/base.xml")
         public void 任意項目が入力されていない場合にペットが保存できること() throws Exception {
             final Pet testData = Pet.builder().name("ポチ")
-                .user(User.builder().id("1").build())
-                .type(new Type("トイプードル")).color(new Color("ホワイト")).build();
+                    .user(User.builder().id("1").build())
+                    .type(new Type("トイプードル")).color(new Color("ホワイト")).build();
 
             Pet result = sut.savePet(testData);
 

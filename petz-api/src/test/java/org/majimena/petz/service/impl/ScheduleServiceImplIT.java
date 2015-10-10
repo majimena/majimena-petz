@@ -5,12 +5,11 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
+import org.majimena.petz.datatype.ScheduleStatus;
 import org.majimena.petz.domain.Schedule;
-import org.majimena.petz.domain.common.ScheduleStatus;
 import org.majimena.petz.domain.examination.ScheduleCriteria;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
 import org.majimena.petz.service.ScheduleService;
-import org.majimena.petz.service.impl.ScheduleServiceImpl;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 

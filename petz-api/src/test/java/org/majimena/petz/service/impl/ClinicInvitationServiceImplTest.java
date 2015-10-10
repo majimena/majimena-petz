@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.framework.aws.AmazonSESService;
+import org.majimena.petz.common.aws.AmazonSESService;
 import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.domain.Clinic;

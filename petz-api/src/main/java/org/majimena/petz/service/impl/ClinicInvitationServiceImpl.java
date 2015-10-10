@@ -1,7 +1,7 @@
 package org.majimena.petz.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.framework.aws.AmazonSESService;
+import org.majimena.petz.common.aws.AmazonSESService;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
 import org.majimena.petz.common.exceptions.SystemException;

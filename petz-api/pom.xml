@@ -12,13 +12,16 @@
 
     <groupId>org.majimena.petz</groupId>
     <artifactId>petz-api</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>PETZ: Petz API Project</name>
     <packaging>war</packaging>
 
-    <name>petz-api Maven Webapp</name>
-    <url>http://maven.apache.org</url>
-
     <dependencies>
+        <dependency>
+            <groupId>org.majimena.petz</groupId>
+            <artifactId>petz-domain</artifactId>
+        </dependency>
+
         <!-- json -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -435,5 +438,18 @@
 
     <build>
         <finalName>petz-api</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</jvmArguments>
+                    <arguments>
+                        <argument>--spring.profiles.active=dev</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
+
 </project>

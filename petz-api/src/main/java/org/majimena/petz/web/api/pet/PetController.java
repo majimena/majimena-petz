@@ -1,7 +1,7 @@
 package org.majimena.petz.web.api.pet;
 
 import com.codahale.metrics.annotation.Timed;
-import org.majimena.framework.aws.AmazonS3Service;
+import org.majimena.petz.common.aws.AmazonS3Service;
 import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.security.SecurityUtils;

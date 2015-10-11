@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.majimena.petz.domain.common.defs.ID;
-import org.majimena.petz.domain.common.defs.PhoneNo;
+import org.majimena.petz.datatype.defs.ID;
+import org.majimena.petz.datatype.defs.PhoneNo;
 
 import javax.validation.constraints.Size;
 import java.io.Serializable;

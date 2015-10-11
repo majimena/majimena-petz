@@ -16,10 +16,10 @@ import org.majimena.petz.datatype.SexType;
 import org.majimena.petz.datatype.converters.LocalDateTimePersistenceConverter;
 import org.majimena.petz.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
 import org.majimena.petz.datatype.serializers.ISO8601LocalDateTimeSerializer;
-import org.majimena.petz.domain.common.defs.Memo;
-import org.majimena.petz.domain.common.defs.MicrochipNo;
-import org.majimena.petz.domain.common.defs.Name;
-import org.majimena.petz.domain.common.defs.URL;
+import org.majimena.petz.datatype.defs.Memo;
+import org.majimena.petz.datatype.defs.MicrochipNo;
+import org.majimena.petz.datatype.defs.Name;
+import org.majimena.petz.datatype.defs.URL;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;

@@ -15,10 +15,10 @@ import java.time.format.DateTimeFormatter;
 public class ISO8601LocalDateSerializer extends JsonSerializer<LocalDate> {
     @Override
     public void serialize(LocalDate value, JsonGenerator generator, SerializerProvider provider) throws IOException {
-        LocalDateTime dateTime = value.atTime(LocalTime.MIN);
-        // TODO とりあえず東京にしてあるが、ユーザー情報から取得しないとi18nできない
-        ZonedDateTime atZone = dateTime.atZone(ZoneId.of("JST", ZoneId.SHORT_IDS));
-        String format = atZone.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        // 日付のみの場合はどこのタイムゾーンか不明なのでユーザ設定から取得する
+        // TODO とりあえず東京にしてあるが、ユーザー情報から取得しないとl10nできない
+        ZonedDateTime zonedDateTime = value.atStartOfDay(ZoneId.of("JST", ZoneId.SHORT_IDS));
+        String format = zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         generator.writeString(format);
     }
 }

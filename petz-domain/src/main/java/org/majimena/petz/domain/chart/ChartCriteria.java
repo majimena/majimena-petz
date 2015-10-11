@@ -1,8 +1,8 @@
 package org.majimena.petz.domain.chart;
 
 import lombok.*;
-import org.majimena.petz.domain.common.defs.ID;
-import org.majimena.petz.domain.common.defs.Name;
+import org.majimena.petz.datatype.defs.ID;
+import org.majimena.petz.datatype.defs.Name;
 
 import javax.validation.constraints.Size;
 import java.io.Serializable;

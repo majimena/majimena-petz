@@ -1,4 +1,4 @@
-package org.majimena.petz.domain.common.defs;
+package org.majimena.petz.datatype.defs;
 
 /**
  * Created by k.todoroki on 2015/09/07.

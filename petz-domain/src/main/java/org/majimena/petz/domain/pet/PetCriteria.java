@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.majimena.petz.domain.common.defs.ID;
-import org.majimena.petz.domain.common.defs.Name;
+import org.majimena.petz.datatype.defs.ID;
+import org.majimena.petz.datatype.defs.Name;
 
 import javax.validation.constraints.Size;
 import java.io.Serializable;

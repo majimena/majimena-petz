@@ -18,6 +18,21 @@ public class ErrorsUtils {
         errors.rejectValue(field, code.name());
     }
 
+    public static void rejectIfNull(String field, Object value, Errors errors) {
+        if (value == null) {
+            errors.rejectValue(field, "errors.required");
+        }
+    }
+
+    public static void rejectIfAllNull(Object[] values, Errors errors) {
+        for (Object value : values) {
+            if (values != null) {
+                return;
+            }
+        }
+        errors.reject("errors.required");
+    }
+
     /**
      * バインディングリザルトにエラーがある場合に例外を投げる.
      *

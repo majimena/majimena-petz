@@ -1,9 +1,17 @@
 package org.majimena.petz.web.api.examination;
 
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.petz.domain.*;
+import org.majimena.petz.domain.Clinic;
+import org.majimena.petz.domain.Customer;
+import org.majimena.petz.domain.Pet;
+import org.majimena.petz.domain.Schedule;
+import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.errors.ErrorCode;
-import org.majimena.petz.repository.*;
+import org.majimena.petz.repository.ClinicRepository;
+import org.majimena.petz.repository.CustomerRepository;
+import org.majimena.petz.repository.PetRepository;
+import org.majimena.petz.repository.ScheduleRepository;
+import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.web.api.AbstractValidator;
 import org.majimena.petz.web.utils.ErrorsUtils;
 import org.springframework.validation.Errors;
@@ -54,6 +62,7 @@ public class ScheduleValidator extends AbstractValidator<Schedule> {
     @Override
     protected void validate(Optional<Schedule> target, Errors errors) {
         target.ifPresent(schedule -> {
+            validateRequired(schedule, errors);
             validateClinicId(schedule, errors);
             validateUserId(schedule, errors);
             validatePetId(schedule, errors);
@@ -62,27 +71,37 @@ public class ScheduleValidator extends AbstractValidator<Schedule> {
         });
     }
 
+    private void validateRequired(Schedule schedule, Errors errors) {
+        ErrorsUtils.rejectIfAllNull(new Object[]{schedule.getUser(), schedule.getCustomer()}, errors);
+    }
+
     private void validateClinicId(Schedule schedule, Errors errors) {
-        String id = schedule.getClinic().getId();
-        Clinic one = clinicRepository.findOne(id);
-        if (one == null) {
-            ErrorsUtils.rejectValue("clinic", ErrorCode.PTZ_001999, errors);
+        if (schedule.getClinic() != null) {
+            String id = schedule.getClinic().getId();
+            Clinic one = clinicRepository.findOne(id);
+            if (one == null) {
+                ErrorsUtils.rejectValue("clinic", ErrorCode.PTZ_001999, errors);
+            }
         }
     }
 
     private void validateUserId(Schedule schedule, Errors errors) {
-        String id = schedule.getUser().getId();
-        User one = userRepository.findOne(id);
-        if (one == null) {
-            ErrorsUtils.rejectValue("user", ErrorCode.PTZ_000999, errors);
+        if (schedule.getUser() != null) {
+            String id = schedule.getUser().getId();
+            User one = userRepository.findOne(id);
+            if (one == null) {
+                ErrorsUtils.rejectValue("user", ErrorCode.PTZ_000999, errors);
+            }
         }
     }
 
     private void validatePetId(Schedule schedule, Errors errors) {
-        String id = schedule.getPet().getId();
-        Pet one = petRepository.findOne(id);
-        if (one == null) {
-            ErrorsUtils.rejectValue("pet", ErrorCode.PTZ_002999, errors);
+        if (schedule.getPet() != null) {
+            String id = schedule.getPet().getId();
+            Pet one = petRepository.findOne(id);
+            if (one == null) {
+                ErrorsUtils.rejectValue("pet", ErrorCode.PTZ_002999, errors);
+            }
         }
     }
 

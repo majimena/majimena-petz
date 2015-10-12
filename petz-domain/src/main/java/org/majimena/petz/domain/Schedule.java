@@ -54,7 +54,6 @@ public class Schedule extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -76,12 +75,14 @@ public class Schedule extends AbstractAuditingEntity implements Serializable {
     @Column(name = "status", length = 20, nullable = false)
     private ScheduleStatus status;
 
+    @NotNull
     @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
     @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
     @Convert(converter = LocalDateTimePersistenceConverter.class)
     @Column(name = "start_date_time", nullable = false)
     private LocalDateTime startDateTime;
 
+    @NotNull
     @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
     @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
     @Convert(converter = LocalDateTimePersistenceConverter.class)

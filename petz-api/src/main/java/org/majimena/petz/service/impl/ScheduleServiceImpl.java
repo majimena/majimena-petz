@@ -1,5 +1,6 @@
 package org.majimena.petz.service.impl;
 
+import org.majimena.petz.datatype.ScheduleStatus;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.Pet;
@@ -73,8 +74,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     public Schedule saveSchedule(Schedule schedule) {
         // 必須の関連マスタを取得する（事前にチェックしているので、通常データがないことはありえない）
         Clinic clinic = clinicRepository.findOne(schedule.getClinic().getId());
-        User user = userRepository.findOne(schedule.getUser().getId());
         Pet pet = petRepository.findOne(schedule.getPet().getId());
+        User user = pet.getUser();
 
         // 顧客が特定できている場合はそのまま使い、顧客が特定できていない場合は既に顧客登録されていないか確認する
         Customer customer;
@@ -86,9 +87,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // スケジュールと関連マスタを関連付けて保存する
         schedule.setClinic(clinic);
-        schedule.setUser(user);
         schedule.setPet(pet);
+        schedule.setUser(user);
         schedule.setCustomer(customer);
+        schedule.setStatus(ScheduleStatus.RESERVED);
         return scheduleRepository.save(schedule);
     }
 

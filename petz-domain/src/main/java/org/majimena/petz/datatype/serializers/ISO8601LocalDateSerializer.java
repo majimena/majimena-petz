@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -15,10 +17,14 @@ import java.time.format.DateTimeFormatter;
 public class ISO8601LocalDateSerializer extends JsonSerializer<LocalDate> {
     @Override
     public void serialize(LocalDate value, JsonGenerator generator, SerializerProvider provider) throws IOException {
-        // 日付のみの場合はどこのタイムゾーンか不明なのでユーザ設定から取得する
-        // TODO とりあえず東京にしてあるが、ユーザー情報から取得しないとl10nできない
-        ZonedDateTime zonedDateTime = value.atStartOfDay(ZoneId.of("JST", ZoneId.SHORT_IDS));
-        String format = zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        generator.writeString(format);
+        if (value == null) {
+            generator.writeNull();
+        } else {
+            // 日付のみの場合はどこのタイムゾーンか不明なのでユーザ設定から取得する
+            // TODO とりあえず東京にしてあるが、ユーザー情報から取得しないとl10nできない
+            ZonedDateTime zonedDateTime = value.atStartOfDay(ZoneId.of("JST", ZoneId.SHORT_IDS));
+            String format = zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            generator.writeString(format);
+        }
     }
 }

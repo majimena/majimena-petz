@@ -45,10 +45,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Created by todoken on 2015/07/26.
  */
 @RunWith(Enclosed.class)
 public class PetControllerTest {
+
+    private static Pet createTestData() {
+        Pet data = new Pet();
+        data.setId("p1");
+        data.setName("POCHI");
+        data.setUser(User.builder().id("1").build());
+        data.setTags(Sets.newHashSet(new Tag("Docs"), new Tag("In the Rooms")));
+        data.setColor(new Color("White"));
+        data.setType(new Type("T.Poodle"));
+        data.setBlood(new Blood("DEA1.1"));
+        data.setProfile("Profile Details");
+        data.setAllergia("Allergia Description");
+        data.setDrug("Drug Description");
+        data.setOther("Other Description");
+        data.setSex(SexType.MALE);
+        data.setBirthDate(LocalDateTime.of(2015, 2, 27, 15, 0, 0));
+        data.setMicrochipDate(LocalDateTime.of(2015, 2, 27, 15, 0, 0));
+        data.setMicrochipNo("1234567890");
+        return data;
+    }
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @SpringApplicationConfiguration(classes = Application.class)
@@ -95,7 +114,7 @@ public class PetControllerTest {
                     .andExpect(jsonPath("$.[0].id", is("p1")))
                     .andExpect(jsonPath("$.[0].name", is("test data")))
                     .andExpect(jsonPath("$.[0].user.id", is("u1")))
-                    .andExpect(jsonPath("$.[0].birthDate", is("2015-02-27T15:00:00+09:00")))
+                    .andExpect(jsonPath("$.[0].birthDate", is("2015-02-28T00:00:00+09:00")))
                     .andExpect(jsonPath("$.[0].sex", is("MALE")))
                     .andExpect(jsonPath("$.[0].profile", is("test data's profile")))
                     .andExpect(jsonPath("$.[0].type", is("type1")))
@@ -143,7 +162,7 @@ public class PetControllerTest {
                     .andExpect(jsonPath("$.id", is("p1")))
                     .andExpect(jsonPath("$.name", is("test data")))
                     .andExpect(jsonPath("$.user.id", is("u1")))
-                    .andExpect(jsonPath("$.birthDate", is("2015-02-27T15:00:00+09:00")))
+                    .andExpect(jsonPath("$.birthDate", is("2015-02-28T00:00:00+09:00")))
                     .andExpect(jsonPath("$.sex", is("MALE")))
                     .andExpect(jsonPath("$.profile", is("test data's profile")))
                     .andExpect(jsonPath("$.type", is("type1")))
@@ -182,6 +201,8 @@ public class PetControllerTest {
             new NonStrictExpectations() {{
                 SecurityUtils.getCurrentUserId();
                 result = "1";
+                petService.savePet((Pet) any);
+                result = createTestData();
             }};
 
             mockMvc.perform(post("/api/v1/pets")
@@ -191,29 +212,23 @@ public class PetControllerTest {
                             "\"sex\":\"MALE\",\"tags\":[\"血統書付き\",\"室内犬\"],\"neutral\":\"true\"," +
                             "\"name\":\"ポチ\",\"profile\":\"プロファイル\",\"allergia\":\"アレルギー\",\"drug\":\"薬剤\",\"other\":\"その他\"}"))
                     .andDo(print())
-                    .andExpect(status().isCreated());
-
-            new Verifications() {{
-                Pet pet;
-                petService.savePet(pet = withCapture());
-                System.out.println(pet.toString());
-
-                assertThat(pet.getId(), is(nullValue()));
-                assertThat(pet.getName(), is("ポチ"));
-                assertThat(pet.getUser().getId(), is("1"));
-                assertThat(pet.getTags(), is(Sets.newHashSet(new Tag("血統書付き"), new Tag("室内犬"))));
-                assertThat(pet.getColor(), is(new Color("ホワイト")));
-                assertThat(pet.getType(), is(new Type("トイプードル")));
-                assertThat(pet.getBlood(), is(new Blood("DEA1.1")));
-                assertThat(pet.getProfile(), is("プロファイル"));
-                assertThat(pet.getAllergia(), is("アレルギー"));
-                assertThat(pet.getDrug(), is("薬剤"));
-                assertThat(pet.getOther(), is("その他"));
-                assertThat(pet.getSex(), is(SexType.MALE));
-                assertThat(pet.getBirthDate(), is(LocalDateTime.of(2015, 2, 27, 15, 0, 0)));
-                assertThat(pet.getMicrochipDate(), is(LocalDateTime.of(2015, 2, 27, 15, 0, 0)));
-                assertThat(pet.getMicrochipNo(), is("1234567890"));
-            }};
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id", is("p1")))
+                    .andExpect(jsonPath("$.name", is("POCHI")))
+                    .andExpect(jsonPath("$.user.id", is("1")))
+                    .andExpect(jsonPath("$.tags[0]", is("Docs")))
+                    .andExpect(jsonPath("$.tags[1]", is("In the Rooms")))
+                    .andExpect(jsonPath("$.color", is("White")))
+                    .andExpect(jsonPath("$.type", is("T.Poodle")))
+                    .andExpect(jsonPath("$.blood", is("DEA1.1")))
+                    .andExpect(jsonPath("$.profile", is("Profile Details")))
+                    .andExpect(jsonPath("$.allergia", is("Allergia Description")))
+                    .andExpect(jsonPath("$.drug", is("Drug Description")))
+                    .andExpect(jsonPath("$.other", is("Other Description")))
+                    .andExpect(jsonPath("$.sex", is("MALE")))
+                    .andExpect(jsonPath("$.birthDate", is("2015-02-28T00:00:00+09:00")))
+                    .andExpect(jsonPath("$.microchipDate", is("2015-02-28T00:00:00+09:00")))
+                    .andExpect(jsonPath("$.microchipNo", is("1234567890")));
         }
     }
 
@@ -247,37 +262,34 @@ public class PetControllerTest {
             new NonStrictExpectations() {{
                 SecurityUtils.getCurrentUserId();
                 result = "1";
+                petService.savePet((Pet) any);
+                result = createTestData();
             }};
 
             mockMvc.perform(put("/api/v1/pets/p1")
                     .contentType(TestUtils.APPLICATION_JSON_UTF8)
-                    .content("{\"birthDate\":\"2015-02-27T15:00:00.000+09:00\",\"microchipDate\":\"2015-02-27T15:00:00.000+09:00\",\"microchipNo\":\"1234567890\"," +
+                    .content("{\"birthDate\":\"2015-02-27T15:00:00.000Z\",\"microchipDate\":\"2015-02-27T15:00:00.000Z\",\"microchipNo\":\"1234567890\"," +
                             "\"user\":{\"id\":\"1\"},\"type\":\"トイプードル\",\"color\":\"ホワイト\",\"blood\":\"DEA1.1\"," +
                             "\"sex\":\"MALE\",\"tags\":[\"血統書付き\",\"室内犬\"],\"neutral\":\"true\"," +
                             "\"name\":\"ポチ\",\"profile\":\"プロファイル\",\"allergia\":\"アレルギー\",\"drug\":\"薬剤\",\"other\":\"その他\"}"))
                     .andDo(print())
-                    .andExpect(status().isOk());
-
-            new Verifications() {{
-                Pet pet;
-                petService.savePet(pet = withCapture());
-
-                assertThat(pet.getId(), is("p1"));
-                assertThat(pet.getName(), is("ポチ"));
-                assertThat(pet.getUser().getId(), is("1"));
-                assertThat(pet.getTags(), is(Sets.newHashSet(new Tag("血統書付き"), new Tag("室内犬"))));
-                assertThat(pet.getColor(), is(new Color("ホワイト")));
-                assertThat(pet.getType(), is(new Type("トイプードル")));
-                assertThat(pet.getBlood(), is(new Blood("DEA1.1")));
-                assertThat(pet.getProfile(), is("プロファイル"));
-                assertThat(pet.getAllergia(), is("アレルギー"));
-                assertThat(pet.getDrug(), is("薬剤"));
-                assertThat(pet.getOther(), is("その他"));
-                assertThat(pet.getSex(), is(SexType.MALE));
-                assertThat(pet.getBirthDate(), is(LocalDateTime.of(2015, 2, 27, 15, 0, 0)));
-                assertThat(pet.getMicrochipDate(), is(LocalDateTime.of(2015, 2, 27, 15, 0, 0)));
-                assertThat(pet.getMicrochipNo(), is("1234567890"));
-            }};
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id", is("p1")))
+                    .andExpect(jsonPath("$.name", is("POCHI")))
+                    .andExpect(jsonPath("$.user.id", is("1")))
+                    .andExpect(jsonPath("$.tags[0]", is("Docs")))
+                    .andExpect(jsonPath("$.tags[1]", is("In the Rooms")))
+                    .andExpect(jsonPath("$.color", is("White")))
+                    .andExpect(jsonPath("$.type", is("T.Poodle")))
+                    .andExpect(jsonPath("$.blood", is("DEA1.1")))
+                    .andExpect(jsonPath("$.profile", is("Profile Details")))
+                    .andExpect(jsonPath("$.allergia", is("Allergia Description")))
+                    .andExpect(jsonPath("$.drug", is("Drug Description")))
+                    .andExpect(jsonPath("$.other", is("Other Description")))
+                    .andExpect(jsonPath("$.sex", is("MALE")))
+                    .andExpect(jsonPath("$.birthDate", is("2015-02-28T00:00:00+09:00")))
+                    .andExpect(jsonPath("$.microchipDate", is("2015-02-28T00:00:00+09:00")))
+                    .andExpect(jsonPath("$.microchipNo", is("1234567890")));
         }
     }
 }

@@ -17,12 +17,16 @@ import java.time.format.DateTimeFormatter;
 public class ISO8601LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
     @Override
     public void serialize(LocalDateTime value, JsonGenerator generator, SerializerProvider provider) throws IOException {
-        // サーバ側は全てUTCで日付を扱う
-        ZonedDateTime utc = value.atZone(ZoneId.of("UTC"));
+        if (value == null) {
+            generator.writeNull();
+        } else {
+            // サーバ側は全てUTCで日付を扱う
+            ZonedDateTime utc = value.atZone(ZoneId.of("UTC"));
 
-        // TODO とりあえず東京にしてあるが、ユーザー情報から取得しないとl10nできない
-        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(utc.toInstant(), ZoneId.of("JST", ZoneId.SHORT_IDS));
-        String format = zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        generator.writeString(format);
+            // TODO とりあえず東京にしてあるが、ユーザー情報から取得しないとl10nできない
+            ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(utc.toInstant(), ZoneId.of("JST", ZoneId.SHORT_IDS));
+            String format = zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            generator.writeString(format);
+        }
     }
 }

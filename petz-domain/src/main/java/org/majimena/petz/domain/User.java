@@ -8,6 +8,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.joda.time.DateTime;
+import org.majimena.petz.datatype.LangKey;
+import org.majimena.petz.datatype.TimeZone;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -66,13 +68,17 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(nullable = false)
     private Boolean activated = Boolean.FALSE;
 
-    @Size(min = 2, max = 5)
-    @Column(name = "lang_key", length = 5)
-    private String langKey;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "lang_key", length = 60, nullable = true)
+    private LangKey langKey;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "time_zone", length = 60, nullable = true)
+    private TimeZone timeZone;
+
+    @JsonIgnore
     @Size(max = 20)
     @Column(name = "activation_key", length = 20)
-    @JsonIgnore
     private String activationKey;
 
     @Size(max = 20)

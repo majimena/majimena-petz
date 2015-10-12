@@ -1,11 +1,13 @@
 package org.majimena.petz.service.impl;
 
+import org.apache.commons.codec.language.bm.Lang;
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.common.aws.AmazonSESService;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.common.utils.RandomUtils;
+import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.ClinicInvitation;
 import org.majimena.petz.domain.ClinicStaff;
@@ -120,7 +122,7 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
             clinicInvitationRepository.save(invitation);
 
             // 招待メールを送信
-            String locale = login.map(User::getLangKey).orElse("en");
+            String locale = login.map(User::getLangKey).orElse(LangKey.ENGLISH).getValue();
             Context context = new Context(Locale.forLanguageTag(locale));
             context.setVariable("email", email);
             context.setVariable("clinic", clinic);

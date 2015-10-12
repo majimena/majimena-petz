@@ -31,7 +31,8 @@
             <column name="activated" type="boolean" valueBoolean="false">
                 <constraints nullable="false" />
             </column>
-            <column name="lang_key" type="varchar(5)"/>
+            <column name="lang_key" type="varchar(60)"/>
+            <column name="time_zone" type="varchar(60)"/>
             <column name="activation_key" type="varchar(20)"/>
             <column name="reset_key" type="varchar(20)"/>
             <column name="zip_code" type="varchar(10)"></column>

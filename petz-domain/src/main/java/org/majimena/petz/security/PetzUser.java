@@ -1,5 +1,7 @@
 package org.majimena.petz.security;
 
+import org.majimena.petz.datatype.LangKey;
+import org.majimena.petz.datatype.TimeZone;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -21,16 +23,30 @@ public class PetzUser extends User {
     private String userId;
 
     /**
+     * 言語.
+     */
+    private LangKey langKey;
+
+    /**
+     * タイムゾーン.
+     */
+    private TimeZone timeZone;
+
+    /**
      * コンストラクタ.
      *
      * @param userId      ユーザーID
      * @param username    ログインID
      * @param password    パスワード
+     * @param langKey     言語
+     * @param timeZone    タイムゾーン
      * @param authorities 権限
      */
-    public PetzUser(String userId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public PetzUser(String userId, String username, String password, LangKey langKey, TimeZone timeZone, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.userId = userId;
+        this.langKey = langKey;
+        this.timeZone = timeZone;
     }
 
     /**
@@ -40,5 +56,13 @@ public class PetzUser extends User {
      */
     public String getUserId() {
         return userId;
+    }
+
+    public LangKey getLangKey() {
+        return langKey;
+    }
+
+    public TimeZone getTimeZone() {
+        return timeZone;
     }
 }

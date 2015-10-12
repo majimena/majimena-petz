@@ -1,12 +1,12 @@
 package org.majimena.petz.security;
 
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -89,8 +89,8 @@ public final class SecurityUtils {
      */
     public static boolean isUserInRole(String clinicId, String role) {
         return getPrincipal()
-            .map(u -> u.getAuthorities().contains(new PetzGrantedAuthority(clinicId, role)))
-            .orElse(false);
+                .map(u -> u.getAuthorities().contains(new PetzGrantedAuthority(clinicId, role)))
+                .orElse(false);
     }
 
     /**
@@ -101,21 +101,21 @@ public final class SecurityUtils {
      */
     public static boolean isUserInClinic(String clinicId) {
         return getPrincipal()
-            .map(u -> u.getAuthorities().stream()
-                .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId)))
-            .orElse(false);
+                .map(u -> u.getAuthorities().stream()
+                        .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId)))
+                .orElse(false);
     }
 
     /**
      * 認証済みユーザーが指定したクリニックのロールを持っていない場合に例外を投げる.
      *
      * @param clinicId クリニックID
-     * @throws ResourceCannotAccessException クリニックのロールを持っていない場合
+     * @throws UnauthorizedUserException クリニックのロールを持っていない場合
      */
     public static void throwIfDoNotHaveClinicRoles(String clinicId) {
         if (isUserInClinic(clinicId)) {
             return;
         }
-        throw new ResourceCannotAccessException();
+        throw new UnauthorizedUserException("Cannot access resource.");
     }
 }

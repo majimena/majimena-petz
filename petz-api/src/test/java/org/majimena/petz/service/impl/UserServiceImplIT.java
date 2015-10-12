@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.SystemException;
+import org.majimena.petz.datatype.LangKey;
+import org.majimena.petz.datatype.TimeZone;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.user.PasswordRegistry;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
@@ -117,7 +119,8 @@ public class UserServiceImplIT {
             assertThat(result.getUsername(), is("テストデータ"));
             assertThat(result.getLogin(), is("test@test.com"));
             assertThat(result.getPassword(), is(notNullValue()));
-            assertThat(result.getLangKey(), is("ja"));
+            assertThat(result.getLangKey(), is(LangKey.JAPANESE));
+            assertThat(result.getTimeZone(), is(TimeZone.ASIA_TOKYO));
             assertThat(result.getCountry(), is("JP"));
             assertThat(result.getZipCode(), is("1110000"));
             assertThat(result.getState(), is("東京都"));

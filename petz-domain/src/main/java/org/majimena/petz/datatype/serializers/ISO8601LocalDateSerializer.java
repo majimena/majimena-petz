@@ -1,30 +1,32 @@
 package org.majimena.petz.datatype.serializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.majimena.petz.datatype.TimeZone;
+import org.majimena.petz.security.SecurityUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 /**
- * ISO 8601 date format
- * Jackson serializer for displaying LocalDate objects.
+ * ISO8601形式の日付にシリアライズするJSONシリアライザ.
  */
-public class ISO8601LocalDateSerializer extends JsonSerializer<LocalDate> {
+public class ISO8601LocalDateSerializer extends AbstractISO8601JsonSerializer<LocalDate> {
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void serialize(LocalDate value, JsonGenerator generator, SerializerProvider provider) throws IOException {
-        if (value == null) {
-            generator.writeNull();
-        } else {
-            // 日付のみの場合はどこのタイムゾーンか不明なのでユーザ設定から取得する
-            // TODO とりあえず東京にしてあるが、ユーザー情報から取得しないとl10nできない
-            ZonedDateTime zonedDateTime = value.atStartOfDay(ZoneId.of("JST", ZoneId.SHORT_IDS));
-            String format = zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-            generator.writeString(format);
-        }
+        // ユーザのタイムゾーン設定を適用
+        ZonedDateTime dateTime = SecurityUtils.getPrincipal()
+                .map(user -> Optional.ofNullable(user.getTimeZone())
+                        .map(timeZone -> value.atStartOfDay(timeZone.getZoneId()))
+                        .orElse(value.atStartOfDay(TimeZone.UTC.getZoneId())))
+                .orElse(value.atStartOfDay(TimeZone.UTC.getZoneId()));
+
+        // フォーマットした日時を書き出す
+        generator.writeString(toISO8601String(dateTime));
     }
 }

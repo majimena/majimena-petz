@@ -10,7 +10,9 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.TestUtils;
+import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.datatype.SexType;
+import org.majimena.petz.datatype.TimeZone;
 import org.majimena.petz.domain.Blood;
 import org.majimena.petz.domain.Color;
 import org.majimena.petz.domain.Pet;
@@ -18,12 +20,14 @@ import org.majimena.petz.domain.Tag;
 import org.majimena.petz.domain.Type;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.pet.PetCriteria;
+import org.majimena.petz.security.PetzUser;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.PetService;
 import org.majimena.petz.web.rest.util.PaginationUtil;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,6 +37,8 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -97,6 +103,8 @@ public class PetControllerTest {
         @Test
         public void ペットが検索できること() throws Exception {
             new NonStrictExpectations() {{
+                SecurityUtils.getPrincipal();
+                result = Optional.of(new PetzUser("userId", "username", "password", LangKey.JAPANESE, TimeZone.ASIA_TOKYO, Collections.<GrantedAuthority>emptyList()));
                 final Pageable pageable = PaginationUtil.generatePageRequest(1, 1);
                 petService.getPetsByPetCriteria(new PetCriteria(), pageable);
                 result = new PageImpl<>(Arrays.asList(Pet.builder().id("p1").name("test data").profile("test data's profile")
@@ -139,6 +147,9 @@ public class PetControllerTest {
         @Mocked
         private PetService petService;
 
+        @Mocked
+        private SecurityUtils securityUtils;
+
         @Before
         public void setup() {
             mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -148,6 +159,8 @@ public class PetControllerTest {
         @Test
         public void ログインユーザのペットが取得できること() throws Exception {
             new NonStrictExpectations() {{
+                SecurityUtils.getPrincipal();
+                result = Optional.of(new PetzUser("userId", "username", "password", LangKey.JAPANESE, TimeZone.ASIA_TOKYO, Collections.<GrantedAuthority>emptyList()));
                 petService.findPetByPetId("p1");
                 result = Pet.builder().id("p1").name("test data").profile("test data's profile")
                         .birthDate(LocalDateTime.of(2015, 2, 27, 15, 0)).sex(SexType.MALE)
@@ -199,6 +212,8 @@ public class PetControllerTest {
         @Test
         public void ペットが登録されること() throws Exception {
             new NonStrictExpectations() {{
+                SecurityUtils.getPrincipal();
+                result = Optional.of(new PetzUser("1", "username", "password", LangKey.JAPANESE, TimeZone.ASIA_TOKYO, Collections.<GrantedAuthority>emptyList()));
                 SecurityUtils.getCurrentUserId();
                 result = "1";
                 petService.savePet((Pet) any);
@@ -260,6 +275,8 @@ public class PetControllerTest {
         @Test
         public void ペットが更新されること() throws Exception {
             new NonStrictExpectations() {{
+                SecurityUtils.getPrincipal();
+                result = Optional.of(new PetzUser("1", "username", "password", LangKey.JAPANESE, TimeZone.ASIA_TOKYO, Collections.<GrantedAuthority>emptyList()));
                 SecurityUtils.getCurrentUserId();
                 result = "1";
                 petService.savePet((Pet) any);

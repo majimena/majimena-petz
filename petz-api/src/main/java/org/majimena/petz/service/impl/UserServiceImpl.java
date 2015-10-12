@@ -7,6 +7,8 @@ import org.majimena.petz.common.utils.BeanFactoryUtils;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.common.utils.RandomUtils;
+import org.majimena.petz.datatype.*;
+import org.majimena.petz.datatype.TimeZone;
 import org.majimena.petz.domain.Authority;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.errors.ErrorCode;
@@ -92,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUserInformation(String login, String password, String firstName, String lastName, String email,
-                                      String langKey) {
+                                      LangKey langKey) {
 
         User newUser = new User();
         Authority authority = authorityRepository.findOne("ROLE_USER");
@@ -153,7 +155,8 @@ public class UserServiceImpl implements UserService {
         newUser.setLogin(registry.getEmail());
         newUser.setPassword(encryptedPassword);
         newUser.setEmail(registry.getEmail());
-        newUser.setLangKey("ja");
+        newUser.setLangKey(LangKey.JAPANESE);
+        newUser.setTimeZone(TimeZone.ASIA_TOKYO);
 
         // new user is not active
         newUser.setActivated(false);
@@ -181,7 +184,8 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(encryptedPassword);
 
-        user.setLangKey("ja"); // FIXME 他言語対応
+        user.setLangKey(LangKey.JAPANESE); // FIXME 他言語対応
+        user.setTimeZone(TimeZone.ASIA_TOKYO);
         user.setCountry("JP"); // FIXME 海外対応
         user.setActivated(false);
         user.setActivationKey(RandomUtils.generateActivationKey());

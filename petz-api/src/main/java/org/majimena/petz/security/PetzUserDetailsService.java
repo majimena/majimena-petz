@@ -60,6 +60,6 @@ public class PetzUserDetailsService implements UserDetailsService {
                 .forEach(o -> authorities.add(new PetzGrantedAuthority(o.getClinic().getId(), o.getRole())));
 
         // ログインユーザー情報
-        return new PetzUser(user.getId(), user.getLogin(), user.getPassword(), authorities);
+        return new PetzUser(user.getId(), user.getLogin(), user.getPassword(), user.getLangKey(), user.getTimeZone(), authorities);
     }
 }

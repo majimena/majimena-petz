@@ -1,10 +1,8 @@
 package org.majimena.petz.security;
 
 import org.junit.Test;
-import org.majimena.petz.security.AuthoritiesConstants;
-import org.majimena.petz.security.PetzGrantedAuthority;
-import org.majimena.petz.security.PetzUser;
-import org.majimena.petz.security.SecurityUtils;
+import org.majimena.petz.datatype.LangKey;
+import org.majimena.petz.datatype.TimeZone;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -59,7 +57,7 @@ public class SecurityUtilsTest {
         authorities.add(new PetzGrantedAuthority("ROLE_USER"));
         authorities.add(new PetzGrantedAuthority("1", "ROLE_CLINIC_ADMIN"));
         authorities.add(new PetzGrantedAuthority("2", "ROLE_CLINIC_ADMIN"));
-        context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", authorities), "anonymous"));
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", LangKey.ENGLISH, TimeZone.UTC, authorities), "anonymous"));
         SecurityContextHolder.setContext(context);
 
         assertThat(SecurityUtils.isUserInRole("ROLE_USER"), is(true));
@@ -73,7 +71,7 @@ public class SecurityUtilsTest {
         authorities.add(new PetzGrantedAuthority("ROLE_USER"));
         authorities.add(new PetzGrantedAuthority("1", "ROLE_CLINIC_ADMIN"));
         authorities.add(new PetzGrantedAuthority("2", "ROLE_CLINIC_ADMIN"));
-        context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", authorities), "anonymous"));
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", LangKey.ENGLISH, TimeZone.UTC, authorities), "anonymous"));
         SecurityContextHolder.setContext(context);
 
         assertThat(SecurityUtils.isUserInRole("1", "ROLE_CLINIC_ADMIN"), is(true));
@@ -89,7 +87,7 @@ public class SecurityUtilsTest {
         authorities.add(new PetzGrantedAuthority("ROLE_USER"));
         authorities.add(new PetzGrantedAuthority("1", "ROLE_CLINIC_ADMIN"));
         authorities.add(new PetzGrantedAuthority("d8272af2-75cc-47b3-97e9-8ba631a569f0", "ROLE_CLINIC_ADMIN"));
-        context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", authorities), "anonymous"));
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", LangKey.ENGLISH, TimeZone.UTC, authorities), "anonymous"));
         SecurityContextHolder.setContext(context);
 
         assertThat(SecurityUtils.isUserInClinic("1"), is(true));

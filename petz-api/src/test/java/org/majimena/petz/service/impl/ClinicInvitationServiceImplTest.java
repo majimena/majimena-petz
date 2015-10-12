@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.majimena.petz.common.aws.AmazonSESService;
 import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.SystemException;
+import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.ClinicInvitation;
 import org.majimena.petz.domain.ClinicStaff;
@@ -85,7 +86,7 @@ public class ClinicInvitationServiceImplTest {
                 SecurityUtils.getCurrentLogin();
                 result = "login";
                 userRepository.findOneByLogin("login");
-                result = Optional.of(User.builder().id("1").login("login").langKey("ja").build());
+                result = Optional.of(User.builder().id("1").login("login").langKey(LangKey.JAPANESE).build());
                 clinicRepository.findOne("10");
                 result = Clinic.builder().id("10").name("テストクリニック").description("テストクリニックの説明").build();
                 userRepository.findOneByEmail("test@mail.com");
@@ -170,7 +171,7 @@ public class ClinicInvitationServiceImplTest {
                     .user(User.builder().id("10").login("login").build())
                     .clinic(Clinic.builder().id("100").name("テストクリニック").build()).build();
                 userRepository.findOneByLogin("foo");
-                result = Optional.of(User.builder().id("1000").login("foo").langKey("ja").build());
+                result = Optional.of(User.builder().id("1000").login("foo").langKey(LangKey.JAPANESE).build());
             }};
 
             sut.activate("1", "1234567890");

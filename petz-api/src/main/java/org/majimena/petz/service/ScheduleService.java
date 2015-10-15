@@ -33,4 +33,11 @@ public interface ScheduleService {
      * @return 更新したスケジュール
      */
     Schedule updateSchedule(Schedule schedule);
+
+    /**
+     * スケジュールのIDをもとに、スケジュールを削除する.
+     *
+     * @param scheduleId スケジュールのID
+     */
+    void deleteScheduleByScheduleId(String scheduleId);
 }

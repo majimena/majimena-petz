@@ -1,5 +1,7 @@
 package org.majimena.petz.web.utils;
 
+import org.apache.commons.lang3.StringUtils;
+import org.majimena.petz.datatype.defs.ID;
 import org.majimena.petz.domain.errors.ErrorCode;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -42,6 +44,12 @@ public class ErrorsUtils {
     public static void throwIfHaveErrors(BindingResult errors) throws BindException {
         if (errors != null && errors.hasErrors()) {
             throw new BindException(errors);
+        }
+    }
+
+    public static void throwIfNotIdentify(String value) {
+        if (StringUtils.isEmpty(value) || value.length() > ID.MAX_LENGTH) {
+            throw new IllegalArgumentException("Illegal identify. id=[" + value + "]");
         }
     }
 }

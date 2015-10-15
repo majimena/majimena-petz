@@ -97,7 +97,7 @@ public class ClinicScheduleController {
         // スケジュールを保存する
         Schedule created = scheduleService.saveSchedule(schedule);
         return ResponseEntity.created(
-            URI.create("/api/v1/clinics/" + clinicId + "/schedules/" + created.getId())).body(created);
+                URI.create("/api/v1/clinics/" + clinicId + "/schedules/" + created.getId())).body(created);
     }
 
     /**
@@ -113,8 +113,10 @@ public class ClinicScheduleController {
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/schedules/{scheduleId}", method = RequestMethod.PUT)
     public ResponseEntity<Schedule> put(@PathVariable String clinicId, @PathVariable String scheduleId, @RequestBody @Valid Schedule schedule, BindingResult errors) throws BindException {
-        // クリニックの権限チェック
+        // クリニックの権限チェックとIDのコード体系チェック
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(schedule.getClinic().getId());
+        ErrorsUtils.throwIfNotIdentify(scheduleId);
 
         // カスタムバリデーションを行う
         scheduleValidator.validate(schedule, errors);
@@ -123,5 +125,24 @@ public class ClinicScheduleController {
         // スケジュールを更新する
         Schedule created = scheduleService.updateSchedule(schedule);
         return ResponseEntity.ok().body(created);
+    }
+
+    /**
+     * クリニックのスケジュールを削除する.
+     *
+     * @param clinicId   クリニックID
+     * @param scheduleId スケジュールID
+     * @return レスポンスステータス（200）
+     */
+    @Timed
+    @RequestMapping(value = "/clinics/{clinicId}/schedules/{scheduleId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> put(@PathVariable String clinicId, @PathVariable String scheduleId) {
+        // クリニックの権限チェックとIDのコード体系チェック
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+        ErrorsUtils.throwIfNotIdentify(scheduleId);
+
+        // スケジュールを更新する
+        scheduleService.deleteScheduleByScheduleId(scheduleId);
+        return ResponseEntity.ok().build();
     }
 }

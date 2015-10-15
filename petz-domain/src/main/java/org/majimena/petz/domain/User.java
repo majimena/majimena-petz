@@ -1,7 +1,14 @@
 package org.majimena.petz.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,8 +17,20 @@ import org.hibernate.validator.constraints.Email;
 import org.joda.time.DateTime;
 import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.datatype.TimeZone;
+import org.majimena.petz.datatype.deserializers.LangKeyDeserializer;
+import org.majimena.petz.datatype.deserializers.TimeZoneDeserializer;
+import org.majimena.petz.datatype.serializers.EnumDataTypeSerializer;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -68,10 +87,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(nullable = false)
     private Boolean activated = Boolean.FALSE;
 
+    @JsonSerialize(using = EnumDataTypeSerializer.class)
+    @JsonDeserialize(using = LangKeyDeserializer.class)
     @Enumerated(EnumType.STRING)
     @Column(name = "lang_key", length = 60, nullable = true)
     private LangKey langKey;
 
+    @JsonSerialize(using = EnumDataTypeSerializer.class)
+    @JsonDeserialize(using = TimeZoneDeserializer.class)
     @Enumerated(EnumType.STRING)
     @Column(name = "time_zone", length = 60, nullable = true)
     private TimeZone timeZone;
@@ -119,9 +142,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
-        name = "user_authority",
-        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-        inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
+            name = "user_authority",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Authority> authorities = new HashSet<>();
 

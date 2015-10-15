@@ -1,6 +1,7 @@
 package org.majimena.petz.datatype;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * サポートする言語.
@@ -9,17 +10,17 @@ public enum LangKey implements EnumDataType, Serializable {
     /**
      * 英語.
      */
-    ENGLISH("en"),
+    ENGLISH(Locale.US),
 
     /**
      * 日本語.
      */
-    JAPANESE("ja");
+    JAPANESE(Locale.JAPAN);
 
-    private String value;
+    private Locale locale;
 
-    LangKey(String value) {
-        this.value = value;
+    LangKey(Locale locale) {
+        this.locale = locale;
     }
 
     @Override
@@ -29,6 +30,6 @@ public enum LangKey implements EnumDataType, Serializable {
 
     @Override
     public String getValue() {
-        return value;
+        return name();
     }
 }

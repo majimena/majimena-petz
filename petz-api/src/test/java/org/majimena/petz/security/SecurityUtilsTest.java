@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import static org.hamcrest.Matchers.is;
@@ -48,6 +49,27 @@ public class SecurityUtilsTest {
         SecurityContextHolder.setContext(securityContext);
         boolean isAuthenticated = SecurityUtils.isAuthenticated();
         assertThat(isAuthenticated, is(false));
+    }
+
+    @Test
+    public void ログインしていない時にデフォルトのタイムゾーンが取得できること() {
+        assertThat(SecurityUtils.getCurrentTimeZone(), is(TimeZone.UTC));
+    }
+
+    @Test
+    public void ログインしている時にユーザ設定のタイムゾーンが取得できること() {
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", LangKey.ENGLISH, TimeZone.ASIA_TOKYO, Arrays.asList()), "anonymous"));
+        SecurityContextHolder.setContext(context);
+        assertThat(SecurityUtils.getCurrentTimeZone(), is(TimeZone.ASIA_TOKYO));
+    }
+
+    @Test
+    public void ログインしている時にデフォルトのタイムゾーンが取得できること() {
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", LangKey.ENGLISH, null, Arrays.asList()), "anonymous"));
+        SecurityContextHolder.setContext(context);
+        assertThat(SecurityUtils.getCurrentTimeZone(), is(TimeZone.UTC));
     }
 
     @Test

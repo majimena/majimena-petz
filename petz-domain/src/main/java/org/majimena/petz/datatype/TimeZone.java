@@ -47,7 +47,7 @@ public enum TimeZone implements EnumDataType, Serializable {
      */
     @Override
     public String getValue() {
-        return value;
+        return name();
     }
 
     /**

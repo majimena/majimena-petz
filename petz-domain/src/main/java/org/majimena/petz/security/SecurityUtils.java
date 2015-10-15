@@ -1,6 +1,7 @@
 package org.majimena.petz.security;
 
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.petz.datatype.TimeZone;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -49,6 +50,19 @@ public final class SecurityUtils {
     public static String getCurrentUserId() {
         Optional<PetzUser> principal = getPrincipal();
         return principal.map(p -> p.getUserId()).orElse(null);
+    }
+
+    /**
+     * 現在のユーザが設定しているタイムゾーンを取得する.
+     *
+     * @return タイムゾーン
+     */
+    public static TimeZone getCurrentTimeZone() {
+        TimeZone timeZone = getPrincipal().map(p -> p.getTimeZone()).orElse(TimeZone.UTC);
+        if (timeZone == null) {
+            timeZone = TimeZone.UTC;
+        }
+        return timeZone;
     }
 
     /**

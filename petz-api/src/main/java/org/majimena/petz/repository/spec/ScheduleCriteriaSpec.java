@@ -1,6 +1,7 @@
 package org.majimena.petz.repository.spec;
 
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.petz.datetime.LocalDateTimeProvider;
 import org.majimena.petz.domain.Schedule;
 import org.majimena.petz.domain.examination.ScheduleCriteria;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,10 +11,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.YearMonth;
+import java.util.Optional;
 
 /**
  * スケジュールを検索するスペック.
@@ -32,8 +31,8 @@ public class ScheduleCriteriaSpec implements Specification<Schedule> {
      */
     public ScheduleCriteriaSpec(ScheduleCriteria criteria) {
         this.specification = Specifications
-            .where(equalClinicId(criteria))
-            .and(betweenStartDateTimeAndEndDateTime(criteria));
+                .where(equalClinicId(criteria))
+                .and(betweenStartDateTimeAndEndDateTime(criteria));
     }
 
     /**
@@ -41,6 +40,7 @@ public class ScheduleCriteriaSpec implements Specification<Schedule> {
      */
     @Override
     public Predicate toPredicate(Root<Schedule> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        query.orderBy(cb.asc(root.get("startDateTime")));
         return specification.toPredicate(root, query, cb);
     }
 
@@ -52,20 +52,14 @@ public class ScheduleCriteriaSpec implements Specification<Schedule> {
     }
 
     private Specification betweenStartDateTimeAndEndDateTime(ScheduleCriteria criteria) {
-        if (criteria.getDay() != null) {
-            // 日付指定
-            LocalDate date = LocalDate.of(criteria.getYear(), criteria.getMonth(), criteria.getDay());
-            LocalDateTime from = date.atStartOfDay();
-            LocalDateTime to = date.atTime(LocalTime.MAX);
-            return (root, query, cb) ->
-                cb.or(cb.between(root.get("startDateTime"), from, to), cb.between(root.get("endDateTime"), from.plusMinutes(1), to));
-        } else {
-            // 年月のみの指定
-            YearMonth ym = YearMonth.of(criteria.getYear(), criteria.getMonth());
-            LocalDateTime from = ym.atDay(1).atStartOfDay();
-            LocalDateTime to = ym.atEndOfMonth().atTime(LocalTime.MAX);
-            return (root, query, cb) ->
-                cb.or(cb.between(root.get("startDateTime"), from, to), cb.between(root.get("endDateTime"), from.plusMinutes(1), to));
-        }
+        // 日付まで指定されていれば日付、そうでなければ範囲を月にする
+        LocalDateTime from = Optional.ofNullable(criteria.getDay())
+                .map(p -> LocalDateTimeProvider.of(criteria.getYear(), criteria.getMonth(), p))
+                .orElse(LocalDateTimeProvider.of(criteria.getYear(), criteria.getMonth()));
+        LocalDateTime to = Optional.ofNullable(criteria.getDay())
+                .map(p -> from.plusDays(1))
+                .orElse(from.plusMonths(1));
+        return (root, query, cb) ->
+                cb.or(cb.between(root.get("startDateTime"), from, to), cb.between(root.get("endDateTime"), from.plusSeconds(1), to.minusSeconds(1)));
     }
 }

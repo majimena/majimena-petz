@@ -1,11 +1,13 @@
 package org.majimena.petz.service.impl;
 
+import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.datatype.ScheduleStatus;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.Schedule;
 import org.majimena.petz.domain.User;
+import org.majimena.petz.domain.errors.ErrorCode;
 import org.majimena.petz.domain.examination.ScheduleCriteria;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.CustomerRepository;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * スケジュールサービスの実装.
@@ -78,12 +81,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         User user = pet.getUser();
 
         // 顧客が特定できている場合はそのまま使い、顧客が特定できていない場合は既に顧客登録されていないか確認する
-        Customer customer;
-        if (schedule.getCustomer() != null) {
-            customer = customerRepository.findOne(schedule.getCustomer().getId());
-        } else {
-            customer = customerRepository.findByClinicIdAndUserId(clinic.getId(), user.getId()).orElse(null);
-        }
+        Customer customer = Optional.ofNullable(schedule.getCustomer())
+                .map(p -> customerRepository.findOne(p.getId()))
+                .orElse(customerRepository.findByClinicIdAndUserId(clinic.getId(), user.getId()).orElse(null));
 
         // スケジュールと関連マスタを関連付けて保存する
         schedule.setClinic(clinic);
@@ -110,12 +110,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         Pet pet = petRepository.findOne(schedule.getPet().getId());
 
         // 顧客が特定できている場合はそのまま使い、顧客が特定できていない場合は既に顧客登録されていないか確認する
-        Customer customer;
-        if (schedule.getCustomer() != null) {
-            customer = customerRepository.findOne(schedule.getCustomer().getId());
-        } else {
-            customer = customerRepository.findByClinicIdAndUserId(clinic.getId(), user.getId()).orElse(null);
-        }
+        Customer customer = Optional.ofNullable(schedule.getCustomer())
+                .map(p -> customerRepository.findOne(p.getId()))
+                .orElse(customerRepository.findByClinicIdAndUserId(clinic.getId(), user.getId()).orElse(null));
 
         // スケジュールと関連マスタを関連付けて保存する
         persist.setClinic(clinic);
@@ -123,5 +120,21 @@ public class ScheduleServiceImpl implements ScheduleService {
         persist.setPet(pet);
         persist.setCustomer(customer);
         return scheduleRepository.save(schedule);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public void deleteScheduleByScheduleId(String scheduleId) {
+        Schedule schedule = scheduleRepository.findOne(scheduleId);
+        if (schedule != null) {
+            if (schedule.getStatus() == ScheduleStatus.RESERVED) {
+                scheduleRepository.delete(schedule);
+            } else {
+                throw new ApplicationException(ErrorCode.PTZ_100101);
+            }
+        }
     }
 }

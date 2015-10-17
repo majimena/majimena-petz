@@ -60,6 +60,6 @@ public class ScheduleCriteriaSpec implements Specification<Schedule> {
                 .map(p -> from.plusDays(1))
                 .orElse(from.plusMonths(1));
         return (root, query, cb) ->
-                cb.or(cb.between(root.get("startDateTime"), from, to), cb.between(root.get("endDateTime"), from.plusSeconds(1), to.minusSeconds(1)));
+                cb.or(cb.between(root.get("startDateTime"), from, to.minusSeconds(1)), cb.between(root.get("endDateTime"), from.plusSeconds(1), to));
     }
 }

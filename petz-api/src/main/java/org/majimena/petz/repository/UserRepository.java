@@ -1,9 +1,9 @@
 package org.majimena.petz.repository;
 
-import org.joda.time.DateTime;
 import org.majimena.petz.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findOneByActivationKey(String activationKey);
 
-    List<User> findAllByActivatedIsFalseAndCreatedDateBefore(DateTime dateTime);
+    List<User> findAllByActivatedIsFalseAndCreatedDateBefore(LocalDateTime dateTime);
 
     Optional<User> findOneByResetKey(String resetKey);
 

@@ -1,10 +1,6 @@
 package org.majimena.petz.config.apidoc;
 
 import org.majimena.petz.config.Constants;
-import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
-import com.mangofactory.swagger.models.dto.ApiInfo;
-import com.mangofactory.swagger.plugin.EnableSwagger;
-import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
@@ -24,7 +20,7 @@ import org.springframework.util.StopWatch;
  * have access to the Swagger view.
  */
 @Configuration
-@EnableSwagger
+//@EnableSwagger
 @Profile("!" + Constants.SPRING_PROFILE_FAST)
 public class SwaggerConfiguration implements EnvironmentAware {
 
@@ -39,35 +35,35 @@ public class SwaggerConfiguration implements EnvironmentAware {
         this.propertyResolver = new RelaxedPropertyResolver(environment, "swagger.");
     }
 
-    /**
-     * Swagger Spring MVC configuration.
-     */
-    @Bean
-    public SwaggerSpringMvcPlugin swaggerSpringMvcPlugin(SpringSwaggerConfig springSwaggerConfig) {
-        log.debug("Starting Swagger");
-        StopWatch watch = new StopWatch();
-        watch.start();
-        SwaggerSpringMvcPlugin swaggerSpringMvcPlugin = new SwaggerSpringMvcPlugin(springSwaggerConfig)
-            .apiInfo(apiInfo())
-            .genericModelSubstitutes(ResponseEntity.class)
-            .includePatterns(DEFAULT_INCLUDE_PATTERN);
-
-        swaggerSpringMvcPlugin.build();
-        watch.stop();
-        log.debug("Started Swagger in {} ms", watch.getTotalTimeMillis());
-        return swaggerSpringMvcPlugin;
-    }
-
-    /**
-     * API Info as it appears on the swagger-ui page.
-     */
-    private ApiInfo apiInfo() {
-        return new ApiInfo(
-                propertyResolver.getProperty("title"),
-                propertyResolver.getProperty("description"),
-                propertyResolver.getProperty("termsOfServiceUrl"),
-                propertyResolver.getProperty("contact"),
-                propertyResolver.getProperty("license"),
-                propertyResolver.getProperty("licenseUrl"));
-    }
+//    /**
+//     * Swagger Spring MVC configuration.
+//     */
+//    @Bean
+//    public SwaggerSpringMvcPlugin swaggerSpringMvcPlugin(SpringSwaggerConfig springSwaggerConfig) {
+//        log.debug("Starting Swagger");
+//        StopWatch watch = new StopWatch();
+//        watch.start();
+//        SwaggerSpringMvcPlugin swaggerSpringMvcPlugin = new SwaggerSpringMvcPlugin(springSwaggerConfig)
+//            .apiInfo(apiInfo())
+//            .genericModelSubstitutes(ResponseEntity.class)
+//            .includePatterns(DEFAULT_INCLUDE_PATTERN);
+//
+//        swaggerSpringMvcPlugin.build();
+//        watch.stop();
+//        log.debug("Started Swagger in {} ms", watch.getTotalTimeMillis());
+//        return swaggerSpringMvcPlugin;
+//    }
+//
+//    /**
+//     * API Info as it appears on the swagger-ui page.
+//     */
+//    private ApiInfo apiInfo() {
+//        return new ApiInfo(
+//                propertyResolver.getProperty("title"),
+//                propertyResolver.getProperty("description"),
+//                propertyResolver.getProperty("termsOfServiceUrl"),
+//                propertyResolver.getProperty("contact"),
+//                propertyResolver.getProperty("license"),
+//                propertyResolver.getProperty("licenseUrl"));
+//    }
 }

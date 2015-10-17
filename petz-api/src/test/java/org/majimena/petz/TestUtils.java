@@ -2,23 +2,26 @@ package org.majimena.petz;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer;
-import com.fasterxml.jackson.datatype.joda.ser.JacksonJodaFormat;
-import org.joda.time.DateTime;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.datetime.joda.DateTimeFormatterFactory;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import org.majimena.petz.datatype.deserializers.ISO8601LocalDateDeserializer;
+import org.majimena.petz.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
+import org.majimena.petz.datatype.serializers.ISO8601LocalDateSerializer;
+import org.majimena.petz.datatype.serializers.ISO8601LocalDateTimeSerializer;
 import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Utility class for testing REST controllers.
  */
 public class TestUtils {
 
-    /** MediaType for JSON UTF8 */
+    /**
+     * MediaType for JSON UTF8
+     */
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(
             MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
@@ -26,8 +29,7 @@ public class TestUtils {
     /**
      * Convert an object to JSON byte array.
      *
-     * @param object
-     *            the object to convert
+     * @param object the object to convert
      * @return the JSON byte array
      * @throws IOException
      */
@@ -35,12 +37,11 @@ public class TestUtils {
             throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        JodaModule module = new JodaModule();
-        DateTimeFormatterFactory formatterFactory = new DateTimeFormatterFactory();
-        formatterFactory.setIso(DateTimeFormat.ISO.DATE);
-        module.addSerializer(DateTime.class, new DateTimeSerializer(
-            new JacksonJodaFormat(formatterFactory.createDateTimeFormatter()
-                .withZoneUTC())));
+        JSR310Module module = new JSR310Module();
+        module.addSerializer(LocalDate.class, new ISO8601LocalDateSerializer());
+        module.addSerializer(LocalDateTime.class, new ISO8601LocalDateTimeSerializer());
+        module.addDeserializer(LocalDate.class, new ISO8601LocalDateDeserializer());
+        module.addDeserializer(LocalDateTime.class, new ISO8601LocalDateTimeDeserializer());
         mapper.registerModule(module);
         return mapper.writeValueAsBytes(object);
     }

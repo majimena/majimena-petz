@@ -29,7 +29,7 @@ public class ColorController {
     @RequestMapping(value = "/colors", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getAll() {
         List<String> list = colorRepository.findAll().stream()
-            .map(t -> t.getName()).collect(Collectors.toList());
+                .map(t -> t.getName()).collect(Collectors.toList());
         return ResponseEntity.ok().body(list);
     }
 }

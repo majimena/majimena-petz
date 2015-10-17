@@ -29,7 +29,7 @@ public class TypeController {
     @RequestMapping(value = "/types", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getAll() {
         List<String> list = typeRepository.findAll().stream()
-            .map(t -> t.getName()).collect(Collectors.toList());
+                .map(t -> t.getName()).collect(Collectors.toList());
         return ResponseEntity.ok().body(list);
     }
 }

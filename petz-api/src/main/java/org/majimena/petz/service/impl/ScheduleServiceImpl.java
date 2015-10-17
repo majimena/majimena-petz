@@ -143,6 +143,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public Schedule signalScheduleStatus(String scheduleId) {
         Schedule schedule = scheduleRepository.findOne(scheduleId);
         if (schedule == null) {

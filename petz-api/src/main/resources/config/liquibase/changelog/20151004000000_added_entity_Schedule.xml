@@ -33,10 +33,10 @@
             <column name="end_date_time" type="timestamp">
                 <constraints nullable="false" />
             </column>
-            <column name="end_date_time" type="timestamp">
+            <column name="receipt_date_time" type="timestamp"/>
+            <column name="created_by" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
-            <column name="receipt_date_time" type="timestamp"/>
             <column name="created_date" type="timestamp">
                 <constraints nullable="false" />
             </column>

@@ -15,7 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -106,13 +111,13 @@ public class CustomerController {
 
         Optional<Customer> result = customerService.getCustomerByCustomerId(customerId);
         return result
-            .map(customer -> {
-                if (!StringUtils.equals(clinicId, customer.getClinic().getId())) {
-                    throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
-                }
-                return ResponseEntity.ok().body(customer);
-            })
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .map(customer -> {
+                    if (!StringUtils.equals(clinicId, customer.getClinic().getId())) {
+                        throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
+                    }
+                    return ResponseEntity.ok().body(customer);
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -142,7 +147,7 @@ public class CustomerController {
         // 新規顧客を登録する
         Customer created = customerService.saveCustomer(clinicId, customer);
         return ResponseEntity.created(
-            URI.create("/api/v1/clinics/" + clinicId + "/customers/" + created.getId())).body(created);
+                URI.create("/api/v1/clinics/" + clinicId + "/customers/" + created.getId())).body(created);
     }
 
     /**

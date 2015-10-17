@@ -13,7 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -62,7 +66,7 @@ public class AccountController {
         String userId = SecurityUtils.getCurrentUserId();
         Optional<User> user = userService.getUserByUserId(userId);
         return user.map(u -> ResponseEntity.ok(u))
-            .orElseThrow(() -> new ResourceNotFoundException("login user is not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("login user is not found."));
     }
 
     @Timed
@@ -103,15 +107,15 @@ public class AccountController {
     @RequestMapping(value = "/account/password", method = RequestMethod.DELETE)
     public ResponseEntity<?> requestPasswordReset(@RequestBody String mail, HttpServletRequest request) {
         return userService.requestPasswordReset(mail)
-            .map(user -> {
-                String baseUrl = request.getScheme() +
-                    "://" +
-                    request.getServerName() +
-                    ":" +
-                    request.getServerPort();
-                mailService.sendPasswordResetMail(user, baseUrl);
-                return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
-            }).orElse(new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST));
+                .map(user -> {
+                    String baseUrl = request.getScheme() +
+                            "://" +
+                            request.getServerName() +
+                            ":" +
+                            request.getServerPort();
+                    mailService.sendPasswordResetMail(user, baseUrl);
+                    return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
+                }).orElse(new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST));
 
     }
 
@@ -119,6 +123,6 @@ public class AccountController {
     @RequestMapping(value = "/account/password", method = RequestMethod.POST)
     public ResponseEntity<String> finishPasswordReset(@RequestParam(value = "key") String key, @RequestParam(value = "newPassword") String newPassword) {
         return userService.completePasswordReset(newPassword, key)
-            .map(user -> new ResponseEntity<String>(HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+                .map(user -> new ResponseEntity<String>(HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 }

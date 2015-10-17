@@ -1,13 +1,12 @@
 package org.majimena.petz.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-import org.majimena.petz.common.factory.BeanFactory;
-import org.majimena.petz.common.utils.BeanFactoryUtils;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.SystemException;
+import org.majimena.petz.common.factory.BeanFactory;
+import org.majimena.petz.common.utils.BeanFactoryUtils;
 import org.majimena.petz.common.utils.RandomUtils;
-import org.majimena.petz.datatype.*;
+import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.datatype.TimeZone;
 import org.majimena.petz.domain.Authority;
 import org.majimena.petz.domain.User;
@@ -27,7 +26,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service class for managing users.
@@ -51,14 +56,14 @@ public class UserServiceImpl implements UserService {
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         userRepository.findOneByActivationKey(key)
-            .map(user -> {
-                // activate given user for the registration key.
-                user.setActivated(true);
-                user.setActivationKey(null);
-                userRepository.save(user);
-                log.debug("Activated user: {}", user);
-                return user;
-            });
+                .map(user -> {
+                    // activate given user for the registration key.
+                    user.setActivated(true);
+                    user.setActivationKey(null);
+                    userRepository.save(user);
+                    log.debug("Activated user: {}", user);
+                    return user;
+                });
         return Optional.empty();
     }
 
@@ -67,29 +72,29 @@ public class UserServiceImpl implements UserService {
         log.debug("Reset user password for reset key {}", key);
 
         return userRepository.findOneByResetKey(key)
-            .filter(user -> {
-                DateTime oneDayAgo = DateTime.now().minusHours(24);
-                return user.getResetDate().isAfter(oneDayAgo.toInstant().getMillis());
-            })
-            .map(user -> {
-                user.setActivated(true);
-                user.setPassword(passwordEncoder.encode(newPassword));
-                user.setResetKey(null);
-                user.setResetDate(null);
-                userRepository.save(user);
-                return user;
-            });
+                .filter(user -> {
+                    LocalDateTime oneDayAgo = LocalDateTime.now().minusHours(24);
+                    return user.getResetDate().isAfter(oneDayAgo);
+                })
+                .map(user -> {
+                    user.setActivated(true);
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    user.setResetKey(null);
+                    user.setResetDate(null);
+                    userRepository.save(user);
+                    return user;
+                });
     }
 
     @Override
     public Optional<User> requestPasswordReset(String mail) {
         return userRepository.findOneByEmail(mail)
-            .map(user -> {
-                user.setResetKey(RandomUtils.generateResetKey());
-                user.setResetDate(DateTime.now());
-                userRepository.save(user);
-                return user;
-            });
+                .map(user -> {
+                    user.setResetKey(RandomUtils.generateResetKey());
+                    user.setResetDate(LocalDateTime.now());
+                    userRepository.save(user);
+                    return user;
+                });
     }
 
     @Override
@@ -126,8 +131,8 @@ public class UserServiceImpl implements UserService {
         // 今はメアド検索しかないのでこのままでもOK
         Optional<User> user = userRepository.findOneByLogin(criteria.getEmail());
         return user
-            .map(u -> Arrays.asList(BeanFactory.create(u, new UserOutline())))
-            .orElse(Arrays.asList());
+                .map(u -> Arrays.asList(BeanFactory.create(u, new UserOutline())))
+                .orElse(Arrays.asList());
     }
 
     /**

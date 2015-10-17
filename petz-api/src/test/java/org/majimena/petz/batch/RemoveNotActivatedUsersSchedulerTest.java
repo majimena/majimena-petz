@@ -1,10 +1,8 @@
 package org.majimena.petz.batch;
 
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
-import org.majimena.petz.batch.RemoveNotActivatedUsersScheduler;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.repository.UserRepository;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -12,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +33,7 @@ public class RemoveNotActivatedUsersSchedulerTest {
     public void testFindNotActivatedUsersByCreationDateBefore() {
         sut.removeNotActivatedUsers();
 
-        DateTime now = new DateTime();
+        LocalDateTime now = LocalDateTime.now();
         List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
         assertThat(users).isEmpty();
     }

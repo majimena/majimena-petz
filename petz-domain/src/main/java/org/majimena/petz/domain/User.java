@@ -14,14 +14,17 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
-import org.joda.time.DateTime;
 import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.datatype.TimeZone;
+import org.majimena.petz.datatype.converters.LocalDateTimePersistenceConverter;
+import org.majimena.petz.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
 import org.majimena.petz.datatype.deserializers.LangKeyDeserializer;
 import org.majimena.petz.datatype.deserializers.TimeZoneDeserializer;
 import org.majimena.petz.datatype.serializers.EnumDataTypeSerializer;
+import org.majimena.petz.datatype.serializers.ISO8601LocalDateTimeSerializer;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -33,6 +36,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -108,9 +112,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "reset_key", length = 20)
     private String resetKey;
 
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
     @Column(name = "reset_date", nullable = true)
-    private DateTime resetDate = null;
+    private LocalDateTime resetDate = null;
 
     @Size(max = 2)
     @Column(name = "country", length = 2, nullable = true)

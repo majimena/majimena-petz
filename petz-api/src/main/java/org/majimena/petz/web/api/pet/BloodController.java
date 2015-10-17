@@ -29,7 +29,7 @@ public class BloodController {
     @RequestMapping(value = "/bloods", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getAll() {
         List<String> list = bloodRepository.findAll().stream()
-            .map(t -> t.getName()).collect(Collectors.toList());
+                .map(t -> t.getName()).collect(Collectors.toList());
         return ResponseEntity.ok().body(list);
     }
 }

@@ -29,7 +29,7 @@ public class TagController {
     @RequestMapping(value = "/tags", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getAll() {
         List<String> list = tagRepository.findAll().stream()
-            .map(t -> t.getName()).collect(Collectors.toList());
+                .map(t -> t.getName()).collect(Collectors.toList());
         return ResponseEntity.ok().body(list);
     }
 }

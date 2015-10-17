@@ -1,6 +1,5 @@
 package org.majimena.petz.service;
 
-import org.joda.time.DateTime;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +16,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,7 +61,7 @@ public class UserServiceTest {
 
         User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", LangKey.ENGLISH);
 
-        DateTime daysAgo = DateTime.now().minusHours(25);
+        LocalDateTime daysAgo = LocalDateTime.now().minusHours(25);
         String resetKey = RandomUtils.generateResetKey();
         user.setActivated(true);
         user.setResetDate(daysAgo);
@@ -83,7 +83,7 @@ public class UserServiceTest {
 
         User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", LangKey.ENGLISH);
 
-        DateTime daysAgo = DateTime.now().minusHours(25);
+        LocalDateTime daysAgo = LocalDateTime.now().minusHours(25);
         user.setActivated(true);
         user.setResetDate(daysAgo);
         user.setResetKey("1234");
@@ -106,7 +106,7 @@ public class UserServiceTest {
 
         String oldPassword = user.getPassword();
 
-        DateTime daysAgo = DateTime.now().minusHours(2);
+        LocalDateTime daysAgo = LocalDateTime.now().minusHours(2);
         String resetKey = RandomUtils.generateResetKey();
         user.setActivated(true);
         user.setResetDate(daysAgo);

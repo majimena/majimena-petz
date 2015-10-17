@@ -2,7 +2,8 @@ package org.majimena.petz.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import cz.jirutka.spring.exhandler.support.HttpMessageConverterUtils;
 import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
@@ -29,6 +30,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -95,15 +97,15 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
     public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(configureSimpleModule());
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        return mapper;
+        return Jackson2ObjectMapperBuilder.json()
+                .serializationInclusion(JsonInclude.Include.NON_NULL)
+                .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .modules(jsr310Module()).build();
     }
 
     @Bean
-    public SimpleModule configureSimpleModule() {
-        SimpleModule module = new SimpleModule("PetzioModule");
+    public JSR310Module jsr310Module() {
+        JSR310Module module = new JSR310Module();
 
         module.addSerializer(LocalDate.class, new ISO8601LocalDateSerializer());
         module.addSerializer(LocalDateTime.class, new ISO8601LocalDateTimeSerializer());

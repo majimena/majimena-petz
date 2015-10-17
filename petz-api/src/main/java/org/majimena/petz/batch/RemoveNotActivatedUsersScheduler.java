@@ -1,6 +1,5 @@
 package org.majimena.petz.batch;
 
-import org.joda.time.DateTime;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.repository.UserRepository;
 import org.slf4j.Logger;
@@ -9,6 +8,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -31,8 +32,8 @@ public class RemoveNotActivatedUsersScheduler {
      */
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
-        DateTime now = new DateTime();
-        List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
+        LocalDateTime now = LocalDateTime.now();
+        List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3L));
         for (User user : users) {
             LOGGER.debug("Deleting not activated user {}", user.getLogin());
             userRepository.delete(user);

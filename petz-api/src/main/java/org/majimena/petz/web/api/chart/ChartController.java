@@ -15,7 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -78,13 +83,13 @@ public class ChartController {
         // カルテを取得する
         Optional<Chart> one = chartService.getChartByChartId(chartId);
         return one
-            .map(chart -> {
-                if (!StringUtils.equals(clinicId, chart.getClinic().getId())) {
-                    throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
-                }
-                return ResponseEntity.ok().body(chart);
-            })
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .map(chart -> {
+                    if (!StringUtils.equals(clinicId, chart.getClinic().getId())) {
+                        throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
+                    }
+                    return ResponseEntity.ok().body(chart);
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -108,7 +113,7 @@ public class ChartController {
         // カルテを保存する
         Chart saved = chartService.saveChart(clinicId, chart);
         return ResponseEntity.created(
-            URI.create("/api/v1/clinics/" + clinicId + "/charts/" + saved.getId())).body(saved);
+                URI.create("/api/v1/clinics/" + clinicId + "/charts/" + saved.getId())).body(saved);
     }
 
     /**

@@ -9,17 +9,15 @@ import java.time.ZonedDateTime;
 /**
  * ローカル日時プロバイダ.
  */
-public class LocalDateTimeProvider {
+public class L10nDateTimeProvider {
 
     /**
-     * 現在時刻をローカライズしてUTCに変換した日時オブジェクトを取得する.
+     * 現在日時を取得する（ローカライゼーションできるようにUTCベースの日時を返す）.
      *
-     * @return ローカル日時
+     * @return UTCの現在日時
      */
-    public static LocalDateTime now() {
-        TimeZone timeZone = SecurityUtils.getCurrentTimeZone();
-        ZonedDateTime dateTime = ZonedDateTime.now(timeZone.getZoneId());
-        return LocalDateTime.ofInstant(dateTime.toInstant(), TimeZone.UTC.getZoneId());
+    public static ZonedDateTime now() {
+        return ZonedDateTime.now(TimeZone.UTC.getZoneId());
     }
 
     /**

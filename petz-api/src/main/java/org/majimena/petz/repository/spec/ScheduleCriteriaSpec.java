@@ -1,7 +1,7 @@
 package org.majimena.petz.repository.spec;
 
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.petz.datetime.LocalDateTimeProvider;
+import org.majimena.petz.datetime.L10nDateTimeProvider;
 import org.majimena.petz.domain.Schedule;
 import org.majimena.petz.domain.examination.ScheduleCriteria;
 import org.springframework.data.jpa.domain.Specification;
@@ -54,8 +54,8 @@ public class ScheduleCriteriaSpec implements Specification<Schedule> {
     private Specification betweenStartDateTimeAndEndDateTime(ScheduleCriteria criteria) {
         // 日付まで指定されていれば日付、そうでなければ範囲を月にする
         LocalDateTime from = Optional.ofNullable(criteria.getDay())
-                .map(p -> LocalDateTimeProvider.of(criteria.getYear(), criteria.getMonth(), p))
-                .orElse(LocalDateTimeProvider.of(criteria.getYear(), criteria.getMonth()));
+                .map(p -> L10nDateTimeProvider.of(criteria.getYear(), criteria.getMonth(), p))
+                .orElse(L10nDateTimeProvider.of(criteria.getYear(), criteria.getMonth()));
         LocalDateTime to = Optional.ofNullable(criteria.getDay())
                 .map(p -> from.plusDays(1))
                 .orElse(from.plusMonths(1));

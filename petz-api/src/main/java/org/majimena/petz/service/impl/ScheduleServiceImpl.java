@@ -2,7 +2,7 @@ package org.majimena.petz.service.impl;
 
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.datatype.ScheduleStatus;
-import org.majimena.petz.datetime.LocalDateTimeProvider;
+import org.majimena.petz.datetime.L10nDateTimeProvider;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.Pet;
@@ -151,7 +151,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         ScheduleStatus next = schedule.getStatus().next();
-        next.is(ScheduleStatus.RECEIPTED, s -> schedule.setReceiptDateTime(LocalDateTimeProvider.now()));
+        next.is(ScheduleStatus.RECEIPTED, s -> schedule.setReceiptDateTime(L10nDateTimeProvider.now().toLocalDateTime()));
         schedule.setStatus(next);
         return scheduleRepository.save(schedule);
     }

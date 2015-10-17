@@ -11,9 +11,9 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
- * @see LocalDateTimeProvider
+ * @see L10nDateTimeProvider
  */
-public class LocalDateTimeProviderTest {
+public class L10nDateTimeProviderTest {
 
     @Mocked
     private SecurityUtils securityUtils;
@@ -24,8 +24,8 @@ public class LocalDateTimeProviderTest {
             SecurityUtils.getCurrentTimeZone();
             result = TimeZone.ASIA_TOKYO;
         }};
-        assertThat(LocalDateTimeProvider.now(), is(notNullValue()));
-        System.out.println(LocalDateTimeProvider.now());
+        assertThat(L10nDateTimeProvider.now(), is(notNullValue()));
+        System.out.println(L10nDateTimeProvider.now());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class LocalDateTimeProviderTest {
             SecurityUtils.getCurrentTimeZone();
             result = TimeZone.ASIA_TOKYO;
         }};
-        assertThat(LocalDateTimeProvider.of(2015, 1, 1).toString(), is("2014-12-31T15:00"));
+        assertThat(L10nDateTimeProvider.of(2015, 1, 1).toString(), is("2014-12-31T15:00"));
     }
 
     @Test
@@ -43,6 +43,6 @@ public class LocalDateTimeProviderTest {
             SecurityUtils.getCurrentTimeZone();
             result = TimeZone.ASIA_TOKYO;
         }};
-        assertThat(LocalDateTimeProvider.of(2015, 1).toString(), is("2014-12-31T15:00"));
+        assertThat(L10nDateTimeProvider.of(2015, 1).toString(), is("2014-12-31T15:00"));
     }
 }

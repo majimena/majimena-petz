@@ -17,6 +17,14 @@ import java.util.Optional;
  */
 public final class SecurityUtils {
 
+    /**
+     * システムアカウント（ユーザが特定できない場合）.
+     */
+    public static final String SYSTEM_ACCOUNT = "system";
+
+    /**
+     * プライベートコンストラクタ.
+     */
     private SecurityUtils() {
     }
 
@@ -31,6 +39,7 @@ public final class SecurityUtils {
         return Optional.empty();
     }
 
+    @Deprecated
     public static String getCurrentLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
@@ -47,9 +56,14 @@ public final class SecurityUtils {
         return userName;
     }
 
+    /**
+     * 現在のユーザのIDを取得する.
+     *
+     * @return ユーザID
+     */
     public static String getCurrentUserId() {
         Optional<PetzUser> principal = getPrincipal();
-        return principal.map(p -> p.getUserId()).orElse(null);
+        return principal.map(p -> p.getUserId()).orElse(SYSTEM_ACCOUNT);
     }
 
     /**

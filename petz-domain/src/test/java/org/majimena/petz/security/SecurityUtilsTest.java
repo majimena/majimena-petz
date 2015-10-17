@@ -1,5 +1,6 @@
 package org.majimena.petz.security;
 
+import org.junit.After;
 import org.junit.Test;
 import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.datatype.TimeZone;
@@ -21,6 +22,12 @@ import static org.junit.Assert.assertThat;
  * @see SecurityUtils
  */
 public class SecurityUtilsTest {
+
+    @After
+    public void tearDown() {
+        // 毎回セキュリティコンテキストを初期化する
+        SecurityContextHolder.clearContext();
+    }
 
     @Test
     public void testGetCurrentLogin() {
@@ -49,6 +56,19 @@ public class SecurityUtilsTest {
         SecurityContextHolder.setContext(securityContext);
         boolean isAuthenticated = SecurityUtils.isAuthenticated();
         assertThat(isAuthenticated, is(false));
+    }
+
+    @Test
+    public void ログインしていない時にシステムのユーザIDが取得できること() {
+        assertThat(SecurityUtils.getCurrentUserId(), is(SecurityUtils.SYSTEM_ACCOUNT));
+    }
+
+    @Test
+    public void ログインしている時にログイン中のユーザIDが取得できること() {
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", LangKey.ENGLISH, TimeZone.ASIA_TOKYO, Arrays.asList()), "anonymous"));
+        SecurityContextHolder.setContext(context);
+        assertThat(SecurityUtils.getCurrentUserId(), is("123"));
     }
 
     @Test

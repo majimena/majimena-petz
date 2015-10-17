@@ -88,4 +88,10 @@ public class Schedule extends AbstractAuditingEntity implements Serializable {
     @Convert(converter = LocalDateTimePersistenceConverter.class)
     @Column(name = "end_date_time", nullable = false)
     private LocalDateTime endDateTime;
+
+    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
+    @Column(name = "receipt_date_time", nullable = true)
+    private LocalDateTime receiptDateTime;
 }

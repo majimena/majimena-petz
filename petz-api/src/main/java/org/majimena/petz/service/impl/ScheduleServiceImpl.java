@@ -2,6 +2,7 @@ package org.majimena.petz.service.impl;
 
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.datatype.ScheduleStatus;
+import org.majimena.petz.datetime.LocalDateTimeProvider;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.Pet;
@@ -130,11 +131,27 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void deleteScheduleByScheduleId(String scheduleId) {
         Schedule schedule = scheduleRepository.findOne(scheduleId);
         if (schedule != null) {
-            if (schedule.getStatus() == ScheduleStatus.RESERVED) {
+            if (schedule.getStatus().is(ScheduleStatus.RESERVED)) {
                 scheduleRepository.delete(schedule);
             } else {
                 throw new ApplicationException(ErrorCode.PTZ_100101);
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Schedule signalScheduleStatus(String scheduleId) {
+        Schedule schedule = scheduleRepository.findOne(scheduleId);
+        if (schedule == null) {
+            throw new ApplicationException(ErrorCode.PTZ_100999);
+        }
+
+        ScheduleStatus next = schedule.getStatus().next();
+        next.is(ScheduleStatus.RECEIPTED, s -> schedule.setReceiptDateTime(LocalDateTimeProvider.now()));
+        schedule.setStatus(next);
+        return scheduleRepository.save(schedule);
     }
 }

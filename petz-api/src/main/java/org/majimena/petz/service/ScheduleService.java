@@ -40,4 +40,12 @@ public interface ScheduleService {
      * @param scheduleId スケジュールのID
      */
     void deleteScheduleByScheduleId(String scheduleId);
+
+    /**
+     * スケジュールのステータスを次に進める.
+     *
+     * @param scheduleId スケジュールのID
+     * @return 更新したスケジュール
+     */
+    Schedule signalScheduleStatus(String scheduleId);
 }

@@ -5,10 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.majimena.petz.datatype.ScheduleStatus;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -25,12 +25,14 @@ public class ScheduleCriteria implements Serializable {
 
     private String clinicId;
 
-    @NotNull
+    private String userId;
+
+    private ScheduleStatus status;
+
     @Min(2010)
     @Max(2999)
     private Integer year;
 
-    @NotNull
     @Min(1)
     @Max(12)
     private Integer month;

@@ -13,6 +13,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.majimena.petz.datatype.ScheduleStatus;
 import org.majimena.petz.datatype.converters.LocalDateTimePersistenceConverter;
 import org.majimena.petz.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
+import org.majimena.petz.datatype.deserializers.ScheduleStatusDeserializer;
+import org.majimena.petz.datatype.serializers.EnumDataTypeSerializer;
 import org.majimena.petz.datatype.serializers.ISO8601LocalDateTimeSerializer;
 
 import javax.persistence.Column;
@@ -71,6 +73,8 @@ public class Schedule extends AbstractAuditingEntity implements Serializable {
     @Column(name = "memo", length = 2000, nullable = true)
     private String memo;
 
+    @JsonSerialize(using = EnumDataTypeSerializer.class)
+    @JsonDeserialize(using = ScheduleStatusDeserializer.class)
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 20, nullable = false)
     private ScheduleStatus status;

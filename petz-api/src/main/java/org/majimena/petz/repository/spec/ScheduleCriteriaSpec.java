@@ -1,6 +1,7 @@
 package org.majimena.petz.repository.spec;
 
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.petz.datatype.ScheduleStatus;
 import org.majimena.petz.datetime.L10nDateTimeProvider;
 import org.majimena.petz.domain.Schedule;
 import org.majimena.petz.domain.examination.ScheduleCriteria;
@@ -32,7 +33,17 @@ public class ScheduleCriteriaSpec implements Specification<Schedule> {
     public ScheduleCriteriaSpec(ScheduleCriteria criteria) {
         this.specification = Specifications
                 .where(equalClinicId(criteria))
+                .and(Optional.ofNullable(criteria.getUserId()).map(ScheduleCriteriaSpec::equalUserId).orElse(null))
+                .and(Optional.ofNullable(criteria.getStatus()).map(ScheduleCriteriaSpec::equalStatus).orElse(null))
                 .and(betweenStartDateTimeAndEndDateTime(criteria));
+    }
+
+    public static Specification equalUserId(String userId) {
+        return (root, query, cb) -> cb.equal(root.get("user").get("id"), userId);
+    }
+
+    public static Specification equalStatus(ScheduleStatus status) {
+        return (root, query, cb) -> cb.equal(root.get("status"), status);
     }
 
     /**
@@ -52,6 +63,10 @@ public class ScheduleCriteriaSpec implements Specification<Schedule> {
     }
 
     private Specification betweenStartDateTimeAndEndDateTime(ScheduleCriteria criteria) {
+        if (criteria.getYear() == null || criteria.getMonth() == null) {
+            return null;
+        }
+
         // 日付まで指定されていれば日付、そうでなければ範囲を月にする
         LocalDateTime from = Optional.ofNullable(criteria.getDay())
                 .map(p -> L10nDateTimeProvider.of(criteria.getYear(), criteria.getMonth(), p))

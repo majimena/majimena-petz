@@ -48,7 +48,7 @@ public class ScheduleServiceImplIT {
                 result = TimeZone.ASIA_TOKYO;
             }};
 
-            ScheduleCriteria criteria = new ScheduleCriteria("0", 2015, 11, null);
+            ScheduleCriteria criteria = new ScheduleCriteria("0", null, null, 2015, 11, null);
             List<Schedule> result = sut.getSchedulesByScheduleCriteria(criteria);
 
             assertThat(result.size(), is(2));
@@ -80,7 +80,7 @@ public class ScheduleServiceImplIT {
                 result = TimeZone.ASIA_TOKYO;
             }};
 
-            ScheduleCriteria criteria = new ScheduleCriteria("0", 2015, 10, 30);
+            ScheduleCriteria criteria = new ScheduleCriteria("0", null, null, 2015, 10, 30);
             List<Schedule> result = sut.getSchedulesByScheduleCriteria(criteria);
 
             assertThat(result.size(), is(1));

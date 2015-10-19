@@ -79,6 +79,12 @@ public final class SecurityUtils {
         return timeZone;
     }
 
+    public static void throwIfNotCurrentUser(String userId) {
+        if (!StringUtils.equals(userId, getCurrentUserId())) {
+            throw new UnauthorizedUserException("Cannot access resource.");
+        }
+    }
+
     /**
      * Check if a user is authenticated.
      *

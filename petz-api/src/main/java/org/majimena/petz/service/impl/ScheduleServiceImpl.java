@@ -74,6 +74,16 @@ public class ScheduleServiceImpl implements ScheduleService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional(readOnly = true)
+    public Optional<Schedule> getScheduleByScheduleId(String scheduleId) {
+        Schedule schedule = scheduleRepository.getOne(scheduleId);
+        return Optional.ofNullable(schedule);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     @Transactional
     public Schedule saveSchedule(Schedule schedule) {
         // 必須の関連マスタを取得する（事前にチェックしているので、通常データがないことはありえない）

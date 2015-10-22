@@ -4,6 +4,7 @@ import org.majimena.petz.domain.Schedule;
 import org.majimena.petz.domain.examination.ScheduleCriteria;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * スケジュールサービス.
@@ -17,6 +18,14 @@ public interface ScheduleService {
      * @return 該当するスケジュールの一覧
      */
     List<Schedule> getSchedulesByScheduleCriteria(ScheduleCriteria criteria);
+
+    /**
+     * スケジュールIDをもとに、スケジュールを取得する.
+     *
+     * @param scheduleId スケジュールID
+     * @return 該当するスケジュール
+     */
+    Optional<Schedule> getScheduleByScheduleId(String scheduleId);
 
     /**
      * スケジュールを新規作成する.

@@ -130,7 +130,7 @@ public class ScheduleController {
     @Timed
     @RequestMapping(value = "/schedules/{scheduleId}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> delete(@PathVariable String scheduleId) {
-        // ユーザ権限のチェックとIDのコード体系チェック
+        // TODO ユーザ権限のチェックとIDのコード体系チェック
 //        SecurityUtils.throwIfNotCurrentUser(schedule.getUser().getId());
         ErrorsUtils.throwIfNotIdentify(scheduleId);
 

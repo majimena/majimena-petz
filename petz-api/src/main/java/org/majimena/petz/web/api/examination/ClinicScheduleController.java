@@ -6,6 +6,7 @@ import org.majimena.petz.domain.examination.ScheduleCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ScheduleService;
 import org.majimena.petz.web.utils.ErrorsUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * クリニックスケジュールコントローラ.
@@ -73,6 +75,27 @@ public class ClinicScheduleController {
         criteria.setClinicId(clinicId);
         List<Schedule> schedules = scheduleService.getSchedulesByScheduleCriteria(criteria);
         return ResponseEntity.ok().body(schedules);
+    }
+
+    /**
+     * クリニックのスケジュールを取得する. 存在しない場合は、404エラーにする.
+     *
+     * @param clinicId   クリニックID
+     * @param scheduleId スケジュールID
+     * @return 指定月の全てのスケジュール
+     */
+    @Timed
+    @RequestMapping(value = "/clinics/{clinicId}/schedules/{scheduleId}", method = RequestMethod.GET)
+    public ResponseEntity<Schedule> get(@PathVariable String clinicId, @PathVariable String scheduleId) {
+        // クリニックの権限チェック
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+        // TODO スケジュールのチェックをすること
+
+        // 該当するスケジュールを取得する
+        Optional<Schedule> schedule = scheduleService.getScheduleByScheduleId(scheduleId);
+        return schedule
+                .map(p -> ResponseEntity.ok().body(p))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

@@ -1,9 +1,9 @@
-package org.majimena.petz.web.api.examination;
+package org.majimena.petz.web.api.ticket;
 
 import com.codahale.metrics.annotation.Timed;
-import org.majimena.petz.domain.Schedule;
+import org.majimena.petz.domain.Ticket;
 import org.majimena.petz.security.SecurityUtils;
-import org.majimena.petz.service.ScheduleService;
+import org.majimena.petz.service.TicketService;
 import org.majimena.petz.web.utils.ErrorsUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,24 +14,24 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.inject.Inject;
 
 /**
- * Created by todoken on 2015/10/17.
+ * クリニックが持つチケットのステータスに関するコントローラ.
  */
 @RestController
 @RequestMapping("/api/v1")
-public class ClinicScheduleStatusController {
+public class ClinicTicketStatusController {
 
     @Inject
-    private ScheduleService scheduleService;
+    private TicketService ticketService;
 
     @Timed
-    @RequestMapping(value = "/clinics/{clinicId}/schedules/{scheduleId}/statuses", method = RequestMethod.POST)
-    public ResponseEntity<Schedule> put(@PathVariable String clinicId, @PathVariable String scheduleId) {
+    @RequestMapping(value = "/clinics/{clinicId}/tickets/{ticketId}/statuses", method = RequestMethod.POST)
+    public ResponseEntity<Ticket> put(@PathVariable String clinicId, @PathVariable String ticketId) {
         // クリニックの権限チェックとIDのコード体系チェック
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
-        ErrorsUtils.throwIfNotIdentify(scheduleId);
+        ErrorsUtils.throwIfNotIdentify(ticketId);
 
         // スケジュールを更新する
-        Schedule created = scheduleService.signalScheduleStatus(scheduleId);
+        Ticket created = ticketService.signalTicketStatus(ticketId);
         return ResponseEntity.ok().body(created);
     }
 }

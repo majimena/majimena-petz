@@ -1,10 +1,10 @@
 package org.majimena.petz.repository.spec;
 
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.petz.datatype.ScheduleStatus;
+import org.majimena.petz.datatype.TicketStatus;
 import org.majimena.petz.datetime.L10nDateTimeProvider;
-import org.majimena.petz.domain.Schedule;
-import org.majimena.petz.domain.examination.ScheduleCriteria;
+import org.majimena.petz.domain.Ticket;
+import org.majimena.petz.domain.examination.TicketCriteria;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -18,19 +18,19 @@ import java.util.Optional;
 /**
  * スケジュールを検索するスペック.
  */
-public class ScheduleCriteriaSpec implements Specification<Schedule> {
+public class ScheduleCriteriaSpec implements Specification<Ticket> {
 
     /**
      * スペック.
      */
-    private Specification<Schedule> specification;
+    private Specification<Ticket> specification;
 
     /**
      * コンストラクタ.
      *
      * @param criteria スケジュールクライテリア
      */
-    public ScheduleCriteriaSpec(ScheduleCriteria criteria) {
+    public ScheduleCriteriaSpec(TicketCriteria criteria) {
         this.specification = Specifications
                 .where(equalClinicId(criteria))
                 .and(Optional.ofNullable(criteria.getUserId()).map(ScheduleCriteriaSpec::equalUserId).orElse(null))
@@ -39,10 +39,10 @@ public class ScheduleCriteriaSpec implements Specification<Schedule> {
     }
 
     public static Specification equalUserId(String userId) {
-        return (root, query, cb) -> cb.equal(root.get("user").get("id"), userId);
+        return (root, query, cb) -> cb.equal(root.get("pet").get("user").get("id"), userId);
     }
 
-    public static Specification equalStatus(ScheduleStatus status) {
+    public static Specification equalStatus(TicketStatus status) {
         return (root, query, cb) -> cb.equal(root.get("status"), status);
     }
 
@@ -50,19 +50,19 @@ public class ScheduleCriteriaSpec implements Specification<Schedule> {
      * {@inheritDoc}
      */
     @Override
-    public Predicate toPredicate(Root<Schedule> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+    public Predicate toPredicate(Root<Ticket> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         query.orderBy(cb.asc(root.get("startDateTime")));
         return specification.toPredicate(root, query, cb);
     }
 
-    private Specification equalClinicId(ScheduleCriteria criteria) {
+    private Specification equalClinicId(TicketCriteria criteria) {
         if (StringUtils.isEmpty(criteria.getClinicId())) {
             return null;
         }
         return (root, query, cb) -> cb.equal(root.get("clinic").get("id"), criteria.getClinicId());
     }
 
-    private Specification betweenStartDateTimeAndEndDateTime(ScheduleCriteria criteria) {
+    private Specification betweenStartDateTimeAndEndDateTime(TicketCriteria criteria) {
         if (criteria.getYear() == null || criteria.getMonth() == null) {
             return null;
         }

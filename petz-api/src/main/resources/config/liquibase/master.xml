@@ -9,5 +9,5 @@
     <include file="classpath:config/liquibase/changelog/20150726000000_added_entity_Pet.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150827000000_added_entity_Customer.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150905000000_added_entity_Chart.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151004000000_added_entity_Schedule.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20151004000000_added_entity_Ticket.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

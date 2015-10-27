@@ -62,7 +62,7 @@ public enum ErrorCode {
      */
     PTZ_003999,
 
-    // Schedule
+    // Ticket
     /**
      * 予約中のスケジュール以外は削除することができません。
      */

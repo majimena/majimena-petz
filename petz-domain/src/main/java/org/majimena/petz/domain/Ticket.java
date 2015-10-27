@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.majimena.petz.datatype.ScheduleStatus;
+import org.majimena.petz.datatype.TicketStatus;
 import org.majimena.petz.datatype.converters.LocalDateTimePersistenceConverter;
 import org.majimena.petz.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
 import org.majimena.petz.datatype.deserializers.ScheduleStatusDeserializer;
@@ -42,9 +42,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "schedule")
+@Table(name = "ticket")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Schedule extends AbstractAuditingEntity implements Serializable {
+public class Ticket extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -56,10 +56,6 @@ public class Schedule extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pet_id", nullable = false)
@@ -69,6 +65,10 @@ public class Schedule extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(name = "customer_id", nullable = true)
     private Customer customer;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "chart_id", nullable = true)
+    private Chart chart;
+
     @Size(max = 2000)
     @Column(name = "memo", length = 2000, nullable = true)
     private String memo;
@@ -77,7 +77,10 @@ public class Schedule extends AbstractAuditingEntity implements Serializable {
     @JsonDeserialize(using = ScheduleStatusDeserializer.class)
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 20, nullable = false)
-    private ScheduleStatus status;
+    private TicketStatus status;
+
+    @Column(name = "removed", nullable = false)
+    private Boolean removed;
 
     @NotNull
     @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)

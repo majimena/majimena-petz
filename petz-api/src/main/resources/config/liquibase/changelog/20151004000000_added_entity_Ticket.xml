@@ -9,22 +9,23 @@
 
     <changeSet id="20151004000000" author="custom">
 
-        <createTable tableName="schedule">
+        <createTable tableName="ticket">
             <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="clinic_id" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
-            <column name="user_id" type="varchar(50)">
-                <constraints nullable="false" />
-            </column>
             <column name="pet_id" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
             <column name="customer_id" type="varchar(50)"/>
+            <column name="chart_id" type="varchar(50)"/>
             <column name="memo" type="varchar(50)" />
             <column name="status" type="varchar(20)">
+                <constraints nullable="false" />
+            </column>
+            <column name="removed" type="boolean">
                 <constraints nullable="false" />
             </column>
             <column name="start_date_time" type="timestamp">
@@ -44,20 +45,24 @@
             <column name="last_modified_date" type="timestamp"/>
         </createTable>
 
-        <createIndex indexName="idx1_schedule"
-                     tableName="schedule">
+        <createIndex indexName="idx1_ticket"
+                     tableName="ticket">
             <column name="clinic_id" type="varchar(50)"/>
         </createIndex>
-        <createIndex indexName="idx2_schedule"
-                     tableName="schedule">
+        <createIndex indexName="idx2_ticket"
+                     tableName="ticket">
             <column name="customer_id" type="varchar(50)"/>
         </createIndex>
-        <createIndex indexName="idx3_schedule"
-                     tableName="schedule">
+        <createIndex indexName="idx3_ticket"
+                     tableName="ticket">
             <column name="pet_id" type="varchar(50)"/>
         </createIndex>
-        <createIndex indexName="idx4_schedule"
-                     tableName="schedule">
+        <createIndex indexName="idx4_ticket"
+                     tableName="ticket">
+            <column name="chart_id" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx5_ticket"
+                     tableName="ticket">
             <column name="start_date_time" type="timestamp"/>
         </createIndex>
 

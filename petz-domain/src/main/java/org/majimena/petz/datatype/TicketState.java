@@ -5,7 +5,9 @@ import java.util.function.Consumer;
 /**
  * チケットのステータス.
  */
-public enum TicketStatus implements EnumDataType {
+public enum TicketState implements EnumDataType {
+
+    NULL(""),
 
     RESERVED("予約中"),
 
@@ -21,7 +23,7 @@ public enum TicketStatus implements EnumDataType {
 
     private String name;
 
-    TicketStatus(String name) {
+    TicketState(String name) {
         this.name = name;
     }
 
@@ -35,17 +37,17 @@ public enum TicketStatus implements EnumDataType {
         return name();
     }
 
-    public boolean is(TicketStatus status) {
+    public boolean is(TicketState status) {
         return this == status;
     }
 
-    public void is(TicketStatus status, Consumer<TicketStatus> proc) {
+    public void is(TicketState status, Consumer<TicketState> proc) {
         if (is(status)) {
             proc.accept(status);
         }
     }
 
-    public TicketStatus next() {
+    public TicketState next() {
         switch (this) {
             case RESERVED:
                 return RECEIPTED;

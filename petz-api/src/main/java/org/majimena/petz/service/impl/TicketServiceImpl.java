@@ -1,13 +1,15 @@
 package org.majimena.petz.service.impl;
 
 import org.majimena.petz.common.exceptions.ApplicationException;
-import org.majimena.petz.datatype.TicketStatus;
+import org.majimena.petz.datatype.TicketActivityType;
+import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.datetime.L10nDateTimeProvider;
 import org.majimena.petz.domain.Chart;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.Ticket;
+import org.majimena.petz.domain.TicketActivity;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.errors.ErrorCode;
 import org.majimena.petz.domain.examination.TicketCriteria;
@@ -15,8 +17,8 @@ import org.majimena.petz.repository.ChartRepository;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.CustomerRepository;
 import org.majimena.petz.repository.PetRepository;
+import org.majimena.petz.repository.TicketActivityRepository;
 import org.majimena.petz.repository.TicketRepository;
-import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.repository.spec.ScheduleCriteriaSpec;
 import org.majimena.petz.service.TicketService;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,16 +43,16 @@ public class TicketServiceImpl implements TicketService {
     private TicketRepository ticketRepository;
 
     /**
+     * チケットアクティビティリポジトリ.
+     */
+    @Inject
+    private TicketActivityRepository ticketActivityRepository;
+
+    /**
      * クリニックリポジトリ.
      */
     @Inject
     private ClinicRepository clinicRepository;
-
-    /**
-     * ユーザーリポジトリ.
-     */
-    @Inject
-    private UserRepository userRepository;
 
     /**
      * ペットリポジトリ.
@@ -113,9 +116,14 @@ public class TicketServiceImpl implements TicketService {
         ticket.setPet(pet);
         ticket.setCustomer(customer);
         ticket.setChart(chart);
-        ticket.setStatus(TicketStatus.RESERVED);
+        ticket.setState(TicketState.RESERVED);
         ticket.setRemoved(Boolean.FALSE);
-        return ticketRepository.save(ticket);
+        Ticket saved = ticketRepository.save(ticket);
+
+        // アクティビティを保存
+        saveTicketActivity(saved, TicketActivityType.CHANGE_STATE, TicketState.NULL, TicketState.RESERVED);
+
+        return saved;
     }
 
     /**
@@ -157,16 +165,15 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional
     public void deleteTicketByTicketId(String ticketId) {
-        Ticket ticket = ticketRepository.findOne(ticketId);
-        if (ticket != null) {
-            if (ticket.getStatus().is(TicketStatus.RESERVED)) {
-                ticket.setStatus(TicketStatus.CANCEL);
-                ticket.setRemoved(Boolean.TRUE);
-                ticketRepository.save(ticket);
-            } else {
-                throw new ApplicationException(ErrorCode.PTZ_100101);
-            }
-        }
+        Optional.ofNullable(ticketRepository.findOne(ticketId)).ifPresent(ticket -> {
+            // アクティビティを記録
+            saveTicketActivity(ticket, TicketActivityType.CHANGE_STATE, ticket.getState(), TicketState.CANCEL);
+
+            // チケットを削除
+            ticket.setState(TicketState.CANCEL);
+            ticket.setRemoved(Boolean.TRUE);
+            ticketRepository.save(ticket);
+        });
     }
 
     /**
@@ -175,14 +182,22 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional
     public Ticket signalTicketStatus(String ticketId) {
-        Ticket ticket = ticketRepository.findOne(ticketId);
-        if (ticket == null) {
-            throw new ApplicationException(ErrorCode.PTZ_100999);
-        }
+        return Optional.ofNullable(ticketRepository.findOne(ticketId))
+                .map(ticket -> {
+                    // アクティビティを記録
+                    TicketState next = ticket.getState().next();
+                    saveTicketActivity(ticket, TicketActivityType.CHANGE_STATE, ticket.getState(), next);
 
-        TicketStatus next = ticket.getStatus().next();
-        next.is(TicketStatus.RECEIPTED, s -> ticket.setReceiptDateTime(L10nDateTimeProvider.now().toLocalDateTime()));
-        ticket.setStatus(next);
-        return ticketRepository.save(ticket);
+                    // ステータスを変更
+                    ticket.setState(next);
+                    return ticketRepository.save(ticket);
+                }).orElseThrow(() -> new ApplicationException(ErrorCode.PTZ_100999));
+    }
+
+    protected void saveTicketActivity(Ticket ticket, TicketActivityType type, TicketState from, TicketState to) {
+        LocalDateTime date = L10nDateTimeProvider.now().toLocalDateTime();
+        TicketActivity activity = TicketActivity.builder()
+                .ticket(ticket).type(type).stateFrom(from).stateTo(to).changeDateTime(date).build();
+        ticketActivityRepository.save(activity);
     }
 }

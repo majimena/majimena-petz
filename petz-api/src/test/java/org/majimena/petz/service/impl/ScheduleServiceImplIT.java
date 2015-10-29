@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
-import org.majimena.petz.datatype.TicketStatus;
+import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.datatype.TimeZone;
 import org.majimena.petz.domain.Ticket;
 import org.majimena.petz.domain.examination.TicketCriteria;
@@ -57,7 +57,6 @@ public class ScheduleServiceImplIT {
             assertThat(result.get(0).getPet().getId(), is("1"));
             assertThat(result.get(0).getCustomer().getId(), is("customer1"));
             assertThat(result.get(0).getMemo(), is("とりあえず１"));
-            assertThat(result.get(0).getStatus(), is(TicketStatus.RESERVED));
             assertThat(result.get(0).getStartDateTime(), is(LocalDateTime.of(2015, 11, 1, 15, 0, 0)));
             assertThat(result.get(0).getEndDateTime(), is(LocalDateTime.of(2015, 11, 1, 15, 30, 0, 0)));
             assertThat(result.get(1).getId(), is("schedule4"));
@@ -65,7 +64,6 @@ public class ScheduleServiceImplIT {
             assertThat(result.get(1).getPet().getId(), is("1"));
             assertThat(result.get(1).getCustomer().getId(), is("customer1"));
             assertThat(result.get(1).getMemo(), is("重複"));
-            assertThat(result.get(1).getStatus(), is(TicketStatus.RESERVED));
             assertThat(result.get(1).getStartDateTime(), is(LocalDateTime.of(2015, 11, 30, 14, 59, 59)));
             assertThat(result.get(1).getEndDateTime(), is(LocalDateTime.of(2015, 12, 1, 15, 00, 00)));
         }
@@ -87,7 +85,6 @@ public class ScheduleServiceImplIT {
             assertThat(result.get(0).getPet().getId(), is("1"));
             assertThat(result.get(0).getCustomer().getId(), is("customer1"));
             assertThat(result.get(0).getMemo(), is("ぎりぎり２"));
-            assertThat(result.get(0).getStatus(), is(TicketStatus.RESERVED));
             assertThat(result.get(0).getStartDateTime(), is(LocalDateTime.of(2015, 10, 30, 14, 59, 59)));
             assertThat(result.get(0).getEndDateTime(), is(LocalDateTime.of(2015, 10, 31, 15, 0, 0, 0)));
         }

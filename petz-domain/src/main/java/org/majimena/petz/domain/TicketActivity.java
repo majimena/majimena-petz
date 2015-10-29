@@ -10,9 +10,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.majimena.petz.datatype.TicketActivityType;
 import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.datatype.converters.LocalDateTimePersistenceConverter;
 import org.majimena.petz.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
+import org.majimena.petz.datatype.deserializers.TicketActivityTypeDeserializer;
 import org.majimena.petz.datatype.deserializers.TicketStateDeserializer;
 import org.majimena.petz.datatype.serializers.EnumDataTypeSerializer;
 import org.majimena.petz.datatype.serializers.ISO8601LocalDateTimeSerializer;
@@ -29,12 +31,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * カルテドメイン.
+ * チケットのアクティビティ.
  */
 @Data
 @Builder
@@ -42,9 +43,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "ticket")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Ticket extends AbstractAuditingEntity implements Serializable {
+@Table(name = "ticket_activity")
+@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
+public class TicketActivity extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -52,47 +53,35 @@ public class Ticket extends AbstractAuditingEntity implements Serializable {
     private String id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "clinic_id", nullable = false)
-    private Clinic clinic;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "pet_id", nullable = false)
-    private Pet pet;
+    @JsonSerialize(using = EnumDataTypeSerializer.class)
+    @JsonDeserialize(using = TicketActivityTypeDeserializer.class)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private TicketActivityType type;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id", nullable = true)
-    private Customer customer;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "chart_id", nullable = true)
-    private Chart chart;
-
+    @NotNull
     @JsonSerialize(using = EnumDataTypeSerializer.class)
     @JsonDeserialize(using = TicketStateDeserializer.class)
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "state", nullable = false)
-    private TicketState state;
+    @Column(name = "state_from", nullable = false)
+    private TicketState stateFrom;
 
-    @Size(max = 2000)
-    @Column(name = "memo", length = 2000, nullable = true)
-    private String memo;
-
-    @Column(name = "removed", nullable = false)
-    private Boolean removed;
+    @NotNull
+    @JsonSerialize(using = EnumDataTypeSerializer.class)
+    @JsonDeserialize(using = TicketStateDeserializer.class)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "state_to", nullable = false)
+    private TicketState stateTo;
 
     @NotNull
     @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
     @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
     @Convert(converter = LocalDateTimePersistenceConverter.class)
-    @Column(name = "start_date_time", nullable = false)
-    private LocalDateTime startDateTime;
-
-    @NotNull
-    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
-    @Convert(converter = LocalDateTimePersistenceConverter.class)
-    @Column(name = "end_date_time", nullable = false)
-    private LocalDateTime endDateTime;
+    @Column(name = "change_date_time", nullable = false)
+    private LocalDateTime changeDateTime;
 }

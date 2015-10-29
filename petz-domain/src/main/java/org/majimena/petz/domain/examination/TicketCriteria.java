@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.majimena.petz.datatype.TicketStatus;
+import org.majimena.petz.datatype.TicketState;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -27,7 +27,7 @@ public class TicketCriteria implements Serializable {
 
     private String userId;
 
-    private TicketStatus status;
+    private TicketState status;
 
     @Min(2010)
     @Max(2999)

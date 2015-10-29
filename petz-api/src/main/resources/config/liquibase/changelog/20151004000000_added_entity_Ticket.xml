@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="now" value="now()" dbms="mysql,h2"/>
     <property name="now" value="current_timestamp" dbms="postgresql"/>
@@ -14,32 +14,31 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="clinic_id" type="varchar(50)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="pet_id" type="varchar(50)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="customer_id" type="varchar(50)"/>
             <column name="chart_id" type="varchar(50)"/>
-            <column name="memo" type="varchar(50)" />
-            <column name="status" type="varchar(20)">
-                <constraints nullable="false" />
+            <column name="state" type="varchar(20)">
+                <constraints nullable="false"/>
             </column>
+            <column name="memo" type="varchar(50)"/>
             <column name="removed" type="boolean">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="start_date_time" type="timestamp">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="end_date_time" type="timestamp">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
-            <column name="receipt_date_time" type="timestamp"/>
             <column name="created_by" type="varchar(50)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="created_date" type="timestamp">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="last_modified_by" type="varchar(50)"/>
             <column name="last_modified_date" type="timestamp"/>
@@ -64,6 +63,10 @@
         <createIndex indexName="idx5_ticket"
                      tableName="ticket">
             <column name="start_date_time" type="timestamp"/>
+        </createIndex>
+        <createIndex indexName="idx6_ticket"
+                     tableName="ticket">
+            <column name="end_date_time" type="timestamp"/>
         </createIndex>
 
     </changeSet>

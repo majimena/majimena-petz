@@ -1,7 +1,7 @@
 package org.majimena.petz.repository.spec;
 
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.petz.datatype.TicketStatus;
+import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.datetime.L10nDateTimeProvider;
 import org.majimena.petz.domain.Ticket;
 import org.majimena.petz.domain.examination.TicketCriteria;
@@ -42,7 +42,7 @@ public class ScheduleCriteriaSpec implements Specification<Ticket> {
         return (root, query, cb) -> cb.equal(root.get("pet").get("user").get("id"), userId);
     }
 
-    public static Specification equalStatus(TicketStatus status) {
+    public static Specification equalStatus(TicketState status) {
         return (root, query, cb) -> cb.equal(root.get("status"), status);
     }
 

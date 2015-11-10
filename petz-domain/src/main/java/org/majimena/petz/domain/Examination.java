@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.majimena.petz.datatype.TicketState;
+import org.majimena.petz.datatype.TaxType;
 import org.majimena.petz.datatype.converters.LocalDateTimePersistenceConverter;
+import org.majimena.petz.datatype.defs.Name;
 import org.majimena.petz.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
-import org.majimena.petz.datatype.deserializers.TicketStateDeserializer;
+import org.majimena.petz.datatype.deserializers.TaxTypeDeserializer;
 import org.majimena.petz.datatype.serializers.EnumDataTypeSerializer;
 import org.majimena.petz.datatype.serializers.ISO8601LocalDateTimeSerializer;
 
@@ -31,10 +32,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * カルテドメイン.
+ * 診察ドメイン.
  */
 @Data
 @Builder
@@ -42,9 +44,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "ticket")
+@Table(name = "examination")
 @Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
-public class Ticket extends AbstractAuditingEntity implements Serializable {
+public class Examination extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -52,47 +54,51 @@ public class Ticket extends AbstractAuditingEntity implements Serializable {
     private String id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "clinic_id", nullable = false)
-    private Clinic clinic;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "pet_id", nullable = false)
-    private Pet pet;
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "name", length = Name.MAX_LENGTH, nullable = false)
+    private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id", nullable = true)
-    private Customer customer;
+    @NotNull
+    @Column(name = "price", precision = 9, scale = 0, nullable = false)
+    private BigDecimal price;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "chart_id", nullable = true)
-    private Chart chart;
-
-    @JsonSerialize(using = EnumDataTypeSerializer.class)
-    @JsonDeserialize(using = TicketStateDeserializer.class)
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "state", nullable = false)
-    private TicketState state;
+    @JsonSerialize(using = EnumDataTypeSerializer.class)
+    @JsonDeserialize(using = TaxTypeDeserializer.class)
+    @Column(name = "tax_type", length = 20, nullable = false)
+    private TaxType taxType;
 
-    @Size(max = 2000)
-    @Column(name = "memo", length = 2000, nullable = true)
+    @NotNull
+    @Column(name = "tax_rate", precision = 3, scale = 2, nullable = false)
+    private BigDecimal taxRate;
+
+    @NotNull
+    @Column(name = "tax", precision = 9, scale = 0, nullable = false)
+    private BigDecimal tax;
+
+    @NotNull
+    @Column(name = "quantity", precision = 3, scale = 0, nullable = false)
+    private BigDecimal quantity;
+
+    @Column(name = "total", precision = 12, scale = 0, nullable = false)
+    private BigDecimal total;
+
+    @Size(max = 10000)
+    @Column(name = "memo", length = 10000, nullable = true)
     private String memo;
+
+    @NotNull
+    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
+    @Column(name = "examination_date_time", nullable = false)
+    private LocalDateTime examinationDateTime;
 
     @Column(name = "removed", nullable = false)
     private Boolean removed;
-
-    @NotNull
-    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
-    @Convert(converter = LocalDateTimePersistenceConverter.class)
-    @Column(name = "start_date_time", nullable = false)
-    private LocalDateTime startDateTime;
-
-    @NotNull
-    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
-    @Convert(converter = LocalDateTimePersistenceConverter.class)
-    @Column(name = "end_date_time", nullable = false)
-    private LocalDateTime endDateTime;
 }

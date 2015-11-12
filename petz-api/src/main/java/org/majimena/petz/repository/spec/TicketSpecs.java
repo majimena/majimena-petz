@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.datetime.L10nDateTimeProvider;
 import org.majimena.petz.domain.Ticket;
-import org.majimena.petz.domain.examination.TicketCriteria;
+import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * スケジュールを検索するスペック.
  */
-public class ScheduleCriteriaSpec implements Specification<Ticket> {
+public class TicketSpecs implements Specification<Ticket> {
 
     /**
      * スペック.
@@ -30,16 +30,21 @@ public class ScheduleCriteriaSpec implements Specification<Ticket> {
      *
      * @param criteria スケジュールクライテリア
      */
-    public ScheduleCriteriaSpec(TicketCriteria criteria) {
+    public TicketSpecs(TicketCriteria criteria) {
         this.specification = Specifications
                 .where(equalClinicId(criteria))
-                .and(Optional.ofNullable(criteria.getUserId()).map(ScheduleCriteriaSpec::equalUserId).orElse(null))
-                .and(Optional.ofNullable(criteria.getStatus()).map(ScheduleCriteriaSpec::equalStatus).orElse(null))
+                .and(Optional.ofNullable(criteria.getPetId()).map(TicketSpecs::equalPetId).orElse(null))
+                .and(Optional.ofNullable(criteria.getUserId()).map(TicketSpecs::equalUserId).orElse(null))
+                .and(Optional.ofNullable(criteria.getStatus()).map(TicketSpecs::equalStatus).orElse(null))
                 .and(betweenStartDateTimeAndEndDateTime(criteria));
     }
 
     public static Specification equalUserId(String userId) {
         return (root, query, cb) -> cb.equal(root.get("pet").get("user").get("id"), userId);
+    }
+
+    public static Specification equalPetId(String petId) {
+        return (root, query, cb) -> cb.equal(root.get("pet").get("id"), petId);
     }
 
     public static Specification equalStatus(TicketState status) {

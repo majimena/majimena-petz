@@ -23,4 +23,8 @@ public enum TaxType implements EnumDataType {
     public String getValue() {
         return name();
     }
+
+    public boolean is(TaxType type) {
+        return this == type;
+    }
 }

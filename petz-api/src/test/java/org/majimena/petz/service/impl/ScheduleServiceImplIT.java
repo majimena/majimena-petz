@@ -7,10 +7,9 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
-import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.datatype.TimeZone;
 import org.majimena.petz.domain.Ticket;
-import org.majimena.petz.domain.examination.TicketCriteria;
+import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.TicketService;
@@ -48,7 +47,7 @@ public class ScheduleServiceImplIT {
                 result = TimeZone.ASIA_TOKYO;
             }};
 
-            TicketCriteria criteria = new TicketCriteria("0", null, null, 2015, 11, null);
+            TicketCriteria criteria = new TicketCriteria("0", null, null, null, 2015, 11, null);
             List<Ticket> result = sut.getTicketsByTicketCriteria(criteria);
 
             assertThat(result.size(), is(2));
@@ -76,7 +75,7 @@ public class ScheduleServiceImplIT {
                 result = TimeZone.ASIA_TOKYO;
             }};
 
-            TicketCriteria criteria = new TicketCriteria("0", null, null, 2015, 10, 30);
+            TicketCriteria criteria = new TicketCriteria("0", null, null, null, 2015, 10, 30);
             List<Ticket> result = sut.getTicketsByTicketCriteria(criteria);
 
             assertThat(result.size(), is(1));

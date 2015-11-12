@@ -2,7 +2,7 @@ package org.majimena.petz.web.api.ticket;
 
 import com.codahale.metrics.annotation.Timed;
 import org.majimena.petz.domain.Ticket;
-import org.majimena.petz.domain.examination.TicketCriteria;
+import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.TicketService;
 import org.majimena.petz.web.utils.ErrorsUtils;

@@ -16,6 +16,9 @@
             <column name="ticket_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="product_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
             <column name="name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>

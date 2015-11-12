@@ -1,7 +1,6 @@
 package org.majimena.petz.service;
 
 import org.majimena.petz.domain.Product;
-import org.majimena.petz.domain.examination.TicketCriteria;
 import org.majimena.petz.domain.product.ProductCriteria;
 
 import java.util.List;

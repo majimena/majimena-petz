@@ -2,6 +2,7 @@ package org.majimena.petz.repository.spec;
 
 import org.majimena.petz.domain.Examination;
 import org.majimena.petz.domain.ticket.ExaminationCriteria;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -16,6 +17,10 @@ public class ExaminationSpecs {
         return Specifications
                 .where(Optional.ofNullable(criteria.getClinicId()).map(ExaminationSpecs::equalClinicId).orElse(null))
                 .and(Optional.ofNullable(criteria.getTicketId()).map(ExaminationSpecs::equalTicketId).orElse(null));
+    }
+
+    public static Sort asc() {
+        return new Sort(Sort.Direction.ASC, "examinationDateTime");
     }
 
     private static Specification equalClinicId(String clinicId) {

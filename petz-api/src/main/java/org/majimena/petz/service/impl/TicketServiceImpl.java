@@ -1,12 +1,14 @@
 package org.majimena.petz.service.impl;
 
 import org.majimena.petz.common.exceptions.ApplicationException;
+import org.majimena.petz.common.utils.ExceptionUtils;
 import org.majimena.petz.datatype.TicketActivityType;
 import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.datetime.L10nDateTimeProvider;
 import org.majimena.petz.domain.Chart;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
+import org.majimena.petz.domain.Examination;
 import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.Ticket;
 import org.majimena.petz.domain.TicketActivity;
@@ -16,6 +18,7 @@ import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.majimena.petz.repository.ChartRepository;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.CustomerRepository;
+import org.majimena.petz.repository.ExaminationRepository;
 import org.majimena.petz.repository.PetRepository;
 import org.majimena.petz.repository.TicketActivityRepository;
 import org.majimena.petz.repository.TicketRepository;
@@ -71,6 +74,12 @@ public class TicketServiceImpl implements TicketService {
      */
     @Inject
     private ChartRepository chartRepository;
+
+    /**
+     * 診察リポジトリ.
+     */
+    @Inject
+    private ExaminationRepository examinationRepository;
 
     /**
      * {@inheritDoc}
@@ -165,15 +174,24 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional
     public void deleteTicketByTicketId(String ticketId) {
-        Optional.ofNullable(ticketRepository.findOne(ticketId)).ifPresent(ticket -> {
-            // アクティビティを記録
-            saveTicketActivity(ticket, TicketActivityType.CHANGE_STATE, ticket.getState(), TicketState.CANCEL);
+        // 削除対象のチケットがあるかチェック
+        Ticket one = ticketRepository.findOne(ticketId);
+        ExceptionUtils.throwIfNull(one);
 
-            // チケットを削除
-            ticket.setState(TicketState.CANCEL);
-            ticket.setRemoved(Boolean.TRUE);
-            ticketRepository.save(ticket);
+        // 先に関連する診察情報を全て論理削除する
+        List<Examination> examinations = examinationRepository.findByTicketId(ticketId);
+        examinations.stream().forEach(examination -> {
+            examination.setRemoved(Boolean.TRUE);
+            examinationRepository.save(examination);
         });
+
+        // アクティビティを記録
+        saveTicketActivity(one, TicketActivityType.CHANGE_STATE, one.getState(), TicketState.CANCEL);
+
+        // チケットを論理削除する
+        one.setState(TicketState.CANCEL);
+        one.setRemoved(Boolean.TRUE);
+        ticketRepository.save(one);
     }
 
     /**

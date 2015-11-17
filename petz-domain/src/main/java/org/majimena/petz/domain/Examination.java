@@ -59,6 +59,11 @@ public class Examination extends AbstractAuditingEntity implements Serializable 
     private Ticket ticket;
 
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @NotNull
     @Size(max = Name.MAX_LENGTH)
     @Column(name = "name", length = Name.MAX_LENGTH, nullable = false)
     private String name;
@@ -92,7 +97,6 @@ public class Examination extends AbstractAuditingEntity implements Serializable 
     @Column(name = "memo", length = 10000, nullable = true)
     private String memo;
 
-    @NotNull
     @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
     @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
     @Convert(converter = LocalDateTimePersistenceConverter.class)

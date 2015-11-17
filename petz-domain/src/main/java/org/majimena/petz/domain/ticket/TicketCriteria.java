@@ -1,4 +1,4 @@
-package org.majimena.petz.domain.examination;
+package org.majimena.petz.domain.ticket;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +26,8 @@ public class TicketCriteria implements Serializable {
     private String clinicId;
 
     private String userId;
+
+    private String petId;
 
     private TicketState status;
 

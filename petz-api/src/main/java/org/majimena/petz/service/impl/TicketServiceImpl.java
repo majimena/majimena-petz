@@ -12,14 +12,14 @@ import org.majimena.petz.domain.Ticket;
 import org.majimena.petz.domain.TicketActivity;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.errors.ErrorCode;
-import org.majimena.petz.domain.examination.TicketCriteria;
+import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.majimena.petz.repository.ChartRepository;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.CustomerRepository;
 import org.majimena.petz.repository.PetRepository;
 import org.majimena.petz.repository.TicketActivityRepository;
 import org.majimena.petz.repository.TicketRepository;
-import org.majimena.petz.repository.spec.ScheduleCriteriaSpec;
+import org.majimena.petz.repository.spec.TicketSpecs;
 import org.majimena.petz.service.TicketService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -78,7 +78,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional(readOnly = true)
     public List<Ticket> getTicketsByTicketCriteria(TicketCriteria criteria) {
-        return ticketRepository.findAll(new ScheduleCriteriaSpec(criteria));
+        return ticketRepository.findAll(new TicketSpecs(criteria));
     }
 
     /**

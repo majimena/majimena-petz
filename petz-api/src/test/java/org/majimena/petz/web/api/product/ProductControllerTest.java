@@ -6,8 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.petz.Application;
 import org.majimena.petz.TestUtils;
+import org.majimena.petz.WebAppTestConfiguration;
 import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.datatype.TaxType;
 import org.majimena.petz.datatype.TimeZone;
@@ -24,9 +24,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Errors;
-import org.springframework.web.context.WebApplicationContext;
 
-import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,17 +58,11 @@ public class ProductControllerTest {
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
     @WebAppConfiguration
     public static class GetAllTest {
 
         private MockMvc mockMvc;
-
-        @Inject
-        private ProductController sut;
-
-        @Inject
-        private WebApplicationContext webApplicationContext;
 
         @Mocked
         private ProductService productService;
@@ -80,8 +72,9 @@ public class ProductControllerTest {
 
         @Before
         public void setup() {
-            mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+            ProductController sut = new ProductController();
             sut.setProductService(productService);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
         }
 
         @Test
@@ -110,17 +103,11 @@ public class ProductControllerTest {
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
     @WebAppConfiguration
     public static class PostTest {
 
         private MockMvc mockMvc;
-
-        @Inject
-        private ProductController sut;
-
-        @Inject
-        private WebApplicationContext webApplicationContext;
 
         @Mocked
         private ProductService productService;
@@ -133,9 +120,10 @@ public class ProductControllerTest {
 
         @Before
         public void setup() {
-            mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+            ProductController sut = new ProductController();
             sut.setProductService(productService);
             sut.setProductValidator(productValidator);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
         }
 
         @Test

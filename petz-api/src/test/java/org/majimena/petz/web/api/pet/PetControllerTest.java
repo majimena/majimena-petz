@@ -3,13 +3,12 @@ package org.majimena.petz.web.api.pet;
 import com.google.common.collect.Sets;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
-import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.petz.Application;
 import org.majimena.petz.TestUtils;
+import org.majimena.petz.WebAppTestConfiguration;
 import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.datatype.SexType;
 import org.majimena.petz.datatype.TimeZone;
@@ -32,17 +31,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -51,6 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
+ * @see PetController
  */
 @RunWith(Enclosed.class)
 public class PetControllerTest {
@@ -76,17 +72,11 @@ public class PetControllerTest {
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
     @WebAppConfiguration
     public static class GetAllTest {
 
         private MockMvc mockMvc;
-
-        @Inject
-        private PetController sut;
-
-        @Inject
-        private WebApplicationContext webApplicationContext;
 
         @Mocked
         private PetService petService;
@@ -96,8 +86,9 @@ public class PetControllerTest {
 
         @Before
         public void setup() {
-            mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+            PetController sut = new PetController();
             sut.setPetService(petService);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
         }
 
         @Test
@@ -132,17 +123,11 @@ public class PetControllerTest {
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
     @WebAppConfiguration
     public static class ShowTest {
 
         private MockMvc mockMvc;
-
-        @Inject
-        private PetController sut;
-
-        @Inject
-        private WebApplicationContext webApplicationContext;
 
         @Mocked
         private PetService petService;
@@ -152,8 +137,9 @@ public class PetControllerTest {
 
         @Before
         public void setup() {
-            mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+            PetController sut = new PetController();
             sut.setPetService(petService);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
         }
 
         @Test
@@ -185,17 +171,11 @@ public class PetControllerTest {
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
     @WebAppConfiguration
     public static class PostTest {
 
         private MockMvc mockMvc;
-
-        @Inject
-        private PetController sut;
-
-        @Inject
-        private WebApplicationContext webApplicationContext;
 
         @Mocked
         private PetService petService;
@@ -205,8 +185,9 @@ public class PetControllerTest {
 
         @Before
         public void setup() {
-            mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+            PetController sut = new PetController();
             sut.setPetService(petService);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
         }
 
         @Test
@@ -248,17 +229,11 @@ public class PetControllerTest {
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
     @WebAppConfiguration
     public static class PutTest {
 
         private MockMvc mockMvc;
-
-        @Inject
-        private PetController sut;
-
-        @Inject
-        private WebApplicationContext webApplicationContext;
 
         @Mocked
         private PetService petService;
@@ -268,8 +243,9 @@ public class PetControllerTest {
 
         @Before
         public void setup() {
-            mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+            PetController sut = new PetController();
             sut.setPetService(petService);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
         }
 
         @Test

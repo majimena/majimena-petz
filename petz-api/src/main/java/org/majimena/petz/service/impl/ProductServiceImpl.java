@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * プロダクトサービスの実装.
@@ -31,6 +32,19 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public List<Product> getProductsByProductCriteria(ProductCriteria criteria) {
         return productRepository.findAll(ProductSpecs.of(criteria));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Product> getProductByProductId(String clinicId, String productId) {
+        Product product = productRepository.findOne(productId);
+        if (product != null) {
+            // TODO クリニックの権限チェック
+        }
+        return Optional.ofNullable(product);
     }
 
     /**

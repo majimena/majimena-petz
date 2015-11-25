@@ -1,11 +1,13 @@
 package org.majimena.petz.web.api.product;
 
+import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+import org.majimena.petz.Application;
 import org.majimena.petz.TestUtils;
 import org.majimena.petz.WebAppTestConfiguration;
 import org.majimena.petz.datatype.LangKey;
@@ -25,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Errors;
 
+import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,8 +35,11 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,7 +56,7 @@ public class ProductControllerTest {
         product1.setName("Product Item 1");
         product1.setDescription("Product Item 1 Description");
         product1.setPrice(BigDecimal.valueOf(1000));
-        product1.setTaxRate(BigDecimal.ONE.valueOf(0.08));
+        product1.setTaxRate(BigDecimal.valueOf(0.08));
         product1.setTaxType(TaxType.EXCLUSIVE);
         product1.setTax(BigDecimal.valueOf(80));
         product1.setRemoved(Boolean.FALSE);
@@ -103,7 +109,7 @@ public class ProductControllerTest {
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)
-    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
+    @SpringApplicationConfiguration(classes = Application.class)
     @WebAppConfiguration
     public static class PostTest {
 
@@ -118,12 +124,17 @@ public class ProductControllerTest {
         @Mocked
         private SecurityUtils securityUtils;
 
+        @Inject
+        private RestHandlerExceptionResolver restHandlerExceptionResolver;
+
         @Before
         public void setup() {
             ProductController sut = new ProductController();
             sut.setProductService(productService);
             sut.setProductValidator(productValidator);
-            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
+            mockMvc = MockMvcBuilders.standaloneSetup(sut)
+                    .setHandlerExceptionResolvers(restHandlerExceptionResolver)
+                    .build();
         }
 
         @Test
@@ -154,6 +165,150 @@ public class ProductControllerTest {
                     .andExpect(jsonPath("$.clinic", is(notNullValue())))
                     .andExpect(jsonPath("$.clinic.id", is("1")))
                     .andExpect(jsonPath("$.removed", is(false)));
+        }
+
+        @Test
+        public void 必須項目が入力されていない場合にプロダクトが登録されないこと() throws Exception {
+            final Product data = new Product();
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        public void プライスが桁数オーバーの場合にプロダクトが登録されないこと() throws Exception {
+            final Product data = Product.builder().clinic(new Clinic()).name("")
+                    .price(new BigDecimal(1234567890)).taxType(TaxType.INCLUSIVE).tax(new BigDecimal(123456789))
+                    .taxRate(BigDecimal.valueOf(0.08)).build();
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("http://httpstatus.es/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("price")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(1234567890)))
+                    .andExpect(jsonPath("$.errors[0].message", is("numeric value out of bounds (<9 digits>.<0 digits> expected)")));
+        }
+
+        @Test
+        public void 税額が桁数オーバーの場合にプロダクトが登録されないこと() throws Exception {
+            final Product data = Product.builder().clinic(new Clinic()).name("")
+                    .price(new BigDecimal(123456789)).taxType(TaxType.INCLUSIVE).tax(new BigDecimal(1234567890))
+                    .taxRate(new BigDecimal(0.08)).build();
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        public void 税率が桁数オーバーの場合にプロダクトが登録されないこと() throws Exception {
+            final Product data = Product.builder().clinic(new Clinic()).name("")
+                    .price(new BigDecimal(123456789)).taxType(TaxType.INCLUSIVE).tax(new BigDecimal(123456789))
+                    .taxRate(new BigDecimal(0.008)).build();
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+        }
+    }
+
+    @RunWith(SpringJUnit4ClassRunner.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
+    @WebAppConfiguration
+    public static class PutTest {
+
+        private MockMvc mockMvc;
+
+        @Mocked
+        private ProductService productService;
+
+        @Mocked
+        private ProductValidator productValidator;
+
+        @Mocked
+        private SecurityUtils securityUtils;
+
+        @Before
+        public void setup() {
+            ProductController sut = new ProductController();
+            sut.setProductService(productService);
+            sut.setProductValidator(productValidator);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
+        }
+
+        @Test
+        public void プロダクトが更新されること() throws Exception {
+            final Product data = createProduct1();
+
+            new NonStrictExpectations() {{
+                SecurityUtils.getPrincipal();
+                result = Optional.of(new PetzUser("1", "username", "password", LangKey.JAPANESE, TimeZone.ASIA_TOKYO, Collections.<GrantedAuthority>emptyList()));
+                productValidator.validate(data, (Errors) any);
+                result = null;
+                productService.updateProduct(data);
+                result = data;
+            }};
+
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id", is("product1")))
+                    .andExpect(jsonPath("$.name", is("Product Item 1")))
+                    .andExpect(jsonPath("$.description", is("Product Item 1 Description")))
+                    .andExpect(jsonPath("$.price", is(1000)))
+                    .andExpect(jsonPath("$.taxRate", is(0.08)))
+                    .andExpect(jsonPath("$.taxType", is(TaxType.EXCLUSIVE.name())))
+                    .andExpect(jsonPath("$.tax", is(80)))
+                    .andExpect(jsonPath("$.clinic", is(notNullValue())))
+                    .andExpect(jsonPath("$.clinic.id", is("1")))
+                    .andExpect(jsonPath("$.removed", is(false)));
+        }
+    }
+
+    @RunWith(SpringJUnit4ClassRunner.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
+    @WebAppConfiguration
+    public static class DeleteTest {
+
+        private MockMvc mockMvc;
+
+        @Mocked
+        private ProductService productService;
+
+        @Mocked
+        private SecurityUtils securityUtils;
+
+        @Before
+        public void setup() {
+            ProductController sut = new ProductController();
+            sut.setProductService(productService);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
+        }
+
+        @Test
+        public void プロダクトが削除されること() throws Exception {
+            new NonStrictExpectations() {{
+                SecurityUtils.getPrincipal();
+                result = Optional.of(new PetzUser("1", "username", "password", LangKey.JAPANESE, TimeZone.ASIA_TOKYO, Collections.<GrantedAuthority>emptyList()));
+                productService.deleteProductByProductId("1", "product1");
+                result = null;
+            }};
+
+            mockMvc.perform(delete("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8))
+                    .andDo(print())
+                    .andExpect(status().isOk());
         }
     }
 }

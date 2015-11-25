@@ -26,6 +26,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -60,6 +61,7 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     private String name;
 
     @NotNull
+    @Digits(integer = 9, fraction = 0)
     @Column(name = "price", precision = 9, scale = 0, nullable = false)
     private BigDecimal price;
 
@@ -71,10 +73,12 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     private TaxType taxType;
 
     @NotNull
+    @Digits(integer = 1, fraction = 2)
     @Column(name = "tax_rate", precision = 1, scale = 2, nullable = false)
     private BigDecimal taxRate;
 
     @NotNull
+    @Digits(integer = 9, fraction = 0)
     @Column(name = "tax", precision = 9, scale = 0, nullable = false)
     private BigDecimal tax;
 
@@ -82,7 +86,6 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     @Column(name = "description", length = Description.MAX_LENGTH, nullable = true)
     private String description;
 
-    @NotNull
     @Column(name = "removed", nullable = false)
     private Boolean removed;
 }

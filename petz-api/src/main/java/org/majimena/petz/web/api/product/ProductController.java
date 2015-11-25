@@ -6,6 +6,7 @@ import org.majimena.petz.domain.product.ProductCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ProductService;
 import org.majimena.petz.web.utils.ErrorsUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * プロダクトコントローラ.
@@ -61,7 +63,7 @@ public class ProductController {
      * プロダクトを取得する.
      *
      * @param clinicId クリニックID
-     * @return 該当するプロダクトの一覧
+     * @return レスポンスエンティティ（通常時は200）
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/products", method = RequestMethod.GET)
@@ -77,13 +79,34 @@ public class ProductController {
     }
 
     /**
+     * プロダクトを取得する.
+     *
+     * @param clinicId  クリニックID
+     * @param productId プロダクトID
+     * @return レスポンスエンティティ（通常時は200だが、結果がない場合は404）
+     */
+    @Timed
+    @RequestMapping(value = "/clinics/{clinicId}/products/{productId}", method = RequestMethod.GET)
+    public ResponseEntity<Product> get(@PathVariable String clinicId, @PathVariable String productId) {
+        // クリニックの権限チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(productId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+
+        // プロダクトを検索する
+        Optional<Product> result = productService.getProductByProductId(clinicId, productId);
+        return result.map(product -> ResponseEntity.ok().body(product))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * プロダクトを登録する.
      *
      * @param clinicId クリニックID
      * @param product  プロダクト
      * @param errors   エラー
      * @return レスポンスエンティティ（通常時は201）
-     * @throws BindException バリデーションエラーがあった場合に発生する例外
+     * @throws BindException バリデーションエラーがあった場合に発生する例外（レスポンスコードは401）
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/products", method = RequestMethod.POST)
@@ -96,9 +119,59 @@ public class ProductController {
         productValidator.validate(product, errors);
         ErrorsUtils.throwIfHaveErrors(errors);
 
-        // チケットを保存する
+        // プロダクトを保存する
         Product saved = productService.saveProduct(product);
         return ResponseEntity.created(
                 URI.create("/api/v1/clinics/" + clinicId + "/products/" + saved.getId())).body(saved);
+    }
+
+    /**
+     * プロダクトを更新する.
+     *
+     * @param clinicId  クリニックID
+     * @param productId プロダクトID
+     * @param product   プロダクト
+     * @param errors    エラー
+     * @return レスポンスエンティティ（通常時は200）
+     * @throws BindException バリデーションエラーがあった場合に発生する例外（レスポンスコードは401）
+     */
+    @Timed
+    @RequestMapping(value = "/clinics/{clinicId}/products/{productId}", method = RequestMethod.PUT)
+    public ResponseEntity<Product> put(@PathVariable String clinicId, @PathVariable String productId,
+                                       @Valid @RequestBody Product product, BindingResult errors) throws BindException {
+        // クリニックの権限チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(productId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+
+        // カスタムバリデーションを行う
+        product.setId(productId);
+        productValidator.validate(product, errors);
+        ErrorsUtils.throwIfHaveErrors(errors);
+
+        // プロダクトを保存する
+        Product saved = productService.updateProduct(product);
+        return ResponseEntity.ok().body(saved);
+    }
+
+    /**
+     * プロダクトを削除する.
+     *
+     * @param clinicId  クリニックID
+     * @param productId プロダクトID
+     * @return レスポンスエンティティ（通常時は200）
+     * @throws BindException バリデーションエラーがあった場合に発生する例外（レスポンスコードは401）
+     */
+    @Timed
+    @RequestMapping(value = "/clinics/{clinicId}/products/{productId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> delete(@PathVariable String clinicId, @PathVariable String productId) throws BindException {
+        // クリニックの権限チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(productId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+
+        // プロダクトを削除する
+        productService.deleteProductByProductId(clinicId, productId);
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,36 +1,30 @@
 package org.majimena.petz.web.api.product;
 
-import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.petz.Application;
 import org.majimena.petz.TestUtils;
 import org.majimena.petz.WebAppTestConfiguration;
-import org.majimena.petz.datatype.LangKey;
+import org.majimena.petz.config.SpringMvcConfiguration;
 import org.majimena.petz.datatype.TaxType;
-import org.majimena.petz.datatype.TimeZone;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Product;
 import org.majimena.petz.domain.product.ProductCriteria;
-import org.majimena.petz.security.PetzUser;
+import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ProductService;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Errors;
 
-import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
@@ -45,22 +39,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
+ * @see ProductController
  */
 @RunWith(Enclosed.class)
 public class ProductControllerTest {
 
-    protected static Product createProduct1() {
-        Product product1 = new Product();
-        product1.setClinic(Clinic.builder().id("1").build());
-        product1.setId("product1");
-        product1.setName("Product Item 1");
-        product1.setDescription("Product Item 1 Description");
-        product1.setPrice(BigDecimal.valueOf(1000));
-        product1.setTaxRate(BigDecimal.valueOf(0.08));
-        product1.setTaxType(TaxType.EXCLUSIVE);
-        product1.setTax(BigDecimal.valueOf(80));
-        product1.setRemoved(Boolean.FALSE);
-        return product1;
+    // POST用テストデータ
+    protected static Product newPostProduct() {
+        return Product.builder()
+                .name("12345678901234567890123456789012345678901234567890")
+                .price(new BigDecimal(123456789))
+                .taxType(TaxType.EXCLUSIVE)
+                .tax(new BigDecimal(123456789))
+                .taxRate(BigDecimal.valueOf(0.08))
+                .description("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890").build();
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)
@@ -80,36 +72,144 @@ public class ProductControllerTest {
         public void setup() {
             ProductController sut = new ProductController();
             sut.setProductService(productService);
-            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
+            mockMvc = MockMvcBuilders.standaloneSetup(sut)
+                    .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
+                    .build();
+        }
+
+        @Test
+        public void 権限がない場合はアクセスできないこと() throws Exception {
+            new NonStrictExpectations() {{
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = new ResourceCannotAccessException("");
+            }};
+
+            mockMvc.perform(get("/api/v1/clinics/1/products"))
+                    .andDo(print())
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/401")))
+                    .andExpect(jsonPath("$.title", is("Unauthorized")))
+                    .andExpect(jsonPath("$.status", is(401)))
+                    .andExpect(jsonPath("$.detail", is("You cannot access resource.")));
         }
 
         @Test
         public void プロダクトが検索できること() throws Exception {
+            Product data = newPostProduct();
+
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
                 result = null;
+
                 productService.getProductsByProductCriteria(ProductCriteria.builder().clinicId("1").build());
-                result = Arrays.asList(createProduct1());
+                data.setId("product1");
+                data.setRemoved(Boolean.FALSE);
+                data.setClinic(Clinic.builder().id("1").build());
+                result = Arrays.asList(data);
             }};
 
             mockMvc.perform(get("/api/v1/clinics/1/products"))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.[0].id", is("product1")))
-                    .andExpect(jsonPath("$.[0].name", is("Product Item 1")))
-                    .andExpect(jsonPath("$.[0].description", is("Product Item 1 Description")))
-                    .andExpect(jsonPath("$.[0].price", is(1000)))
+                    .andExpect(jsonPath("$.[0].name", is("12345678901234567890123456789012345678901234567890")))
+                    .andExpect(jsonPath("$.[0].description", is("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")))
+                    .andExpect(jsonPath("$.[0].price", is(123456789)))
                     .andExpect(jsonPath("$.[0].taxRate", is(0.08)))
                     .andExpect(jsonPath("$.[0].taxType", is(TaxType.EXCLUSIVE.name())))
-                    .andExpect(jsonPath("$.[0].tax", is(80)))
+                    .andExpect(jsonPath("$.[0].tax", is(123456789)))
                     .andExpect(jsonPath("$.[0].clinic", is(notNullValue())))
                     .andExpect(jsonPath("$.[0].clinic.id", is("1")))
-                    .andExpect(jsonPath("$.[0].removed", is(false)));
+                    .andExpect(jsonPath("$.[0].removed", is(Boolean.FALSE)));
         }
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
+    @WebAppConfiguration
+    public static class GetTest {
+
+        private MockMvc mockMvc;
+
+        @Mocked
+        private ProductService productService;
+
+        @Mocked
+        private SecurityUtils securityUtils;
+
+        @Before
+        public void setup() {
+            ProductController sut = new ProductController();
+            sut.setProductService(productService);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut)
+                    .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
+                    .build();
+        }
+
+        @Test
+        public void 権限がない場合はアクセスできないこと() throws Exception {
+            new NonStrictExpectations() {{
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = new ResourceCannotAccessException("");
+            }};
+
+            mockMvc.perform(get("/api/v1/clinics/1/products/product1"))
+                    .andDo(print())
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/401")))
+                    .andExpect(jsonPath("$.title", is("Unauthorized")))
+                    .andExpect(jsonPath("$.status", is(401)))
+                    .andExpect(jsonPath("$.detail", is("You cannot access resource.")));
+        }
+
+        @Test
+        public void プロダクトが検索できること() throws Exception {
+            Product data = newPostProduct();
+
+            new NonStrictExpectations() {{
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = null;
+
+                productService.getProductByProductId("1", "product1");
+                data.setId("product1");
+                data.setRemoved(Boolean.FALSE);
+                data.setClinic(Clinic.builder().id("1").build());
+                result = Optional.of(data);
+            }};
+
+            mockMvc.perform(get("/api/v1/clinics/1/products/product1"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id", is("product1")))
+                    .andExpect(jsonPath("$.name", is("12345678901234567890123456789012345678901234567890")))
+                    .andExpect(jsonPath("$.description", is("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")))
+                    .andExpect(jsonPath("$.price", is(123456789)))
+                    .andExpect(jsonPath("$.taxRate", is(0.08)))
+                    .andExpect(jsonPath("$.taxType", is(TaxType.EXCLUSIVE.name())))
+                    .andExpect(jsonPath("$.tax", is(123456789)))
+                    .andExpect(jsonPath("$.clinic", is(notNullValue())))
+                    .andExpect(jsonPath("$.clinic.id", is("1")))
+                    .andExpect(jsonPath("$.removed", is(Boolean.FALSE)));
+        }
+
+        @Test
+        public void 検索結果がない場合は404になること() throws Exception {
+            new NonStrictExpectations() {{
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = null;
+
+                productService.getProductByProductId("1", "product1");
+                result = Optional.ofNullable(null);
+            }};
+
+            mockMvc.perform(get("/api/v1/clinics/1/products/product1"))
+                    .andDo(print())
+                    .andExpect(status().isNotFound());
+        }
+    }
+
+    @RunWith(SpringJUnit4ClassRunner.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
     @WebAppConfiguration
     public static class PostTest {
 
@@ -124,29 +224,50 @@ public class ProductControllerTest {
         @Mocked
         private SecurityUtils securityUtils;
 
-        @Inject
-        private RestHandlerExceptionResolver restHandlerExceptionResolver;
-
         @Before
         public void setup() {
             ProductController sut = new ProductController();
             sut.setProductService(productService);
             sut.setProductValidator(productValidator);
             mockMvc = MockMvcBuilders.standaloneSetup(sut)
-                    .setHandlerExceptionResolvers(restHandlerExceptionResolver)
+                    .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
                     .build();
         }
 
         @Test
-        public void プロダクトが登録されること() throws Exception {
-            final Product data = createProduct1();
+        public void 権限がない場合はアクセスできないこと() throws Exception {
+            Product data = newPostProduct();
 
             new NonStrictExpectations() {{
-                SecurityUtils.getPrincipal();
-                result = Optional.of(new PetzUser("1", "username", "password", LangKey.JAPANESE, TimeZone.ASIA_TOKYO, Collections.<GrantedAuthority>emptyList()));
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = new ResourceCannotAccessException("");
+            }};
+
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/401")))
+                    .andExpect(jsonPath("$.title", is("Unauthorized")))
+                    .andExpect(jsonPath("$.status", is(401)))
+                    .andExpect(jsonPath("$.detail", is("You cannot access resource.")));
+        }
+
+        @Test
+        public void プロダクトが登録されること() throws Exception {
+            Product data = newPostProduct();
+
+            new NonStrictExpectations() {{
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = null;
                 productValidator.validate(data, (Errors) any);
                 result = null;
+
                 productService.saveProduct(data);
+                data.setId("product1");
+                data.setRemoved(Boolean.FALSE);
+                data.setClinic(Clinic.builder().id("1").build());
                 result = data;
             }};
 
@@ -156,38 +277,99 @@ public class ProductControllerTest {
                     .andDo(print())
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id", is("product1")))
-                    .andExpect(jsonPath("$.name", is("Product Item 1")))
-                    .andExpect(jsonPath("$.description", is("Product Item 1 Description")))
-                    .andExpect(jsonPath("$.price", is(1000)))
+                    .andExpect(jsonPath("$.name", is("12345678901234567890123456789012345678901234567890")))
+                    .andExpect(jsonPath("$.description", is("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")))
+                    .andExpect(jsonPath("$.price", is(123456789)))
                     .andExpect(jsonPath("$.taxRate", is(0.08)))
                     .andExpect(jsonPath("$.taxType", is(TaxType.EXCLUSIVE.name())))
-                    .andExpect(jsonPath("$.tax", is(80)))
+                    .andExpect(jsonPath("$.tax", is(123456789)))
                     .andExpect(jsonPath("$.clinic", is(notNullValue())))
                     .andExpect(jsonPath("$.clinic.id", is("1")))
-                    .andExpect(jsonPath("$.removed", is(false)));
+                    .andExpect(jsonPath("$.removed", is(Boolean.FALSE)));
         }
 
         @Test
-        public void 必須項目が入力されていない場合にプロダクトが登録されないこと() throws Exception {
-            final Product data = new Product();
-            mockMvc.perform(post("/api/v1/clinics/1/products")
-                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
-                    .content(TestUtils.convertObjectToJsonBytes(data)))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest());
-        }
+        public void 名称にエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
 
-        @Test
-        public void プライスが桁数オーバーの場合にプロダクトが登録されないこと() throws Exception {
-            final Product data = Product.builder().clinic(new Clinic()).name("")
-                    .price(new BigDecimal(1234567890)).taxType(TaxType.INCLUSIVE).tax(new BigDecimal(123456789))
-                    .taxRate(BigDecimal.valueOf(0.08)).build();
+            // 未入力
+            data.setName("");
             mockMvc.perform(post("/api/v1/clinics/1/products")
                     .contentType(TestUtils.APPLICATION_JSON_UTF8)
                     .content(TestUtils.convertObjectToJsonBytes(data)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.type", is("http://httpstatus.es/400")))
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("name")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    .andExpect(jsonPath("$.errors[0].message", is("may not be empty")));
+
+            // 桁数オーバー
+            data.setName("123456789012345678901234567890123456789012345678901");
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("name")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is("123456789012345678901234567890123456789012345678901")))
+                    .andExpect(jsonPath("$.errors[0].message", is("size must be between 0 and 50")));
+        }
+
+        @Test
+        public void 説明にエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
+
+            // 桁数オーバー
+            data.setDescription("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901");
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("description")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901")))
+                    .andExpect(jsonPath("$.errors[0].message", is("size must be between 0 and 2000")));
+        }
+
+        @Test
+        public void プライスにエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
+
+            // 未入力
+            data.setPrice(null);
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("price")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    .andExpect(jsonPath("$.errors[0].message", is("may not be null")));
+
+            // 桁数オーバー
+            data.setPrice(BigDecimal.valueOf(1234567890));
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
                     .andExpect(jsonPath("$.title", is("Validation Failed")))
                     .andExpect(jsonPath("$.status", is(400)))
                     .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
@@ -197,27 +379,120 @@ public class ProductControllerTest {
         }
 
         @Test
-        public void 税額が桁数オーバーの場合にプロダクトが登録されないこと() throws Exception {
-            final Product data = Product.builder().clinic(new Clinic()).name("")
-                    .price(new BigDecimal(123456789)).taxType(TaxType.INCLUSIVE).tax(new BigDecimal(1234567890))
-                    .taxRate(new BigDecimal(0.08)).build();
+        public void 税額にエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
+
+            // 未入力
+            data.setTax(null);
             mockMvc.perform(post("/api/v1/clinics/1/products")
                     .contentType(TestUtils.APPLICATION_JSON_UTF8)
                     .content(TestUtils.convertObjectToJsonBytes(data)))
                     .andDo(print())
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("tax")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    .andExpect(jsonPath("$.errors[0].message", is("may not be null")));
+
+            // 桁数オーバー
+            data.setTax(BigDecimal.valueOf(1234567890));
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("tax")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(1234567890)))
+                    .andExpect(jsonPath("$.errors[0].message", is("numeric value out of bounds (<9 digits>.<0 digits> expected)")));
         }
 
         @Test
-        public void 税率が桁数オーバーの場合にプロダクトが登録されないこと() throws Exception {
-            final Product data = Product.builder().clinic(new Clinic()).name("")
-                    .price(new BigDecimal(123456789)).taxType(TaxType.INCLUSIVE).tax(new BigDecimal(123456789))
-                    .taxRate(new BigDecimal(0.008)).build();
+        public void 税区分にエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
+
+            // 未入力
+            data.setTaxType(null);
             mockMvc.perform(post("/api/v1/clinics/1/products")
                     .contentType(TestUtils.APPLICATION_JSON_UTF8)
                     .content(TestUtils.convertObjectToJsonBytes(data)))
                     .andDo(print())
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("taxType")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    .andExpect(jsonPath("$.errors[0].message", is("may not be null")));
+
+            // 型不正
+            data.setTaxType(TaxType.EXCLUSIVE);
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(new String(TestUtils.convertObjectToJsonBytes(data)).replace("EXCLUSIVE", "HOGE")))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Conversion Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send is probably malformed.")));
+        }
+
+        @Test
+        public void 税率にエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
+
+            // 未入力
+            data.setTaxRate(null);
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("taxRate")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    .andExpect(jsonPath("$.errors[0].message", is("may not be null")));
+
+            // 桁数オーバー１
+            data.setTaxRate(BigDecimal.valueOf(1.123));
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("taxRate")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(1.123)))
+                    .andExpect(jsonPath("$.errors[0].message", is("numeric value out of bounds (<1 digits>.<2 digits> expected)")));
+
+            // 桁数オーバー２
+            data.setTaxRate(BigDecimal.valueOf(12.12));
+            mockMvc.perform(post("/api/v1/clinics/1/products")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("taxRate")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(12.12)))
+                    .andExpect(jsonPath("$.errors[0].message", is("numeric value out of bounds (<1 digits>.<2 digits> expected)")));
         }
     }
 
@@ -242,19 +517,45 @@ public class ProductControllerTest {
             ProductController sut = new ProductController();
             sut.setProductService(productService);
             sut.setProductValidator(productValidator);
-            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
+            mockMvc = MockMvcBuilders.standaloneSetup(sut)
+                    .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
+                    .build();
+        }
+
+        @Test
+        public void 権限がない場合はアクセスできないこと() throws Exception {
+            Product data = newPostProduct();
+
+            new NonStrictExpectations() {{
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = new ResourceCannotAccessException("");
+            }};
+
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/401")))
+                    .andExpect(jsonPath("$.title", is("Unauthorized")))
+                    .andExpect(jsonPath("$.status", is(401)))
+                    .andExpect(jsonPath("$.detail", is("You cannot access resource.")));
         }
 
         @Test
         public void プロダクトが更新されること() throws Exception {
-            final Product data = createProduct1();
+            final Product data = newPostProduct();
 
             new NonStrictExpectations() {{
-                SecurityUtils.getPrincipal();
-                result = Optional.of(new PetzUser("1", "username", "password", LangKey.JAPANESE, TimeZone.ASIA_TOKYO, Collections.<GrantedAuthority>emptyList()));
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = null;
                 productValidator.validate(data, (Errors) any);
                 result = null;
+
                 productService.updateProduct(data);
+                data.setId("product1");
+                data.setRemoved(Boolean.FALSE);
+                data.setClinic(Clinic.builder().id("1").build());
                 result = data;
             }};
 
@@ -264,15 +565,15 @@ public class ProductControllerTest {
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id", is("product1")))
-                    .andExpect(jsonPath("$.name", is("Product Item 1")))
-                    .andExpect(jsonPath("$.description", is("Product Item 1 Description")))
-                    .andExpect(jsonPath("$.price", is(1000)))
+                    .andExpect(jsonPath("$.name", is("12345678901234567890123456789012345678901234567890")))
+                    .andExpect(jsonPath("$.description", is("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")))
+                    .andExpect(jsonPath("$.price", is(123456789)))
                     .andExpect(jsonPath("$.taxRate", is(0.08)))
                     .andExpect(jsonPath("$.taxType", is(TaxType.EXCLUSIVE.name())))
-                    .andExpect(jsonPath("$.tax", is(80)))
+                    .andExpect(jsonPath("$.tax", is(123456789)))
                     .andExpect(jsonPath("$.clinic", is(notNullValue())))
                     .andExpect(jsonPath("$.clinic.id", is("1")))
-                    .andExpect(jsonPath("$.removed", is(false)));
+                    .andExpect(jsonPath("$.removed", is(Boolean.FALSE)));
         }
     }
 
@@ -293,14 +594,32 @@ public class ProductControllerTest {
         public void setup() {
             ProductController sut = new ProductController();
             sut.setProductService(productService);
-            mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
+            mockMvc = MockMvcBuilders.standaloneSetup(sut)
+                    .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
+                    .build();
+        }
+
+        @Test
+        public void 権限がない場合はアクセスできないこと() throws Exception {
+            new NonStrictExpectations() {{
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = new ResourceCannotAccessException("");
+            }};
+
+            mockMvc.perform(delete("/api/v1/clinics/1/products/product1"))
+                    .andDo(print())
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/401")))
+                    .andExpect(jsonPath("$.title", is("Unauthorized")))
+                    .andExpect(jsonPath("$.status", is(401)))
+                    .andExpect(jsonPath("$.detail", is("You cannot access resource.")));
         }
 
         @Test
         public void プロダクトが削除されること() throws Exception {
             new NonStrictExpectations() {{
-                SecurityUtils.getPrincipal();
-                result = Optional.of(new PetzUser("1", "username", "password", LangKey.JAPANESE, TimeZone.ASIA_TOKYO, Collections.<GrantedAuthority>emptyList()));
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = null;
                 productService.deleteProductByProductId("1", "product1");
                 result = null;
             }};

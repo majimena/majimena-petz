@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -81,7 +80,7 @@ public final class SecurityUtils {
 
     public static void throwIfNotCurrentUser(String userId) {
         if (!StringUtils.equals(userId, getCurrentUserId())) {
-            throw new UnauthorizedUserException("Cannot access resource.");
+            throw new ResourceCannotAccessException("Cannot access resource.");
         }
     }
 
@@ -135,8 +134,13 @@ public final class SecurityUtils {
      */
     public static boolean isUserInClinic(String clinicId) {
         return getPrincipal()
-                .map(u -> u.getAuthorities().stream()
-                        .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId)))
+                .map(u -> {
+                    if (u.getAuthorities().isEmpty()) {
+                        return false;
+                    }
+                    return u.getAuthorities().stream()
+                            .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId));
+                })
                 .orElse(false);
     }
 
@@ -144,12 +148,12 @@ public final class SecurityUtils {
      * 認証済みユーザーが指定したクリニックのロールを持っていない場合に例外を投げる.
      *
      * @param clinicId クリニックID
-     * @throws UnauthorizedUserException クリニックのロールを持っていない場合
+     * @throws ResourceCannotAccessException クリニックのロールを持っていない場合
      */
     public static void throwIfDoNotHaveClinicRoles(String clinicId) {
         if (isUserInClinic(clinicId)) {
             return;
         }
-        throw new UnauthorizedUserException("Cannot access resource.");
+        throw new ResourceCannotAccessException("Cannot access resource.");
     }
 }

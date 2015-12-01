@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.majimena.petz.datatype.TaxType;
 import org.majimena.petz.datatype.defs.Description;
 import org.majimena.petz.datatype.defs.Name;
@@ -39,7 +40,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
 @Table(name = "product")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -50,12 +51,11 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 
-    @NotNull
+    @NotEmpty
     @Size(max = Name.MAX_LENGTH)
     @Column(name = "name", length = Name.MAX_LENGTH, nullable = false)
     private String name;

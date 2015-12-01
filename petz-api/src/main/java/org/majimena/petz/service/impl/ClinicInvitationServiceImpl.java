@@ -1,10 +1,9 @@
 package org.majimena.petz.service.impl;
 
-import org.apache.commons.codec.language.bm.Lang;
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.common.aws.AmazonSESService;
 import org.majimena.petz.common.exceptions.ApplicationException;
-import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
+import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.common.utils.RandomUtils;
 import org.majimena.petz.datatype.LangKey;

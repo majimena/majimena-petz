@@ -1,6 +1,7 @@
 package org.majimena.petz.web.api.product;
 
 import com.codahale.metrics.annotation.Timed;
+import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Product;
 import org.majimena.petz.domain.product.ProductCriteria;
 import org.majimena.petz.security.SecurityUtils;
@@ -116,6 +117,7 @@ public class ProductController {
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // カスタムバリデーションを行う
+        product.setClinic(Clinic.builder().id(clinicId).build());
         productValidator.validate(product, errors);
         ErrorsUtils.throwIfHaveErrors(errors);
 
@@ -146,6 +148,7 @@ public class ProductController {
 
         // カスタムバリデーションを行う
         product.setId(productId);
+        product.setClinic(Clinic.builder().id(clinicId).build());
         productValidator.validate(product, errors);
         ErrorsUtils.throwIfHaveErrors(errors);
 

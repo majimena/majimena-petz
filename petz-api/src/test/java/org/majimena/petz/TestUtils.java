@@ -48,21 +48,23 @@ public class TestUtils {
 
     public static class Type {
         public static final String TYPE_400 = "http://httpstatus.es/400";
+        public static final String TYPE_401 = "http://httpstatus.es/401";
     }
 
     public static class Title {
         public static final String VALIDATION_FAILED = "Validation Failed";
+        public static final String CONVERSION_FAILED = "Conversion Failed";
+        public static final String UNAUTHORIZED = "Unauthorized";
     }
 
     public static class Detail {
         public static final String VALIDATION_FAILED = "The content you've send contains validation errors.";
-        public static final String ONE_VALIDATION_FAILED = "The content you've send contains 1 validation errors.";
     }
 
     public static class Message {
+        public static final String CANNOT_ACCESS = "cannot access resource";
         public static final String NULL = "may not be null";
         public static final String EMPTY = "may not be empty";
         public static final String EMAIL = "not a well-formed email address";
     }
-
 }

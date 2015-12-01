@@ -2,7 +2,7 @@ package org.majimena.petz.web.api.chart;
 
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
+import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.domain.Chart;
 import org.majimena.petz.domain.chart.ChartCriteria;
 import org.majimena.petz.security.SecurityUtils;

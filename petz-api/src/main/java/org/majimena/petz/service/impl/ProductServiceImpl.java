@@ -1,10 +1,12 @@
 package org.majimena.petz.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.common.utils.BeanFactoryUtils;
 import org.majimena.petz.domain.Product;
 import org.majimena.petz.domain.product.ProductCriteria;
 import org.majimena.petz.repository.ProductRepository;
 import org.majimena.petz.repository.spec.ProductSpecs;
+import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.service.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +44,9 @@ public class ProductServiceImpl implements ProductService {
     public Optional<Product> getProductByProductId(String clinicId, String productId) {
         Product product = productRepository.findOne(productId);
         if (product != null) {
-            // TODO クリニックの権限チェック
+            if (!StringUtils.equals(clinicId, product.getClinic().getId())) {
+                throw new ResourceCannotAccessException("");
+            }
         }
         return Optional.ofNullable(product);
     }
@@ -64,8 +68,12 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public Product updateProduct(Product product) {
         Product one = productRepository.findOne(product.getId());
-        BeanFactoryUtils.copyNonNullProperties(product, one);
+        // TODO 存在チェックが足りていない
+        if (!StringUtils.equals(product.getClinic().getId(), one.getClinic().getId())) {
+            throw new ResourceCannotAccessException("");
+        }
 
+        BeanFactoryUtils.copyNonNullProperties(product, one);
         Product saved = productRepository.save(one);
         return saved;
     }
@@ -78,8 +86,9 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProductByProductId(String clinicId, String productId) {
         Product one = productRepository.findOne(productId);
         // TODO 存在チェックが足りていない
-
-        // TODO クリニック権限チェックが足りていない
+        if (!StringUtils.equals(clinicId, one.getClinic().getId())) {
+            throw new ResourceCannotAccessException("");
+        }
 
         // 論理削除する
         one.setRemoved(Boolean.TRUE);

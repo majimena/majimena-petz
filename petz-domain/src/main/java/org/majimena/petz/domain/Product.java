@@ -71,7 +71,7 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     private TaxType taxType;
 
     @NotNull
-    @Column(name = "tax_rate", precision = 1, scale = 2, nullable = false)
+    @Column(name = "tax_rate", precision = 3, scale = 2, nullable = false)
     private BigDecimal taxRate;
 
     @NotNull

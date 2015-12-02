@@ -7,32 +7,23 @@
     <property name="now" value="now()" dbms="mysql,h2"/>
     <property name="now" value="current_timestamp" dbms="postgresql"/>
 
-    <changeSet id="20151106000000" author="custom">
+    <changeSet id="20151115000000" author="custom">
 
-        <createTable tableName="product">
+        <createTable tableName="ticket_attachment">
             <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="clinic_id" type="varchar(50)">
+            <column name="ticket_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="price" type="numeric(9,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="tax_type" type="varchar(20)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="tax_rate" type="numeric(3,2)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="tax" type="numeric(9,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="varchar(2000)">
+            <column name="memo" type="text">
                 <constraints nullable="true"/>
+            </column>
+            <column name="url" type="varchar(200)">
+                <constraints nullable="false"/>
             </column>
             <column name="removed" type="boolean">
                 <constraints nullable="false"/>
@@ -47,13 +38,9 @@
             <column name="last_modified_date" type="timestamp"/>
         </createTable>
 
-        <createIndex indexName="idx1_product"
-                     tableName="product">
-            <column name="clinic_id" type="varchar(50)"/>
-        </createIndex>
-        <createIndex indexName="idx2_product"
-                     tableName="product">
-            <column name="name" type="varchar(50)"/>
+        <createIndex indexName="idx1_ticket_attachment"
+                     tableName="ticket_attachment">
+            <column name="ticket_id" type="varchar(50)"/>
         </createIndex>
 
     </changeSet>

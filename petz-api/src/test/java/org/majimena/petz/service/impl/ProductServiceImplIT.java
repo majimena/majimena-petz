@@ -15,6 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -41,15 +42,23 @@ public class ProductServiceImplIT {
             List<Product> result = sut.getProductsByProductCriteria(criteria);
 
             assertThat(result.isEmpty(), is(false));
-            assertThat(result.size(), is(1));
-            assertThat(result.get(0).getId(), is("product01"));
+            assertThat(result.size(), is(2));
+            assertThat(result.get(0).getId(), is("product11"));
             assertThat(result.get(0).getName(), is("初診料"));
-            assertThat(result.get(0).getPrice(), is(1000));
+            assertThat(result.get(0).getPrice(), is(BigDecimal.valueOf(2000)));
             assertThat(result.get(0).getTaxType(), is(TaxType.EXCLUSIVE));
-            assertThat(result.get(0).getTaxRate(), is(0.08));
-            assertThat(result.get(0).getTax(), is(80));
+            assertThat(result.get(0).getTaxRate(), is(BigDecimal.valueOf(0.08)));
+            assertThat(result.get(0).getTax(), is(BigDecimal.valueOf(160)));
             assertThat(result.get(0).getDescription(), is("初診料の説明"));
             assertThat(result.get(0).getRemoved(), is(false));
+            assertThat(result.get(1).getId(), is("product12"));
+            assertThat(result.get(1).getName(), is("初診料"));
+            assertThat(result.get(1).getPrice(), is(BigDecimal.valueOf(2000)));
+            assertThat(result.get(1).getTaxType(), is(TaxType.EXCLUSIVE));
+            assertThat(result.get(1).getTaxRate(), is(BigDecimal.valueOf(0.08)));
+            assertThat(result.get(1).getTax(), is(BigDecimal.valueOf(160)));
+            assertThat(result.get(1).getDescription(), is("初診料の説明"));
+            assertThat(result.get(1).getRemoved(), is(true));
         }
 
         @Test

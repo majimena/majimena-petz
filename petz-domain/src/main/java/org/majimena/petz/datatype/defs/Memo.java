@@ -7,5 +7,5 @@ public class Memo {
 
     public static final int MIN_LENGTH = 0;
 
-    public static final int MAX_LENGTH = 2000;
+    public static final int MAX_LENGTH = 10000;
 }

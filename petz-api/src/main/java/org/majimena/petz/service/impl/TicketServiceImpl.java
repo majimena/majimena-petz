@@ -12,6 +12,7 @@ import org.majimena.petz.domain.Examination;
 import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.Ticket;
 import org.majimena.petz.domain.TicketActivity;
+import org.majimena.petz.domain.TicketAttachment;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.errors.ErrorCode;
 import org.majimena.petz.domain.ticket.TicketCriteria;
@@ -21,6 +22,7 @@ import org.majimena.petz.repository.CustomerRepository;
 import org.majimena.petz.repository.ExaminationRepository;
 import org.majimena.petz.repository.PetRepository;
 import org.majimena.petz.repository.TicketActivityRepository;
+import org.majimena.petz.repository.TicketAttachmentRepository;
 import org.majimena.petz.repository.TicketRepository;
 import org.majimena.petz.repository.spec.TicketSpecs;
 import org.majimena.petz.service.TicketService;
@@ -80,6 +82,8 @@ public class TicketServiceImpl implements TicketService {
      */
     @Inject
     private ExaminationRepository examinationRepository;
+    @Inject
+    private TicketAttachmentRepository ticketAttachmentRepository;
 
     /**
      * {@inheritDoc}
@@ -183,6 +187,13 @@ public class TicketServiceImpl implements TicketService {
         examinations.stream().forEach(examination -> {
             examination.setRemoved(Boolean.TRUE);
             examinationRepository.save(examination);
+        });
+
+        // 関連する添付ファイルを論理削除する
+        List<TicketAttachment> attachments = ticketAttachmentRepository.findByTicketId(ticketId);
+        attachments.stream().forEach(attachment -> {
+            attachment.setRemoved(Boolean.TRUE);
+            ticketAttachmentRepository.save(attachment);
         });
 
         // アクティビティを記録

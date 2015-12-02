@@ -2,6 +2,7 @@ package org.majimena.petz.common.aws.impl;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
@@ -59,12 +60,22 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 
         ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
         PutObjectRequest request = new PutObjectRequest(bucketName, filename, stream, metadata)
-            .withCannedAcl(CannedAccessControlList.PublicRead);
+                .withCannedAcl(CannedAccessControlList.PublicRead);
         PutObjectResult result = amazonS3Client.putObject(request);
         LOG.debug(ToStringBuilder.reflectionToString(result));
 
         String url = amazonS3Client.getResourceUrl(bucketName, filename);
         LOG.info("file upload url [" + url + "].");
         return url;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void delete(String filename) {
+        // TODO キーが微妙で消せない（エンドポイント付きでDBに保存されているため）
+        DeleteObjectRequest request = new DeleteObjectRequest(bucketName, filename);
+        amazonS3Client.deleteObject(request);
     }
 }

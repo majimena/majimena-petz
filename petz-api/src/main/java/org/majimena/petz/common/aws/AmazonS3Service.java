@@ -14,4 +14,10 @@ public interface AmazonS3Service {
      */
     String upload(String filename, byte[] bytes);
 
+    /**
+     * S3ストレージのファイルを削除する.
+     *
+     * @param filename ファイル名
+     */
+    void delete(String filename);
 }

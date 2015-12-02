@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import cz.jirutka.spring.exhandler.support.HttpMessageConverterUtils;
-import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
+import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.common.exceptions.ResourceConflictException;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.common.factory.JacksonJsonFactory;

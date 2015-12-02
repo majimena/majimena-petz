@@ -4,6 +4,7 @@ import org.majimena.petz.domain.Product;
 import org.majimena.petz.domain.product.ProductCriteria;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * プロダクトサービス.
@@ -17,4 +18,12 @@ public interface ProductService {
      * @return 該当するプロダクトの一覧
      */
     List<Product> getProductsByProductCriteria(ProductCriteria criteria);
+
+    Optional<Product> getProductByProductId(String clinicId, String productId);
+
+    Product saveProduct(Product product);
+
+    Product updateProduct(Product product);
+
+    void deleteProductByProductId(String clinicId, String productId);
 }

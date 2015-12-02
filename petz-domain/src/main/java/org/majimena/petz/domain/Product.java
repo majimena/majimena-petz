@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.majimena.petz.datatype.TaxType;
 import org.majimena.petz.datatype.defs.Description;
 import org.majimena.petz.datatype.defs.Name;
@@ -26,6 +27,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -38,7 +40,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
 @Table(name = "product")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -49,17 +51,17 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 
-    @NotNull
+    @NotEmpty
     @Size(max = Name.MAX_LENGTH)
     @Column(name = "name", length = Name.MAX_LENGTH, nullable = false)
     private String name;
 
     @NotNull
+    @Digits(integer = 9, fraction = 0)
     @Column(name = "price", precision = 9, scale = 0, nullable = false)
     private BigDecimal price;
 
@@ -71,10 +73,12 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     private TaxType taxType;
 
     @NotNull
+    @Digits(integer = 1, fraction = 2)
     @Column(name = "tax_rate", precision = 3, scale = 2, nullable = false)
     private BigDecimal taxRate;
 
     @NotNull
+    @Digits(integer = 9, fraction = 0)
     @Column(name = "tax", precision = 9, scale = 0, nullable = false)
     private BigDecimal tax;
 
@@ -82,7 +86,6 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     @Column(name = "description", length = Description.MAX_LENGTH, nullable = true)
     private String description;
 
-    @NotNull
     @Column(name = "removed", nullable = false)
     private Boolean removed;
 }

@@ -1,4 +1,4 @@
-package org.majimena.petz.common.exceptions;
+package org.majimena.petz.security;
 
 /**
  * Created by todoken on 2015/07/08.

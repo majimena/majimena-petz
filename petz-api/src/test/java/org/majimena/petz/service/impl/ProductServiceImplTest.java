@@ -7,6 +7,7 @@ import mockit.Verifications;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.datatype.TaxType;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Product;
@@ -200,8 +201,18 @@ public class ProductServiceImplTest {
             assertThat(result.getRemoved(), is(Boolean.FALSE));
         }
 
+        @Test(expected = ResourceNotFoundException.class)
+        public void 対象がない場合は削除できないこと() throws Exception {
+            new NonStrictExpectations() {{
+                productRepository.findOne("product1");
+                result = null;
+            }};
+
+            sut.updateProduct(newProduct());
+        }
+
         @Test(expected = ResourceCannotAccessException.class)
-        public void 指定したクリニックと異なる場合は空が取得できること() throws Exception {
+        public void 指定したクリニックの権限がない場合は削除できないこと() throws Exception {
             Product product = newProduct();
             new NonStrictExpectations() {{
                 Product data = newProduct();
@@ -235,8 +246,18 @@ public class ProductServiceImplTest {
             sut.deleteProductByProductId("1", "product1");
         }
 
+        @Test(expected = ResourceNotFoundException.class)
+        public void 対象がない場合は削除できないこと() throws Exception {
+            new NonStrictExpectations() {{
+                productRepository.findOne("product1");
+                result = null;
+            }};
+
+            sut.deleteProductByProductId("1", "product1");
+        }
+
         @Test(expected = ResourceCannotAccessException.class)
-        public void 指定したクリニックと異なる場合は削除できないこと() throws Exception {
+        public void 指定したクリニックの権限がない場合は削除できないこと() throws Exception {
             Product product = newProduct();
             new NonStrictExpectations() {{
                 productRepository.findOne("product1");

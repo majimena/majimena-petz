@@ -575,6 +575,213 @@ public class ProductControllerTest {
                     .andExpect(jsonPath("$.clinic.id", is("1")))
                     .andExpect(jsonPath("$.removed", is(Boolean.FALSE)));
         }
+
+        @Test
+        public void 名称にエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
+
+            // 未入力
+            data.setName("");
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("name")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    .andExpect(jsonPath("$.errors[0].message", is("may not be empty")));
+
+            // 桁数オーバー
+            data.setName("123456789012345678901234567890123456789012345678901");
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("name")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is("123456789012345678901234567890123456789012345678901")))
+                    .andExpect(jsonPath("$.errors[0].message", is("size must be between 0 and 50")));
+        }
+
+        @Test
+        public void 説明にエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
+
+            // 桁数オーバー
+            data.setDescription("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901");
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("description")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901")))
+                    .andExpect(jsonPath("$.errors[0].message", is("size must be between 0 and 2000")));
+        }
+
+        @Test
+        public void プライスにエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
+
+            // 未入力
+            data.setPrice(null);
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("price")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    .andExpect(jsonPath("$.errors[0].message", is("may not be null")));
+
+            // 桁数オーバー
+            data.setPrice(BigDecimal.valueOf(1234567890));
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("price")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(1234567890)))
+                    .andExpect(jsonPath("$.errors[0].message", is("numeric value out of bounds (<9 digits>.<0 digits> expected)")));
+        }
+
+        @Test
+        public void 税額にエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
+
+            // 未入力
+            data.setTax(null);
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("tax")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    .andExpect(jsonPath("$.errors[0].message", is("may not be null")));
+
+            // 桁数オーバー
+            data.setTax(BigDecimal.valueOf(1234567890));
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("tax")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(1234567890)))
+                    .andExpect(jsonPath("$.errors[0].message", is("numeric value out of bounds (<9 digits>.<0 digits> expected)")));
+        }
+
+        @Test
+        public void 税区分にエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
+
+            // 未入力
+            data.setTaxType(null);
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("taxType")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    .andExpect(jsonPath("$.errors[0].message", is("may not be null")));
+
+            // 型不正
+            data.setTaxType(TaxType.EXCLUSIVE);
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(new String(TestUtils.convertObjectToJsonBytes(data)).replace("EXCLUSIVE", "HOGE")))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Conversion Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send is probably malformed.")));
+        }
+
+        @Test
+        public void 税率にエラーがある場合はプロダクトが登録されないこと() throws Exception {
+            Product data = newPostProduct();
+
+            // 未入力
+            data.setTaxRate(null);
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("taxRate")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    .andExpect(jsonPath("$.errors[0].message", is("may not be null")));
+
+            // 桁数オーバー１
+            data.setTaxRate(BigDecimal.valueOf(1.123));
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("taxRate")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(1.123)))
+                    .andExpect(jsonPath("$.errors[0].message", is("numeric value out of bounds (<1 digits>.<2 digits> expected)")));
+
+            // 桁数オーバー２
+            data.setTaxRate(BigDecimal.valueOf(12.12));
+            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("taxRate")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(12.12)))
+                    .andExpect(jsonPath("$.errors[0].message", is("numeric value out of bounds (<1 digits>.<2 digits> expected)")));
+        }
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)

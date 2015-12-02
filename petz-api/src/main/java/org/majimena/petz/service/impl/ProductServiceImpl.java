@@ -1,6 +1,7 @@
 package org.majimena.petz.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.common.utils.BeanFactoryUtils;
 import org.majimena.petz.domain.Product;
 import org.majimena.petz.domain.product.ProductCriteria;
@@ -44,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
     public Optional<Product> getProductByProductId(String clinicId, String productId) {
         Product product = productRepository.findOne(productId);
         if (product != null) {
+            // TODO 要リファクタリング
             if (!StringUtils.equals(clinicId, product.getClinic().getId())) {
                 throw new ResourceCannotAccessException("");
             }
@@ -68,7 +70,10 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public Product updateProduct(Product product) {
         Product one = productRepository.findOne(product.getId());
-        // TODO 存在チェックが足りていない
+        // TODO 要リファクタリング
+        if (one == null) {
+            throw new ResourceNotFoundException("");
+        }
         if (!StringUtils.equals(product.getClinic().getId(), one.getClinic().getId())) {
             throw new ResourceCannotAccessException("");
         }
@@ -85,7 +90,10 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void deleteProductByProductId(String clinicId, String productId) {
         Product one = productRepository.findOne(productId);
-        // TODO 存在チェックが足りていない
+        // TODO 要リファクタリング
+        if (one == null) {
+            throw new ResourceNotFoundException("");
+        }
         if (!StringUtils.equals(clinicId, one.getClinic().getId())) {
             throw new ResourceCannotAccessException("");
         }

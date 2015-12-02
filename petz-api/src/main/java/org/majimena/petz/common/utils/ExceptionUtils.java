@@ -1,8 +1,8 @@
 package org.majimena.petz.common.utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.petz.common.exceptions.ResourceCannotAccessException;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
+import org.majimena.petz.security.ResourceCannotAccessException;
 
 /**
  * Created by todoken on 2015/11/15.

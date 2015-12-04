@@ -1,10 +1,8 @@
 package org.majimena.petz.web.api.clinic;
 
 import org.apache.commons.validator.GenericValidator;
-import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.domain.clinic.ClinicInvitationRegistry;
 import org.majimena.petz.domain.errors.ErrorCode;
-import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.ClinicStaffRepository;
 import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.web.api.AbstractValidator;
@@ -24,32 +22,12 @@ public class ClinicInvitationRegistryValidator extends AbstractValidator<ClinicI
     private UserRepository userRepository;
 
     @Inject
-    private ClinicRepository clinicRepository;
-
-    @Inject
     private ClinicStaffRepository clinicStaffRepository;
-
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public void setClinicRepository(ClinicRepository clinicRepository) {
-        this.clinicRepository = clinicRepository;
-    }
-
-    public void setClinicStaffRepository(ClinicStaffRepository clinicStaffRepository) {
-        this.clinicStaffRepository = clinicStaffRepository;
-    }
 
     @Override
     protected void validate(Optional<ClinicInvitationRegistry> target, Errors errors) {
         target.ifPresent(registry -> {
-            // クリニックが存在しなければURLの指定ミス
-            if (clinicRepository.findOne(registry.getClinicId()) == null) {
-                throw new ResourceNotFoundException("clinicId [" + registry.getClinicId() + "] is not found.");
-            }
-
-            // 入力されたメールアドレスのチェック
+            // メールアドレスのチェック
             validateEmails(registry, errors);
         });
     }
@@ -63,11 +41,9 @@ public class ClinicInvitationRegistryValidator extends AbstractValidator<ClinicI
             }
 
             // 同一メールアドレスが既にスタッフとして登録されていないかチェック
-            userRepository.findOneByLogin(email)
-                .ifPresent(user -> {
+            userRepository.findOneByLogin(email).ifPresent(user ->
                     clinicStaffRepository.findByClinicIdAndUserId(target.getClinicId(), user.getId())
-                        .ifPresent(staff -> errors.rejectValue("emails", ErrorCode.PTZ_001204.name()));
-                });
+                            .ifPresent(staff -> errors.rejectValue("emails", ErrorCode.PTZ_001204.name())));
         }
     }
 }

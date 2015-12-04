@@ -21,7 +21,7 @@ public class ClinicInvitationRegistry implements Serializable {
     private String clinicId;
 
     @NotNull
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 20)
     private String[] emails;
 
 }

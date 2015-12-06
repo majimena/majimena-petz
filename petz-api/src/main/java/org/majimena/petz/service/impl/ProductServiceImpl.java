@@ -59,6 +59,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product saveProduct(Product product) {
+        product.setRemoved(Boolean.FALSE);
         Product saved = productRepository.save(product);
         return saved;
     }

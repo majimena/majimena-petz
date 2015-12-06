@@ -77,11 +77,6 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     @Column(name = "tax_rate", precision = 3, scale = 2, nullable = false)
     private BigDecimal taxRate;
 
-    @NotNull
-    @Digits(integer = 9, fraction = 0)
-    @Column(name = "tax", precision = 9, scale = 0, nullable = false)
-    private BigDecimal tax;
-
     @Size(max = Description.MAX_LENGTH)
     @Column(name = "description", length = Description.MAX_LENGTH, nullable = true)
     private String description;

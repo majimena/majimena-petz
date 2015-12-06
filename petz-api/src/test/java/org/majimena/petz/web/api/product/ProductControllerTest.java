@@ -50,7 +50,6 @@ public class ProductControllerTest {
                 .name("12345678901234567890123456789012345678901234567890")
                 .price(new BigDecimal(123456789))
                 .taxType(TaxType.EXCLUSIVE)
-                .tax(new BigDecimal(123456789))
                 .taxRate(BigDecimal.valueOf(0.08))
                 .description("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890").build();
     }
@@ -379,41 +378,6 @@ public class ProductControllerTest {
         }
 
         @Test
-        public void 税額にエラーがある場合はプロダクトが登録されないこと() throws Exception {
-            Product data = newPostProduct();
-
-            // 未入力
-            data.setTax(null);
-            mockMvc.perform(post("/api/v1/clinics/1/products")
-                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
-                    .content(TestUtils.convertObjectToJsonBytes(data)))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
-                    .andExpect(jsonPath("$.title", is("Validation Failed")))
-                    .andExpect(jsonPath("$.status", is(400)))
-                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
-                    .andExpect(jsonPath("$.errors[0].field", is("tax")))
-                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
-                    .andExpect(jsonPath("$.errors[0].message", is("may not be null")));
-
-            // 桁数オーバー
-            data.setTax(BigDecimal.valueOf(1234567890));
-            mockMvc.perform(post("/api/v1/clinics/1/products")
-                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
-                    .content(TestUtils.convertObjectToJsonBytes(data)))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
-                    .andExpect(jsonPath("$.title", is("Validation Failed")))
-                    .andExpect(jsonPath("$.status", is(400)))
-                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
-                    .andExpect(jsonPath("$.errors[0].field", is("tax")))
-                    .andExpect(jsonPath("$.errors[0].rejected", is(1234567890)))
-                    .andExpect(jsonPath("$.errors[0].message", is("numeric value out of bounds (<9 digits>.<0 digits> expected)")));
-        }
-
-        @Test
         public void 税区分にエラーがある場合はプロダクトが登録されないこと() throws Exception {
             Product data = newPostProduct();
 
@@ -662,41 +626,6 @@ public class ProductControllerTest {
                     .andExpect(jsonPath("$.status", is(400)))
                     .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
                     .andExpect(jsonPath("$.errors[0].field", is("price")))
-                    .andExpect(jsonPath("$.errors[0].rejected", is(1234567890)))
-                    .andExpect(jsonPath("$.errors[0].message", is("numeric value out of bounds (<9 digits>.<0 digits> expected)")));
-        }
-
-        @Test
-        public void 税額にエラーがある場合はプロダクトが登録されないこと() throws Exception {
-            Product data = newPostProduct();
-
-            // 未入力
-            data.setTax(null);
-            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
-                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
-                    .content(TestUtils.convertObjectToJsonBytes(data)))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
-                    .andExpect(jsonPath("$.title", is("Validation Failed")))
-                    .andExpect(jsonPath("$.status", is(400)))
-                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
-                    .andExpect(jsonPath("$.errors[0].field", is("tax")))
-                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
-                    .andExpect(jsonPath("$.errors[0].message", is("may not be null")));
-
-            // 桁数オーバー
-            data.setTax(BigDecimal.valueOf(1234567890));
-            mockMvc.perform(put("/api/v1/clinics/1/products/product1")
-                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
-                    .content(TestUtils.convertObjectToJsonBytes(data)))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
-                    .andExpect(jsonPath("$.title", is("Validation Failed")))
-                    .andExpect(jsonPath("$.status", is(400)))
-                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
-                    .andExpect(jsonPath("$.errors[0].field", is("tax")))
                     .andExpect(jsonPath("$.errors[0].rejected", is(1234567890)))
                     .andExpect(jsonPath("$.errors[0].message", is("numeric value out of bounds (<9 digits>.<0 digits> expected)")));
         }

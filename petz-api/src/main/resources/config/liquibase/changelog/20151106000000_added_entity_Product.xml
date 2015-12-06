@@ -28,9 +28,6 @@
             <column name="tax_rate" type="numeric(3,2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="tax" type="numeric(9,0)">
-                <constraints nullable="false"/>
-            </column>
             <column name="description" type="varchar(2000)">
                 <constraints nullable="true"/>
             </column>

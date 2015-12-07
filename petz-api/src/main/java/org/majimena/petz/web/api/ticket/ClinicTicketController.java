@@ -1,6 +1,7 @@
 package org.majimena.petz.web.api.ticket;
 
 import com.codahale.metrics.annotation.Timed;
+import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Ticket;
 import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.majimena.petz.security.SecurityUtils;
@@ -42,24 +43,6 @@ public class ClinicTicketController {
     private TicketValidator ticketValidator;
 
     /**
-     * チケットサービスを設定する.
-     *
-     * @param ticketService チケットサービス
-     */
-    public void setTicketService(TicketService ticketService) {
-        this.ticketService = ticketService;
-    }
-
-    /**
-     * チケットバリデータを設定する.
-     *
-     * @param ticketValidator チケットバリデータ
-     */
-    public void setTicketValidator(TicketValidator ticketValidator) {
-        this.ticketValidator = ticketValidator;
-    }
-
-    /**
      * クリニックのチケットを取得する.
      *
      * @param clinicId クリニックID
@@ -69,6 +52,7 @@ public class ClinicTicketController {
     @RequestMapping(value = "/clinics/{clinicId}/tickets", method = RequestMethod.GET)
     public ResponseEntity<List<Ticket>> get(@PathVariable String clinicId, @Valid TicketCriteria criteria) {
         // クリニックの権限チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // 月単位でチケットを取得する
@@ -88,6 +72,8 @@ public class ClinicTicketController {
     @RequestMapping(value = "/clinics/{clinicId}/tickets/{ticketId}", method = RequestMethod.GET)
     public ResponseEntity<Ticket> get(@PathVariable String clinicId, @PathVariable String ticketId) {
         // クリニックの権限チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(ticketId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
         // TODO チケットのチェックをすること
 
@@ -111,9 +97,11 @@ public class ClinicTicketController {
     @RequestMapping(value = "/clinics/{clinicId}/tickets", method = RequestMethod.POST)
     public ResponseEntity<Ticket> post(@PathVariable String clinicId, @RequestBody @Valid Ticket ticket, BindingResult errors) throws BindException {
         // クリニックの権限チェック
-        SecurityUtils.throwIfDoNotHaveClinicRoles(ticket.getClinic().getId());
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // カスタムバリデーションを行う
+        ticket.setClinic(Clinic.builder().id(clinicId).build());
         ticketValidator.validate(ticket, errors);
         ErrorsUtils.throwIfHaveErrors(errors);
 
@@ -137,11 +125,12 @@ public class ClinicTicketController {
     @RequestMapping(value = "/clinics/{clinicId}/tickets/{ticketId}", method = RequestMethod.PUT)
     public ResponseEntity<Ticket> put(@PathVariable String clinicId, @PathVariable String ticketId, @RequestBody @Valid Ticket ticket, BindingResult errors) throws BindException {
         // クリニックの権限チェックとIDのコード体系チェック
-        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
-        SecurityUtils.throwIfDoNotHaveClinicRoles(ticket.getClinic().getId());
+        ErrorsUtils.throwIfNotIdentify(clinicId);
         ErrorsUtils.throwIfNotIdentify(ticketId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // カスタムバリデーションを行う
+        ticket.setClinic(Clinic.builder().id(clinicId).build());
         ticketValidator.validate(ticket, errors);
         ErrorsUtils.throwIfHaveErrors(errors);
 
@@ -161,8 +150,9 @@ public class ClinicTicketController {
     @RequestMapping(value = "/clinics/{clinicId}/tickets/{ticketId}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> put(@PathVariable String clinicId, @PathVariable String ticketId) {
         // クリニックの権限チェックとIDのコード体系チェック
-        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+        ErrorsUtils.throwIfNotIdentify(clinicId);
         ErrorsUtils.throwIfNotIdentify(ticketId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // チケットを更新する
         ticketService.deleteTicketByTicketId(ticketId);

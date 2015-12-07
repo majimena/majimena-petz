@@ -116,7 +116,6 @@ public class ProductControllerTest {
                     .andExpect(jsonPath("$.[0].price", is(123456789)))
                     .andExpect(jsonPath("$.[0].taxRate", is(0.08)))
                     .andExpect(jsonPath("$.[0].taxType", is(TaxType.EXCLUSIVE.name())))
-                    .andExpect(jsonPath("$.[0].tax", is(123456789)))
                     .andExpect(jsonPath("$.[0].clinic", is(notNullValue())))
                     .andExpect(jsonPath("$.[0].clinic.id", is("1")))
                     .andExpect(jsonPath("$.[0].removed", is(Boolean.FALSE)));
@@ -185,7 +184,6 @@ public class ProductControllerTest {
                     .andExpect(jsonPath("$.price", is(123456789)))
                     .andExpect(jsonPath("$.taxRate", is(0.08)))
                     .andExpect(jsonPath("$.taxType", is(TaxType.EXCLUSIVE.name())))
-                    .andExpect(jsonPath("$.tax", is(123456789)))
                     .andExpect(jsonPath("$.clinic", is(notNullValue())))
                     .andExpect(jsonPath("$.clinic.id", is("1")))
                     .andExpect(jsonPath("$.removed", is(Boolean.FALSE)));
@@ -281,7 +279,6 @@ public class ProductControllerTest {
                     .andExpect(jsonPath("$.price", is(123456789)))
                     .andExpect(jsonPath("$.taxRate", is(0.08)))
                     .andExpect(jsonPath("$.taxType", is(TaxType.EXCLUSIVE.name())))
-                    .andExpect(jsonPath("$.tax", is(123456789)))
                     .andExpect(jsonPath("$.clinic", is(notNullValue())))
                     .andExpect(jsonPath("$.clinic.id", is("1")))
                     .andExpect(jsonPath("$.removed", is(Boolean.FALSE)));
@@ -534,7 +531,6 @@ public class ProductControllerTest {
                     .andExpect(jsonPath("$.price", is(123456789)))
                     .andExpect(jsonPath("$.taxRate", is(0.08)))
                     .andExpect(jsonPath("$.taxType", is(TaxType.EXCLUSIVE.name())))
-                    .andExpect(jsonPath("$.tax", is(123456789)))
                     .andExpect(jsonPath("$.clinic", is(notNullValue())))
                     .andExpect(jsonPath("$.clinic.id", is("1")))
                     .andExpect(jsonPath("$.removed", is(Boolean.FALSE)));

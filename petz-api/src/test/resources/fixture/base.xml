@@ -46,10 +46,10 @@
     <ticket id="schedule5" clinic_id="0" chart_id="chart01" customer_id="customer1" pet_id="1" state="RESERVED" memo="ぎりぎり１" removed="false" start_date_time="2015-10-29 14:59:59" end_date_time="2015-10-29 15:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
     <ticket id="schedule6" clinic_id="0" chart_id="chart01" customer_id="customer1" pet_id="1" state="RESERVED" memo="ぎりぎり２" removed="false" start_date_time="2015-10-30 14:59:59" end_date_time="2015-10-31 15:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
 
-    <product id="product01" clinic_id="0" name="初診料" price="1000" tax_type="EXCLUSIVE" tax_rate="0.08" tax="80" description="初診料の説明" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
-    <product id="product02" clinic_id="0" name="再診料" price="500" tax_type="INCLUSIVE" tax_rate="0.08" tax="35" description="再診料の説明" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
-    <product id="product11" clinic_id="1" name="初診料" price="2000" tax_type="EXCLUSIVE" tax_rate="0.08" tax="160" description="初診料の説明" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
-    <product id="product12" clinic_id="1" name="初診料" price="2000" tax_type="EXCLUSIVE" tax_rate="0.08" tax="160" description="初診料の説明" removed="true" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <product id="product01" clinic_id="0" name="初診料" price="1000" tax_type="EXCLUSIVE" tax_rate="0.08" description="初診料の説明" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <product id="product02" clinic_id="0" name="再診料" price="500" tax_type="INCLUSIVE" tax_rate="0.08" description="再診料の説明" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <product id="product11" clinic_id="1" name="初診料" price="2000" tax_type="EXCLUSIVE" tax_rate="0.08" description="初診料の説明" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <product id="product12" clinic_id="1" name="初診料" price="2000" tax_type="EXCLUSIVE" tax_rate="0.08" description="初診料の説明" removed="true" created_by="hoge@hoge.com" created_date="2015-01-01"/>
 
     <examination/>
 </dataset>

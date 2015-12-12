@@ -1,0 +1,11 @@
+package org.majimena.petz.datatype.defs;
+
+/**
+ * Created by k.todoroki on 2015/09/07.
+ */
+public class ID {
+
+    public static final int MIN_LENGTH = 0;
+
+    public static final int MAX_LENGTH = 50;
+}

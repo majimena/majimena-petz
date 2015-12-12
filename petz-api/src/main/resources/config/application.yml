@@ -1,0 +1,48 @@
+# Disable the spring security default configuration from spring-boot-actuator
+management.security.enabled: true
+security.basic.enabled: false
+
+# Disable Jolokia - An http/json bridge for remote JMX access
+endpoints.jolokia.enabled: false
+
+# security configuration (this key should be unique for your application, and kept secret)
+jhipster.security.rememberme.key: 001d26f638de5f7b9754c0af140055c7f8774d7f
+
+async:
+    corePoolSize: 2
+    maxPoolSize: 50
+    queueCapacity: 10000
+
+mail:
+    host: localhost
+    port: 25
+    username:
+    password:
+    protocol: smtp
+    tls: false
+    auth: false
+# FIXME    from: noreply@petz.io
+    from: ken.todoroki@majimena.org
+
+authentication:
+    oauth:
+        clientid: majimenatestapp
+        secret: mySecretOAuthSecret
+        # Token is valid 10 hours
+        tokenValidityInSeconds: 36000
+
+swagger:
+    title: petz.io API
+    description: petz.io applications and beyond!
+    termsOfServiceUrl: http://petz.io/
+    contact:
+    license: CC BY-NC
+    licenseUrl: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+
+aws:
+    ses:
+        region: us-west-2
+    s3:
+        region: ap-northeast-1
+        bucket: images.petz.io
+        type: image/jpeg

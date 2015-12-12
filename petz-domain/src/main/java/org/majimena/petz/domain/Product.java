@@ -51,7 +51,7 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 

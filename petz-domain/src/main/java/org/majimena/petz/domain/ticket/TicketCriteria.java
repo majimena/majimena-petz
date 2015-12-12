@@ -29,7 +29,7 @@ public class TicketCriteria implements Serializable {
 
     private String petId;
 
-    private TicketState status;
+    private TicketState state;
 
     @Min(2010)
     @Max(2999)

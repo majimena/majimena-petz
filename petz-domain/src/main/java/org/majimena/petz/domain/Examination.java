@@ -82,7 +82,6 @@ public class Examination extends AbstractAuditingEntity implements Serializable 
     @Column(name = "tax_rate", precision = 3, scale = 2, nullable = false)
     private BigDecimal taxRate;
 
-    @NotNull
     @Column(name = "tax", precision = 9, scale = 0, nullable = false)
     private BigDecimal tax;
 

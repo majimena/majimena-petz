@@ -35,7 +35,7 @@ public class TicketSpecs implements Specification<Ticket> {
                 .where(equalClinicId(criteria))
                 .and(Optional.ofNullable(criteria.getPetId()).map(TicketSpecs::equalPetId).orElse(null))
                 .and(Optional.ofNullable(criteria.getUserId()).map(TicketSpecs::equalUserId).orElse(null))
-                .and(Optional.ofNullable(criteria.getStatus()).map(TicketSpecs::equalStatus).orElse(null))
+                .and(Optional.ofNullable(criteria.getState()).map(TicketSpecs::equalState).orElse(null))
                 .and(betweenStartDateTimeAndEndDateTime(criteria));
     }
 
@@ -47,8 +47,8 @@ public class TicketSpecs implements Specification<Ticket> {
         return (root, query, cb) -> cb.equal(root.get("pet").get("id"), petId);
     }
 
-    public static Specification equalStatus(TicketState status) {
-        return (root, query, cb) -> cb.equal(root.get("status"), status);
+    public static Specification equalState(TicketState status) {
+        return (root, query, cb) -> cb.equal(root.get("state"), status);
     }
 
     /**

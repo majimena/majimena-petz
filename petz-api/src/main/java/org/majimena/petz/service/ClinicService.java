@@ -16,6 +16,10 @@ public interface ClinicService {
 
     Optional<Clinic> getClinicById(String clinicId);
 
+    Page<Clinic> findClinicsByClinicCriteria(ClinicCriteria criteria, Pageable pageable);
+
+    Page<Clinic> findMyClinicsByClinicCriteria(ClinicCriteria criteria, Pageable pageable);
+
     Page<Clinic> getClinics(ClinicCriteria criteria, Pageable pageable);
 
     List<ClinicStaff> getClinicStaffsById(String clinicId);

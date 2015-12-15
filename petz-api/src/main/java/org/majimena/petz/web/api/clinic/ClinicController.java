@@ -58,7 +58,7 @@ public class ClinicController {
     public ResponseEntity<List<Clinic>> getAll(@RequestParam(value = "page", required = false) Integer offset,
                                                @RequestParam(value = "per_page", required = false) Integer limit) throws URISyntaxException {
         Pageable pageable = PaginationUtil.generatePageRequest(offset, limit);
-        Page<Clinic> page = clinicService.getClinics(new ClinicCriteria(), pageable);
+        Page<Clinic> page = clinicService.findClinicsByClinicCriteria(new ClinicCriteria(), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/v1/clinics", offset, limit);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

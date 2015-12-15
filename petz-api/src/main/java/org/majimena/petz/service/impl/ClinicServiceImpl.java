@@ -9,6 +9,7 @@ import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.ClinicStaffRepository;
 import org.majimena.petz.repository.UserRepository;
+import org.majimena.petz.repository.spec.ClinicSpecs;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ClinicService;
 import org.springframework.data.domain.Page;
@@ -53,6 +54,7 @@ public class ClinicServiceImpl implements ClinicService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<Clinic> getClinicById(String clinicId) {
         return Optional.ofNullable(clinicRepository.findOne(clinicId));
     }
@@ -61,10 +63,28 @@ public class ClinicServiceImpl implements ClinicService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional(readOnly = true)
+    public Page<Clinic> findClinicsByClinicCriteria(ClinicCriteria criteria, Pageable pageable) {
+        return clinicRepository.findAll(ClinicSpecs.of(criteria), pageable);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Clinic> findMyClinicsByClinicCriteria(ClinicCriteria criteria, Pageable pageable) {
+        // TODO マイクリニックの機能を実装する予定（お気に入り＋既に診察しているクリニック）
+        return getClinics(criteria, pageable);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
     public Page<Clinic> getClinics(ClinicCriteria criteria, Pageable pageable) {
-        // 自分が所属するクリニックだけ取得
-        String userId = SecurityUtils.getCurrentUserId();
-        return clinicStaffRepository.findClinicsByUserId(userId, pageable);
+        return clinicStaffRepository.findClinicsByUserId(criteria.getUserId(), pageable);
     }
 
     /**

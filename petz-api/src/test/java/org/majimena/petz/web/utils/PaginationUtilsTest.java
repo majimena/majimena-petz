@@ -1,6 +1,7 @@
 package org.majimena.petz.web.utils;
 
 import org.junit.Test;
+import org.majimena.petz.common.utils.TestCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -46,22 +47,28 @@ public class PaginationUtilsTest {
 
     @Test
     public void ページング用ヘッダを生成できること() throws URISyntaxException {
+        TestCriteria criteria = new TestCriteria();
+        criteria.setCondition1("value1");
+        criteria.setCondition2("value2");
         Pageable pageable = PaginationUtils.generatePageRequest(1, 1);
         Page<String> page = new PageImpl<>(Arrays.asList("test"), pageable, 10);
-        HttpHeaders result = PaginationUtils.generatePaginationHttpHeaders(page, "/api/test", 1, 1);
+        HttpHeaders result = PaginationUtils.generatePaginationHttpHeaders(page, "/api/test", 1, 1, criteria, "condition2");
 
         assertThat(result.get("X-Total-Count").get(0), is("10"));
-        assertThat(result.get(HttpHeaders.LINK).get(0), is("</api/test?page=2&per_page=1>; rel=\"next\",</api/test?page=10&per_page=1>; rel=\"last\",</api/test?page=1&per_page=1>; rel=\"first\""));
+        assertThat(result.get(HttpHeaders.LINK).get(0), is("</api/test?page=2&per_page=1&condition1=value1>; rel=\"next\",</api/test?page=10&per_page=1&condition1=value1>; rel=\"last\",</api/test?page=1&per_page=1&condition1=value1>; rel=\"first\""));
     }
 
     @Test
     public void 次ページ目以降もページング用ヘッダを生成できること() throws URISyntaxException {
+        TestCriteria criteria = new TestCriteria();
+        criteria.setCondition1("value1");
+        criteria.setCondition2("value2");
         Pageable pageable = PaginationUtils.generatePageRequest(1, 1);
         Page<String> page = new PageImpl<>(Arrays.asList("test"), pageable, 10);
-        HttpHeaders result = PaginationUtils.generatePaginationHttpHeaders(page, "/api/test", 2, 1);
+        HttpHeaders result = PaginationUtils.generatePaginationHttpHeaders(page, "/api/test", 2, 1, criteria, "condition2");
 
         assertThat(result.get("X-Total-Count").get(0), is("10"));
-        assertThat(result.get(HttpHeaders.LINK).get(0), is("</api/test?page=3&per_page=1>; rel=\"next\",</api/test?page=1&per_page=1>; rel=\"prev\",</api/test?page=10&per_page=1>; rel=\"last\",</api/test?page=1&per_page=1>; rel=\"first\""));
+        assertThat(result.get(HttpHeaders.LINK).get(0), is("</api/test?page=3&per_page=1&condition1=value1>; rel=\"next\",</api/test?page=1&per_page=1&condition1=value1>; rel=\"prev\",</api/test?page=10&per_page=1&condition1=value1>; rel=\"last\",</api/test?page=1&per_page=1&condition1=value1>; rel=\"first\""));
     }
 
     @Test

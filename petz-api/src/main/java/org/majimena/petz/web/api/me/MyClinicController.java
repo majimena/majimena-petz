@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,7 +46,7 @@ public class MyClinicController {
     @RequestMapping(value = "/me/clinics", method = RequestMethod.GET)
     public ResponseEntity<List<Clinic>> get(@RequestParam(value = "page", required = false) Integer offset,
                                             @RequestParam(value = "per_page", required = false) Integer limit,
-                                            @RequestBody @Valid ClinicCriteria criteria) throws URISyntaxException {
+                                            @Valid ClinicCriteria criteria) throws URISyntaxException {
         // ログインユーザーのIDで検索条件を上書きする
         criteria.setUserId(SecurityUtils.getCurrentUserId());
 

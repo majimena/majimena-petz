@@ -11,8 +11,7 @@ import org.majimena.petz.TestUtils;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.service.ClinicService;
-import org.majimena.petz.web.api.clinic.ClinicController;
-import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -126,7 +125,7 @@ public class ClinicControllerTest {
         public void ページングされてデータが取得できること() throws Exception {
             final Clinic testData1 = Clinic.builder().email("test1.clinic").name("テストクリニック1").description("テストクリニック1の説明").build();
             final Clinic testData2 = Clinic.builder().email("test2.clinic").name("テストクリニック2").description("テストクリニック2の説明").build();
-            final Pageable pageable = PaginationUtil.generatePageRequest(1, 1);
+            final Pageable pageable = PaginationUtils.generatePageRequest(1, 1);
             new NonStrictExpectations() {{
                 clinicService.getClinics(new ClinicCriteria(), pageable);
                 result = new PageImpl(Arrays.asList(testData1, testData2), pageable, 2);

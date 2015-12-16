@@ -7,7 +7,7 @@ import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.customer.CustomerCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.CustomerService;
-import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -86,11 +86,11 @@ public class CustomerController {
             throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
         }
 
-        Pageable pageable = PaginationUtil.generatePageRequest(offset, limit);
+        Pageable pageable = PaginationUtils.generatePageRequest(offset, limit);
         criteria.setClinicId(clinicId);
 
         Page<Customer> users = customerService.getCustomersByCustomerCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(users, "/api/v1/clinics/" + clinicId + "/users", offset, limit);
+        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(users, "/api/v1/clinics/" + clinicId + "/users", offset, limit);
         return new ResponseEntity<>(users.getContent(), headers, HttpStatus.OK);
     }
 

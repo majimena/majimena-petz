@@ -6,7 +6,7 @@ import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.PetService;
-import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -49,9 +49,9 @@ public class PetController {
     public ResponseEntity<List<Pet>> getAll(@RequestParam(value = "page", required = false) Integer offset,
                                             @RequestParam(value = "per_page", required = false) Integer limit,
                                             @Valid PetCriteria criteria) throws URISyntaxException {
-        Pageable pageable = PaginationUtil.generatePageRequest(offset, limit);
+        Pageable pageable = PaginationUtils.generatePageRequest(offset, limit);
         Page<Pet> pets = petService.getPetsByPetCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pets, "/api/v1/pets", offset, limit);
+        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(pets, "/api/v1/pets", offset, limit);
         return new ResponseEntity<>(pets.getContent(), headers, HttpStatus.OK);
     }
 

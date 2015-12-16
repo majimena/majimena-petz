@@ -15,9 +15,7 @@ import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.customer.CustomerCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.CustomerService;
-import org.majimena.petz.web.api.customer.CustomerController;
-import org.majimena.petz.web.api.customer.CustomerValidator;
-import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -77,7 +75,7 @@ public class CustomerControllerTest {
         @Test
         public void ページングされてデータが取得できること() throws Exception {
             CustomerCriteria criteria = CustomerCriteria.builder().clinicId("c123").build();
-            Pageable pageable = PaginationUtil.generatePageRequest(1, 1);
+            Pageable pageable = PaginationUtils.generatePageRequest(1, 1);
 
             final Clinic clinic = Clinic.builder().id("c123").build();
             final Customer d1 = Customer.builder().id("c111").clinic(clinic).user(User.builder().id("u111").build()).build();

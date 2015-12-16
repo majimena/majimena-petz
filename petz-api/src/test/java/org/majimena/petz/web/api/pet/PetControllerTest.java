@@ -22,7 +22,7 @@ import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.security.PetzUser;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.PetService;
-import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -96,7 +96,7 @@ public class PetControllerTest {
             new NonStrictExpectations() {{
                 SecurityUtils.getPrincipal();
                 result = Optional.of(new PetzUser("userId", "username", "password", LangKey.JAPANESE, TimeZone.ASIA_TOKYO, Collections.<GrantedAuthority>emptyList()));
-                final Pageable pageable = PaginationUtil.generatePageRequest(1, 1);
+                final Pageable pageable = PaginationUtils.generatePageRequest(1, 1);
                 petService.getPetsByPetCriteria(new PetCriteria(), pageable);
                 result = new PageImpl<>(Arrays.asList(Pet.builder().id("p1").name("test data").profile("test data's profile")
                         .birthDate(LocalDateTime.of(2015, 2, 27, 15, 0)).sex(SexType.MALE)

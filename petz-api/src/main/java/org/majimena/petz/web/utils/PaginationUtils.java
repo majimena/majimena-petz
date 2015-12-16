@@ -1,4 +1,4 @@
-package org.majimena.petz.web.rest.util;
+package org.majimena.petz.web.utils;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +16,7 @@ import java.net.URISyntaxException;
  * and follow <a href="http://tools.ietf.org/html/rfc5988">RFC 5988 (Link header)</a>.
  * </p>
  */
-public class PaginationUtil {
+public class PaginationUtils {
 
     public static final int DEFAULT_OFFSET = 1;
 
@@ -25,6 +25,9 @@ public class PaginationUtil {
     public static final int DEFAULT_LIMIT = 20;
 
     public static final int MAX_LIMIT = 100;
+
+    private PaginationUtils() {
+    }
 
     public static Pageable generatePageRequest(Integer offset, Integer limit) {
         if (offset == null || offset < MIN_OFFSET) {

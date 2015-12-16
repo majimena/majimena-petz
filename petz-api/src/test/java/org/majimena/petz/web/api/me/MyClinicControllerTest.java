@@ -8,20 +8,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+import org.majimena.petz.TestUtils;
 import org.majimena.petz.WebAppTestConfiguration;
 import org.majimena.petz.config.SpringMvcConfiguration;
-import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.domain.Clinic;
-import org.majimena.petz.domain.Ticket;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
-import org.majimena.petz.domain.ticket.TicketCriteria;
-import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ClinicService;
-import org.majimena.petz.service.TicketService;
-import org.majimena.petz.web.api.ticket.ClinicTicketController;
-import org.majimena.petz.web.api.ticket.TicketValidator;
-import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -81,18 +75,20 @@ public class MyClinicControllerTest {
 
         @Test
         public void マイクリニックの一覧がページングで取得できること() throws Exception {
-            Pageable pageable = PaginationUtil.generatePageRequest(1, 1);
+            ClinicCriteria criteria = ClinicCriteria.builder().userId("taro").build();
+            Pageable pageable = PaginationUtils.generatePageRequest(1, 1);
 
             new NonStrictExpectations() {{
                 SecurityUtils.getCurrentUserId();
                 result = "taro";
-                clinicService.findMyClinicsByClinicCriteria(ClinicCriteria.builder().userId("taro").build(), pageable);
+                clinicService.findMyClinicsByClinicCriteria(criteria, pageable);
                 result = new PageImpl<>(Arrays.asList(newClinic()), pageable, 2);
             }};
 
             mockMvc.perform(get("/api/v1/me/clinics")
                 .param("page", "1")
-                .param("per_page", "1"))
+                .param("per_page", "1")
+                .content(TestUtils.convertObjectToJsonBytes(criteria)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("X-Total-Count", "2"))

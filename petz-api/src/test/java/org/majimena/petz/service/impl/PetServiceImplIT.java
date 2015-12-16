@@ -16,7 +16,7 @@ import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
 import org.majimena.petz.service.PetService;
-import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +48,7 @@ public class PetServiceImplIT {
         @Test
         @DatabaseSetup("classpath:/fixture/base.xml")
         public void ユーザーのペット一覧が取得できること() throws Exception {
-            Pageable pageable = PaginationUtil.generatePageRequest(null, null);
+            Pageable pageable = PaginationUtils.generatePageRequest(null, null);
             Page<Pet> result = sut.getPetsByPetCriteria(new PetCriteria("1", null), pageable);
 
             assertThat(result.hasContent(), is(true));
@@ -74,7 +74,7 @@ public class PetServiceImplIT {
         @Test
         @DatabaseSetup("classpath:/fixture/base.xml")
         public void ユーザーが存在しない場合は何も取得できないこと() throws Exception {
-            Pageable pageable = PaginationUtil.generatePageRequest(null, null);
+            Pageable pageable = PaginationUtils.generatePageRequest(null, null);
             Page<Pet> result = sut.getPetsByPetCriteria(new PetCriteria("999", null), pageable);
             assertThat(result.hasContent(), is(false));
         }

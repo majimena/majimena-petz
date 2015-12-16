@@ -7,7 +7,7 @@ import org.majimena.petz.domain.Chart;
 import org.majimena.petz.domain.chart.ChartCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ChartService;
-import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -63,12 +63,12 @@ public class ChartController {
             throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
         }
 
-        Pageable pageable = PaginationUtil.generatePageRequest(offset, limit);
+        Pageable pageable = PaginationUtils.generatePageRequest(offset, limit);
         criteria.setClinicId(clinicId);
 
         // カルテを検索する
         Page<Chart> charts = chartService.findChartsByChartCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(charts, "/api/v1/clinics/" + clinicId + "/charts", offset, limit);
+        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(charts, "/api/v1/clinics/" + clinicId + "/charts", offset, limit);
         return new ResponseEntity<>(charts.getContent(), headers, HttpStatus.OK);
     }
 

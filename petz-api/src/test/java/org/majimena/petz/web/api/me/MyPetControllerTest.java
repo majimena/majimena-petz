@@ -10,15 +10,12 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.WebAppTestConfiguration;
 import org.majimena.petz.config.SpringMvcConfiguration;
-import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.User;
-import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.security.SecurityUtils;
-import org.majimena.petz.service.ClinicService;
 import org.majimena.petz.service.PetService;
-import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -78,7 +75,7 @@ public class MyPetControllerTest {
         @Test
         public void マイペットの一覧がページングで取得できること() throws Exception {
             PetCriteria criteria = PetCriteria.builder().userId("taro").build();
-            Pageable pageable = PaginationUtil.generatePageRequest(1, 1);
+            Pageable pageable = PaginationUtils.generatePageRequest(1, 1);
 
             new NonStrictExpectations() {{
                 SecurityUtils.getCurrentUserId();

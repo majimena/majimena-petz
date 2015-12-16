@@ -10,23 +10,15 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.WebAppTestConfiguration;
 import org.majimena.petz.config.SpringMvcConfiguration;
-import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.User;
-import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.security.SecurityUtils;
-import org.majimena.petz.service.ClinicService;
 import org.majimena.petz.service.UserService;
-import org.majimena.petz.web.rest.util.PaginationUtil;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
@@ -34,7 +26,6 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

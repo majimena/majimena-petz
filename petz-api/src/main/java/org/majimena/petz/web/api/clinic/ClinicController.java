@@ -4,7 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.service.ClinicService;
-import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -57,9 +57,9 @@ public class ClinicController {
     @RequestMapping(value = "/clinics", method = RequestMethod.GET)
     public ResponseEntity<List<Clinic>> getAll(@RequestParam(value = "page", required = false) Integer offset,
                                                @RequestParam(value = "per_page", required = false) Integer limit) throws URISyntaxException {
-        Pageable pageable = PaginationUtil.generatePageRequest(offset, limit);
+        Pageable pageable = PaginationUtils.generatePageRequest(offset, limit);
         Page<Clinic> page = clinicService.findClinicsByClinicCriteria(new ClinicCriteria(), pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/v1/clinics", offset, limit);
+        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page, "/api/v1/clinics", offset, limit);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

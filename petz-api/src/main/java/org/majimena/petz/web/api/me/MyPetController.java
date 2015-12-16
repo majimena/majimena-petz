@@ -5,7 +5,7 @@ import org.majimena.petz.domain.Pet;
 import org.majimena.petz.domain.pet.PetCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.PetService;
-import org.majimena.petz.web.rest.util.PaginationUtil;
+import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -50,9 +50,9 @@ public class MyPetController {
         criteria.setUserId(SecurityUtils.getCurrentUserId());
 
         // ページング要素を加えて検索結果を返す
-        Pageable pageable = PaginationUtil.generatePageRequest(offset, limit);
+        Pageable pageable = PaginationUtils.generatePageRequest(offset, limit);
         Page<Pet> page = petService.getPetsByPetCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/v1/me/pets", offset, limit);
+        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page, "/api/v1/me/pets", offset, limit);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 }

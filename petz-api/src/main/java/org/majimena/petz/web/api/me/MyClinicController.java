@@ -43,8 +43,8 @@ public class MyClinicController {
      */
     @Timed
     @RequestMapping(value = "/me/clinics", method = RequestMethod.GET)
-    public ResponseEntity<List<Clinic>> getAll(@RequestParam(value = "page", required = false) Integer offset,
-                                               @RequestParam(value = "per_page", required = false) Integer limit) throws URISyntaxException {
+    public ResponseEntity<List<Clinic>> get(@RequestParam(value = "page", required = false) Integer offset,
+                                            @RequestParam(value = "per_page", required = false) Integer limit) throws URISyntaxException {
         // 検索条件を生成
         ClinicCriteria criteria = new ClinicCriteria();
         criteria.setUserId(SecurityUtils.getCurrentUserId());

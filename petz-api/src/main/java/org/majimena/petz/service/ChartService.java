@@ -25,18 +25,20 @@ public interface ChartService {
     /**
      * カルテIDをもとに, カルテを取得する.
      *
-     * @param chartId カルテID
+     * @param clinicId クリニックID
+     * @param chartId  カルテID
      * @return カルテ
      */
-    Optional<Chart> getChartByChartId(String chartId);
+    Optional<Chart> getChartByChartId(String clinicId, String chartId);
 
     /**
      * カルテを保存する. 未登録のペット情報があれば, それも一緒に登録する.
      *
-     * @param clinicId カルテを登録するクリニックのID
-     * @param chart    カルテ情報
+     * @param chart カルテ情報
      * @return 保存しカルテ情報
      * @throws ApplicationException
      */
-    Chart saveChart(String clinicId, Chart chart) throws ApplicationException;
+    Chart saveChart(Chart chart);
+
+    Chart updateChart(Chart chart);
 }

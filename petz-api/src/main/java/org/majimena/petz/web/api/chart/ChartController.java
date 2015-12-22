@@ -2,11 +2,13 @@ package org.majimena.petz.web.api.chart;
 
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.domain.Chart;
 import org.majimena.petz.domain.chart.ChartCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ChartService;
+import org.majimena.petz.web.utils.ErrorsUtils;
 import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,21 +56,18 @@ public class ChartController {
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/charts", method = RequestMethod.GET)
-    public ResponseEntity<List<Chart>> getAll(@PathVariable String clinicId,
+    public ResponseEntity<List<Chart>> getAll(@PathVariable String clinicId, @Valid ChartCriteria criteria,
                                               @RequestParam(value = "page", required = false) Integer offset,
-                                              @RequestParam(value = "per_page", required = false) Integer limit,
-                                              @Valid ChartCriteria criteria) throws URISyntaxException {
+                                              @RequestParam(value = "per_page", required = false) Integer limit) throws URISyntaxException {
         // クリニックの権限チェック
-        if (!SecurityUtils.isUserInClinic(clinicId)) {
-            throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
-        }
-
-        Pageable pageable = PaginationUtils.generatePageRequest(offset, limit);
-        criteria.setClinicId(clinicId);
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // カルテを検索する
+        Pageable pageable = PaginationUtils.generatePageRequest(offset, limit);
+        criteria.setClinicId(clinicId);
         Page<Chart> charts = chartService.findChartsByChartCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(charts, "/api/v1/clinics/" + clinicId + "/charts", offset, limit);
+        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(charts, "/api/v1/clinics/" + clinicId + "/charts", offset, limit, criteria);
         return new ResponseEntity<>(charts.getContent(), headers, HttpStatus.OK);
     }
 
@@ -76,20 +75,15 @@ public class ChartController {
     @RequestMapping(value = "/clinics/{clinicId}/charts/{chartId}", method = RequestMethod.GET)
     public ResponseEntity<Chart> show(@PathVariable String clinicId, @PathVariable String chartId) {
         // クリニックの権限チェック
-        if (!SecurityUtils.isUserInClinic(clinicId)) {
-            throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
-        }
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(chartId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // カルテを取得する
-        Optional<Chart> one = chartService.getChartByChartId(chartId);
+        Optional<Chart> one = chartService.getChartByChartId(clinicId, chartId);
         return one
-                .map(chart -> {
-                    if (!StringUtils.equals(clinicId, chart.getClinic().getId())) {
-                        throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
-                    }
-                    return ResponseEntity.ok().body(chart);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .map(chart -> ResponseEntity.ok().body(chart))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -103,17 +97,16 @@ public class ChartController {
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/charts", method = RequestMethod.POST)
-    public ResponseEntity<Chart> post(@PathVariable String clinicId,
-                                      @RequestBody @Valid Chart chart, BindingResult errors) throws BindException {
+    public ResponseEntity<Chart> post(@PathVariable String clinicId, @RequestBody @Valid Chart chart, BindingResult errors) throws BindException {
         // クリニックの権限チェック
-        if (!SecurityUtils.isUserInClinic(clinicId)) {
-            throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
-        }
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // カルテを保存する
-        Chart saved = chartService.saveChart(clinicId, chart);
+        chart.setClinic(Clinic.builder().id(clinicId).build());
+        Chart saved = chartService.saveChart(chart);
         return ResponseEntity.created(
-                URI.create("/api/v1/clinics/" + clinicId + "/charts/" + saved.getId())).body(saved);
+            URI.create("/api/v1/clinics/" + clinicId + "/charts/" + saved.getId())).body(saved);
     }
 
     /**
@@ -128,9 +121,15 @@ public class ChartController {
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/charts/{chartId}", method = RequestMethod.PUT)
-    public ResponseEntity<Chart> put(@PathVariable String clinicId, @PathVariable String chartId,
-                                     @RequestBody @Valid Chart chart, BindingResult errors) throws BindException {
-        ResponseEntity<Chart> post = post(clinicId, chart, errors);
-        return ResponseEntity.ok().body(post.getBody());
+    public ResponseEntity<Chart> put(@PathVariable String clinicId, @PathVariable String chartId, @RequestBody @Valid Chart chart, BindingResult errors) throws BindException {
+        // クリニックの権限チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(chartId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+
+        // カルテを更新する
+        chart.setClinic(Clinic.builder().id(clinicId).build());
+        Chart saved = chartService.updateChart(chart);
+        return ResponseEntity.ok().body(saved);
     }
 }

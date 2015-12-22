@@ -59,7 +59,7 @@ public class ExaminationServiceImpl implements ExaminationService {
         BigDecimal total = examination.getPrice().multiply(examination.getQuantity());
         if (examination.getTaxType().is(TaxType.INCLUSIVE)) {
             // 内税計算
-            BigDecimal tax = total.divide(BigDecimal.ONE.add(rate)).multiply(rate);
+            BigDecimal tax = total.divide(BigDecimal.ONE.add(rate), 1, BigDecimal.ROUND_DOWN).multiply(rate);
             examination.setTotal(total);
             examination.setTax(tax);
         } else {

@@ -14,4 +14,5 @@
     <include file="classpath:config/liquibase/changelog/20151106000000_added_entity_Product.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151109000000_added_entity_Examination.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151115000000_added_entity_TicketAttachment.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20151219000000_added_entity_Invoice.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

@@ -44,13 +44,11 @@ public class PaginationUtils {
         return new PageRequest(offset - 1, limit);
     }
 
-    public static HttpHeaders generatePaginationHttpHeaders(Page page, String baseUrl, Integer offset, Integer limit)
-            throws URISyntaxException {
+    public static HttpHeaders generatePaginationHttpHeaders(Page page, String baseUrl, Integer offset, Integer limit) {
         return generatePaginationHttpHeaders(page, baseUrl, offset, limit, null);
     }
 
-    public static HttpHeaders generatePaginationHttpHeaders(Page page, String baseUrl, Integer offset, Integer limit, Object criteria, String... excludes)
-            throws URISyntaxException {
+    public static HttpHeaders generatePaginationHttpHeaders(Page page, String baseUrl, Integer offset, Integer limit, Object criteria, String... excludes) {
         if (offset == null || offset < MIN_OFFSET) {
             offset = DEFAULT_OFFSET;
         }
@@ -61,20 +59,24 @@ public class PaginationUtils {
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", "" + page.getTotalElements());
 
-        String params = getParamString(criteria, excludes);
-        String link = "";
-        if (offset < page.getTotalPages()) {
-            URI uri = new URI(baseUrl + "?page=" + (offset + 1) + "&per_page=" + limit + params);
-            link = "<" + uri.toString() + ">; rel=\"next\",";
+        try {
+            String params = getParamString(criteria, excludes);
+            String link = "";
+            if (offset < page.getTotalPages()) {
+                URI uri = new URI(baseUrl + "?page=" + (offset + 1) + "&per_page=" + limit + params);
+                link = "<" + uri.toString() + ">; rel=\"next\",";
+            }
+            if (offset > 1) {
+                URI uri = new URI(baseUrl + "?page=" + (offset - 1) + "&per_page=" + limit + params);
+                link += "<" + uri.toString() + ">; rel=\"prev\",";
+            }
+            URI last = new URI(baseUrl + "?page=" + page.getTotalPages() + "&per_page=" + limit + params);
+            URI first = new URI(baseUrl + "?page=" + 1 + "&per_page=" + limit + params);
+            link += "<" + last.toString() + ">; rel=\"last\"," + "<" + first.toString() + ">; rel=\"first\"";
+            headers.add(HttpHeaders.LINK, link);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
-        if (offset > 1) {
-            URI uri = new URI(baseUrl + "?page=" + (offset - 1) + "&per_page=" + limit + params);
-            link += "<" + uri.toString() + ">; rel=\"prev\",";
-        }
-        URI last = new URI(baseUrl + "?page=" + page.getTotalPages() + "&per_page=" + limit + params);
-        URI first = new URI(baseUrl + "?page=" + 1 + "&per_page=" + limit + params);
-        link += "<" + last.toString() + ">; rel=\"last\"," + "<" + first.toString() + ">; rel=\"first\"";
-        headers.add(HttpHeaders.LINK, link);
 
         return headers;
     }

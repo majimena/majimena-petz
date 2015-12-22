@@ -41,14 +41,9 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Optional<Product> getProductByProductId(String clinicId, String productId) {
+    public Optional<Product> getProductByProductId(String productId) {
         Product product = productRepository.findOne(productId);
-        if (product == null) {
-            return Optional.empty();
-        }
-
-        SecurityUtils.throwIfUnmatchClinicId(clinicId, product.getClinic().getId());
-        return Optional.of(product);
+        return Optional.ofNullable(product);
     }
 
     /**
@@ -82,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProductByProductId(String clinicId, String productId) {
         // 削除対象が存在しなければ何もしない
         Product one = productRepository.findOne(productId);
-        if (one != null) {
+        if (one == null) {
             return;
         }
 

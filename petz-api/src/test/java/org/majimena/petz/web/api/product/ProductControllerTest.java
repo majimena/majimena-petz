@@ -148,7 +148,7 @@ public class ProductControllerTest {
         public void 権限がない場合はアクセスできないこと() throws Exception {
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
-                result = new ResourceCannotAccessException("");
+                result = new ResourceCannotAccessException();
             }};
 
             mockMvc.perform(get("/api/v1/clinics/1/products/product1"))
@@ -168,7 +168,7 @@ public class ProductControllerTest {
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
                 result = null;
 
-                productService.getProductByProductId("1", "product1");
+                productService.getProductByProductId("product1");
                 data.setId("product1");
                 data.setRemoved(Boolean.FALSE);
                 data.setClinic(Clinic.builder().id("1").build());
@@ -190,12 +190,39 @@ public class ProductControllerTest {
         }
 
         @Test
+        public void 権限がないプロダクトにはアクセスできないこと() throws Exception {
+            Product data = newPostProduct();
+
+            new NonStrictExpectations() {{
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = null;
+
+                productService.getProductByProductId("product1");
+                data.setId("product1");
+                data.setRemoved(Boolean.FALSE);
+                data.setClinic(Clinic.builder().id("2").build());
+                result = Optional.of(data);
+
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = new ResourceCannotAccessException();
+            }};
+
+            mockMvc.perform(get("/api/v1/clinics/1/products/product1"))
+                    .andDo(print())
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/401")))
+                    .andExpect(jsonPath("$.title", is("Unauthorized")))
+                    .andExpect(jsonPath("$.status", is(401)))
+                    .andExpect(jsonPath("$.detail", is("You cannot access resource.")));
+        }
+
+        @Test
         public void 検索結果がない場合は404になること() throws Exception {
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
                 result = null;
 
-                productService.getProductByProductId("1", "product1");
+                productService.getProductByProductId("product1");
                 result = Optional.ofNullable(null);
             }};
 

@@ -94,9 +94,10 @@ public class ProductController {
         ErrorsUtils.throwIfNotIdentify(productId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
-        // プロダクトを検索する
-        Optional<Product> result = productService.getProductByProductId(clinicId, productId);
-        return result.map(product -> ResponseEntity.ok().body(product))
+        // プロダクトを検索してデータの権限をチェックする
+        Optional<Product> result = productService.getProductByProductId(productId);
+        result.ifPresent(p -> SecurityUtils.throwIfDoNotHaveClinicRoles(p.getClinic().getId()));
+        return result.map(p -> ResponseEntity.ok().body(p))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

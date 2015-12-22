@@ -13,7 +13,6 @@ import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Product;
 import org.majimena.petz.domain.product.ProductCriteria;
 import org.majimena.petz.repository.ProductRepository;
-import org.majimena.petz.security.ResourceCannotAccessException;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
@@ -100,7 +99,7 @@ public class ProductServiceImplTest {
                 result = newProduct();
             }};
 
-            Optional<Product> result = sut.getProductByProductId("1", "product1");
+            Optional<Product> result = sut.getProductByProductId("product1");
 
             assertThat(result.get().getId(), is("product1"));
             assertThat(result.get().getName(), is("12345678901234567890123456789012345678901234567890"));
@@ -118,20 +117,8 @@ public class ProductServiceImplTest {
                 result = null;
             }};
 
-            Optional<Product> result = sut.getProductByProductId("1", "product1");
+            Optional<Product> result = sut.getProductByProductId("product1");
             assertThat(result.isPresent(), is(false));
-        }
-
-        @Test(expected = ResourceCannotAccessException.class)
-        public void 指定したクリニックと異なる場合は空が取得できること() throws Exception {
-            new NonStrictExpectations() {{
-                Product data = newProduct();
-                data.setClinic(Clinic.builder().id("999").build());
-                productRepository.findOne("product1");
-                result = data;
-            }};
-
-            sut.getProductByProductId("1", "product1");
         }
     }
 
@@ -205,19 +192,6 @@ public class ProductServiceImplTest {
 
             sut.updateProduct(newProduct());
         }
-
-        @Test(expected = ResourceCannotAccessException.class)
-        public void 指定したクリニックの権限がない場合は削除できないこと() throws Exception {
-            Product product = newProduct();
-            new NonStrictExpectations() {{
-                Product data = newProduct();
-                data.setClinic(Clinic.builder().id("999").build());
-                productRepository.findOne("product1");
-                result = data;
-            }};
-
-            sut.updateProduct(product);
-        }
     }
 
     public static class DeleteProductByProductIdTest {
@@ -241,7 +215,7 @@ public class ProductServiceImplTest {
             sut.deleteProductByProductId("1", "product1");
         }
 
-        @Test(expected = ResourceNotFoundException.class)
+        @Test
         public void 対象がない場合は削除できないこと() throws Exception {
             new NonStrictExpectations() {{
                 productRepository.findOne("product1");
@@ -249,18 +223,11 @@ public class ProductServiceImplTest {
             }};
 
             sut.deleteProductByProductId("1", "product1");
-        }
 
-        @Test(expected = ResourceCannotAccessException.class)
-        public void 指定したクリニックの権限がない場合は削除できないこと() throws Exception {
-            Product product = newProduct();
-            new NonStrictExpectations() {{
-                productRepository.findOne("product1");
-                product.setClinic(Clinic.builder().id("999").build());
-                result = product;
+            new Verifications() {{
+                productRepository.delete((Product) any);
+                times = 0;
             }};
-
-            sut.deleteProductByProductId("1", "product1");
         }
     }
 }

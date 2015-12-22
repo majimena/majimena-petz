@@ -19,7 +19,7 @@ public interface ProductService {
      */
     List<Product> getProductsByProductCriteria(ProductCriteria criteria);
 
-    Optional<Product> getProductByProductId(String clinicId, String productId);
+    Optional<Product> getProductByProductId(String productId);
 
     Product saveProduct(Product product);
 

@@ -3,6 +3,7 @@ package org.majimena.petz.service.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.SystemException;
+import org.majimena.petz.common.utils.BeanFactoryUtils;
 import org.majimena.petz.domain.Chart;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
@@ -75,7 +76,7 @@ public class ChartServiceImpl implements ChartService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Optional<Chart> getChartByChartId(String chartId) {
+    public Optional<Chart> getChartByChartId(String clinicId, String chartId) {
         Chart one = chartRepository.findOne(chartId);
         Optional<Chart> chart = Optional.ofNullable(one);
         // lazy load for relational entities if chart is exists
@@ -92,13 +93,10 @@ public class ChartServiceImpl implements ChartService {
      */
     @Override
     @Transactional
-    public Chart saveChart(String clinicId, Chart chart) throws ApplicationException {
+    public Chart saveChart(Chart chart) {
         // カルテの保存に必要な関連情報を取得する
-        Clinic clinic = clinicRepository.findOne(clinicId);
+        Clinic clinic = clinicRepository.findOne(chart.getClinic().getId());
         Customer customer = customerRepository.findOne(chart.getCustomer().getId());
-        if (clinic == null || customer == null) {
-            throw new SystemException("must be found clinic [" + clinicId + "] and customer [" + chart.getCustomer().getId() + "].");
-        }
 
         // ペット情報が変更されているかもしれないので、ユーザーを指定して保存する
         chart.getPet().setUser(customer.getUser());
@@ -112,6 +110,20 @@ public class ChartServiceImpl implements ChartService {
         chart.setClinic(clinic);
         chart.setCustomer(customer);
         chart.setPet(pet);
+        return chartRepository.save(chart);
+    }
+
+    @Override
+    @Transactional
+    public Chart updateChart(Chart chart) {
+        Chart one = chartRepository.findOne(chart.getId());
+        if (one == null) {
+            // TODO
+            throw new RuntimeException("");
+        }
+
+        // カルテを更新する
+        BeanFactoryUtils.copyNonNullProperties(chart, one);
         return chartRepository.save(chart);
     }
 }

@@ -1,13 +1,12 @@
 package org.majimena.petz.service.impl;
 
-import org.apache.commons.lang3.StringUtils;
-import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.common.utils.BeanFactoryUtils;
+import org.majimena.petz.common.utils.ExceptionUtils;
 import org.majimena.petz.domain.Product;
 import org.majimena.petz.domain.product.ProductCriteria;
 import org.majimena.petz.repository.ProductRepository;
 import org.majimena.petz.repository.spec.ProductSpecs;
-import org.majimena.petz.security.ResourceCannotAccessException;
+import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,13 +43,12 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public Optional<Product> getProductByProductId(String clinicId, String productId) {
         Product product = productRepository.findOne(productId);
-        if (product != null) {
-            // TODO 要リファクタリング
-            if (!StringUtils.equals(clinicId, product.getClinic().getId())) {
-                throw new ResourceCannotAccessException("");
-            }
+        if (product == null) {
+            return Optional.empty();
         }
-        return Optional.ofNullable(product);
+
+        SecurityUtils.throwIfUnmatchClinicId(clinicId, product.getClinic().getId());
+        return Optional.of(product);
     }
 
     /**
@@ -60,8 +58,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public Product saveProduct(Product product) {
         product.setRemoved(Boolean.FALSE);
-        Product saved = productRepository.save(product);
-        return saved;
+        return productRepository.save(product);
     }
 
     /**
@@ -71,17 +68,10 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public Product updateProduct(Product product) {
         Product one = productRepository.findOne(product.getId());
-        // TODO 要リファクタリング
-        if (one == null) {
-            throw new ResourceNotFoundException("");
-        }
-        if (!StringUtils.equals(product.getClinic().getId(), one.getClinic().getId())) {
-            throw new ResourceCannotAccessException("");
-        }
+        ExceptionUtils.throwIfNull(one);
 
         BeanFactoryUtils.copyNonNullProperties(product, one);
-        Product saved = productRepository.save(one);
-        return saved;
+        return productRepository.save(one);
     }
 
     /**
@@ -90,14 +80,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void deleteProductByProductId(String clinicId, String productId) {
+        // 削除対象が存在しなければ何もしない
         Product one = productRepository.findOne(productId);
-        // TODO 要リファクタリング
-        if (one == null) {
-            throw new ResourceNotFoundException("");
+        if (one != null) {
+            return;
         }
-        if (!StringUtils.equals(clinicId, one.getClinic().getId())) {
-            throw new ResourceCannotAccessException("");
-        }
+
+        // 削除して良いクリニックかどうかチェックする
+        SecurityUtils.throwIfUnmatchClinicId(clinicId, one.getClinic().getId());
 
         // 論理削除する
         one.setRemoved(Boolean.TRUE);

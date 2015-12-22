@@ -122,8 +122,8 @@ public final class SecurityUtils {
      */
     public static boolean isUserInRole(String clinicId, String role) {
         return getPrincipal()
-                .map(u -> u.getAuthorities().contains(new PetzGrantedAuthority(clinicId, role)))
-                .orElse(false);
+            .map(u -> u.getAuthorities().contains(new PetzGrantedAuthority(clinicId, role)))
+            .orElse(false);
     }
 
     /**
@@ -134,14 +134,14 @@ public final class SecurityUtils {
      */
     public static boolean isUserInClinic(String clinicId) {
         return getPrincipal()
-                .map(u -> {
-                    if (u.getAuthorities().isEmpty()) {
-                        return false;
-                    }
-                    return u.getAuthorities().stream()
-                            .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId));
-                })
-                .orElse(false);
+            .map(u -> {
+                if (u.getAuthorities().isEmpty()) {
+                    return false;
+                }
+                return u.getAuthorities().stream()
+                    .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId));
+            })
+            .orElse(false);
     }
 
     /**
@@ -155,5 +155,18 @@ public final class SecurityUtils {
             return;
         }
         throw new ResourceCannotAccessException("Cannot access resource.");
+    }
+
+    /**
+     * 指定したクリニックIDと同一でない場合に例外を投げる.
+     *
+     * @param value1 クリニックID
+     * @param value2 クリニックID
+     * @throws ResourceCannotAccessException クリニックIDが同一ではない場合
+     */
+    public static void throwIfUnmatchClinicId(String value1, String value2) {
+        if (!StringUtils.equals(value1, value2)) {
+            throw new ResourceCannotAccessException("Cannot access resource.");
+        }
     }
 }

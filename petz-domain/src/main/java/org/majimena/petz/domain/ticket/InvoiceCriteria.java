@@ -27,6 +27,8 @@ public class InvoiceCriteria implements Serializable {
 
     private String clinicId;
 
+    private String ticketId;
+
     @JsonSerialize(using = EnumDataTypeSerializer.class)
     @JsonDeserialize(using = InvoiceStateDeserializer.class)
     private InvoiceState state;

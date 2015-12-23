@@ -1,6 +1,6 @@
 package org.majimena.petz.service.impl;
 
-import org.apache.commons.lang3.StringUtils;
+import org.majimena.petz.common.utils.ExceptionUtils;
 import org.majimena.petz.datatype.InvoiceState;
 import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.domain.Examination;
@@ -11,7 +11,6 @@ import org.majimena.petz.repository.ExaminationRepository;
 import org.majimena.petz.repository.InvoiceRepository;
 import org.majimena.petz.repository.TicketRepository;
 import org.majimena.petz.repository.spec.InvoiceSpecs;
-import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.InvoiceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,8 +50,10 @@ public class InvoiceServiceImpl implements InvoiceService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<Invoice> findInvoicesByInvoiceCriteria(InvoiceCriteria criteria, Pageable pageable) {
         Page<Invoice> page = invoiceRepository.findAll(InvoiceSpecs.of(criteria), pageable);
+        page.forEach(invoice -> invoice.getTicket().getId()); // lazy load
         return page;
     }
 
@@ -60,22 +61,40 @@ public class InvoiceServiceImpl implements InvoiceService {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Invoice> getInvoiceByInvoiceId(String clinicId, String ticketId, String invoiceId) {
-        Invoice one = invoiceRepository.findOne(invoiceId);
-        if (one == null) {
-            return Optional.empty();
-        }
-        if (!StringUtils.equals(ticketId, one.getTicket().getId()) || !StringUtils.equals(clinicId, one.getTicket().getClinic().getId())) {
-            return Optional.empty();
-        }
-        return Optional.of(one);
+    @Transactional(readOnly = true)
+    public List<Invoice> getInvoicesByTicketId(String clinicId, String ticketId) {
+        InvoiceCriteria criteria = new InvoiceCriteria();
+        criteria.setClinicId(clinicId);
+        criteria.setTicketId(ticketId);
+
+        List<Invoice> invoices = invoiceRepository.findAll(InvoiceSpecs.of(criteria));
+        invoices.forEach(invoice -> invoice.getTicket().getId()); // lazy load
+        return invoices;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Invoice> getInvoiceByInvoiceId(String invoiceId) {
+        Invoice one = invoiceRepository.findOne(invoiceId);
+        if (one != null) {
+            one.getTicket().getId(); // lazy load
+        }
+        return Optional.ofNullable(one);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public Invoice createInvoice(String clinicId, String ticketId) {
+        // チケットが存在するか確認する
         Ticket ticket = ticketRepository.findOne(ticketId);
-        // TODO セキュリティ対策
+        ExceptionUtils.throwIfNull(ticket);
+        ExceptionUtils.throwIfNotEqual(clinicId, ticket.getClinic().getId());
 
         // チケット自体のステータスを支払中にする
         ticket.setState(TicketState.PAYMENT);
@@ -86,11 +105,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         BigDecimal subtotal = BigDecimal.ZERO;
         BigDecimal tax = BigDecimal.ZERO;
         BigDecimal total = BigDecimal.ZERO;
-        examinations.forEach(examination -> {
-            subtotal.add(examination.getTotal().subtract(examination.getTax()));
-            tax.add(examination.getTax());
-            total.add(examination.getTotal());
-        });
+        for (Examination examination : examinations) {
+            subtotal = subtotal.add(examination.getTotal().subtract(examination.getTax()));
+            tax = tax.add(examination.getTax());
+            total = total.add(examination.getTotal());
+        }
 
         // インヴォイスを作成する
         Invoice invoice = new Invoice();
@@ -100,5 +119,26 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setTax(tax);
         invoice.setTotal(total);
         return invoiceRepository.save(invoice);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public void cancelInvoice(String clinicId, String invoiceId) {
+        // キャンセルするインヴォイスを取得する
+        Invoice one = invoiceRepository.findOne(invoiceId);
+        ExceptionUtils.throwIfNull(one);
+
+        // 権限のないチケットなら例外にする
+        Ticket ticket = one.getTicket();
+        ExceptionUtils.throwIfNotEqual(clinicId, ticket.getClinic().getId());
+
+        // インヴォイスをキャンセルしてチケットのステータスを戻す
+        ticket.setState(TicketState.DOING);
+        ticketRepository.save(ticket);
+        one.setState(InvoiceState.CANCEL);
+        invoiceRepository.save(one);
     }
 }

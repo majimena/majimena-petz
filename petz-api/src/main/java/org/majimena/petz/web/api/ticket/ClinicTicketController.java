@@ -148,7 +148,7 @@ public class ClinicTicketController {
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/tickets/{ticketId}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> put(@PathVariable String clinicId, @PathVariable String ticketId) {
+    public ResponseEntity<Void> delete(@PathVariable String clinicId, @PathVariable String ticketId) {
         // クリニックの権限チェックとIDのコード体系チェック
         ErrorsUtils.throwIfNotIdentify(clinicId);
         ErrorsUtils.throwIfNotIdentify(ticketId);

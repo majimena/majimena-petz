@@ -64,7 +64,7 @@ public class Invoice extends AbstractAuditingEntity implements Serializable {
     @JsonSerialize(using = EnumDataTypeSerializer.class)
     @JsonDeserialize(using = InvoiceStateDeserializer.class)
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "state", nullable = false)
+    @Column(name = "state", nullable = false)
     private InvoiceState state;
 
     @NotNull

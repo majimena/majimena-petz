@@ -16,6 +16,7 @@ public class InvoiceSpecs {
     public static Specification<Invoice> of(InvoiceCriteria criteria) {
         return Specifications
                 .where(Optional.ofNullable(criteria.getClinicId()).map(InvoiceSpecs::equalClinicId).orElse(null))
+                .and(Optional.ofNullable(criteria.getTicketId()).map(InvoiceSpecs::equalTicketId).orElse(null))
                 .and(Optional.ofNullable(criteria.getState()).map(InvoiceSpecs::equalState).orElse(null));
     }
 
@@ -23,7 +24,11 @@ public class InvoiceSpecs {
         return (root, query, cb) -> cb.equal(root.get("ticket").get("clinic").get("id"), clinicId);
     }
 
+    private static Specification equalTicketId(String ticketId) {
+        return (root, query, cb) -> cb.equal(root.get("ticket").get("id"), ticketId);
+    }
+
     private static Specification equalState(InvoiceState state) {
-        return (root, query, cb) -> cb.equal(root.get("state"), state.getValue());
+        return (root, query, cb) -> cb.equal(root.get("state"), state);
     }
 }

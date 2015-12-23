@@ -2,7 +2,6 @@ package org.majimena.petz.common.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
-import org.majimena.petz.security.ResourceCannotAccessException;
 
 /**
  * Created by todoken on 2015/11/15.
@@ -17,7 +16,7 @@ public class ExceptionUtils {
 
     public static void throwIfNotEqual(String value1, String value2) {
         if (!StringUtils.equals(value1, value2)) {
-            throw new ResourceCannotAccessException("value1 [" + value1 + "] must be equal value2 [" + value2 + "]");
+            throw new ResourceNotFoundException("value1 [" + value1 + "] must be equal value2 [" + value2 + "]");
         }
     }
 }

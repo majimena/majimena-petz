@@ -28,7 +28,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/v1")
-public class ProductController {
+public class ClinicProductController {
 
     /**
      * プロダクトサービス.

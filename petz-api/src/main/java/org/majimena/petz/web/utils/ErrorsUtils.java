@@ -1,6 +1,7 @@
 package org.majimena.petz.web.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.datatype.defs.ID;
 import org.majimena.petz.domain.errors.ErrorCode;
 import org.springframework.validation.BindException;
@@ -50,6 +51,12 @@ public class ErrorsUtils {
     public static void throwIfNotIdentify(String value) {
         if (StringUtils.isEmpty(value) || value.length() > ID.MAX_LENGTH) {
             throw new IllegalArgumentException("Illegal identify. id=[" + value + "]");
+        }
+    }
+
+    public static void throwIfNotEqual(String value1, String value2) {
+        if (!StringUtils.equals(value1, value2)) {
+            throw new ResourceNotFoundException();
         }
     }
 }

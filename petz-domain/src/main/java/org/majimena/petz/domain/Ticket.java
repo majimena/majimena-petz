@@ -43,7 +43,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "ticket")
-@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class Ticket extends AbstractAuditingEntity implements Serializable {
 
     @Id

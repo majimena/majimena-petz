@@ -4,11 +4,11 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.MetricsServlet;
 import org.majimena.petz.common.factory.JsonFactory;
-import org.majimena.petz.web.servlet.filter.AccessLogFilter;
 import org.majimena.petz.web.filter.CachingHttpHeadersFilter;
 import org.majimena.petz.web.filter.CrossOriginResourceSharingFilter;
 import org.majimena.petz.web.filter.StaticResourcesProductionFilter;
 import org.majimena.petz.web.filter.gzip.GZipServletFilter;
+import org.majimena.petz.web.servlet.filter.AccessLogFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +19,13 @@ import org.springframework.boot.context.embedded.MimeMappings;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.inject.Inject;
 import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -69,6 +71,7 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         initCharacterEncodingFilter(servletContext, disps);
         initCrossOriginResourceSharingFilter(servletContext);
         initAccessLogFilter(servletContext);
+        initOpenEntityManagerInViewFilter(servletContext);
 
         super.onStartup(servletContext);
         log.info("Web application fully configured");
@@ -193,6 +196,12 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         CrossOriginResourceSharingFilter filter = new CrossOriginResourceSharingFilter();
 
         FilterRegistration registration = context.addFilter("crossOriginResourceSharingFilter", filter);
+        registration.addMappingForUrlPatterns(null, false, "/*");
+    }
+
+    private void initOpenEntityManagerInViewFilter(ServletContext context) {
+        OpenEntityManagerInViewFilter filter = new OpenEntityManagerInViewFilter();
+        FilterRegistration registration = context.addFilter("openEntityManagerInViewFilter", filter);
         registration.addMappingForUrlPatterns(null, false, "/*");
     }
 

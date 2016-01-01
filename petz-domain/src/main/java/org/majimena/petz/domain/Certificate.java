@@ -10,11 +10,12 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.majimena.petz.datatype.TaxType;
+import org.majimena.petz.datatype.CertificateType;
 import org.majimena.petz.datatype.converters.LocalDateTimePersistenceConverter;
+import org.majimena.petz.datatype.defs.Description;
 import org.majimena.petz.datatype.defs.Name;
+import org.majimena.petz.datatype.deserializers.CertificateTypeDeserializer;
 import org.majimena.petz.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
-import org.majimena.petz.datatype.deserializers.TaxTypeDeserializer;
 import org.majimena.petz.datatype.serializers.EnumDataTypeSerializer;
 import org.majimena.petz.datatype.serializers.ISO8601LocalDateTimeSerializer;
 
@@ -36,7 +37,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 診察ドメイン.
+ * 証明書ドメイン.
  */
 @Data
 @Builder
@@ -44,9 +45,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "examination")
-@Cache(usage = CacheConcurrencyStrategy.NONE)
-public class Examination extends AbstractAuditingEntity implements Serializable {
+@Table(name = "certificate")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public class Certificate extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -59,49 +60,31 @@ public class Examination extends AbstractAuditingEntity implements Serializable 
     private Ticket ticket;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    @NotNull
-    @Size(max = Name.MAX_LENGTH)
-    @Column(name = "name", length = Name.MAX_LENGTH, nullable = false)
-    private String name;
-
-    @NotNull
-    @Column(name = "price", precision = 9, scale = 0, nullable = false)
-    private BigDecimal price;
-
-    @Enumerated(EnumType.STRING)
     @JsonSerialize(using = EnumDataTypeSerializer.class)
-    @JsonDeserialize(using = TaxTypeDeserializer.class)
-    @Column(name = "tax_type", length = 20, nullable = false)
-    private TaxType taxType;
+    @JsonDeserialize(using = CertificateTypeDeserializer.class)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private CertificateType type;
 
-    @NotNull
-    @Column(name = "tax_rate", precision = 3, scale = 2, nullable = false)
-    private BigDecimal taxRate;
-
-    @Column(name = "tax", precision = 9, scale = 0, nullable = false)
-    private BigDecimal tax;
-
-    @NotNull
-    @Column(name = "quantity", precision = 3, scale = 0, nullable = false)
-    private BigDecimal quantity;
-
-    @Column(name = "total", precision = 12, scale = 0, nullable = false)
-    private BigDecimal total;
-
-    @Size(max = 10000)
-    @Column(name = "memo", length = 10000, nullable = true)
-    private String memo;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "vaccine_id", nullable = true)
+    private Vaccine vaccine;
 
     @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
     @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
     @Convert(converter = LocalDateTimePersistenceConverter.class)
-    @Column(name = "examination_date_time", nullable = false)
-    private LocalDateTime examinationDateTime;
+    @Column(name = "vaccinated_date", nullable = false)
+    private LocalDateTime vaccinatedDate;
 
-    @Column(name = "removed", nullable = false)
-    private Boolean removed;
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "license_no", length = Name.MAX_LENGTH, nullable = true)
+    private String licenseNo;
+
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "report_no", length = Name.MAX_LENGTH, nullable = true)
+    private String reportNo;
+
+    @Size(max = Description.MAX_LENGTH)
+    @Column(name = "memo", length = Description.MAX_LENGTH, nullable = true)
+    private String memo;
 }

@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * @see ProductController
+ * @see ClinicProductController
  */
 @RunWith(Enclosed.class)
 public class ProductControllerTest {
@@ -69,7 +69,7 @@ public class ProductControllerTest {
 
         @Before
         public void setup() {
-            ProductController sut = new ProductController();
+            ClinicProductController sut = new ClinicProductController();
             sut.setProductService(productService);
             mockMvc = MockMvcBuilders.standaloneSetup(sut)
                     .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
@@ -137,7 +137,7 @@ public class ProductControllerTest {
 
         @Before
         public void setup() {
-            ProductController sut = new ProductController();
+            ClinicProductController sut = new ClinicProductController();
             sut.setProductService(productService);
             mockMvc = MockMvcBuilders.standaloneSetup(sut)
                     .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
@@ -250,7 +250,7 @@ public class ProductControllerTest {
 
         @Before
         public void setup() {
-            ProductController sut = new ProductController();
+            ClinicProductController sut = new ClinicProductController();
             sut.setProductService(productService);
             sut.setProductValidator(productValidator);
             mockMvc = MockMvcBuilders.standaloneSetup(sut)
@@ -502,7 +502,7 @@ public class ProductControllerTest {
 
         @Before
         public void setup() {
-            ProductController sut = new ProductController();
+            ClinicProductController sut = new ClinicProductController();
             sut.setProductService(productService);
             sut.setProductValidator(productValidator);
             mockMvc = MockMvcBuilders.standaloneSetup(sut)
@@ -751,7 +751,7 @@ public class ProductControllerTest {
 
         @Before
         public void setup() {
-            ProductController sut = new ProductController();
+            ClinicProductController sut = new ClinicProductController();
             sut.setProductService(productService);
             mockMvc = MockMvcBuilders.standaloneSetup(sut)
                     .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())

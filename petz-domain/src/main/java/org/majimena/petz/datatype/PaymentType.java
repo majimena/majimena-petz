@@ -3,7 +3,7 @@ package org.majimena.petz.datatype;
 /**
  * 支払方法.
  */
-public enum PaymentOption implements EnumDataType {
+public enum PaymentType implements EnumDataType {
 
     CASH("現金"),
 
@@ -13,7 +13,7 @@ public enum PaymentOption implements EnumDataType {
 
     private String name;
 
-    PaymentOption(String name) {
+    PaymentType(String name) {
         this.name = name;
     }
 
@@ -27,7 +27,7 @@ public enum PaymentOption implements EnumDataType {
         return name();
     }
 
-    public boolean is(PaymentOption value) {
+    public boolean is(PaymentType value) {
         return this == value;
     }
 }

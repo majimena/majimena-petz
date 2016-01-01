@@ -118,6 +118,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setSubtotal(subtotal);
         invoice.setTax(tax);
         invoice.setTotal(total);
+        invoice.setReceiptAmount(BigDecimal.ZERO);
         return invoiceRepository.save(invoice);
     }
 

@@ -10,6 +10,7 @@ import org.majimena.petz.repository.TicketRepository;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.web.api.AbstractValidator;
 import org.majimena.petz.web.utils.ErrorsUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 
 import javax.inject.Inject;
@@ -44,6 +45,7 @@ public class ExaminationValidator extends AbstractValidator<Examination> {
      * {@inheritDoc}
      */
     @Override
+    @Transactional(readOnly = true)
     protected void validate(Optional<Examination> target, Errors errors) {
         target.ifPresent(examination -> {
             Ticket ticket = validateTicket(Optional.ofNullable(examination.getTicket()), errors);

@@ -1,42 +1,53 @@
 package org.majimena.petz.repository.spec;
 
-import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.datetime.L10nDateTimeProvider;
-import org.majimena.petz.domain.Ticket;
 import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
  * スケジュールを検索するスペック.
  */
-public class TicketSpecs implements Specification<Ticket> {
+public class TicketSpecs {
 
     /**
-     * スペック.
-     */
-    private Specification<Ticket> specification;
-
-    /**
-     * コンストラクタ.
+     * チケット検索条件をもとにスペックを作成する.
      *
-     * @param criteria スケジュールクライテリア
+     * @param criteria チケット検索条件
+     * @return スペック
      */
-    public TicketSpecs(TicketCriteria criteria) {
-        this.specification = Specifications
-                .where(equalClinicId(criteria))
+    public static Specification of(TicketCriteria criteria) {
+        return Specifications
+                .where(Optional.ofNullable(criteria.getClinicId()).map(TicketSpecs::equalClinicId).orElse(null))
                 .and(Optional.ofNullable(criteria.getPetId()).map(TicketSpecs::equalPetId).orElse(null))
                 .and(Optional.ofNullable(criteria.getUserId()).map(TicketSpecs::equalUserId).orElse(null))
                 .and(Optional.ofNullable(criteria.getState()).map(TicketSpecs::equalState).orElse(null))
                 .and(betweenStartDateTimeAndEndDateTime(criteria));
+    }
+
+    /**
+     * 指定した期間中のチケットを検索するスペックを作成する.
+     *
+     * @param clinicId クリニックID
+     * @param from     開始日時（FROM）
+     * @param to       終了日時（TO）
+     * @return スペック
+     */
+    public static Specification of(String clinicId, LocalDateTime from, LocalDateTime to) {
+        return Specifications
+                .where(TicketSpecs.equalClinicId(clinicId))
+                .and(TicketSpecs.betweenStartDateTime(from, to));
+    }
+
+    public static Specification equalClinicId(String clinicId) {
+        return (root, query, cb) -> {
+            query.orderBy(cb.asc(root.get("startDateTime")));
+            return cb.equal(root.get("clinic").get("id"), clinicId);
+        };
     }
 
     public static Specification equalUserId(String userId) {
@@ -51,23 +62,7 @@ public class TicketSpecs implements Specification<Ticket> {
         return (root, query, cb) -> cb.equal(root.get("state"), status);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Predicate toPredicate(Root<Ticket> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        query.orderBy(cb.asc(root.get("startDateTime")));
-        return specification.toPredicate(root, query, cb);
-    }
-
-    private Specification equalClinicId(TicketCriteria criteria) {
-        if (StringUtils.isEmpty(criteria.getClinicId())) {
-            return null;
-        }
-        return (root, query, cb) -> cb.equal(root.get("clinic").get("id"), criteria.getClinicId());
-    }
-
-    private Specification betweenStartDateTimeAndEndDateTime(TicketCriteria criteria) {
+    private static Specification betweenStartDateTimeAndEndDateTime(TicketCriteria criteria) {
         if (criteria.getYear() == null || criteria.getMonth() == null) {
             return null;
         }
@@ -81,5 +76,9 @@ public class TicketSpecs implements Specification<Ticket> {
                 .orElse(from.plusMonths(1));
         return (root, query, cb) ->
                 cb.or(cb.between(root.get("startDateTime"), from, to.minusSeconds(1)), cb.between(root.get("endDateTime"), from.plusSeconds(1), to));
+    }
+
+    private static Specification betweenStartDateTime(LocalDateTime from, LocalDateTime to) {
+        return (root, query, cb) -> cb.between(root.get("startDateTime"), from, to);
     }
 }

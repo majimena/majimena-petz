@@ -1,6 +1,7 @@
 package org.majimena.petz.service;
 
 import org.majimena.petz.domain.Ticket;
+import org.majimena.petz.domain.graph.Graph;
 import org.majimena.petz.domain.ticket.TicketCriteria;
 
 import java.util.List;
@@ -26,6 +27,14 @@ public interface TicketService {
      * @return 該当するチケット
      */
     Optional<Ticket> getTicketByTicketId(String ticketId);
+
+    /**
+     * 本日分のチケットのグラフデータを取得する.
+     *
+     * @param clinicId クリニックID
+     * @return 本日分のチケットデータ
+     */
+    Graph getTodaysTicketGraphByClinicId(String clinicId);
 
     /**
      * チケットを新規作成する.

@@ -15,6 +15,7 @@ import org.majimena.petz.domain.TicketActivity;
 import org.majimena.petz.domain.TicketAttachment;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.errors.ErrorCode;
+import org.majimena.petz.domain.graph.Graph;
 import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.majimena.petz.repository.ChartRepository;
 import org.majimena.petz.repository.ClinicRepository;
@@ -31,7 +32,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,7 +96,8 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional(readOnly = true)
     public List<Ticket> getTicketsByTicketCriteria(TicketCriteria criteria) {
-        return ticketRepository.findAll(new TicketSpecs(criteria));
+        List<Ticket> tickets = ticketRepository.findAll(TicketSpecs.of(criteria));
+        return tickets;
     }
 
     /**
@@ -102,6 +108,27 @@ public class TicketServiceImpl implements TicketService {
     public Optional<Ticket> getTicketByTicketId(String ticketId) {
         Ticket ticket = ticketRepository.getOne(ticketId);
         return Optional.ofNullable(ticket);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Graph getTodaysTicketGraphByClinicId(String clinicId) {
+        ZonedDateTime now = L10nDateTimeProvider.now();
+
+        List<String> labels = new ArrayList<>();
+        List<BigDecimal> values = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            LocalDateTime from = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i);
+            LocalDateTime to = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i, 59, 59);
+            long count = ticketRepository.count(TicketSpecs.of(clinicId, from, to));
+            labels.add(i + ":00");
+            values.add(BigDecimal.valueOf(count));
+        }
+
+        return new Graph(labels, Arrays.asList(values));
     }
 
     /**

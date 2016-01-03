@@ -1,6 +1,7 @@
 package org.majimena.petz.service;
 
 import org.majimena.petz.domain.Invoice;
+import org.majimena.petz.domain.graph.Graph;
 import org.majimena.petz.domain.ticket.InvoiceCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -23,6 +23,38 @@ public class L10nDateTimeProvider {
     /**
      * 指定日をローカライズしてUTCに変換した日時オブジェクトを取得する.
      *
+     * @param year   年
+     * @param month  月
+     * @param date   日
+     * @param hour   時
+     * @param minute 分
+     * @param second 秒
+     * @return ローカル日時
+     */
+    public static LocalDateTime of(int year, int month, int date, int hour, int minute, int second) {
+        TimeZone timeZone = SecurityUtils.getCurrentTimeZone();
+        ZonedDateTime dateTime = ZonedDateTime.of(year, month, date, hour, minute, second, 0, timeZone.getZoneId());
+        return LocalDateTime.ofInstant(dateTime.toInstant(), TimeZone.UTC.getZoneId());
+    }
+
+    /**
+     * 指定日をローカライズしてUTCに変換した日時オブジェクトを取得する.
+     *
+     * @param year  年
+     * @param month 月
+     * @param date  日
+     * @param hour  時
+     * @return ローカル日時
+     */
+    public static LocalDateTime of(int year, int month, int date, int hour) {
+        TimeZone timeZone = SecurityUtils.getCurrentTimeZone();
+        ZonedDateTime dateTime = ZonedDateTime.of(year, month, date, hour, 0, 0, 0, timeZone.getZoneId());
+        return LocalDateTime.ofInstant(dateTime.toInstant(), TimeZone.UTC.getZoneId());
+    }
+
+    /**
+     * 指定日をローカライズしてUTCに変換した日時オブジェクトを取得する.
+     *
      * @param year  年
      * @param month 月
      * @param date  日

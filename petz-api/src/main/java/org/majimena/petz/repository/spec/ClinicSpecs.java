@@ -12,4 +12,5 @@ public class ClinicSpecs {
     public static Specification<Clinic> of(ClinicCriteria criteria) {
         return null;
     }
+
 }

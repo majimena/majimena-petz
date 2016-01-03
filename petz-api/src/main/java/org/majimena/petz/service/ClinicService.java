@@ -3,6 +3,7 @@ package org.majimena.petz.service;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.ClinicStaff;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
+import org.majimena.petz.domain.clinic.ClinicOutline;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,6 +16,8 @@ import java.util.Optional;
 public interface ClinicService {
 
     Optional<Clinic> getClinicById(String clinicId);
+
+    Optional<ClinicOutline> getClinicOutlineByClinicId(String clinicId);
 
     Page<Clinic> findClinicsByClinicCriteria(ClinicCriteria criteria, Pageable pageable);
 

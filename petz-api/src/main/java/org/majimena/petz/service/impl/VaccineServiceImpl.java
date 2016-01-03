@@ -52,6 +52,7 @@ public class VaccineServiceImpl implements VaccineService {
     @Override
     @Transactional
     public Vaccine saveVaccine(Vaccine vaccine) {
+        vaccine.setRemoved(Boolean.FALSE);
         Vaccine save = vaccineRepository.save(vaccine);
         return save;
     }
@@ -68,7 +69,7 @@ public class VaccineServiceImpl implements VaccineService {
 
         // 値があるデータを上書きコピーして保存
         BeanFactoryUtils.copyNonNullProperties(vaccine, one);
-        one.setRemoved(Boolean.TRUE);
+        one.setRemoved(Boolean.FALSE);
         return vaccineRepository.save(one);
     }
 

@@ -35,14 +35,13 @@ import java.io.Serializable;
 @Entity
 @Table(name = "vaccine")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Vaccine implements Serializable {
+public class Vaccine extends AbstractAuditingEntity {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;

@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see ClinicProductController
  */
 @RunWith(Enclosed.class)
-public class ProductControllerTest {
+public class ClinicProductControllerTest {
 
     // POST用テストデータ
     protected static Product newPostProduct() {

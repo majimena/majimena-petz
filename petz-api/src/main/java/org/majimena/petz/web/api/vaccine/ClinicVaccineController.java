@@ -81,7 +81,7 @@ public class ClinicVaccineController {
         Optional<Vaccine> optional = vaccineService.getVaccineByVaccineId(vaccineId);
         optional.ifPresent(v -> SecurityUtils.throwIfDoNotHaveClinicRoles(v.getClinic().getId()));
         return optional.map(v -> ResponseEntity.ok().body(v))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -108,7 +108,7 @@ public class ClinicVaccineController {
         // ワクチンを保存する
         Vaccine saved = vaccineService.saveVaccine(vaccine);
         return ResponseEntity.created(
-                URI.create("/api/v1/clinics/" + clinicId + "/vaccines/" + saved.getId())).body(saved);
+            URI.create("/api/v1/clinics/" + clinicId + "/vaccines/" + saved.getId())).body(saved);
     }
 
     /**
@@ -146,7 +146,7 @@ public class ClinicVaccineController {
      *
      * @param clinicId  クリニックID
      * @param vaccineId ワクチンID
-     * @return レスポンスエンティティ（通常時は200）
+     * @return レスポンスエンティティ（通常時は200、権限エラー時は401、結果がない場合は404）
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/vaccines/{vaccineId}", method = RequestMethod.DELETE)
@@ -157,14 +157,13 @@ public class ClinicVaccineController {
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // エラーにならなければ消しても良いということ
-        ResponseEntity<Vaccine> entity = get(clinicId, vaccineId);
-        if (entity.getStatusCode().is2xxSuccessful()) {
-            // ワクチンを削除する
-            Vaccine vaccine = entity.getBody();
-            vaccineService.deleteVaccine(vaccine);
-        }
-
-        // 基本的にいつも成功したことにしておく
-        return ResponseEntity.ok().build();
+        Optional<Vaccine> optional = vaccineService.getVaccineByVaccineId(vaccineId);
+        return optional
+            .map(vaccine -> {
+                SecurityUtils.throwIfUnmatchClinicId(clinicId, vaccine.getClinic().getId());
+                vaccineService.deleteVaccine(vaccine);
+                return ResponseEntity.ok().build();
+            })
+            .orElse(ResponseEntity.notFound().build());
     }
 }

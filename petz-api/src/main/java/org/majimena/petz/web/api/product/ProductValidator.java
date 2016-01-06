@@ -37,28 +37,31 @@ public class ProductValidator extends AbstractValidator<Product> {
     @Override
     protected void validate(Optional<Product> target, Errors errors) {
         target.ifPresent(product -> {
-            Clinic clinic = validateClinic(product.getClinic(), errors);
-            product.setClinic(clinic);
+            // IDの存在チェック
+            validateProductId(Optional.ofNullable(product.getId()), product.getClinic().getId(), errors);
 
-            validateProductId(Optional.ofNullable(product.getId()), errors);
+            // クリニックの存在チェック
+            Clinic clinic = validateClinicId(product.getClinic().getId(), errors);
+            product.setClinic(clinic);
         });
     }
 
-    private Clinic validateClinic(Clinic clinic, Errors errors) {
-        Clinic one = clinicRepository.findOne(clinic.getId());
-        if (one == null) {
-            ErrorsUtils.rejectValue("clinic", ErrorCode.PTZ_001999, errors);
-            return null;
-        }
-        return one;
-    }
-
-    private void validateProductId(Optional<String> value, Errors errors) {
+    private void validateProductId(Optional<String> value, String clinicId, Errors errors) {
         value.ifPresent(id -> {
             Product one = productRepository.findOne(id);
             if (one == null) {
                 ErrorsUtils.reject(ErrorCode.PTZ_999998, errors);
+            } else {
+                ErrorsUtils.throwIfNotEqual(clinicId, one.getClinic().getId());
             }
         });
+    }
+
+    private Clinic validateClinicId(String clinicId, Errors errors) {
+        Clinic one = clinicRepository.findOne(clinicId);
+        if (one == null) {
+            ErrorsUtils.rejectValue("clinic", ErrorCode.PTZ_001999, errors);
+        }
+        return one;
     }
 }

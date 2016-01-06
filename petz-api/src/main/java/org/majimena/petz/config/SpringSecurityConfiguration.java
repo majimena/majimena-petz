@@ -39,15 +39,15 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/scripts/**/*.{js,html}")
-                .antMatchers("/bower_components/**")
-                .antMatchers("/i18n/**")
-                .antMatchers("/assets/**")
-                .antMatchers("/swagger-ui/**")
+//                .antMatchers("/scripts/**/*.{js,html}")
+//                .antMatchers("/bower_components/**")
+//                .antMatchers("/i18n/**")
+//                .antMatchers("/assets/**")
+//                .antMatchers("/swagger-ui/**")
 //                .antMatchers(HttpMethod.GET, "/api/v1/clinics")
-                .antMatchers(HttpMethod.POST, "/api/v1/account")
-                .antMatchers(HttpMethod.POST, "/api/v1/activate")
-                .antMatchers("/test/**");
+                .antMatchers(HttpMethod.POST, "/api/v1/account");
+//                .antMatchers(HttpMethod.POST, "/api/v1/activate")
+//                .antMatchers("/test/**");
     }
 
     @Override

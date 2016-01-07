@@ -61,21 +61,6 @@ public class AccountController {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @Deprecated
-    @Timed
-    @RequestMapping(value = "/account", method = RequestMethod.POST)
-    public ResponseEntity<?> post(@RequestBody @Valid SignupRegistry registry, BindingResult errors) throws BindException {
-        signupRegistryValidator.validate(registry, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
-
-        userService.saveUser(registry);
-        //        User user = userService.createUserInformation(registry.getLogin(), registry.getPassword(),
-        //            registry.getFirstName(), registry.getLastName(), registry.getEmail().toLowerCase(),
-        //            registry.getLangKey());
-        //        mailService.sendActivationEmail(user, "");
-        return ResponseEntity.created(URI.create("/api/v1/account")).build();
-    }
-
     @Timed
     @RequestMapping(value = "/account", method = RequestMethod.PATCH)
     public ResponseEntity<User> patch(@RequestBody @Valid User user) {

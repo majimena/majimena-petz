@@ -1,7 +1,9 @@
 package org.majimena.petz.web.api.product;
 
+import mockit.Injectable;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
+import mockit.Tested;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -60,17 +62,17 @@ public class ClinicProductControllerTest {
     public static class GetAllTest {
 
         private MockMvc mockMvc;
-
-        @Mocked
+        @Tested
+        private ClinicProductController sut = new ClinicProductController();
+        @Injectable
         private ProductService productService;
-
+        @Injectable
+        private ProductValidator productValidator;
         @Mocked
         private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
-            ClinicProductController sut = new ClinicProductController();
-            sut.setProductService(productService);
             mockMvc = MockMvcBuilders.standaloneSetup(sut)
                     .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
                     .build();
@@ -128,17 +130,17 @@ public class ClinicProductControllerTest {
     public static class GetTest {
 
         private MockMvc mockMvc;
-
-        @Mocked
+        @Tested
+        private ClinicProductController sut = new ClinicProductController();
+        @Injectable
         private ProductService productService;
-
+        @Injectable
+        private ProductValidator productValidator;
         @Mocked
         private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
-            ClinicProductController sut = new ClinicProductController();
-            sut.setProductService(productService);
             mockMvc = MockMvcBuilders.standaloneSetup(sut)
                     .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
                     .build();
@@ -238,21 +240,17 @@ public class ClinicProductControllerTest {
     public static class PostTest {
 
         private MockMvc mockMvc;
-
-        @Mocked
+        @Tested
+        private ClinicProductController sut = new ClinicProductController();
+        @Injectable
         private ProductService productService;
-
-        @Mocked
+        @Injectable
         private ProductValidator productValidator;
-
         @Mocked
         private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
-            ClinicProductController sut = new ClinicProductController();
-            sut.setProductService(productService);
-            sut.setProductValidator(productValidator);
             mockMvc = MockMvcBuilders.standaloneSetup(sut)
                     .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
                     .build();
@@ -490,21 +488,17 @@ public class ClinicProductControllerTest {
     public static class PutTest {
 
         private MockMvc mockMvc;
-
-        @Mocked
+        @Tested
+        private ClinicProductController sut = new ClinicProductController();
+        @Injectable
         private ProductService productService;
-
-        @Mocked
+        @Injectable
         private ProductValidator productValidator;
-
         @Mocked
         private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
-            ClinicProductController sut = new ClinicProductController();
-            sut.setProductService(productService);
-            sut.setProductValidator(productValidator);
             mockMvc = MockMvcBuilders.standaloneSetup(sut)
                     .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
                     .build();
@@ -742,17 +736,17 @@ public class ClinicProductControllerTest {
     public static class DeleteTest {
 
         private MockMvc mockMvc;
-
-        @Mocked
+        @Tested
+        private ClinicProductController sut = new ClinicProductController();
+        @Injectable
         private ProductService productService;
-
+        @Injectable
+        private ProductValidator productValidator;
         @Mocked
         private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
-            ClinicProductController sut = new ClinicProductController();
-            sut.setProductService(productService);
             mockMvc = MockMvcBuilders.standaloneSetup(sut)
                     .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
                     .build();

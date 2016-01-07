@@ -6,12 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.majimena.petz.datatype.defs.Name;
 
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * Created by todoken on 2015/07/20.
+ * サインアップレジストリ.
  */
 @Data
 @Builder
@@ -20,12 +21,15 @@ import java.io.Serializable;
 public class SignupRegistry implements Serializable {
 
     @NotEmpty
+    @Size(max = Name.MAX_LENGTH)
+    private String username;
+
+    @NotEmpty
     @Email
-    @Size(min = 1, max = 100)
+    @Size(max = 100)
     private String email;
 
     @NotEmpty
     @Size(min = 5, max = 100)
     private String password;
-
 }

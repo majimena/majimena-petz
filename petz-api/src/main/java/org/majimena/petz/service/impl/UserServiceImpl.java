@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public void saveUser(SignupRegistry registry) {
+    public User saveUser(SignupRegistry registry) {
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
         authorities.add(authority);
@@ -157,18 +157,20 @@ public class UserServiceImpl implements UserService {
         String encryptedPassword = passwordEncoder.encode(registry.getPassword());
 
         User newUser = new User();
+        newUser.setUsername(registry.getUsername());
+        newUser.setEmail(registry.getEmail());
         newUser.setLogin(registry.getEmail());
         newUser.setPassword(encryptedPassword);
-        newUser.setEmail(registry.getEmail());
         newUser.setLangKey(LangKey.JAPANESE);
         newUser.setTimeZone(TimeZone.ASIA_TOKYO);
 
         // new user is not active
+        newUser.setCountry("JP"); // FIXME 海外対応
         newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtils.generateActivationKey());
         newUser.setAuthorities(authorities);
-        userRepository.save(newUser);
+        return userRepository.save(newUser);
     }
 
     /**

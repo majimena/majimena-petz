@@ -47,8 +47,7 @@ public interface UserService {
      *
      * @param registry 新規ユーザー
      */
-    @Deprecated
-    void saveUser(SignupRegistry registry);
+    User saveUser(SignupRegistry registry);
 
     /**
      * ユーザーを新規登録する.
@@ -56,6 +55,7 @@ public interface UserService {
      * @param user ユーザー情報
      * @return 登録したユーザー情報
      */
+    @Deprecated
     User saveUser(User user);
 
     /**

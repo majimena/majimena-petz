@@ -12,7 +12,6 @@ import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.datatype.TimeZone;

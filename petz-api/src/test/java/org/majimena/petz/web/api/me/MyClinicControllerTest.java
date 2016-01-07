@@ -54,13 +54,10 @@ public class MyClinicControllerTest {
     public static class GetTest {
 
         private MockMvc mockMvc;
-
         @Tested
         private MyClinicController sut = new MyClinicController();
-
         @Injectable
         private ClinicService clinicService;
-
         @Mocked
         private SecurityUtils securityUtils;
 

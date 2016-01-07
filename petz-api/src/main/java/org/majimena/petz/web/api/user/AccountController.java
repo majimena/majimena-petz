@@ -45,22 +45,6 @@ public class AccountController {
     @Inject
     private SignupRegistryValidator signupRegistryValidator;
 
-    /**
-     * ログインユーザのアカウント情報を取得する.<br>
-     * -> /api/v1/me
-     *
-     * @return レスポンスエンティティ（通常時は200、該当が無い場合は404）
-     */
-    @Deprecated
-    @Timed
-    @RequestMapping(value = "/account", method = RequestMethod.GET)
-    public ResponseEntity<User> get() {
-        String userId = SecurityUtils.getCurrentUserId();
-        return userService.getUserByUserId(userId)
-            .map(u -> ResponseEntity.ok(u))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
     @Timed
     @RequestMapping(value = "/account", method = RequestMethod.PATCH)
     public ResponseEntity<User> patch(@RequestBody @Valid User user) {

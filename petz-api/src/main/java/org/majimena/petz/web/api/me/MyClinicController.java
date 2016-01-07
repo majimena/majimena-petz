@@ -47,6 +47,7 @@ public class MyClinicController {
     public ResponseEntity<List<Clinic>> get(@RequestParam(value = "page", required = false) Integer offset,
                                             @RequestParam(value = "per_page", required = false) Integer limit,
                                             @Valid ClinicCriteria criteria) throws URISyntaxException {
+        // TODO ログインしていなければ、空を返すようにする
         // ログインユーザーのIDで検索条件を上書きする
         criteria.setUserId(SecurityUtils.getCurrentUserId());
 

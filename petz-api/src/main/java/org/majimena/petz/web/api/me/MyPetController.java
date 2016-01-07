@@ -45,6 +45,7 @@ public class MyPetController {
     @RequestMapping(value = "/me/pets", method = RequestMethod.GET)
     public ResponseEntity<List<Pet>> getAll(@RequestParam(value = "page", required = false) Integer offset,
                                             @RequestParam(value = "per_page", required = false) Integer limit) throws URISyntaxException {
+        // TODO ログインしていなければ、空を返すようにする
         // 検索条件を生成
         PetCriteria criteria = new PetCriteria();
         criteria.setUserId(SecurityUtils.getCurrentUserId());

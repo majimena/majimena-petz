@@ -55,13 +55,10 @@ public class MyPetControllerTest {
     public static class GetTest {
 
         private MockMvc mockMvc;
-
         @Tested
         private MyPetController sut = new MyPetController();
-
         @Injectable
         private PetService petService;
-
         @Mocked
         private SecurityUtils securityUtils;
 

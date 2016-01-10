@@ -1,4 +1,4 @@
-package org.majimena.petz.security;
+package org.majimena.petz.domain.authentication;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;

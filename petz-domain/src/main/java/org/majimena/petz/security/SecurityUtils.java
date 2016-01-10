@@ -2,6 +2,9 @@ package org.majimena.petz.security;
 
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.datatype.TimeZone;
+import org.majimena.petz.domain.authentication.PetzGrantedAuthority;
+import org.majimena.petz.domain.authentication.PetzUser;
+import org.majimena.petz.domain.authentication.PetzUserKey;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -71,7 +74,9 @@ public final class SecurityUtils {
      * @return タイムゾーン
      */
     public static TimeZone getCurrentTimeZone() {
-        TimeZone timeZone = getPrincipal().map(p -> p.getTimeZone()).orElse(TimeZone.UTC);
+        TimeZone timeZone = getPrincipal()
+                .map(p -> p.get(PetzUserKey.TIMEZONE, TimeZone.class))
+                .orElse(TimeZone.UTC);
         if (timeZone == null) {
             timeZone = TimeZone.UTC;
         }
@@ -122,8 +127,8 @@ public final class SecurityUtils {
      */
     public static boolean isUserInRole(String clinicId, String role) {
         return getPrincipal()
-            .map(u -> u.getAuthorities().contains(new PetzGrantedAuthority(clinicId, role)))
-            .orElse(false);
+                .map(u -> u.getAuthorities().contains(new PetzGrantedAuthority(clinicId, role)))
+                .orElse(false);
     }
 
     /**
@@ -134,14 +139,14 @@ public final class SecurityUtils {
      */
     public static boolean isUserInClinic(String clinicId) {
         return getPrincipal()
-            .map(u -> {
-                if (u.getAuthorities().isEmpty()) {
-                    return false;
-                }
-                return u.getAuthorities().stream()
-                    .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId));
-            })
-            .orElse(false);
+                .map(u -> {
+                    if (u.getAuthorities().isEmpty()) {
+                        return false;
+                    }
+                    return u.getAuthorities().stream()
+                            .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId));
+                })
+                .orElse(false);
     }
 
     /**

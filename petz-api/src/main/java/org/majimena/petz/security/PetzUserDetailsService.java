@@ -1,6 +1,9 @@
 package org.majimena.petz.security;
 
 import org.majimena.petz.domain.User;
+import org.majimena.petz.domain.authentication.PetzGrantedAuthority;
+import org.majimena.petz.domain.authentication.PetzUser;
+import org.majimena.petz.domain.authentication.PetzUserKey;
 import org.majimena.petz.repository.ClinicStaffRepository;
 import org.majimena.petz.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,7 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -60,6 +65,9 @@ public class PetzUserDetailsService implements UserDetailsService {
                 .forEach(o -> authorities.add(new PetzGrantedAuthority(o.getClinic().getId(), o.getRole())));
 
         // ログインユーザー情報
-        return new PetzUser(user.getId(), user.getLogin(), user.getPassword(), user.getLangKey(), user.getTimeZone(), authorities);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(PetzUserKey.LANG, user.getLangKey());
+        properties.put(PetzUserKey.TIMEZONE, user.getTimeZone());
+        return new PetzUser(user.getId(), user.getLogin(), user.getPassword(), properties, authorities);
     }
 }

@@ -3,6 +3,7 @@ package org.majimena.petz.datatype.serializers;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import org.majimena.petz.datatype.TimeZone;
+import org.majimena.petz.domain.authentication.PetzUserKey;
 import org.majimena.petz.security.SecurityUtils;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class ISO8601LocalDateTimeSerializer extends AbstractISO8601JsonSerialize
 
         // ユーザのタイムゾーン設定を適用
         ZonedDateTime dateTime = SecurityUtils.getPrincipal()
-                .map(user -> Optional.ofNullable(user.getTimeZone())
+                .map(user -> Optional.ofNullable(user.get(PetzUserKey.TIMEZONE, TimeZone.class))
                         .map(timeZone -> timeZone.fromInstant(utc))
                         .orElse(utc))
                 .orElse(utc);

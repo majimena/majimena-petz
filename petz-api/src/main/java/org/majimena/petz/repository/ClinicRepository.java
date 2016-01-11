@@ -8,5 +8,4 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * クリニックリポジトリ.
  */
 public interface ClinicRepository extends JpaRepository<Clinic, String>, JpaSpecificationExecutor<Clinic> {
-
 }

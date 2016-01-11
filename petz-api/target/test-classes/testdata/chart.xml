@@ -13,8 +13,8 @@
     <tag name="室内犬"/>
     <tag name="忠犬"/>
 
-    <clinic id="0" email="foo@localhost.com" name="Name 1" description="Description 1" created_by="hoge@hoge.com" created_date="2015-01-01"/>
-    <clinic id="1" email="bar@localhost.com" name="Name 2" description="Description 2" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic id="0" email="foo@localhost.com" name="Name 1" last_name="Yamada" first_name="Taro" description="Description 1" country="JP" zip_code="1110000" state="Tokyo" city="Shinjuku" street="Kabuki-cho 1-1-1" phone_no="0311112222" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic id="1" email="bar@localhost.com" name="Name 2" last_name="Yamada" first_name="Taro" description="Description 2" country="JP" zip_code="1110000" state="Tokyo" city="Shinjuku" street="Kabuki-cho 1-1-1" phone_no="0311112222" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
     <clinic_staff/>
 
     <pet id="1" name="ハチ" type="柴犬" color="ブラウン" blood="DEA1.1" profile="渋谷ハチ公" sex="MALE" birth_date="2000-01-01" user_id="1" created_by="hoge@hoge.com" created_date="2015-01-01"/>

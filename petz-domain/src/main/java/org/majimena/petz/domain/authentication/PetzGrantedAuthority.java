@@ -44,6 +44,24 @@ public class PetzGrantedAuthority implements GrantedAuthority {
     }
 
     /**
+     * クリニックIDを取得する.
+     *
+     * @return クリニックID
+     */
+    public String getClinicId() {
+        return clinicId;
+    }
+
+    /**
+     * 権限を取得する.
+     *
+     * @return 権限
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

@@ -1,33 +1,38 @@
 package org.majimena.petz.security;
 
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.petz.common.utils.ApplicationContextUtils;
 import org.majimena.petz.datatype.TimeZone;
 import org.majimena.petz.domain.authentication.PetzGrantedAuthority;
 import org.majimena.petz.domain.authentication.PetzUser;
 import org.majimena.petz.domain.authentication.PetzUserKey;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Utility class for Spring Security.
  */
-public final class SecurityUtils {
+@Component
+public final class SecurityUtils implements InitializingBean {
 
     /**
      * システムアカウント（ユーザが特定できない場合）.
      */
     public static final String SYSTEM_ACCOUNT = "system";
 
-    /**
-     * プライベートコンストラクタ.
-     */
-    private SecurityUtils() {
+    private static GrantedAuthorityService grantedAuthorityService;
+
+    public static void setGrantedAuthorityService(GrantedAuthorityService grantedAuthorityService) {
+        SecurityUtils.grantedAuthorityService = grantedAuthorityService;
     }
 
     public static Optional<PetzUser> getPrincipal() {
@@ -107,7 +112,6 @@ public final class SecurityUtils {
         return true;
     }
 
-
     /**
      * 認証ユーザーがロールを持っているかチェックする.
      *
@@ -139,13 +143,13 @@ public final class SecurityUtils {
      */
     public static boolean isUserInClinic(String clinicId) {
         return getPrincipal()
-                .map(u -> {
-                    if (u.getAuthorities().isEmpty()) {
-                        return false;
-                    }
-                    return u.getAuthorities().stream()
-                            .anyMatch(ga -> StringUtils.endsWith(ga.getAuthority(), clinicId));
-                })
+                .map(u ->
+                        !grantedAuthorityService.getAuthoritiesByUserId(u.getUserId())
+                                .stream()
+                                .filter(authority -> authority.getClinicId().equals(clinicId))
+                                .collect(Collectors.toList())
+                                .isEmpty()
+                )
                 .orElse(false);
     }
 
@@ -173,5 +177,14 @@ public final class SecurityUtils {
         if (!StringUtils.equals(value1, value2)) {
             throw new ResourceCannotAccessException("Cannot access resource.");
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        GrantedAuthorityService service = ApplicationContextUtils.getApplicationContext().getBean(GrantedAuthorityService.class);
+        SecurityUtils.setGrantedAuthorityService(service);
     }
 }

@@ -1,5 +1,8 @@
 package org.majimena.petz.security;
 
+import com.google.common.collect.Lists;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
 import org.junit.After;
 import org.junit.Test;
 import org.majimena.petz.datatype.LangKey;
@@ -16,17 +19,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Test class for the SecurityUtils utility class.
- *
  * @see SecurityUtils
  */
 public class SecurityUtilsTest {
+
+    @Mocked
+    private GrantedAuthorityService grantedAuthorityService;
 
     private static Map<String, Object> createProperties() {
         Map<String, Object> properties = new HashMap<>();
@@ -129,13 +134,18 @@ public class SecurityUtilsTest {
         Map<String, Object> properties = createProperties();
         properties.put(PetzUserKey.TIMEZONE, TimeZone.UTC);
 
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new PetzGrantedAuthority("ROLE_USER"));
+        List<PetzGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new PetzGrantedAuthority("1", "ROLE_CLINIC_ADMIN"));
         authorities.add(new PetzGrantedAuthority("2", "ROLE_CLINIC_ADMIN"));
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", properties, authorities), "anonymous"));
         SecurityContextHolder.setContext(context);
+
+        SecurityUtils.setGrantedAuthorityService(grantedAuthorityService);
+        new NonStrictExpectations() {{
+            grantedAuthorityService.getAuthoritiesByUserId("123");
+            result = authorities;
+        }};
 
         assertThat(SecurityUtils.isUserInRole("1", "ROLE_CLINIC_ADMIN"), is(true));
         assertThat(SecurityUtils.isUserInRole("2", "ROLE_CLINIC_ADMIN"), is(true));
@@ -151,10 +161,17 @@ public class SecurityUtilsTest {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new PetzGrantedAuthority("ROLE_USER"));
-        authorities.add(new PetzGrantedAuthority("1", "ROLE_CLINIC_ADMIN"));
-        authorities.add(new PetzGrantedAuthority("d8272af2-75cc-47b3-97e9-8ba631a569f0", "ROLE_CLINIC_ADMIN"));
         context.setAuthentication(new UsernamePasswordAuthenticationToken(new PetzUser("123", "anonymous", "anonymous", properties, authorities), "anonymous"));
         SecurityContextHolder.setContext(context);
+
+        SecurityUtils.setGrantedAuthorityService(grantedAuthorityService);
+        new NonStrictExpectations() {{
+            List<PetzGrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new PetzGrantedAuthority("1", "ROLE_CLINIC_ADMIN"));
+            authorities.add(new PetzGrantedAuthority("d8272af2-75cc-47b3-97e9-8ba631a569f0", "ROLE_CLINIC_ADMIN"));
+            grantedAuthorityService.getAuthoritiesByUserId("123");
+            result = authorities;
+        }};
 
         assertThat(SecurityUtils.isUserInClinic("1"), is(true));
         assertThat(SecurityUtils.isUserInClinic("d8272af2-75cc-47b3-97e9-8ba631a569f0"), is(true));

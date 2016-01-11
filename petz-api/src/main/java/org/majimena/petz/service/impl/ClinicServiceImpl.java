@@ -2,7 +2,9 @@ package org.majimena.petz.service.impl;
 
 import org.majimena.petz.common.exceptions.ResourceConflictException;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
+import org.majimena.petz.common.utils.BeanFactoryUtils;
 import org.majimena.petz.common.utils.DateTimeUtils;
+import org.majimena.petz.common.utils.ExceptionUtils;
 import org.majimena.petz.datatype.InvoiceState;
 import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.datetime.L10nDateTimeProvider;
@@ -185,14 +187,14 @@ public class ClinicServiceImpl implements ClinicService {
      */
     @Override
     public Clinic updateClinic(Clinic clinic) {
-        Optional<Clinic> one = getClinicById(clinic.getId());
-        one.ifPresent(c -> {
-            c.setName(clinic.getName());
-            c.setDescription(clinic.getDescription());
-            c.setEmail(clinic.getEmail());
-            clinicRepository.save(c);
-        });
-        return one.orElse(null);
+        // 該当エンティティを取得
+        Clinic one = clinicRepository.findOne(clinic.getId());
+        ExceptionUtils.throwIfNull(one);
+
+        // コピーして保存する
+        BeanFactoryUtils.copyNonNullProperties(clinic, one);
+        one.setRemoved(Boolean.FALSE);
+        return clinicRepository.save(one);
     }
 
     /**

@@ -42,37 +42,62 @@ import java.util.Optional;
  * クリニックサービスの実装クラス.
  */
 @Service
-@Transactional
 public class ClinicServiceImpl implements ClinicService {
 
+    /**
+     * クリニックリポジトリ.
+     */
     @Inject
     private ClinicRepository clinicRepository;
 
+    /**
+     * クリニックスタッフリポジトリ.
+     */
     @Inject
     private ClinicStaffRepository clinicStaffRepository;
 
+    /**
+     * ユーザリポジトリ.
+     */
     @Inject
     private UserRepository userRepository;
 
+    /**
+     * チケットリポジトリ.
+     */
     @Inject
     private TicketRepository ticketRepository;
 
+    /**
+     * カルテリポジトリ.
+     */
     @Inject
     private ChartRepository chartRepository;
 
+    /**
+     * インヴォイスリポジトリ.
+     */
     @Inject
     private InvoiceRepository invoiceRepository;
 
-    public void setClinicRepository(ClinicRepository clinicRepository) {
-        this.clinicRepository = clinicRepository;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Clinic> findClinicsByClinicCriteria(ClinicCriteria criteria, Pageable pageable) {
+        Page<Clinic> page = clinicRepository.findAll(ClinicSpecs.of(criteria), pageable);
+        return page;
     }
 
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public void setClinicStaffRepository(ClinicStaffRepository clinicStaffRepository) {
-        this.clinicStaffRepository = clinicStaffRepository;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Clinic> getMyClinicsByUserId(String userId) {
+        List<Clinic> list = clinicStaffRepository.findClinicsByUserId(userId);
+        return list;
     }
 
     /**
@@ -81,7 +106,8 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Clinic> getClinicById(String clinicId) {
-        return Optional.ofNullable(clinicRepository.findOne(clinicId));
+        Clinic one = clinicRepository.findOne(clinicId);
+        return Optional.ofNullable(one);
     }
 
     /**
@@ -125,49 +151,7 @@ public class ClinicServiceImpl implements ClinicService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
-    public Page<Clinic> findClinicsByClinicCriteria(ClinicCriteria criteria, Pageable pageable) {
-        return clinicRepository.findAll(ClinicSpecs.of(criteria), pageable);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<Clinic> findMyClinicsByClinicCriteria(ClinicCriteria criteria, Pageable pageable) {
-        // TODO マイクリニックの機能を実装する予定（お気に入り＋既に診察しているクリニック）
-        return getClinics(criteria, pageable);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<Clinic> getClinics(ClinicCriteria criteria, Pageable pageable) {
-        return clinicStaffRepository.findClinicsByUserId(criteria.getUserId(), pageable);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<ClinicStaff> getClinicStaffsById(String clinicId) {
-        // 自分が所属するクリニックのスタッフだけが取得できるようにチェックする
-        String currentUserId = SecurityUtils.getCurrentUserId();
-        Optional<ClinicStaff> staff = clinicStaffRepository.findByClinicIdAndUserId(clinicId, currentUserId);
-        staff.orElseThrow(() -> new ResourceNotFoundException("cannot read ClinicStaff for clinicId=[" + clinicId + "]"));
-
-        List<ClinicStaff> clinics = clinicStaffRepository.findByClinicId(clinicId);
-        clinics.stream().forEach(cs -> cs.getUser().getAuthorities().size()); // lazy loading authorities
-        return clinics;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+    @Transactional
     public Clinic saveClinic(Clinic clinic) {
         // クリニックを登録
         clinic.setRemoved(Boolean.FALSE);
@@ -186,6 +170,7 @@ public class ClinicServiceImpl implements ClinicService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public Clinic updateClinic(Clinic clinic) {
         // 該当エンティティを取得
         Clinic one = clinicRepository.findOne(clinic.getId());
@@ -201,6 +186,7 @@ public class ClinicServiceImpl implements ClinicService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public void deleteClinic(String clinicId) {
         clinicStaffRepository.deleteAll();
         clinicRepository.delete(clinicId);
@@ -210,6 +196,23 @@ public class ClinicServiceImpl implements ClinicService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional(readOnly = true)
+    public List<ClinicStaff> getClinicStaffsById(String clinicId) {
+        // 自分が所属するクリニックのスタッフだけが取得できるようにチェックする
+        String currentUserId = SecurityUtils.getCurrentUserId();
+        Optional<ClinicStaff> staff = clinicStaffRepository.findByClinicIdAndUserId(clinicId, currentUserId);
+        staff.orElseThrow(() -> new ResourceNotFoundException("cannot read ClinicStaff for clinicId=[" + clinicId + "]"));
+
+        List<ClinicStaff> clinics = clinicStaffRepository.findByClinicId(clinicId);
+        clinics.stream().forEach(cs -> cs.getUser().getAuthorities().size()); // lazy loading authorities
+        return clinics;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
     public void deleteClinicStaff(String clinicId, String userId) {
         // 自分が所属するクリニックのスタッフだけが取得できるようにチェックする
         String currentUserId = SecurityUtils.getCurrentUserId();
@@ -221,5 +224,4 @@ public class ClinicServiceImpl implements ClinicService {
         target.ifPresent(s -> clinicStaffRepository.delete(s));
         target.orElseThrow(() -> new ResourceConflictException("conflict ClinicStaff resource for clinicId=[" + clinicId + "] and userId=[" + userId + "]"));
     }
-
 }

@@ -86,7 +86,7 @@ public class ClinicControllerTest {
             Clinic testData2 = Clinic.builder().email("test2.clinic").name("テストクリニック2").description("テストクリニック2の説明").build();
             Pageable pageable = PaginationUtils.generatePageRequest(1, 1);
             new NonStrictExpectations() {{
-                clinicService.getClinics(new ClinicCriteria(), pageable);
+                clinicService.findClinicsByClinicCriteria(new ClinicCriteria(), pageable);
                 result = new PageImpl(Arrays.asList(testData1, testData2), pageable, 2);
             }};
 

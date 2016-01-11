@@ -1,25 +1,24 @@
 package org.majimena.petz.service.impl;
 
+import mockit.Injectable;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
+import mockit.Tested;
 import mockit.Verifications;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.petz.Application;
 import org.majimena.petz.domain.Authority;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.ClinicStaff;
 import org.majimena.petz.domain.User;
+import org.majimena.petz.repository.ChartRepository;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.ClinicStaffRepository;
+import org.majimena.petz.repository.InvoiceRepository;
+import org.majimena.petz.repository.TicketRepository;
 import org.majimena.petz.repository.UserRepository;
 import org.majimena.petz.security.SecurityUtils;
-import org.majimena.petz.service.impl.ClinicServiceImpl;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -37,88 +36,185 @@ import static org.junit.Assert.assertThat;
 @RunWith(Enclosed.class)
 public class ClinicServiceImplTest {
 
-    @RunWith(SpringJUnit4ClassRunner.class)
-    @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
-    public static class SaveClinicTest {
+    private static User createTestUser() {
+        return User.builder()
+                .id("1")
+                .login("test")
+                .build();
+    }
 
+    private static Clinic newClinic() {
+        return Clinic.builder()
+                .id("1")
+                .name("Clinic Name")
+                .lastName("LastName")
+                .firstName("FirstName")
+                .zipCode("1110000")
+                .state("Tokyo")
+                .city("Shinjuku")
+                .street("Kabuki-cho 1-1-1")
+                .phoneNo("0311110000")
+                .build();
+    }
+
+    public static class GetMyClinicsByUserIdTest {
+
+        @Tested
         private ClinicServiceImpl sut = new ClinicServiceImpl();
-
-        @Mocked
+        @Injectable
         private ClinicRepository clinicRepository;
-
-        @Mocked
+        @Injectable
         private ClinicStaffRepository clinicStaffRepository;
-
-        @Mocked
+        @Injectable
         private UserRepository userRepository;
-
+        @Injectable
+        private TicketRepository ticketRepository;
+        @Injectable
+        private ChartRepository chartRepository;
+        @Injectable
+        private InvoiceRepository invoiceRepository;
         @Mocked
         private SecurityUtils securityUtils;
 
-        @Before
-        public void before() {
-            sut.setClinicRepository(clinicRepository);
-            sut.setUserRepository(userRepository);
-            sut.setClinicStaffRepository(clinicStaffRepository);
+        @Test
+        public void ユーザの勤務先のクリニック一覧が取得できること() throws Exception {
+            new NonStrictExpectations() {{
+                clinicStaffRepository.findClinicsByUserId("1");
+                result = Arrays.asList(newClinic());
+            }};
+
+            List<Clinic> result = sut.getMyClinicsByUserId("1");
+
+            assertThat(result.size(), is(1));
+            assertThat(result.get(0).getId(), is("1"));
+            assertThat(result.get(0).getName(), is("Clinic Name"));
+            assertThat(result.get(0).getLastName(), is("LastName"));
+            assertThat(result.get(0).getFirstName(), is("FirstName"));
+            assertThat(result.get(0).getZipCode(), is("1110000"));
+            assertThat(result.get(0).getState(), is("Tokyo"));
+            assertThat(result.get(0).getCity(), is("Shinjuku"));
+            assertThat(result.get(0).getStreet(), is("Kabuki-cho 1-1-1"));
+            assertThat(result.get(0).getPhoneNo(), is("0311110000"));
         }
+    }
+
+    public static class GetClinicByIdTest {
+
+        @Tested
+        private ClinicServiceImpl sut = new ClinicServiceImpl();
+        @Injectable
+        private ClinicRepository clinicRepository;
+        @Injectable
+        private ClinicStaffRepository clinicStaffRepository;
+        @Injectable
+        private UserRepository userRepository;
+        @Injectable
+        private TicketRepository ticketRepository;
+        @Injectable
+        private ChartRepository chartRepository;
+        @Injectable
+        private InvoiceRepository invoiceRepository;
+
+        @Test
+        public void クリニックが取得できること() throws Exception {
+            new NonStrictExpectations() {{
+                clinicRepository.findOne("1");
+                result = newClinic();
+            }};
+
+            Optional<Clinic> optional = sut.getClinicById("1");
+            Clinic result = optional.get();
+
+            assertThat(result.getId(), is("1"));
+            assertThat(result.getName(), is("Clinic Name"));
+            assertThat(result.getLastName(), is("LastName"));
+            assertThat(result.getFirstName(), is("FirstName"));
+            assertThat(result.getZipCode(), is("1110000"));
+            assertThat(result.getState(), is("Tokyo"));
+            assertThat(result.getCity(), is("Shinjuku"));
+            assertThat(result.getStreet(), is("Kabuki-cho 1-1-1"));
+            assertThat(result.getPhoneNo(), is("0311110000"));
+        }
+    }
+
+    public static class SaveClinicTest {
+
+        @Tested
+        private ClinicServiceImpl sut = new ClinicServiceImpl();
+        @Injectable
+        private ClinicRepository clinicRepository;
+        @Injectable
+        private ClinicStaffRepository clinicStaffRepository;
+        @Injectable
+        private UserRepository userRepository;
+        @Injectable
+        private TicketRepository ticketRepository;
+        @Injectable
+        private ChartRepository chartRepository;
+        @Injectable
+        private InvoiceRepository invoiceRepository;
+        @Mocked
+        private SecurityUtils securityUtils;
 
         @Test
         public void 正しく登録されること() throws Exception {
-            Clinic testData = Clinic.builder().email("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
+            Clinic data = newClinic();
 
             new NonStrictExpectations() {{
-                clinicRepository.save(testData);
-                result = Clinic.builder().id("1").email("test.clinic").name("テストクリニック").description("テストクリニックの説明").build();
+                clinicRepository.save(data);
+                data.setId("1");
+                result = data;
                 SecurityUtils.getCurrentUserId();
-                result = 1L;
-                userRepository.findOne("1");
-                result = User.builder().id("1").build();
+                result = "taro";
+                userRepository.findOne("taro");
+                result = User.builder().id("taro").build();
             }};
 
-            Clinic result = sut.saveClinic(testData);
+            Clinic result = sut.saveClinic(data);
 
-            assertThat(result.getEmail(), is("test.clinic"));
-            assertThat(result.getName(), is("テストクリニック"));
-            assertThat(result.getDescription(), is("テストクリニックの説明"));
+            assertThat(result.getId(), is("1"));
+            assertThat(result.getName(), is("Clinic Name"));
+            assertThat(result.getLastName(), is("LastName"));
+            assertThat(result.getFirstName(), is("FirstName"));
+            assertThat(result.getZipCode(), is("1110000"));
+            assertThat(result.getState(), is("Tokyo"));
+            assertThat(result.getCity(), is("Shinjuku"));
+            assertThat(result.getStreet(), is("Kabuki-cho 1-1-1"));
+            assertThat(result.getPhoneNo(), is("0311110000"));
 
             new Verifications() {{
                 ClinicStaff staff;
                 clinicStaffRepository.save(staff = withCapture());
 
                 assertThat(staff.getId(), is(nullValue()));
+                assertThat(staff.getClinic(), is(notNullValue()));
                 assertThat(staff.getClinic().getId(), is("1"));
-                assertThat(staff.getUser().getId(), is("1"));
+                assertThat(staff.getUser(), is(notNullValue()));
+                assertThat(staff.getUser().getId(), is("taro"));
                 assertThat(staff.getRole(), is("ROLE_OWNER"));
                 assertThat(staff.getActivatedDate(), is(notNullValue()));
             }};
         }
-
-        private User createTestUser() {
-            User user = new User();
-            user.setId("1");
-            user.setLogin("test");
-            return user;
-        }
     }
 
-    @RunWith(SpringJUnit4ClassRunner.class)
-    @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
     public static class GetClinicStaffsByIdTest {
 
+        @Tested
         private ClinicServiceImpl sut = new ClinicServiceImpl();
-
-        @Mocked
+        @Injectable
+        private ClinicRepository clinicRepository;
+        @Injectable
         private ClinicStaffRepository clinicStaffRepository;
-
+        @Injectable
+        private UserRepository userRepository;
+        @Injectable
+        private TicketRepository ticketRepository;
+        @Injectable
+        private ChartRepository chartRepository;
+        @Injectable
+        private InvoiceRepository invoiceRepository;
         @Mocked
         private SecurityUtils securityUtils;
-
-        @Before
-        public void before() {
-            sut.setClinicStaffRepository(clinicStaffRepository);
-        }
 
         @Test
         public void クリニックに所属するスタッフが取得できること() throws Exception {
@@ -129,9 +225,9 @@ public class ClinicServiceImplTest {
                 result = Optional.of(ClinicStaff.builder().id("1").build());
                 clinicStaffRepository.findByClinicId("c1");
                 result = Arrays.asList(ClinicStaff.builder().id("cs1")
-                    .clinic(Clinic.builder().id("c1").build())
-                    .user(User.builder().id("u1").authorities(new HashSet<>(Arrays.asList(new Authority("ROLE_USER")))).build())
-                    .role("ROLE_TEST").build());
+                        .clinic(Clinic.builder().id("c1").build())
+                        .user(User.builder().id("u1").authorities(new HashSet<>(Arrays.asList(new Authority("ROLE_USER")))).build())
+                        .role("ROLE_TEST").build());
             }};
 
             List<ClinicStaff> result = sut.getClinicStaffsById("c1");

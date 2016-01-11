@@ -15,23 +15,63 @@ import java.util.Optional;
  */
 public interface ClinicService {
 
-    Optional<Clinic> getClinicById(String clinicId);
-
-    Optional<ClinicOutline> getClinicOutlineByClinicId(String clinicId);
-
+    /**
+     * クリニック検索条件をもとにクリニックを検索する.
+     *
+     * @param criteria 検索条件
+     * @param pageable ページ
+     * @return 該当するクリニック
+     */
     Page<Clinic> findClinicsByClinicCriteria(ClinicCriteria criteria, Pageable pageable);
 
-    Page<Clinic> findMyClinicsByClinicCriteria(ClinicCriteria criteria, Pageable pageable);
+    /**
+     * ユーザIDをもとに勤務先のクリニックを取得する.
+     *
+     * @param userId ユーザID
+     * @return 該当するクリニック
+     */
+    List<Clinic> getMyClinicsByUserId(String userId);
 
-    Page<Clinic> getClinics(ClinicCriteria criteria, Pageable pageable);
+    /**
+     * クリニックを取得する.
+     *
+     * @param clinicId クリニックID
+     * @return 該当するクリニック
+     */
+    Optional<Clinic> getClinicById(String clinicId);
 
-    List<ClinicStaff> getClinicStaffsById(String clinicId);
+    /**
+     * クリニックのアウトライン情報を取得する.
+     *
+     * @param clinicId クリニックID
+     * @return 該当するクリニックのアウトライン
+     */
+    Optional<ClinicOutline> getClinicOutlineByClinicId(String clinicId);
 
+    /**
+     * クリニックを保存する.
+     *
+     * @param clinic クリニック
+     * @return 保存したクリニック
+     */
     Clinic saveClinic(Clinic clinic);
 
+    /**
+     * クリニックを変更する.
+     *
+     * @param clinic クリニック
+     * @return 変更したクリニック
+     */
     Clinic updateClinic(Clinic clinic);
 
+    /**
+     * クリニックを削除する.
+     *
+     * @param clinicId クリニックID
+     */
     void deleteClinic(String clinicId);
+
+    List<ClinicStaff> getClinicStaffsById(String clinicId);
 
     void deleteClinicStaff(String clinicId, String userId);
 }

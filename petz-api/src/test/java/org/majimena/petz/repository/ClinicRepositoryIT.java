@@ -38,7 +38,7 @@ public class ClinicRepositoryIT {
         @Transactional
         @DatabaseSetup("classpath:/testdata/clinic.xml")
         public void sampleTest() throws Exception {
-            sut.save(new Clinic(null, "name", "description", "email@localhost.com"));
+            sut.save(Clinic.builder().name("name").description("description").email("email@localhost.com").build());
 
             List<Clinic> results = sut.findAll();
             assertThat(results.size(), is(3));

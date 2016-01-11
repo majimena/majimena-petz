@@ -168,6 +168,7 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     public Clinic saveClinic(Clinic clinic) {
         // クリニックを登録
+        clinic.setRemoved(Boolean.FALSE);
         Clinic save = clinicRepository.save(clinic);
 
         // クリニックのオーナーとして自分を登録
@@ -183,7 +184,7 @@ public class ClinicServiceImpl implements ClinicService {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Clinic> updateClinic(Clinic clinic) {
+    public Clinic updateClinic(Clinic clinic) {
         Optional<Clinic> one = getClinicById(clinic.getId());
         one.ifPresent(c -> {
             c.setName(clinic.getName());
@@ -191,7 +192,7 @@ public class ClinicServiceImpl implements ClinicService {
             c.setEmail(clinic.getEmail());
             clinicRepository.save(c);
         });
-        return one;
+        return one.orElse(null);
     }
 
     /**

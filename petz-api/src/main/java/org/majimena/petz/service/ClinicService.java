@@ -29,7 +29,7 @@ public interface ClinicService {
 
     Clinic saveClinic(Clinic clinic);
 
-    Optional<Clinic> updateClinic(Clinic clinic);
+    Clinic updateClinic(Clinic clinic);
 
     void deleteClinic(String clinicId);
 

@@ -18,4 +18,5 @@
     <include file="classpath:config/liquibase/changelog/20151224000000_added_entity_Payment.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151230000000_added_entity_Vaccine.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151231000000_added_entity_Certificate.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20160110000000_modify_entity_Clinic.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

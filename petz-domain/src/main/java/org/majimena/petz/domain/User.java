@@ -141,6 +141,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "phone_no", length = 15, nullable = true)
     private String phoneNo;
 
+    @Size(max = 15)
     @Column(name = "mobile_phone_no", length = 15, nullable = true)
     private String mobilePhoneNo;
 

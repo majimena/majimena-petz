@@ -453,7 +453,7 @@ public class ClinicControllerTest {
                     .andExpect(jsonPath("$.errors[0].message", is("size must be between 0 and 15")));
 
             // 型エラー
-            data.setPhoneNo("12345-12345-12345");
+            data.setPhoneNo("1234-1234-1234");
             mockMvc.perform(post("/api/v1/clinics")
                     .contentType(TestUtils.APPLICATION_JSON_UTF8)
                     .content(TestUtils.convertObjectToJsonBytes(data)))
@@ -464,7 +464,7 @@ public class ClinicControllerTest {
                     .andExpect(jsonPath("$.status", is(400)))
                     .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
                     .andExpect(jsonPath("$.errors[0].field", is("phoneNo")))
-                    .andExpect(jsonPath("$.errors[0].rejected", is("12345-12345-12345")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is("1234-1234-1234")))
                     .andExpect(jsonPath("$.errors[0].message", is("must match \"^[0-9]+$\"")));
         }
 

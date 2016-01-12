@@ -15,15 +15,10 @@ import java.util.Optional;
  */
 public interface UserService {
 
-    Optional<User> activateRegistration(String key);
-
-    Optional<User> completePasswordReset(String newPassword, String key);
-
-    Optional<User> requestPasswordReset(String mail);
-
     @Deprecated
     User createUserInformation(String login, String password, String firstName, String lastName, String email, LangKey langKey);
 
+    @Deprecated
     void updateUserInformation(String firstName, String lastName, String email);
 
     /**
@@ -55,15 +50,7 @@ public interface UserService {
      * @param user ユーザー情報
      * @return 登録したユーザー情報
      */
-    @Deprecated
     User saveUser(User user);
-
-    /**
-     * パスワードを変更する.
-     *
-     * @param registry パスワード登録情報
-     */
-    void changePassword(PasswordRegistry registry);
 
     /**
      * ユーザーを更新する.
@@ -71,6 +58,18 @@ public interface UserService {
      * @param user 更するユーザー情報
      * @return 更新後のユーザー情報
      */
-    User patchUser(User user);
+    User updateUser(User user);
 
+    Optional<User> activateRegistration(String key);
+
+    Optional<User> completePasswordReset(String newPassword, String key);
+
+    Optional<User> requestPasswordReset(String mail);
+
+    /**
+     * パスワードを変更する.
+     *
+     * @param registry パスワード登録情報
+     */
+    void changePassword(PasswordRegistry registry);
 }

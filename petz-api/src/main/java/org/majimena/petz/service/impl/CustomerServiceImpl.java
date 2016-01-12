@@ -8,7 +8,6 @@ import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.customer.CustomerAuthorizationToken;
 import org.majimena.petz.domain.customer.CustomerCriteria;
 import org.majimena.petz.domain.errors.ErrorCode;
-import org.majimena.petz.domain.user.SignupRegistry;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.CustomerRepository;
 import org.majimena.petz.repository.UserRepository;
@@ -97,7 +96,7 @@ public class CustomerServiceImpl implements CustomerService {
         User user;
         // ユーザーが既にいるなら更新し、そうでなければ新規でアカウントを作成する
         if (StringUtils.isNotEmpty(customer.getUser().getId())) {
-            user = userService.patchUser(customer.getUser());
+            user = userService.updateUser(customer.getUser());
         } else {
             // FIXME 海外対応した場合は考える
             customer.getUser().setUsername(customer.getLastName() + " " + customer.getFirstName());

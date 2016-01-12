@@ -27,6 +27,12 @@ public class ErrorsUtils {
         }
     }
 
+    public static void rejectIfEmpty(String field, String value, Errors errors) {
+        if (StringUtils.isEmpty(value)) {
+            errors.rejectValue(field, "errors.required", "may not be empty");
+        }
+    }
+
     public static void rejectIfAllNull(Object[] values, Errors errors) {
         for (Object value : values) {
             if (values != null) {

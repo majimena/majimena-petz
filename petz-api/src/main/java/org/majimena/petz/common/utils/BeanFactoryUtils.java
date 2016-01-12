@@ -40,9 +40,9 @@ public class BeanFactoryUtils {
             try {
                 Object value = PropertyUtils.getSimpleProperty(orig, name);
                 if (value != null) {
-                    if (value instanceof String && StringUtils.isEmpty((String) value)) {
-                        return;
-                    }
+//                    if (value instanceof String && StringUtils.isEmpty((String) value)) {
+//                        return;
+//                    }
                     BeanUtils.copyProperty(dest, name, value);
                 }
             } catch (IllegalAccessException e) {

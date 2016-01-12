@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -21,14 +21,14 @@ public class PasswordRegistry implements Serializable {
 
     private String userId;
 
-    @NotNull
-    @Size(min = 5, max = 50)
-    @Column(length = 50)
+    @NotEmpty
+    @Size(min = 5, max = 100)
+    @Column(length = 100)
     private String oldPassword;
 
-    @NotNull
-    @Size(min = 5, max = 50)
-    @Column(length = 50)
+    @NotEmpty
+    @Size(min = 5, max = 100)
+    @Column(length = 100)
     private String newPassword;
 
 }

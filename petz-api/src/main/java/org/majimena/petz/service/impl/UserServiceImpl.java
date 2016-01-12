@@ -5,6 +5,7 @@ import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.common.factory.BeanFactory;
 import org.majimena.petz.common.utils.BeanFactoryUtils;
+import org.majimena.petz.common.utils.ExceptionUtils;
 import org.majimena.petz.common.utils.RandomUtils;
 import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.datatype.TimeZone;
@@ -223,15 +224,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User patchUser(User user) {
+    public User updateUser(User user) {
         User one = userRepository.findOne(user.getId());
-        if (one == null) {
-            throw new SystemException("user not found [" + user.getId() + "]");
-        }
+        ExceptionUtils.throwIfNull(one);
 
         BeanFactoryUtils.copyNonNullProperties(user, one);
-        userRepository.save(one);
-        return one;
+        return userRepository.save(one);
     }
 
     @Override

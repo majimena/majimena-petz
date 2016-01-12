@@ -6,6 +6,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.common.exceptions.ApplicationException;
+import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.datatype.TimeZone;
@@ -13,7 +14,6 @@ import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.user.PasswordRegistry;
 import org.majimena.petz.repository.AbstractSpringDBUnitTest;
 import org.majimena.petz.service.UserService;
-import org.majimena.petz.service.impl.UserServiceImpl;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -72,7 +72,7 @@ public class UserServiceImplIT {
         public void ユーザーが更新できること() throws Exception {
             User r = User.builder().id("1").firstName("FirstName").lastName("LastName").email("todoken@example.com").build();
 
-            User result = sut.patchUser(r);
+            User result = sut.updateUser(r);
 
             assertThat(result.getId(), is("1"));
             assertThat(result.getLogin(), is("hoge@hoge.com"));
@@ -83,12 +83,12 @@ public class UserServiceImplIT {
             assertThat(result.getActivated(), is(Boolean.FALSE));
         }
 
-        @Test(expected = SystemException.class)
+        @Test(expected = ResourceNotFoundException.class)
         @DatabaseSetup("classpath:/fixture/base.xml")
         public void ユーザーが存在しない場合はシステム例外が発生すること() throws Exception {
             User r = User.builder().id("999").firstName("FirstName").lastName("LastName").email("todoken@example.com").build();
 
-            sut.patchUser(r);
+            sut.updateUser(r);
         }
     }
 

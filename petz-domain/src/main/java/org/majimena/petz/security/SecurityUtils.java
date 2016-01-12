@@ -21,8 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Utility class for Spring Security.
  */
-@Component
-public final class SecurityUtils implements InitializingBean {
+public final class SecurityUtils {
 
     /**
      * システムアカウント（ユーザが特定できない場合）.
@@ -30,6 +29,15 @@ public final class SecurityUtils implements InitializingBean {
     public static final String SYSTEM_ACCOUNT = "system";
 
     private static GrantedAuthorityService grantedAuthorityService;
+
+    private SecurityUtils() {
+        synchronized (grantedAuthorityService) {
+            if (grantedAuthorityService == null) {
+                GrantedAuthorityService service = ApplicationContextUtils.getApplicationContext().getBean(GrantedAuthorityService.class);
+                grantedAuthorityService = service;
+            }
+        }
+    }
 
     public static void setGrantedAuthorityService(GrantedAuthorityService grantedAuthorityService) {
         SecurityUtils.grantedAuthorityService = grantedAuthorityService;
@@ -80,8 +88,8 @@ public final class SecurityUtils implements InitializingBean {
      */
     public static TimeZone getCurrentTimeZone() {
         TimeZone timeZone = getPrincipal()
-                .map(p -> p.get(PetzUserKey.TIMEZONE, TimeZone.class))
-                .orElse(TimeZone.UTC);
+            .map(p -> p.get(PetzUserKey.TIMEZONE, TimeZone.class))
+            .orElse(TimeZone.UTC);
         if (timeZone == null) {
             timeZone = TimeZone.UTC;
         }
@@ -131,8 +139,8 @@ public final class SecurityUtils implements InitializingBean {
      */
     public static boolean isUserInRole(String clinicId, String role) {
         return getPrincipal()
-                .map(u -> u.getAuthorities().contains(new PetzGrantedAuthority(clinicId, role)))
-                .orElse(false);
+            .map(u -> u.getAuthorities().contains(new PetzGrantedAuthority(clinicId, role)))
+            .orElse(false);
     }
 
     /**
@@ -143,14 +151,14 @@ public final class SecurityUtils implements InitializingBean {
      */
     public static boolean isUserInClinic(String clinicId) {
         return getPrincipal()
-                .map(u ->
-                        !grantedAuthorityService.getAuthoritiesByUserId(u.getUserId())
-                                .stream()
-                                .filter(authority -> authority.getClinicId().equals(clinicId))
-                                .collect(Collectors.toList())
-                                .isEmpty()
-                )
-                .orElse(false);
+            .map(u ->
+                !grantedAuthorityService.getAuthoritiesByUserId(u.getUserId())
+                    .stream()
+                    .filter(authority -> authority.getClinicId().equals(clinicId))
+                    .collect(Collectors.toList())
+                    .isEmpty()
+            )
+            .orElse(false);
     }
 
     /**
@@ -177,14 +185,5 @@ public final class SecurityUtils implements InitializingBean {
         if (!StringUtils.equals(value1, value2)) {
             throw new ResourceCannotAccessException("Cannot access resource.");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        GrantedAuthorityService service = ApplicationContextUtils.getApplicationContext().getBean(GrantedAuthorityService.class);
-        SecurityUtils.setGrantedAuthorityService(service);
     }
 }

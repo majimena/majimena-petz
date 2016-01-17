@@ -31,12 +31,13 @@ public class PaymentServiceImplTest {
 
     private static Invoice newInvoice() {
         return Invoice.builder()
-                .state(InvoiceState.NOT_PAID)
                 .total(BigDecimal.valueOf(10800))
                 .tax(BigDecimal.valueOf(800))
                 .subtotal(BigDecimal.valueOf(10000))
                 .receiptAmount(BigDecimal.ZERO)
                 .ticket(new Ticket())
+                .paid(Boolean.FALSE)
+                .removed(Boolean.FALSE)
                 .build();
     }
 
@@ -61,9 +62,9 @@ public class PaymentServiceImplTest {
             new Verifications() {{
                 Invoice invoice;
                 invoiceRepository.save(invoice = withCapture());
-                assertThat(invoice.getState(), is(InvoiceState.PAID));
                 assertThat(invoice.getReceiptAmount(), is(BigDecimal.valueOf(10800)));
                 assertThat(invoice.getReceiptDateTime(), is(notNullValue()));
+                assertThat(invoice.getPaid(), is(Boolean.TRUE));
 
                 Ticket ticket;
                 ticketRepository.save(ticket = withCapture());
@@ -89,6 +90,7 @@ public class PaymentServiceImplTest {
                 invoiceRepository.save(invoice = withCapture());
                 assertThat(invoice.getReceiptAmount(), is(BigDecimal.valueOf(5000)));
                 assertThat(invoice.getReceiptDateTime(), is(nullValue()));
+                assertThat(invoice.getPaid(), is(Boolean.FALSE));
 
                 Payment result;
                 paymentRepository.save(result = withCapture());

@@ -51,11 +51,11 @@ public class TicketSpecs {
     }
 
     public static Specification equalUserId(String userId) {
-        return (root, query, cb) -> cb.equal(root.get("pet").get("user").get("id"), userId);
+        return (root, query, cb) -> cb.equal(root.get("chart").get("customer").get("user").get("id"), userId);
     }
 
     public static Specification equalPetId(String petId) {
-        return (root, query, cb) -> cb.equal(root.get("pet").get("id"), petId);
+        return (root, query, cb) -> cb.equal(root.get("chart").get("pet").get("id"), petId);
     }
 
     public static Specification equalState(TicketState status) {

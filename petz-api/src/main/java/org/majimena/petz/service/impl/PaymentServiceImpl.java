@@ -55,7 +55,7 @@ public class PaymentServiceImpl implements PaymentService {
         BigDecimal amount = invoice.getReceiptAmount().add(payment.getAmount());
         if (invoice.getTotal().compareTo(amount) <= 0) {
             // 全額支払を済ませた場合
-            invoice.setState(InvoiceState.PAID);
+            invoice.setPaid(Boolean.TRUE);
             invoice.setReceiptAmount(amount);
             invoice.setReceiptDateTime(LocalDateTime.from(L10nDateTimeProvider.now()));
             invoiceRepository.save(invoice);

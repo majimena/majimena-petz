@@ -1,7 +1,6 @@
 package org.majimena.petz.web.api.ticket;
 
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.collect.Lists;
 import org.majimena.petz.domain.Ticket;
 import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.majimena.petz.security.SecurityUtils;
@@ -72,20 +71,7 @@ public class TicketController {
         criteria.setUserId(userId);
 
         // 月単位でチケットを取得する
-        List<Ticket> tickets = Lists.newArrayList();
-        ticketService.getTicketsByTicketCriteria(criteria).stream().forEach(ticket -> {
-            // クライアント側の処理速度向上のため、余計な値は返さない
-            if (ticket.getCustomer() != null) {
-                ticket.getCustomer().setClinic(null);
-                ticket.getCustomer().setUser(null);
-            }
-            if (ticket.getChart() != null) {
-                ticket.getChart().setClinic(null);
-                ticket.getChart().setCustomer(null);
-                ticket.getChart().setPet(null);
-            }
-            ticket.getPet().setUser(null);
-        });
+        List<Ticket> tickets = ticketService.getTicketsByTicketCriteria(criteria);
         return ResponseEntity.ok().body(tickets);
     }
 
@@ -123,7 +109,6 @@ public class TicketController {
     @RequestMapping(value = "/tickets/{ticketId}", method = RequestMethod.PUT)
     public ResponseEntity<Ticket> put(@PathVariable String ticketId, @RequestBody @Valid Ticket ticket, BindingResult errors) throws BindException {
         // ユーザ権限のチェックとIDのコード体系チェック
-        SecurityUtils.throwIfNotCurrentUser(ticket.getPet().getUser().getId());
         ErrorsUtils.throwIfNotIdentify(ticketId);
 
         // カスタムバリデーションを行う

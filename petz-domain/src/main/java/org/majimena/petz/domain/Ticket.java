@@ -12,6 +12,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.datatype.converters.LocalDateTimePersistenceConverter;
+import org.majimena.petz.datatype.defs.Memo;
 import org.majimena.petz.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
 import org.majimena.petz.datatype.deserializers.TicketStateDeserializer;
 import org.majimena.petz.datatype.serializers.EnumDataTypeSerializer;
@@ -52,20 +53,12 @@ public class Ticket extends AbstractAuditingEntity implements Serializable {
     private String id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "pet_id", nullable = false)
-    private Pet pet;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id", nullable = true)
-    private Customer customer;
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chart_id", nullable = true)
     private Chart chart;
 
@@ -75,12 +68,9 @@ public class Ticket extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(name = "state", nullable = false)
     private TicketState state;
 
-    @Size(max = 2000)
-    @Column(name = "memo", length = 2000, nullable = true)
+    @Size(max = Memo.MAX_LENGTH)
+    @Column(name = "memo", length = Memo.MAX_LENGTH, nullable = true)
     private String memo;
-
-    @Column(name = "removed", nullable = false)
-    private Boolean removed;
 
     @NotNull
     @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)

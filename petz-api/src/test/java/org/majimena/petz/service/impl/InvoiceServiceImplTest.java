@@ -86,12 +86,12 @@ public class InvoiceServiceImplTest {
                 assertThat(ticket.getState(), is(TicketState.PAYMENT));
 
                 assertThat(invoice.getId(), is(nullValue()));
-                assertThat(invoice.getState(), is(InvoiceState.NOT_PAID));
                 assertThat(invoice.getTotal(), is(BigDecimal.valueOf(12160L)));
                 assertThat(invoice.getSubtotal(), is(BigDecimal.valueOf(11259L)));
                 assertThat(invoice.getTax(), is(BigDecimal.valueOf(901L)));
                 assertThat(invoice.getReceiptAmount(), is(BigDecimal.ZERO));
                 assertThat(invoice.getReceiptDateTime(), is(nullValue()));
+                assertThat(invoice.getPaid(), is(Boolean.FALSE));
             }};
         }
     }

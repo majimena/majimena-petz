@@ -10,19 +10,14 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.majimena.petz.datatype.InvoiceState;
 import org.majimena.petz.datatype.converters.LocalDateTimePersistenceConverter;
 import org.majimena.petz.datatype.defs.Description;
 import org.majimena.petz.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
-import org.majimena.petz.datatype.deserializers.InvoiceStateDeserializer;
-import org.majimena.petz.datatype.serializers.EnumDataTypeSerializer;
 import org.majimena.petz.datatype.serializers.ISO8601LocalDateTimeSerializer;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -59,13 +54,6 @@ public class Invoice extends AbstractAuditingEntity implements Serializable {
     private Ticket ticket;
 
     @NotNull
-    @JsonSerialize(using = EnumDataTypeSerializer.class)
-    @JsonDeserialize(using = InvoiceStateDeserializer.class)
-    @Enumerated(EnumType.STRING)
-    @Column(name = "state", nullable = false)
-    private InvoiceState state;
-
-    @NotNull
     @Column(name = "subtotal", precision = 12, scale = 0, nullable = false)
     private BigDecimal subtotal;
 
@@ -89,4 +77,10 @@ public class Invoice extends AbstractAuditingEntity implements Serializable {
     @Size(max = Description.MAX_LENGTH)
     @Column(name = "memo", length = Description.MAX_LENGTH, nullable = true)
     private String memo;
+
+    @Column(name = "paid", nullable = false)
+    private Boolean paid;
+
+    @Column(name = "removed", nullable = false)
+    private Boolean removed;
 }

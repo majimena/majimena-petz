@@ -1,7 +1,6 @@
 package org.majimena.petz.service.impl;
 
 import org.majimena.petz.common.utils.ExceptionUtils;
-import org.majimena.petz.datatype.InvoiceState;
 import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.domain.Examination;
 import org.majimena.petz.domain.Invoice;
@@ -53,7 +52,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Transactional(readOnly = true)
     public Page<Invoice> findInvoicesByInvoiceCriteria(InvoiceCriteria criteria, Pageable pageable) {
         Page<Invoice> page = invoiceRepository.findAll(InvoiceSpecs.of(criteria), pageable);
-        page.forEach(invoice -> invoice.getTicket().getId()); // lazy load
+        // lazy load
+        page.forEach(invoice -> {
+            invoice.getTicket().getId();
+            invoice.getTicket().getChart().getId();
+            invoice.getTicket().getChart().getCustomer().getId();
+            invoice.getTicket().getChart().getCustomer().getUser().getId();
+        });
         return page;
     }
 
@@ -114,11 +119,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         // インヴォイスを作成する
         Invoice invoice = new Invoice();
         invoice.setTicket(ticket);
-        invoice.setState(InvoiceState.NOT_PAID);
         invoice.setSubtotal(subtotal);
         invoice.setTax(tax);
         invoice.setTotal(total);
         invoice.setReceiptAmount(BigDecimal.ZERO);
+        invoice.setPaid(Boolean.FALSE);
+        invoice.setRemoved(Boolean.FALSE);
         return invoiceRepository.save(invoice);
     }
 
@@ -139,7 +145,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         // インヴォイスをキャンセルしてチケットのステータスを戻す
         ticket.setState(TicketState.DOING);
         ticketRepository.save(ticket);
-        one.setState(InvoiceState.CANCEL);
+        one.setRemoved(Boolean.TRUE);
         invoiceRepository.save(one);
     }
 }

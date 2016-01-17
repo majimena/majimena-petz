@@ -39,12 +39,12 @@
     <chart id="chart01" chart_no="01" customer_id="customer1" pet_id="1" clinic_id="0" creation_date="2015-10-01" created_by="hoge@hoge.com" created_date="2015-10-01"/>
     <chart id="chart11" chart_no="11" customer_id="customer2" pet_id="3" clinic_id="1" creation_date="2015-10-01" created_by="hoge@hoge.com" created_date="2015-10-01"/>
 
-    <ticket id="schedule1" clinic_id="0" chart_id="chart01" customer_id="customer1" pet_id="1" state="RESERVED" memo="とりあえず１" removed="false" start_date_time="2015-11-01 15:00:00" end_date_time="2015-11-01 15:30:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
-    <ticket id="schedule2" clinic_id="0" chart_id="chart01" customer_id="customer1" pet_id="1" state="RESERVED" memo="とりあえず２" removed="false" start_date_time="2015-12-01 15:00:00" end_date_time="2015-12-01 15:30:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
-    <ticket id="schedule3" clinic_id="1" chart_id="chart11" customer_id="customer2" pet_id="3" state="RESERVED" memo="クリニック別" removed="false" start_date_time="2015-11-01 15:30:00" end_date_time="2015-11-02 15:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
-    <ticket id="schedule4" clinic_id="0" chart_id="chart01" customer_id="customer1" pet_id="1" state="RESERVED" memo="重複" removed="false" start_date_time="2015-11-30 14:59:59" end_date_time="2015-12-01 15:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
-    <ticket id="schedule5" clinic_id="0" chart_id="chart01" customer_id="customer1" pet_id="1" state="RESERVED" memo="ぎりぎり１" removed="false" start_date_time="2015-10-29 14:59:59" end_date_time="2015-10-29 15:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
-    <ticket id="schedule6" clinic_id="0" chart_id="chart01" customer_id="customer1" pet_id="1" state="RESERVED" memo="ぎりぎり２" removed="false" start_date_time="2015-10-30 14:59:59" end_date_time="2015-10-31 15:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+    <ticket id="schedule1" clinic_id="0" chart_id="chart01" state="RESERVED" memo="とりあえず１" start_date_time="2015-11-01 15:00:00" end_date_time="2015-11-01 15:30:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+    <ticket id="schedule2" clinic_id="0" chart_id="chart01" state="RESERVED" memo="とりあえず２" start_date_time="2015-12-01 15:00:00" end_date_time="2015-12-01 15:30:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+    <ticket id="schedule3" clinic_id="1" chart_id="chart11" state="RESERVED" memo="クリニック別" start_date_time="2015-11-01 15:30:00" end_date_time="2015-11-02 15:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+    <ticket id="schedule4" clinic_id="0" chart_id="chart01" state="RESERVED" memo="重複" start_date_time="2015-11-30 14:59:59" end_date_time="2015-12-01 15:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+    <ticket id="schedule5" clinic_id="0" chart_id="chart01" state="RESERVED" memo="ぎりぎり１" start_date_time="2015-10-29 14:59:59" end_date_time="2015-10-29 15:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
+    <ticket id="schedule6" clinic_id="0" chart_id="chart01" state="RESERVED" memo="ぎりぎり２" start_date_time="2015-10-30 14:59:59" end_date_time="2015-10-31 15:00:00" created_by="hoge@hoge.com" created_date="2015-10-01" />
 
     <product id="product01" clinic_id="0" name="初診料" price="1000" tax_type="EXCLUSIVE" tax_rate="0.08" description="初診料の説明" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
     <product id="product02" clinic_id="0" name="再診料" price="500" tax_type="INCLUSIVE" tax_rate="0.08" description="再診料の説明" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>

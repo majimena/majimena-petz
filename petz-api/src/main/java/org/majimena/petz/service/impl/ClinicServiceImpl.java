@@ -5,16 +5,14 @@ import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.common.utils.BeanFactoryUtils;
 import org.majimena.petz.common.utils.DateTimeUtils;
 import org.majimena.petz.common.utils.ExceptionUtils;
-import org.majimena.petz.datatype.InvoiceState;
 import org.majimena.petz.datatype.TicketState;
-import org.majimena.petz.datetime.L10nDateTimeProvider;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.ClinicStaff;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.chart.ChartCriteria;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.domain.clinic.ClinicOutline;
-import org.majimena.petz.domain.ticket.TicketCriteria;
+import org.majimena.petz.domain.clinic.ClinicOutlineCriteria;
 import org.majimena.petz.repository.ChartRepository;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.ClinicStaffRepository;
@@ -115,29 +113,19 @@ public class ClinicServiceImpl implements ClinicService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Optional<ClinicOutline> getClinicOutlineByClinicId(String clinicId) {
-        // 今日がいつなのか調べる
-        LocalDateTime now = L10nDateTimeProvider.now().toLocalDateTime();
-        int year = now.getYear();
-        int month = now.getMonthValue();
-        int day = now.getDayOfMonth();
-
+    public Optional<ClinicOutline> findClinicOutlineByClinicOutlineCriteria(ClinicOutlineCriteria criteria) {
         // 本日の予約中のチケット件数
-        long reserve = ticketRepository.count(TicketSpecs.of(TicketCriteria.builder()
-                .clinicId(clinicId).state(TicketState.RESERVED).year(year).month(month).day(day)
-                .build()));
+        criteria.setState(TicketState.RESERVED);
+        long reserve = ticketRepository.count(TicketSpecs.of(criteria));
         // 本日のカルテの管理件数
-        long chart = chartRepository.count(ChartSpecs.of(ChartCriteria.builder()
-                .clinicId(clinicId)
-                .build()));
+        long chart = chartRepository.count(ChartSpecs.of(ChartCriteria.builder().clinicId(criteria.getClinicId()).build()));
         // 本日の診察済のチケット件数
-        long examinated = ticketRepository.count(TicketSpecs.of(TicketCriteria.builder()
-                .clinicId(clinicId).state(TicketState.COMPLETED).year(year).month(month).day(day)
-                .build()));
+        criteria.setState(TicketState.COMPLETED);
+        long examinated = ticketRepository.count(TicketSpecs.of(criteria));
         // 本日の売上金額
-        LocalDateTime min = DateTimeUtils.minOfDay(now);
-        LocalDateTime max = DateTimeUtils.maxOfDay(now);
-        BigDecimal sales = invoiceRepository.sumTotal(clinicId, InvoiceState.PAID, min, max).orElse(BigDecimal.ZERO);
+        LocalDateTime from = DateTimeUtils.from(criteria.getYear(), criteria.getMonth(), criteria.getDay());
+        LocalDateTime to = DateTimeUtils.to(criteria.getYear(), criteria.getMonth(), criteria.getDay());
+        BigDecimal sales = invoiceRepository.sumTotal(criteria.getClinicId(), from, to).orElse(BigDecimal.ZERO);
 
         return Optional.of(ClinicOutline.builder()
                 .reserve(BigDecimal.valueOf(reserve))

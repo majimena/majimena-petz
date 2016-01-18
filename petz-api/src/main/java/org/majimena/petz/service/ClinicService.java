@@ -4,6 +4,7 @@ import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.ClinicStaff;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
 import org.majimena.petz.domain.clinic.ClinicOutline;
+import org.majimena.petz.domain.clinic.ClinicOutlineCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -43,10 +44,10 @@ public interface ClinicService {
     /**
      * クリニックのアウトライン情報を取得する.
      *
-     * @param clinicId クリニックID
+     * @param criteria 検索条件
      * @return 該当するクリニックのアウトライン
      */
-    Optional<ClinicOutline> getClinicOutlineByClinicId(String clinicId);
+    Optional<ClinicOutline> findClinicOutlineByClinicOutlineCriteria(ClinicOutlineCriteria criteria);
 
     /**
      * クリニックを保存する.

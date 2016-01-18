@@ -2,6 +2,7 @@ package org.majimena.petz.web.api.clinic;
 
 import com.codahale.metrics.annotation.Timed;
 import org.majimena.petz.domain.clinic.ClinicOutline;
+import org.majimena.petz.domain.clinic.ClinicOutlineCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ClinicService;
 import org.majimena.petz.web.utils.ErrorsUtils;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.util.Optional;
 
 /**
@@ -36,15 +38,16 @@ public class ClinicDashboardController {
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/outline", method = RequestMethod.GET)
-    public ResponseEntity<ClinicOutline> get(@PathVariable String clinicId) {
+    public ResponseEntity<ClinicOutline> get(@PathVariable String clinicId, @Valid ClinicOutlineCriteria criteria) {
         // クリニック権限のチェック
         ErrorsUtils.throwIfNotIdentify(clinicId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // クリニック概要を取得
-        Optional<ClinicOutline> optional = clinicService.getClinicOutlineByClinicId(clinicId);
+        criteria.setClinicId(clinicId);
+        Optional<ClinicOutline> optional = clinicService.findClinicOutlineByClinicOutlineCriteria(criteria);
         return optional
-                .map(outline -> new ResponseEntity<>(outline, HttpStatus.OK))
+                .map(outline -> ResponseEntity.ok().body(outline))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

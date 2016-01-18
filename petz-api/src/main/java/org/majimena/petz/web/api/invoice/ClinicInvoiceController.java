@@ -92,6 +92,7 @@ public class ClinicInvoiceController {
      * @param invoiceId インヴォイスID
      * @return レスポンスエンティティ（正常時は200、権限エラーは401、その他は500）
      */
+    @Deprecated
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/invoices/{invoiceId}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> delete(@PathVariable String clinicId, @PathVariable String invoiceId) {

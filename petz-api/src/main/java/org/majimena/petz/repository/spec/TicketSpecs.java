@@ -1,7 +1,8 @@
 package org.majimena.petz.repository.spec;
 
+import org.majimena.petz.common.utils.DateTimeUtils;
 import org.majimena.petz.datatype.TicketState;
-import org.majimena.petz.datetime.L10nDateTimeProvider;
+import org.majimena.petz.domain.clinic.ClinicOutlineCriteria;
 import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -26,7 +27,14 @@ public class TicketSpecs {
                 .and(Optional.ofNullable(criteria.getPetId()).map(TicketSpecs::equalPetId).orElse(null))
                 .and(Optional.ofNullable(criteria.getUserId()).map(TicketSpecs::equalUserId).orElse(null))
                 .and(Optional.ofNullable(criteria.getState()).map(TicketSpecs::equalState).orElse(null))
-                .and(betweenStartDateTimeAndEndDateTime(criteria));
+                .and(betweenStartDateTimeAndEndDateTime(criteria.getYear(), criteria.getMonth(), criteria.getDay()));
+    }
+
+    public static Specification of(ClinicOutlineCriteria criteria) {
+        return Specifications
+                .where(equalClinicId(criteria.getClinicId()))
+                .and(Optional.ofNullable(criteria.getState()).map(TicketSpecs::equalState).orElse(null))
+                .and(betweenStartDateTimeAndEndDateTime(criteria.getYear(), criteria.getMonth(), criteria.getDay()));
     }
 
     /**
@@ -62,18 +70,14 @@ public class TicketSpecs {
         return (root, query, cb) -> cb.equal(root.get("state"), status);
     }
 
-    private static Specification betweenStartDateTimeAndEndDateTime(TicketCriteria criteria) {
-        if (criteria.getYear() == null || criteria.getMonth() == null) {
+    private static Specification betweenStartDateTimeAndEndDateTime(Integer year, Integer month, Integer day) {
+        if (year == null || month == null) {
             return null;
         }
 
         // 日付まで指定されていれば日付、そうでなければ範囲を月にする
-        LocalDateTime from = Optional.ofNullable(criteria.getDay())
-                .map(p -> L10nDateTimeProvider.of(criteria.getYear(), criteria.getMonth(), p))
-                .orElse(L10nDateTimeProvider.of(criteria.getYear(), criteria.getMonth()));
-        LocalDateTime to = Optional.ofNullable(criteria.getDay())
-                .map(p -> from.plusDays(1))
-                .orElse(from.plusMonths(1));
+        LocalDateTime from = DateTimeUtils.from(year, month, day);
+        LocalDateTime to = DateTimeUtils.to(year, month, day);
         return (root, query, cb) ->
                 cb.or(cb.between(root.get("startDateTime"), from, to.minusSeconds(1)), cb.between(root.get("endDateTime"), from.plusSeconds(1), to));
     }

@@ -39,7 +39,7 @@ public class SalesServiceImpl implements SalesService {
             LocalDateTime date = start.plusDays(i).toLocalDateTime();
             LocalDateTime from = DateTimeUtils.minOfDay(date);
             LocalDateTime to = DateTimeUtils.maxOfDay(date);
-            BigDecimal sales = invoiceRepository.sumTotal(clinicId, InvoiceState.PAID, from, to).orElse(BigDecimal.ZERO);
+            BigDecimal sales = invoiceRepository.sumTotal(clinicId, from, to).orElse(BigDecimal.ZERO);
             labels.add(from.format(DateTimeFormatter.ofPattern("dd")));
             values.add(sales);
         }

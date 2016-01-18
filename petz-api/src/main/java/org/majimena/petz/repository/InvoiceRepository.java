@@ -1,6 +1,5 @@
 package org.majimena.petz.repository;
 
-import org.majimena.petz.datatype.InvoiceState;
 import org.majimena.petz.domain.Invoice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -17,7 +16,7 @@ import java.util.Optional;
 public interface InvoiceRepository
         extends JpaRepository<Invoice, String>, JpaSpecificationExecutor<Invoice> {
 
-    @Query(value = "SELECT sum(total) FROM Invoice WHERE ticket.clinic.id = :clinicId AND state = :state AND receiptDateTime BETWEEN :startDateTime AND :endDateTime")
-    Optional<BigDecimal> sumTotal(@Param("clinicId") String clinicId, @Param("state") InvoiceState state,
+    @Query(value = "SELECT sum(total) FROM Invoice WHERE ticket.clinic.id=:clinicId AND paid=true AND receiptDateTime BETWEEN :startDateTime AND :endDateTime")
+    Optional<BigDecimal> sumTotal(@Param("clinicId") String clinicId,
                                   @Param("startDateTime") LocalDateTime start, @Param("endDateTime") LocalDateTime end);
 }

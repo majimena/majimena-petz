@@ -69,4 +69,26 @@ public class ClinicTicketInvoiceController {
                 .created(URI.create("/api/v1/clinics/" + clinicId + "/tickets/" + ticketId + "/invoices/" + invoice.getId()))
                 .body(invoice);
     }
+
+    /**
+     * インヴォイスを削除する.
+     *
+     * @param clinicId  クリニックID
+     * @param ticketId  チケットID
+     * @param invoiceId インヴォイスID
+     * @return レスポンスエンティティ（正常時は200、権限エラーは401、その他は500）
+     */
+    @Timed
+    @RequestMapping(value = "/clinics/{clinicId}/tickets/{ticketId}/invoices/{invoiceId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> delete(@PathVariable String clinicId, @PathVariable String ticketId, @PathVariable String invoiceId) {
+        // クリニックの権限チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(ticketId);
+        ErrorsUtils.throwIfNotIdentify(invoiceId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+
+        // インヴォイスをキャンセルする
+        invoiceService.cancelInvoice(clinicId, invoiceId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -1,6 +1,7 @@
 package org.majimena.petz.web.api.clinic;
 
 import mockit.Injectable;
+import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import mockit.Tested;
 import org.junit.Before;
@@ -12,6 +13,8 @@ import org.majimena.petz.WebAppTestConfiguration;
 import org.majimena.petz.config.SpringMvcConfiguration;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
+import org.majimena.petz.security.ResourceCannotAccessException;
+import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ClinicService;
 import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -521,6 +524,8 @@ public class ClinicControllerTest {
         private ClinicService clinicService;
         @Injectable
         private ClinicValidator clinicValidator;
+        @Mocked
+        private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
@@ -561,6 +566,28 @@ public class ClinicControllerTest {
                     .andExpect(jsonPath("$.description", is("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")))
                     .andExpect(jsonPath("$.removed", is(Boolean.FALSE)));
         }
+
+        @Test
+        public void 権限がない場合は401エラーになること() throws Exception {
+            Clinic data = newClinic();
+            data.setId("1");
+            data.setRemoved(Boolean.FALSE);
+
+            new NonStrictExpectations() {{
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = new ResourceCannotAccessException();
+            }};
+
+            mockMvc.perform(put("/api/v1/clinics/1")
+                .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                .content(TestUtils.convertObjectToJsonBytes(data)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.type", is("https://httpstatuses.com/401")))
+                .andExpect(jsonPath("$.title", is("Unauthorized")))
+                .andExpect(jsonPath("$.status", is(401)))
+                .andExpect(jsonPath("$.detail", is("You cannot access resource.")));
+        }
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)
@@ -575,6 +602,8 @@ public class ClinicControllerTest {
         private ClinicService clinicService;
         @Injectable
         private ClinicValidator clinicValidator;
+        @Mocked
+        private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
@@ -584,7 +613,7 @@ public class ClinicControllerTest {
         }
 
         @Test
-        public void deleteProject() throws Exception {
+        public void クリニックが削除できること() throws Exception {
             new NonStrictExpectations() {{
                 clinicService.deleteClinic("1");
                 result = null;
@@ -594,6 +623,23 @@ public class ClinicControllerTest {
                     .accept(TestUtils.APPLICATION_JSON_UTF8))
                     .andDo(print())
                     .andExpect(status().isOk());
+        }
+
+        @Test
+        public void 権限がない場合は401エラーになること() throws Exception {
+            new NonStrictExpectations() {{
+                SecurityUtils.throwIfDoNotHaveClinicRoles("1");
+                result = new ResourceCannotAccessException();
+            }};
+
+            mockMvc.perform(delete("/api/v1/clinics/1")
+                .accept(TestUtils.APPLICATION_JSON_UTF8))
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.type", is("https://httpstatuses.com/401")))
+                .andExpect(jsonPath("$.title", is("Unauthorized")))
+                .andExpect(jsonPath("$.status", is(401)))
+                .andExpect(jsonPath("$.detail", is("You cannot access resource.")));
         }
     }
 }

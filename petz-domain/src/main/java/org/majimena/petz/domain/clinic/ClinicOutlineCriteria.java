@@ -1,15 +1,11 @@
 package org.majimena.petz.domain.clinic;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.majimena.petz.datatype.TicketState;
-import org.majimena.petz.datatype.deserializers.TicketStateDeserializer;
-import org.majimena.petz.datatype.serializers.EnumDataTypeSerializer;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -30,8 +26,6 @@ public class ClinicOutlineCriteria implements Serializable {
 
     private String clinicId;
 
-    @JsonSerialize(using = EnumDataTypeSerializer.class)
-    @JsonDeserialize(using = TicketStateDeserializer.class)
     private TicketState state;
 
     @NotNull

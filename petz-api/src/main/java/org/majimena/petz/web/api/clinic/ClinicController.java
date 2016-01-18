@@ -3,6 +3,7 @@ package org.majimena.petz.web.api.clinic;
 import com.codahale.metrics.annotation.Timed;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.clinic.ClinicCriteria;
+import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ClinicService;
 import org.majimena.petz.web.utils.ErrorsUtils;
 import org.majimena.petz.web.utils.PaginationUtils;
@@ -95,7 +96,9 @@ public class ClinicController {
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}", method = RequestMethod.PUT)
     public ResponseEntity<Clinic> put(@PathVariable String clinicId, @Valid @RequestBody Clinic clinic, BindingResult errors) throws BindException {
+        // クリニックの権限チェックをする
         ErrorsUtils.throwIfNotIdentify(clinicId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // カスタムバリデータを行う
         clinic.setId(clinicId);
@@ -117,8 +120,11 @@ public class ClinicController {
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> delete(@PathVariable String clinicId) {
+        // クリニックの権限チェックをする
         ErrorsUtils.throwIfNotIdentify(clinicId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
+        // クリニックを削除する
         clinicService.deleteClinic(clinicId);
         return ResponseEntity.ok().build();
     }

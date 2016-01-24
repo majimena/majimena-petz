@@ -49,7 +49,7 @@ public class ClinicInvitationController {
         // カスタムバリデーションを行う
         registry.setClinicId(clinicId);
         clinicInvitationRegistryValidator.validate(registry, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // 招待状を送る
         Set<String> emails = new HashSet<>(Arrays.asList(registry.getEmails()));
@@ -82,7 +82,7 @@ public class ClinicInvitationController {
         acception.setClinicId(clinicId);
         acception.setClinicInvitationId(invitationId);
         clinicInvitationAcceptionValidator.validate(acception, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // 招待をアクティベートする
         clinicInvitationService.activate(invitationId, acception.getActivationKey());

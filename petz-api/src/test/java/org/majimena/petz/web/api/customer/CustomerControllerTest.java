@@ -13,6 +13,7 @@ import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.customer.CustomerCriteria;
+import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.CustomerService;
 import org.majimena.petz.web.utils.PaginationUtils;
@@ -183,8 +184,8 @@ public class CustomerControllerTest {
         @Test
         public void 権限がない場合は401エラーとなること() throws Exception {
             new NonStrictExpectations() {{
-                SecurityUtils.isUserInClinic("c123");
-                result = false;
+                SecurityUtils.throwIfDoNotHaveClinicRoles("c999");
+                result = new ResourceCannotAccessException();
                 customerService.getCustomerByCustomerId("customer123");
                 times = 0;
             }};
@@ -292,8 +293,8 @@ public class CustomerControllerTest {
                     .build();
 
             new NonStrictExpectations() {{
-                SecurityUtils.isUserInClinic("c123");
-                result = false;
+                SecurityUtils.throwIfDoNotHaveClinicRoles("c999");
+                result = new ResourceCannotAccessException();
             }};
 
             mockMvc.perform(post("/api/v1/clinics/c999/customers")
@@ -386,8 +387,8 @@ public class CustomerControllerTest {
                     .build();
 
             new NonStrictExpectations() {{
-                SecurityUtils.isUserInClinic("c123");
-                result = false;
+                SecurityUtils.throwIfDoNotHaveClinicRoles("c999");
+                result = new ResourceCannotAccessException();
             }};
 
             mockMvc.perform(put("/api/v1/clinics/c999/customers/customer123")

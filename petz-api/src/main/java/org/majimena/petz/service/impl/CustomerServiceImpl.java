@@ -5,7 +5,7 @@ import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.User;
-import org.majimena.petz.domain.customer.CustomerAuthorizationToken;
+import org.majimena.petz.domain.customer.CustomerAuthenticationToken;
 import org.majimena.petz.domain.customer.CustomerCriteria;
 import org.majimena.petz.domain.errors.ErrorCode;
 import org.majimena.petz.repository.ClinicRepository;
@@ -64,28 +64,20 @@ public class CustomerServiceImpl implements CustomerService {
      * {@inheritDoc}
      */
     @Override
-    public Customer authorize(CustomerAuthorizationToken token) throws ApplicationException {
-        // 関連情報を取得する
+    public Customer saveCustomer(CustomerAuthenticationToken token) throws ApplicationException {
+        // 指定クリニックと指定ユーザーを紐付けて顧客登録する
         Clinic clinic = clinicRepository.findOne(token.getClinicId());
-        User user = userRepository.findOne(token.getUserId());
-
-        // 既に連絡先が登録されており、それを流用する場合は電話番号をキーに認証する
-        String phone = token.getPhoneNo();
-        if (StringUtils.isNotEmpty(user.getPhoneNo()) &&
-            !(StringUtils.equals(user.getPhoneNo(), phone) || StringUtils.equals(user.getMobilePhoneNo(), phone))) {
-            throw new ApplicationException(ErrorCode.PTZ_000201);
-        }
-
-        // 登録情報と合っていればクリニック顧客として追加（但し、この時点ではアクティベートしていない）
-        Customer customer = customerRepository.findByClinicIdAndUserId(token.getClinicId(), token.getUserId())
-            .map(u -> {
-                u.setClinic(clinic);
-                u.setUser(user);
-                return customerRepository.save(u);
-            })
-            .orElseGet(() -> customerRepository.save(Customer.builder()
-                .clinic(clinic).user(user).activated(false).blocked(false).build()));
-        return customer;
+        return userRepository.findOneByLogin(token.getLogin())
+                .map(user -> {
+                    Customer customer = Customer.builder()
+                            .clinic(clinic)
+                            .user(user)
+                            .activated(Boolean.FALSE)
+                            .blocked(Boolean.FALSE)
+                            .build();
+                    return customerRepository.save(customer);
+                })
+                .orElseThrow(() -> new ApplicationException(ErrorCode.PTZ_000201));
     }
 
     /**

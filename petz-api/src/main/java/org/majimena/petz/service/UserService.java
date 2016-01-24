@@ -38,6 +38,14 @@ public interface UserService {
     Optional<User> getUserByUserId(String userId);
 
     /**
+     * ログインIDをもとにユーザーを取得する.
+     *
+     * @param loginId ログインID
+     * @return 該当するユーザー情報
+     */
+    Optional<User> getUserByLogin(String loginId);
+
+    /**
      * ユーザーを新規登録（サインアップ）する.
      *
      * @param registry 新規ユーザー

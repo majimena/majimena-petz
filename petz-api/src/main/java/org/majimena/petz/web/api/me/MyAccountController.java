@@ -59,7 +59,7 @@ public class MyAccountController {
     @RequestMapping(value = "/me", method = RequestMethod.PUT)
     public ResponseEntity<User> put(@Valid @RequestBody User user, BindingResult errors) throws BindException {
         ErrorsUtils.rejectIfEmpty("username", user.getUsername(), errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         user.setId(SecurityUtils.getCurrentUserId());
         User save = userService.updateUser(user);
@@ -77,7 +77,7 @@ public class MyAccountController {
     @Timed
     @RequestMapping(value = "/me/password", method = RequestMethod.PUT)
     public ResponseEntity<Void> putPassword(@Valid @RequestBody PasswordRegistry registry, BindingResult errors) throws BindException {
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         registry.setUserId(SecurityUtils.getCurrentUserId());
         userService.changePassword(registry);

@@ -79,7 +79,7 @@ public class ClinicController {
     public ResponseEntity<Clinic> post(@Valid @RequestBody Clinic clinic, BindingResult errors) throws BindException {
         // カスタムバリデータを行う
         clinicValidator.validate(clinic, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // クリニックを登録する
         Clinic saved = clinicService.saveClinic(clinic);
@@ -103,7 +103,7 @@ public class ClinicController {
         // カスタムバリデータを行う
         clinic.setId(clinicId);
         clinicValidator.validate(clinic, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // クリニック情報を変更する
         Clinic save = clinicService.updateClinic(clinic);

@@ -103,7 +103,7 @@ public class ClinicTicketController {
         // カスタムバリデーションを行う
         ticket.setClinic(Clinic.builder().id(clinicId).build());
         ticketValidator.validate(ticket, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // チケットを保存する
         Ticket created = ticketService.saveTicket(ticket);
@@ -132,7 +132,7 @@ public class ClinicTicketController {
         // カスタムバリデーションを行う
         ticket.setClinic(Clinic.builder().id(clinicId).build());
         ticketValidator.validate(ticket, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // チケットを更新する
         Ticket created = ticketService.updateTicket(ticket);

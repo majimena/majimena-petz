@@ -111,7 +111,7 @@ public class TicketAttachmentController {
 
         // カスタムバリデーションを行う
         ticketAttachmentValidator.validate(attachment, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // チケット添付ファイル情報を更新する
         TicketAttachment saved = ticketAttachmentService.updateTicketAttachment(attachment);

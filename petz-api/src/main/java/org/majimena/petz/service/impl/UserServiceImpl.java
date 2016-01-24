@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -144,6 +143,14 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserByUserId(String userId) {
         User currentUser = userRepository.findOne(userId);
         return Optional.ofNullable(currentUser);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<User> getUserByLogin(String loginId) {
+        return userRepository.findOneByLogin(loginId);
     }
 
     /**

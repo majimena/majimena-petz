@@ -48,7 +48,7 @@ public class SignupController {
     public ResponseEntity<User> post(@RequestBody @Valid SignupRegistry registry, BindingResult errors) throws BindException {
         // カスタムバリデーションを行う
         signupRegistryValidator.validate(registry, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // ユーザを新規登録する
         User save = userService.saveUser(registry);

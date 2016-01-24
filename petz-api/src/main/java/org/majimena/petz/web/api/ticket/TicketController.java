@@ -88,7 +88,7 @@ public class TicketController {
     public ResponseEntity<Ticket> post(@RequestBody @Valid Ticket ticket, BindingResult errors) throws BindException {
         // カスタムバリデーションを行う
         ticketValidator.validate(ticket, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // チケットを保存する
         Ticket created = ticketService.saveTicket(ticket);
@@ -113,7 +113,7 @@ public class TicketController {
 
         // カスタムバリデーションを行う
         ticketValidator.validate(ticket, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // チケットを更新する
         Ticket created = ticketService.updateTicket(ticket);

@@ -55,7 +55,7 @@ public class ClinicPaymentController {
 
         // バリデータを通す
         paymentValidator.validate(payment, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // 該当するペイメントを取得する
         Payment saved = paymentService.savePayment(payment);

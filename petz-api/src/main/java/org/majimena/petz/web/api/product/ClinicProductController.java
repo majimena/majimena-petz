@@ -108,7 +108,7 @@ public class ClinicProductController {
      * @param product  プロダクト
      * @param errors   エラー
      * @return レスポンスエンティティ（通常時は201）
-     * @throws BindException バリデーションエラーがあった場合に発生する例外（レスポンスコードは401）
+     * @throws BindException バリデーションエラーがあった場合に発生する例外（レスポンスコードは400）
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/products", method = RequestMethod.POST)
@@ -120,7 +120,7 @@ public class ClinicProductController {
         // カスタムバリデーションを行う
         product.setClinic(Clinic.builder().id(clinicId).build());
         productValidator.validate(product, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // プロダクトを保存する
         Product saved = productService.saveProduct(product);
@@ -151,7 +151,7 @@ public class ClinicProductController {
         product.setId(productId);
         product.setClinic(Clinic.builder().id(clinicId).build());
         productValidator.validate(product, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // プロダクトを保存する
         Product saved = productService.updateProduct(product);

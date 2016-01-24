@@ -17,6 +17,12 @@ public class ErrorsUtils {
         errors.reject(code.name());
     }
 
+    public static void rejectIfNotEquals(ErrorCode code, String value1, String value2, Errors errors) {
+        if (!StringUtils.equals(value1, value2)) {
+            errors.reject(code.name(), "may not be equal values");
+        }
+    }
+
     public static void rejectValue(String field, ErrorCode code, Errors errors) {
         errors.rejectValue(field, code.name());
     }
@@ -48,7 +54,7 @@ public class ErrorsUtils {
      * @param errors バインディングリザルト
      * @throws BindException エラーがある場合
      */
-    public static void throwIfHaveErrors(BindingResult errors) throws BindException {
+    public static void throwIfHasErrors(BindingResult errors) throws BindException {
         if (errors != null && errors.hasErrors()) {
             throw new BindException(errors);
         }

@@ -7,6 +7,7 @@ import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.customer.CustomerCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.CustomerService;
+import org.majimena.petz.web.utils.ErrorsUtils;
 import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,17 +36,18 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1")
 public class CustomerController {
+
     /**
      * 顧客サービス.
      */
     @Inject
-    protected CustomerService customerService;
+    private CustomerService customerService;
 
     /**
      * 顧客バリデータ.
      */
     @Inject
-    protected CustomerValidator customerValidator;
+    private CustomerValidator customerValidator;
 
     /**
      * 顧客サービスを設定する.
@@ -134,20 +136,19 @@ public class CustomerController {
     public ResponseEntity<Customer> post(@PathVariable String clinicId,
                                          @RequestBody @Valid Customer customer, BindingResult errors) throws BindException {
         // クリニックの権限チェック
-        if (!SecurityUtils.isUserInClinic(clinicId)) {
-            throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
-        }
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+        customer.getClinic().setId(clinicId);
 
         // 顧客のデータ整合性チェック
         customerValidator.validate(customer, errors);
-        if (errors.hasErrors()) {
-            throw new BindException(errors);
-        }
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // 新規顧客を登録する
         Customer created = customerService.saveCustomer(clinicId, customer);
-        return ResponseEntity.created(
-                URI.create("/api/v1/clinics/" + clinicId + "/customers/" + created.getId())).body(created);
+        return ResponseEntity
+                .created(URI.create("/api/v1/clinics/" + clinicId + "/customers/" + created.getId()))
+                .body(created);
     }
 
     /**
@@ -164,6 +165,11 @@ public class CustomerController {
     @RequestMapping(value = "/clinics/{clinicId}/customers/{customerId}", method = RequestMethod.PUT)
     public ResponseEntity<Customer> put(@PathVariable String clinicId, @PathVariable String customerId,
                                         @RequestBody @Valid Customer customer, BindingResult errors) throws BindException {
+        // クリニックの権限チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+        customer.getClinic().setId(clinicId);
+
         customer.setId(customerId);
         ResponseEntity<Customer> post = post(clinicId, customer, errors);
         return ResponseEntity.ok().body(post.getBody());

@@ -103,7 +103,7 @@ public class ClinicVaccineController {
         // カスタムバリデーションを行う
         vaccine.setClinic(Clinic.builder().id(clinicId).build());
         vaccineValidator.validate(vaccine, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // ワクチンを保存する
         Vaccine saved = vaccineService.saveVaccine(vaccine);
@@ -134,7 +134,7 @@ public class ClinicVaccineController {
         vaccine.setId(vaccineId);
         vaccine.setClinic(Clinic.builder().id(clinicId).build());
         vaccineValidator.validate(vaccine, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // ワクチンを保存する
         Vaccine saved = vaccineService.updateVaccine(vaccine);

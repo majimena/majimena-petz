@@ -82,7 +82,7 @@ public class ExaminationController {
 
         // カスタムバリデーションを行う（実際のクリニック権限チェックはバリデータ内で行う）
         examinationValidator.validate(examination, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // チケットを保存する
         Examination saved = examinationService.saveExamination(examination);
@@ -113,7 +113,7 @@ public class ExaminationController {
 
         // カスタムバリデーションを行う（実際のクリニック権限チェックはバリデータ内で行う）
         examinationValidator.validate(examination, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // チケットを更新する
         Examination saved = examinationService.saveExamination(examination);

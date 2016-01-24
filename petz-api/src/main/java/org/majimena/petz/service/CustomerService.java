@@ -2,7 +2,7 @@ package org.majimena.petz.service;
 
 import org.majimena.petz.common.exceptions.ApplicationException;
 import org.majimena.petz.domain.Customer;
-import org.majimena.petz.domain.customer.CustomerAuthorizationToken;
+import org.majimena.petz.domain.customer.CustomerAuthenticationToken;
 import org.majimena.petz.domain.customer.CustomerCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +25,7 @@ public interface CustomerService {
      * @return 顧客情報
      * @throws ApplicationException 認証に失敗した場合に発生する例外
      */
-    Customer authorize(CustomerAuthorizationToken token) throws ApplicationException;
+    Customer saveCustomer(CustomerAuthenticationToken token) throws ApplicationException;
 
     /**
      * 顧客情報を保存する. 入力があればユーザー情報も一緒に更新する.

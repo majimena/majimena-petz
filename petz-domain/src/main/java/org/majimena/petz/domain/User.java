@@ -16,6 +16,8 @@ import org.hibernate.validator.constraints.Email;
 import org.majimena.petz.datatype.LangKey;
 import org.majimena.petz.datatype.TimeZone;
 import org.majimena.petz.datatype.converters.LocalDateTimePersistenceConverter;
+import org.majimena.petz.datatype.defs.MailAddress;
+import org.majimena.petz.datatype.defs.Name;
 import org.majimena.petz.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
 import org.majimena.petz.datatype.deserializers.LangKeyDeserializer;
 import org.majimena.petz.datatype.deserializers.TimeZoneDeserializer;
@@ -68,23 +70,21 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(length = 100)
     private String password;
 
-    @Size(max = 50)
+    @Size(max = Name.MAX_LENGTH)
     @Column(name = "username", length = 50)
     private String username;
 
-    @Deprecated
-    @Size(max = 50)
+    @Size(max = Name.MAX_LENGTH)
     @Column(name = "first_name", length = 50)
     private String firstName;
 
-    @Deprecated
-    @Size(max = 50)
+    @Size(max = Name.MAX_LENGTH)
     @Column(name = "last_name", length = 50)
     private String lastName;
 
     @Email
-    @Size(max = 100)
-    @Column(length = 100, unique = true)
+    @Size(max = MailAddress.MAX_LENGTH)
+    @Column(length = MailAddress.MAX_LENGTH, unique = true)
     private String email;
 
     @Column(nullable = false)

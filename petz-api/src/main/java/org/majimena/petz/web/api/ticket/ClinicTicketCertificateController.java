@@ -123,7 +123,7 @@ public class ClinicTicketCertificateController {
         Ticket ticket = Ticket.builder().id(ticketId).clinic(clinic).build();
         certificate.setTicket(ticket);
         certificateValidator.validate(certificate, errors);
-        ErrorsUtils.throwIfHaveErrors(errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // 証明書を保存する
         Certificate saved = certificateService.saveCertificate(certificate);

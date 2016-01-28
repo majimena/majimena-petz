@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,15 @@ public class PetServiceImpl implements PetService {
 
     @Inject
     private AmazonS3Service amazonS3Service;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Pet> getPetsByUserId(String userId) {
+        return petRepository.findByUserId(userId);
+    }
 
     @Override
     @Transactional(readOnly = true)

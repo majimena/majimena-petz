@@ -122,17 +122,14 @@ public class TicketServiceImpl implements TicketService {
     public Graph getTodaysTicketGraphByClinicId(String clinicId) {
         ZonedDateTime now = L10nDateTimeProvider.now();
 
-        List<String> labels = new ArrayList<>();
-        List<BigDecimal> values = new ArrayList<>();
+        List<List<Object>> data = new ArrayList<>();
         for (int i = 0; i < 24; i++) {
             LocalDateTime from = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i);
             LocalDateTime to = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i, 59, 59);
             long count = ticketRepository.count(TicketSpecs.of(clinicId, from, to));
-            labels.add(i + ":00");
-            values.add(BigDecimal.valueOf(count));
+            data.add(Arrays.asList(i + ":00", BigDecimal.valueOf(count)));
         }
-
-        return new Graph(labels, Arrays.asList(values));
+        return new Graph(Arrays.asList("Time", "Reserved"), data);
     }
 
     /**

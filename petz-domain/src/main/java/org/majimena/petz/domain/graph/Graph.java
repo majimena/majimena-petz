@@ -7,11 +7,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * グラフデータ.
+ * グラフ.
  */
 @Data
 @Builder
@@ -20,7 +20,6 @@ import java.util.List;
 @EqualsAndHashCode
 public class Graph implements Serializable {
     private static final long serialVersionUID = 8553594676748196467L;
-
     private List<String> labels;
-    private List<List<BigDecimal>> values;
+    private List<List<Object>> data;
 }

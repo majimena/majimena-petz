@@ -1,7 +1,6 @@
 package org.majimena.petz.service.impl;
 
 import org.majimena.petz.common.utils.DateTimeUtils;
-import org.majimena.petz.datatype.InvoiceState;
 import org.majimena.petz.datetime.L10nDateTimeProvider;
 import org.majimena.petz.domain.graph.Graph;
 import org.majimena.petz.repository.InvoiceRepository;
@@ -14,7 +13,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,25 +23,28 @@ import java.util.List;
 @Service
 public class SalesServiceImpl implements SalesService {
 
+    /**
+     * 請求書リポジトリ.
+     */
     @Inject
     private InvoiceRepository invoiceRepository;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     public Graph getDailySalesByClinicId(String clinicId) {
         ZonedDateTime start = L10nDateTimeProvider.now().minusDays(30);
 
-        List<String> labels = new ArrayList<>();
-        List<BigDecimal> values = new ArrayList<>();
+        List<List<Object>> data = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             LocalDateTime date = start.plusDays(i).toLocalDateTime();
             LocalDateTime from = DateTimeUtils.minOfDay(date);
             LocalDateTime to = DateTimeUtils.maxOfDay(date);
             BigDecimal sales = invoiceRepository.sumTotal(clinicId, from, to).orElse(BigDecimal.ZERO);
-            labels.add(from.format(DateTimeFormatter.ofPattern("dd")));
-            values.add(sales);
+            data.add(Arrays.asList(from.format(DateTimeFormatter.ofPattern("dd")), sales));
         }
-
-        return new Graph(labels, Arrays.asList(values));
+        return new Graph(Arrays.asList("Time", "Sales"), data);
     }
 }

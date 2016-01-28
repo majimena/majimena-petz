@@ -6,12 +6,15 @@ import org.majimena.petz.domain.chart.ChartCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
  * カルテサービス.
  */
 public interface ChartService {
+
+    List<Chart> getChartsByCustomerId(String customerId);
 
     /**
      * カルテを検索する. ページングに対応するため, ページ情報が必要.

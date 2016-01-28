@@ -1,14 +1,17 @@
 package org.majimena.petz.web.api.customer;
 
-import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
+import mockit.Injectable;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
+import mockit.Tested;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petz.Application;
 import org.majimena.petz.TestUtils;
+import org.majimena.petz.WebAppTestConfiguration;
+import org.majimena.petz.config.SpringMvcConfiguration;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.User;
@@ -27,7 +30,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindException;
 
-import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -41,36 +43,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * @see CustomerController
+ * @see ClinicCustomerController
  */
 @RunWith(Enclosed.class)
-public class CustomerControllerTest {
+public class ClinicCustomerControllerTest {
+
+    private static Customer newCustomer() {
+        return Customer.builder()
+                .id("customer123")
+                .clinic(Clinic.builder().id("c123").build())
+                .user(User.builder().id("u123").build())
+                .activated(Boolean.FALSE)
+                .blocked(Boolean.FALSE)
+                .build();
+    }
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
     public static class GetAllTest {
 
         private MockMvc mockMvc;
-
-        @Inject
-        private CustomerController sut;
-
-        @Inject
-        private RestHandlerExceptionResolver restHandlerExceptionResolver;
-
-        @Mocked
+        @Tested
+        private ClinicCustomerController sut = new ClinicCustomerController();
+        @Injectable
         private CustomerService customerService;
-
+        @Injectable
+        private CustomerValidator customerValidator;
         @Mocked
         private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
-            mockMvc = MockMvcBuilders
-                    .standaloneSetup(sut)
-                    .setHandlerExceptionResolvers(restHandlerExceptionResolver).build();
-            sut.setCustomerService(customerService);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut)
+                    .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
+                    .build();
         }
 
         @Test
@@ -83,8 +90,8 @@ public class CustomerControllerTest {
             final Customer d2 = Customer.builder().id("c222").clinic(clinic).user(User.builder().id("u222").build()).build();
 
             new NonStrictExpectations() {{
-                SecurityUtils.isUserInClinic("c123");
-                result = true;
+                SecurityUtils.throwIfDoNotHaveClinicRoles("c123");
+                result = null;
                 customerService.getCustomersByCustomerCriteria(criteria, pageable);
                 result = new PageImpl(Arrays.asList(d1, d2), pageable, 2);
             }};
@@ -106,10 +113,8 @@ public class CustomerControllerTest {
         @Test
         public void 権限がない場合は401エラーとなること() throws Exception {
             new NonStrictExpectations() {{
-                SecurityUtils.isUserInClinic("c123");
-                result = false;
-                customerService.getCustomersByCustomerCriteria((CustomerCriteria) any, (Pageable) any);
-                times = 0;
+                SecurityUtils.throwIfDoNotHaveClinicRoles("c999");
+                result = new ResourceCannotAccessException();
             }};
 
             mockMvc.perform(get("/api/v1/clinics/c999/customers")
@@ -122,29 +127,24 @@ public class CustomerControllerTest {
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
     public static class GetTest {
 
         private MockMvc mockMvc;
-
-        @Inject
-        private CustomerController sut;
-
-        @Inject
-        private RestHandlerExceptionResolver restHandlerExceptionResolver;
-
-        @Mocked
+        @Tested
+        private ClinicCustomerController sut = new ClinicCustomerController();
+        @Injectable
         private CustomerService customerService;
-
+        @Injectable
+        private CustomerValidator customerValidator;
         @Mocked
         private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
-            mockMvc = MockMvcBuilders
-                    .standaloneSetup(sut)
-                    .setHandlerExceptionResolvers(restHandlerExceptionResolver).build();
-            sut.setCustomerService(customerService);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut)
+                    .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
+                    .build();
         }
 
         @Test
@@ -197,14 +197,9 @@ public class CustomerControllerTest {
 
         @Test
         public void 取得したデータの権限が異なっている場合は401エラーとなること() throws Exception {
-            final Clinic clinic = Clinic.builder().id("c999").build();
-            final Customer customer = Customer.builder().id("customer123").clinic(clinic).user(User.builder().id("u111").build()).build();
-
             new NonStrictExpectations() {{
-                SecurityUtils.isUserInClinic("c123");
-                result = true;
-                customerService.getCustomerByCustomerId("customer123");
-                result = Optional.ofNullable(customer);
+                SecurityUtils.throwIfDoNotHaveClinicRoles("c123");
+                result = new ResourceCannotAccessException();
             }};
 
             mockMvc.perform(get("/api/v1/clinics/c123/customers/customer123"))
@@ -215,48 +210,33 @@ public class CustomerControllerTest {
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
     public static class PostTest {
 
         private MockMvc mockMvc;
-
-        @Inject
-        private CustomerController sut;
-
-        @Inject
-        private RestHandlerExceptionResolver restHandlerExceptionResolver;
-
-        @Mocked
+        @Tested
+        private ClinicCustomerController sut = new ClinicCustomerController();
+        @Injectable
         private CustomerValidator customerValidator;
-
-        @Mocked
+        @Injectable
         private CustomerService customerService;
-
         @Mocked
         private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
-            mockMvc = MockMvcBuilders
-                    .standaloneSetup(sut)
-                    .setHandlerExceptionResolvers(restHandlerExceptionResolver).build();
-            sut.setCustomerService(customerService);
-            sut.setCustomerValidator(customerValidator);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut)
+                    .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
+                    .build();
         }
 
         @Test
         public void POSTしたデータが登録できること() throws Exception {
-            final Customer customer = Customer.builder().lastName("Test").firstName("Taro")
-                    .activated(Boolean.FALSE).blocked(Boolean.FALSE)
-                    .clinic(Clinic.builder().id("c123").build())
-                    .user(User.builder().login("test@example.com").email("test@example.com")
-                            .state("Tokyo").city("Shinjuku-ku").street("Nishi-Shinjuku 1-1-1")
-                            .phoneNo("0311112222").mobilePhoneNo("09011112222").build())
-                    .build();
+            Customer customer = newCustomer();
 
             new NonStrictExpectations() {{
-                SecurityUtils.isUserInClinic("c123");
-                result = true;
+                SecurityUtils.throwIfDoNotHaveClinicRoles("c123");
+                result = null;
                 customerValidator.validate(customer, (BindException) any);
                 result = null;
                 customerService.saveCustomer("c123", customer);
@@ -268,29 +248,16 @@ public class CustomerControllerTest {
                     .content(TestUtils.convertObjectToJsonBytes(customer)))
                     .andDo(print())
                     .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.lastName", is("Test")))
-                    .andExpect(jsonPath("$.firstName", is("Taro")))
+                    .andExpect(jsonPath("$.id", is("customer123")))
                     .andExpect(jsonPath("$.activated", is(false)))
                     .andExpect(jsonPath("$.blocked", is(false)))
                     .andExpect(jsonPath("$.clinic.id", is("c123")))
-                    .andExpect(jsonPath("$.user.login", is("test@example.com")))
-                    .andExpect(jsonPath("$.user.email", is("test@example.com")))
-                    .andExpect(jsonPath("$.user.state", is("Tokyo")))
-                    .andExpect(jsonPath("$.user.city", is("Shinjuku-ku")))
-                    .andExpect(jsonPath("$.user.street", is("Nishi-Shinjuku 1-1-1")))
-                    .andExpect(jsonPath("$.user.phoneNo", is("0311112222")))
-                    .andExpect(jsonPath("$.user.mobilePhoneNo", is("09011112222")));
+                    .andExpect(jsonPath("$.user.id", is("u123")));
         }
 
         @Test
         public void 権限がない場合は401エラーとなること() throws Exception {
-            final Customer customer = Customer.builder().lastName("Test").firstName("Taro")
-                    .activated(Boolean.FALSE).blocked(Boolean.FALSE)
-                    .clinic(Clinic.builder().id("c123").build())
-                    .user(User.builder().login("test@example.com").email("test@example.com")
-                            .state("Tokyo").city("Shinjuku-ku").street("Nishi-Shinjuku 1-1-1")
-                            .phoneNo("0311112222").mobilePhoneNo("09011112222").build())
-                    .build();
+            Customer customer = newCustomer();
 
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("c999");
@@ -311,47 +278,31 @@ public class CustomerControllerTest {
     public static class PutTest {
 
         private MockMvc mockMvc;
-
-        @Inject
-        private CustomerController sut;
-
-        @Inject
-        private RestHandlerExceptionResolver restHandlerExceptionResolver;
-
-        @Mocked
+        @Tested
+        private ClinicCustomerController sut = new ClinicCustomerController();
+        @Injectable
         private CustomerValidator customerValidator;
-
-        @Mocked
+        @Injectable
         private CustomerService customerService;
-
         @Mocked
         private SecurityUtils securityUtils;
 
         @Before
         public void setup() {
-            mockMvc = MockMvcBuilders
-                    .standaloneSetup(sut)
-                    .setHandlerExceptionResolvers(restHandlerExceptionResolver).build();
-            sut.setCustomerService(customerService);
-            sut.setCustomerValidator(customerValidator);
+            mockMvc = MockMvcBuilders.standaloneSetup(sut)
+                    .setHandlerExceptionResolvers(new SpringMvcConfiguration().restExceptionResolver())
+                    .build();
         }
 
         @Test
         public void PUTしたデータが登録できること() throws Exception {
-            final Customer customer = Customer.builder().id("customer123").lastName("Test").firstName("Taro")
-                    .activated(Boolean.FALSE).blocked(Boolean.FALSE)
-                    .clinic(Clinic.builder().id("c123").build())
-                    .user(User.builder().id("u123").login("test@example.com").email("test@example.com")
-                            .state("Tokyo").city("Shinjuku-ku").street("Nishi-Shinjuku 1-1-1")
-                            .phoneNo("0311112222").mobilePhoneNo("09011112222").build())
-                    .build();
-
+            Customer customer = newCustomer();
             new NonStrictExpectations() {{
-                SecurityUtils.isUserInClinic("c123");
-                result = true;
+                SecurityUtils.throwIfDoNotHaveClinicRoles("c123");
+                result = null;
                 customerValidator.validate(customer, (BindException) any);
                 result = null;
-                customerService.saveCustomer("c123", customer);
+                customerService.updateCustomer(customer);
                 result = customer;
             }};
 
@@ -361,30 +312,15 @@ public class CustomerControllerTest {
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id", is("customer123")))
-                    .andExpect(jsonPath("$.lastName", is("Test")))
-                    .andExpect(jsonPath("$.firstName", is("Taro")))
                     .andExpect(jsonPath("$.activated", is(false)))
                     .andExpect(jsonPath("$.blocked", is(false)))
                     .andExpect(jsonPath("$.clinic.id", is("c123")))
-                    .andExpect(jsonPath("$.user.id", is("u123")))
-                    .andExpect(jsonPath("$.user.login", is("test@example.com")))
-                    .andExpect(jsonPath("$.user.email", is("test@example.com")))
-                    .andExpect(jsonPath("$.user.state", is("Tokyo")))
-                    .andExpect(jsonPath("$.user.city", is("Shinjuku-ku")))
-                    .andExpect(jsonPath("$.user.street", is("Nishi-Shinjuku 1-1-1")))
-                    .andExpect(jsonPath("$.user.phoneNo", is("0311112222")))
-                    .andExpect(jsonPath("$.user.mobilePhoneNo", is("09011112222")));
+                    .andExpect(jsonPath("$.user.id", is("u123")));
         }
 
         @Test
         public void 権限がない場合は401エラーとなること() throws Exception {
-            final Customer customer = Customer.builder().id("customer123").lastName("Test").firstName("Taro")
-                    .activated(Boolean.FALSE).blocked(Boolean.FALSE)
-                    .clinic(Clinic.builder().id("c123").build())
-                    .user(User.builder().id("u123").login("test@example.com").email("test@example.com")
-                            .state("Tokyo").city("Shinjuku-ku").street("Nishi-Shinjuku 1-1-1")
-                            .phoneNo("0311112222").mobilePhoneNo("09011112222").build())
-                    .build();
+            Customer customer = newCustomer();
 
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("c999");

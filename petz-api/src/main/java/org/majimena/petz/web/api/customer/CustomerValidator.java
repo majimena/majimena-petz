@@ -56,7 +56,8 @@ public class CustomerValidator extends AbstractValidator<Customer> {
 
     private void validateLogin(Optional<String> value, String login, Errors errors) {
         value.orElseGet(() -> {
-            userRepository.findOneByLogin(login).ifPresent(user -> ErrorsUtils.reject(ErrorCode.PTZ_000101, errors));
+            userRepository.findOneByLogin(login)
+                    .ifPresent(user -> ErrorsUtils.reject(ErrorCode.PTZ_000101, errors));
             return null;
         });
     }

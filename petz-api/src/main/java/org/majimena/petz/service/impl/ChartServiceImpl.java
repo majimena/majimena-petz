@@ -1,8 +1,6 @@
 package org.majimena.petz.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.petz.common.exceptions.ApplicationException;
-import org.majimena.petz.common.exceptions.SystemException;
 import org.majimena.petz.common.utils.BeanFactoryUtils;
 import org.majimena.petz.domain.Chart;
 import org.majimena.petz.domain.Clinic;
@@ -13,7 +11,6 @@ import org.majimena.petz.repository.ChartRepository;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.CustomerRepository;
 import org.majimena.petz.repository.spec.ChartCriteriaSpec;
-import org.majimena.petz.repository.spec.ChartSpecs;
 import org.majimena.petz.service.ChartService;
 import org.majimena.petz.service.PetService;
 import org.springframework.data.domain.Page;
@@ -23,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -54,6 +52,15 @@ public class ChartServiceImpl implements ChartService {
      */
     @Inject
     private PetService petService;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Chart> getChartsByCustomerId(String customerId) {
+        return chartRepository.findByCustomerId(customerId);
+    }
 
     /**
      * {@inheritDoc}

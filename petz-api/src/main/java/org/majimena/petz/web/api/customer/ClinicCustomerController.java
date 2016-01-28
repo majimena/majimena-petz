@@ -2,7 +2,6 @@ package org.majimena.petz.web.api.customer;
 
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.customer.CustomerCriteria;
 import org.majimena.petz.security.SecurityUtils;
@@ -28,14 +27,13 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 顧客コントローラ.
  */
 @RestController
 @RequestMapping("/api/v1")
-public class CustomerController {
+public class ClinicCustomerController {
 
     /**
      * 顧客サービス.
@@ -50,49 +48,28 @@ public class CustomerController {
     private CustomerValidator customerValidator;
 
     /**
-     * 顧客サービスを設定する.
-     *
-     * @param customerService 顧客サービス
-     */
-    public void setCustomerService(final CustomerService customerService) {
-        this.customerService = customerService;
-    }
-
-    /**
-     * 顧客バリデータを設定する.
-     *
-     * @param customerValidator 顧客レジスタバリデータ
-     */
-    public void setCustomerValidator(final CustomerValidator customerValidator) {
-        this.customerValidator = customerValidator;
-    }
-
-    /**
      * 自分のクリニックの顧客を検索する.
      *
      * @param clinicId クリニックID
      * @param offset   検索時のオフセット値
      * @param limit    検索結果数の上限値
      * @param criteria 検索条件
-     * @return 検索結果
+     * @return レスポンスエンティティ（通常時は200、入力エラー時は400、認証失敗時は401）
      * @throws URISyntaxException URIエラー
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/customers", method = RequestMethod.GET)
-    public ResponseEntity<List<Customer>> getAll(@PathVariable String clinicId,
-                                                 @RequestParam(value = "page", required = false) Integer offset,
-                                                 @RequestParam(value = "per_page", required = false) Integer limit,
-                                                 @Valid CustomerCriteria criteria) throws URISyntaxException {
+    public ResponseEntity<List<Customer>> getAll(@PathVariable String clinicId, @RequestParam(value = "page", required = false) Integer offset,
+                                                 @RequestParam(value = "per_page", required = false) Integer limit, @Valid CustomerCriteria criteria) throws URISyntaxException {
         // クリニックの権限チェック
-        if (!SecurityUtils.isUserInClinic(clinicId)) {
-            throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
-        }
-
-        Pageable pageable = PaginationUtils.generatePageRequest(offset, limit);
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
         criteria.setClinicId(clinicId);
 
+        // ページング検索する
+        Pageable pageable = PaginationUtils.generatePageRequest(offset, limit);
         Page<Customer> users = customerService.getCustomersByCustomerCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(users, "/api/v1/clinics/" + clinicId + "/users", offset, limit);
+        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(users, "/api/v1/clinics/" + clinicId + "/customers", offset, limit);
         return new ResponseEntity<>(users.getContent(), headers, HttpStatus.OK);
     }
 
@@ -101,24 +78,20 @@ public class CustomerController {
      *
      * @param clinicId   クリニックID
      * @param customerId 顧客ID
-     * @return 該当する顧客
+     * @return レスポンスエンティティ（通常時は200、認証失敗時は401、対象が見つからない場合は404）
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/customers/{customerId}", method = RequestMethod.GET)
     public ResponseEntity<Customer> get(@PathVariable String clinicId, @PathVariable String customerId) {
         // クリニックの権限チェック
-        if (!SecurityUtils.isUserInClinic(clinicId)) {
-            throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
-        }
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(customerId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
-        Optional<Customer> result = customerService.getCustomerByCustomerId(customerId);
-        return result
-                .map(customer -> {
-                    if (!StringUtils.equals(clinicId, customer.getClinic().getId())) {
-                        throw new ResourceCannotAccessException(); // FIXME メッセージ詰める
-                    }
-                    return ResponseEntity.ok().body(customer);
-                })
+        // 顧客を検索
+        return customerService.getCustomerByCustomerId(customerId)
+                .filter(customer -> StringUtils.equals(clinicId, customer.getClinic().getId()))
+                .map(customer -> ResponseEntity.ok().body(customer))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -128,7 +101,7 @@ public class CustomerController {
      * @param clinicId クリニックID
      * @param customer 顧客登録情報
      * @param errors   エラーオブジェクト
-     * @return 登録結果
+     * @return レスポンスエンティティ（通常時は200、入力エラー時は400、認証失敗時は401）
      * @throws BindException バリデーションエラーがある場合に発生する例外
      */
     @Timed
@@ -138,9 +111,9 @@ public class CustomerController {
         // クリニックの権限チェック
         ErrorsUtils.throwIfNotIdentify(clinicId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
-        customer.getClinic().setId(clinicId);
 
         // 顧客のデータ整合性チェック
+        customer.getClinic().setId(clinicId);
         customerValidator.validate(customer, errors);
         ErrorsUtils.throwIfHasErrors(errors);
 
@@ -158,7 +131,7 @@ public class CustomerController {
      * @param customerId 顧客ID
      * @param customer   顧客登録情報
      * @param errors     エラーオブジェクト
-     * @return 登録結果
+     * @return レスポンスエンティティ（通常時は200、入力エラー時は400、認証失敗時は401）
      * @throws BindException バリデーションエラーがある場合に発生する例外
      */
     @Timed
@@ -167,11 +140,42 @@ public class CustomerController {
                                         @RequestBody @Valid Customer customer, BindingResult errors) throws BindException {
         // クリニックの権限チェック
         ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(customerId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
-        customer.getClinic().setId(clinicId);
 
+        // 顧客のデータ整合性チェック
         customer.setId(customerId);
-        ResponseEntity<Customer> post = post(clinicId, customer, errors);
-        return ResponseEntity.ok().body(post.getBody());
+        customer.getClinic().setId(clinicId);
+        customerValidator.validate(customer, errors);
+        ErrorsUtils.throwIfHasErrors(errors);
+
+        // 顧客を更新する
+        Customer saved = customerService.updateCustomer(customer);
+        return ResponseEntity.ok().body(saved);
+    }
+
+    /**
+     * 顧客情報を削除する.
+     *
+     * @param clinicId   クリニックID
+     * @param customerId 顧客ID
+     * @return レスポンスエンティティ（通常時は200、認証失敗時は401、対象が見つからない場合は404）
+     */
+    @Timed
+    @RequestMapping(value = "/clinics/{clinicId}/customers/{customerId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> delete(@PathVariable String clinicId, @PathVariable String customerId) {
+        // クリニックの権限チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(customerId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+
+        // 顧客を削除する
+        return customerService.getCustomerByCustomerId(customerId)
+                .filter(customer -> StringUtils.equals(clinicId, customer.getClinic().getId()))
+                .map(customer -> {
+                    customerService.deleteCustomer(customer);
+                    return ResponseEntity.ok().build();
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

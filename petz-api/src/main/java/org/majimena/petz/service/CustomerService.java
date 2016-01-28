@@ -27,13 +27,22 @@ public interface CustomerService {
      */
     Customer saveCustomer(CustomerAuthenticationToken token) throws ApplicationException;
 
+    Customer saveCustomer(String clinicId, Customer customer) throws ApplicationException;
+
     /**
-     * 顧客情報を保存する. 入力があればユーザー情報も一緒に更新する.
+     * 顧客情報を更新する.
      *
-     * @param clinicId 顧客として登録するクリニックのID
      * @param customer 顧客情報
-     * @return 保存した顧客情報
+     * @return 更新した顧客情報
      * @throws ApplicationException
      */
-    Customer saveCustomer(String clinicId, Customer customer) throws ApplicationException;
+    Customer updateCustomer(Customer customer) throws ApplicationException;
+
+    /**
+     * 顧客情報を削除する.<br/>
+     * このケースでは、厳密には論理削除する.
+     *
+     * @param customer 顧客
+     */
+    void deleteCustomer(Customer customer);
 }

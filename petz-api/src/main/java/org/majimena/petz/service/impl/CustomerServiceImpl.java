@@ -2,6 +2,8 @@ package org.majimena.petz.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.common.exceptions.ApplicationException;
+import org.majimena.petz.common.utils.BeanFactoryUtils;
+import org.majimena.petz.common.utils.ExceptionUtils;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.User;
@@ -106,5 +108,26 @@ public class CustomerServiceImpl implements CustomerService {
 
         // TODO 顧客に登録完了のメールを送信
         return created;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Customer updateCustomer(Customer customer) throws ApplicationException {
+        // 更新対象データを取得する
+        Customer one = customerRepository.findOne(customer.getId());
+        ExceptionUtils.throwIfNull(one);
+
+        // データをコピーして保存する
+        BeanFactoryUtils.copyNonNullProperties(customer, one);
+        return customerRepository.save(one);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteCustomer(Customer customer) {
     }
 }

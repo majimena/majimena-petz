@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-
-    <include file="classpath:config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20150512163654_added_entity_Clinic.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20150726000000_added_entity_Pet.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20150827000000_added_entity_Customer.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20150905000000_added_entity_Chart.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151004000000_added_entity_Ticket.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151027000000_added_entity_TicketActivity.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151106000000_added_entity_Product.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151109000000_added_entity_Examination.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151115000000_added_entity_TicketAttachment.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151219000000_added_entity_Invoice.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151224000000_added_entity_Payment.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151230000000_added_entity_Vaccine.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151231000000_added_entity_Certificate.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20160110000000_modify_entity_Clinic.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20160111000000_added_index_ClinicStaff.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20160115000000_drop_columns.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20160117000000_drop_columns.xml" relativeToChangelogFile="false"/>
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_user.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_authority.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_audit.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_oauth.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_clinic.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_clinic_staff.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_clinic_invitation.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_blood.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_color.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_type.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_tag.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_pet.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_customer.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_chart.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_ticket.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_ticket_activity.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_product.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_examination.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_ticket_attachment.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_invoice.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_payment.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_vaccine.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_certificate.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_load_data.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

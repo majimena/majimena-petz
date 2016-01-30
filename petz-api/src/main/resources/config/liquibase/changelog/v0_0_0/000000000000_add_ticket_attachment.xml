@@ -4,38 +4,25 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="now" value="now()" dbms="mysql,h2"/>
-    <property name="now" value="current_timestamp" dbms="postgresql"/>
-
-    <changeSet id="20151219000000" author="custom">
-
-        <createTable tableName="invoice">
+    <changeSet id="000000000000_ticket_attachment" author="custom">
+        <createTable tableName="ticket_attachment">
             <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="ticket_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="state" type="varchar(20)">
+            <column name="name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="subtotal" type="numeric(12,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="tax" type="numeric(9,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="total" type="numeric(12,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="receipt_amount" type="numeric(12,0)">
+            <column name="memo" type="text">
                 <constraints nullable="true"/>
             </column>
-            <column name="receipt_date_time" type="timestamp">
-                <constraints nullable="true"/>
+            <column name="url" type="varchar(200)">
+                <constraints nullable="false"/>
             </column>
-            <column name="memo" type="varchar(2000)">
-                <constraints nullable="true"/>
+            <column name="removed" type="boolean">
+                <constraints nullable="false"/>
             </column>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
@@ -46,12 +33,15 @@
             <column name="last_modified_by" type="varchar(50)"/>
             <column name="last_modified_date" type="timestamp"/>
         </createTable>
-
-        <createIndex indexName="idx1_invoice"
-                     tableName="invoice">
-            <column name="ticket_id" type="varchar(50)"/>
-        </createIndex>
-
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
     </changeSet>
 
+    <changeSet id="000000000000_ticket_attachment_index" author="custom">
+        <createIndex indexName="idx1_ticket_attachment"
+                     tableName="ticket_attachment">
+            <column name="ticket_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

@@ -4,32 +4,34 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="now" value="now()" dbms="mysql,h2"/>
-    <property name="now" value="current_timestamp" dbms="postgresql"/>
-
-    <changeSet id="20151106000000" author="custom">
-
-        <createTable tableName="product">
+    <changeSet id="000000000000_invoice" author="custom">
+        <createTable tableName="invoice">
             <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="clinic_id" type="varchar(50)">
+            <column name="ticket_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="varchar(50)">
+            <column name="subtotal" type="numeric(12,0)">
                 <constraints nullable="false"/>
             </column>
-            <column name="price" type="numeric(9,0)">
+            <column name="tax" type="numeric(9,0)">
                 <constraints nullable="false"/>
             </column>
-            <column name="tax_type" type="varchar(20)">
+            <column name="total" type="numeric(12,0)">
                 <constraints nullable="false"/>
             </column>
-            <column name="tax_rate" type="numeric(3,2)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="varchar(2000)">
+            <column name="receipt_amount" type="numeric(12,0)">
                 <constraints nullable="true"/>
+            </column>
+            <column name="receipt_date_time" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="memo" type="varchar(2000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="paid" type="boolean">
+                <constraints nullable="false"/>
             </column>
             <column name="removed" type="boolean">
                 <constraints nullable="false"/>
@@ -43,16 +45,15 @@
             <column name="last_modified_by" type="varchar(50)"/>
             <column name="last_modified_date" type="timestamp"/>
         </createTable>
-
-        <createIndex indexName="idx1_product"
-                     tableName="product">
-            <column name="clinic_id" type="varchar(50)"/>
-        </createIndex>
-        <createIndex indexName="idx2_product"
-                     tableName="product">
-            <column name="name" type="varchar(50)"/>
-        </createIndex>
-
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
     </changeSet>
 
+    <changeSet id="000000000000_invoice_index" author="custom">
+        <createIndex indexName="idx1_invoice"
+                     tableName="invoice">
+            <column name="ticket_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

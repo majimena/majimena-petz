@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+
+    <changeSet id="000000000000_user" author="custom">
+        <createTable tableName="user">
+            <column name="id" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="varchar(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="last_name" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activated" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lang_key" type="varchar(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time_zone" type="varchar(60)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="activation_key" type="varchar(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="reset_key" type="varchar(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="reset_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="zip_code" type="varchar(10)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="country" type="varchar(2)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="state" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="city" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="street" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="phone_no" type="varchar(15)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mobile_phone_no" type="varchar(15)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="last_modified_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="000000000000_user_index" author="custom">
+        <createIndex indexName="idx1_user"
+                     tableName="user" unique="true">
+            <column name="login" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx2_user"
+                     tableName="user">
+            <column name="email" type="varchar(100)"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

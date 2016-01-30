@@ -4,29 +4,22 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="now" value="now()" dbms="mysql,h2"/>
-    <property name="now" value="current_timestamp" dbms="postgresql"/>
-
-    <changeSet id="20151027000002" author="custom">
-
-        <createTable tableName="ticket_activity">
+    <changeSet id="000000000000_clinic_staff" author="custom">
+        <createTable tableName="clinic_staff">
             <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="ticket_id" type="varchar(50)">
+            <column name="clinic_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="varchar(20)">
+            <column name="user_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="state_from" type="varchar(20)">
+            <column name="role" type="varchar(60)">
                 <constraints nullable="false"/>
             </column>
-            <column name="state_to" type="varchar(20)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="change_date_time" type="timestamp">
-                <constraints nullable="false"/>
+            <column name="activated_date" type="date">
+                <constraints nullable="true"/>
             </column>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
@@ -37,12 +30,19 @@
             <column name="last_modified_by" type="varchar(50)"/>
             <column name="last_modified_date" type="timestamp"/>
         </createTable>
-
-        <createIndex indexName="idx1_ticket_activity"
-                     tableName="ticket_activity">
-            <column name="ticket_id" type="varchar(50)"/>
-        </createIndex>
-
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
     </changeSet>
 
+    <changeSet id="000000000000_clinic_staff_index" author="custom">
+        <createIndex indexName="idx1_clinic_staff"
+                     tableName="clinic_staff">
+            <column name="clinic_id" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx2_clinic_staff"
+                     tableName="clinic_staff">
+            <column name="user_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

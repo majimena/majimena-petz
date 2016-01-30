@@ -4,28 +4,24 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="now" value="now()" dbms="mysql,h2"/>
-    <property name="now" value="current_timestamp" dbms="postgresql"/>
-
-    <changeSet id="20151115000000" author="custom">
-
-        <createTable tableName="ticket_attachment">
+    <changeSet id="000000000000_ticket_activity" author="custom">
+        <createTable tableName="ticket_activity">
             <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="ticket_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="varchar(50)">
+            <column name="type" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="memo" type="text">
-                <constraints nullable="true"/>
-            </column>
-            <column name="url" type="varchar(200)">
+            <column name="state_from" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="removed" type="boolean">
+            <column name="state_to" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_date_time" type="timestamp">
                 <constraints nullable="false"/>
             </column>
             <column name="created_by" type="varchar(50)">
@@ -37,12 +33,16 @@
             <column name="last_modified_by" type="varchar(50)"/>
             <column name="last_modified_date" type="timestamp"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
 
-        <createIndex indexName="idx1_ticket_attachment"
-                     tableName="ticket_attachment">
+    <changeSet id="000000000000_ticket_activity_index" author="custom">
+        <createIndex indexName="idx1_ticket_activity"
+                     tableName="ticket_activity">
             <column name="ticket_id" type="varchar(50)"/>
         </createIndex>
-
     </changeSet>
 
 </databaseChangeLog>

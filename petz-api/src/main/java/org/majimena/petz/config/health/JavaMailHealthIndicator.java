@@ -1,4 +1,4 @@
-package org.majimena.petz.config.metrics;
+package org.majimena.petz.config.health;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

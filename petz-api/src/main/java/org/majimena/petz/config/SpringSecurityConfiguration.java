@@ -45,6 +45,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/assets/**")
 //                .antMatchers("/swagger-ui/**")
 //                .antMatchers(HttpMethod.GET, "/api/v1/clinics")
+                .antMatchers(HttpMethod.GET, "/health")
                 .antMatchers(HttpMethod.POST, "/api/v1/signup");
 //                .antMatchers(HttpMethod.POST, "/api/v1/activate")
 //                .antMatchers("/test/**");

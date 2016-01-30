@@ -174,12 +174,11 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
     }
 
     private void initCharacterEncodingFilter(ServletContext context, EnumSet<DispatcherType> dispatcherTypes) {
-        log.debug("Registering Caching HTTP Headers Filter");
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
 
-        FilterRegistration.Dynamic dynamic = context.addFilter("cachingHttpHeadersFilter", filter);
+        FilterRegistration.Dynamic dynamic = context.addFilter("characterEncodingFilter", filter);
         dynamic.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
         dynamic.setAsyncSupported(true);
     }

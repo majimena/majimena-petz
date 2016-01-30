@@ -6,13 +6,14 @@
 
     <parent>
         <groupId>org.majimena.petz</groupId>
-        <artifactId>petz-backend</artifactId>
+        <artifactId>petz-backend-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.majimena.petz</groupId>
-    <artifactId>petz-batch</artifactId>
+    <artifactId>petz-backend-batch</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>PETZ: Petz Batch Project</name>
+    <name>Petz: Petz Backend Batch Module</name>
+    <packaging>jar</packaging>
 
 </project>

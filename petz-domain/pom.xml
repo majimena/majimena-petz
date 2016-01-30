@@ -6,14 +6,15 @@
 
     <parent>
         <groupId>org.majimena.petz</groupId>
-        <artifactId>petz-backend</artifactId>
+        <artifactId>petz-backend-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.majimena.petz</groupId>
-    <artifactId>petz-domain</artifactId>
+    <artifactId>petz-backend-domain</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>PETZ: Petz Domain Project</name>
+    <name>Petz: Petz Backend Domain Module</name>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!-- json -->

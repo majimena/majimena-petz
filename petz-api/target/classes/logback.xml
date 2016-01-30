@@ -70,7 +70,7 @@
         <resetJUL>true</resetJUL>
     </contextListener>
 
-    <root level="DEBUG">
+    <root level="${logback.loglevel}">
         <appender-ref ref="CONSOLE"/>
     </root>
 

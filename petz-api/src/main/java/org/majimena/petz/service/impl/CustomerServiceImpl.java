@@ -93,7 +93,7 @@ public class CustomerServiceImpl implements CustomerService {
             user = userService.updateUser(customer.getUser());
         } else {
             // FIXME 海外対応した場合は考える
-            customer.getUser().setUsername(customer.getLastName() + " " + customer.getFirstName());
+//            customer.getUser().setUsername(customer.getLastName() + " " + customer.getFirstName());
             user = userService.saveUser(customer.getUser());
         }
 

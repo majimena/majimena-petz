@@ -70,16 +70,6 @@ public class ClinicInvitationServiceImplTest {
         @Mocked
         private SecurityUtils securityUtils;
 
-        @Before
-        public void before() {
-            sut.setClinicRepository(clinicRepository);
-            sut.setClinicInvitationRepository(clinicInvitationRepository);
-            sut.setUserRepository(userRepository);
-            sut.setAmazonSESService(amazonSESService);
-            sut.setTemplateEngine(templateEngine);
-            sut.setFromEmail("noreply@majimena.org");
-        }
-
         @Test
         public void クリニックの招待状が送信されること_既にユーザが存在する場合() throws Exception {
             new NonStrictExpectations() {{
@@ -93,7 +83,7 @@ public class ClinicInvitationServiceImplTest {
                 result = Optional.of(User.builder().id("100").email("test@mail.com").build());
             }};
 
-            sut.inviteStaff("10", new HashSet<>(Arrays.asList("test@mail.com")));
+            sut.inviteStaff("1", "10", new HashSet<>(Arrays.asList("test@mail.com")));
 
             new Verifications() {{
                 ClinicInvitation invitation;
@@ -126,7 +116,7 @@ public class ClinicInvitationServiceImplTest {
                 result = Optional.empty();
             }};
 
-            sut.inviteStaff("10", new HashSet<>(Arrays.asList("test@mail.com")));
+            sut.inviteStaff("1", "10", new HashSet<>(Arrays.asList("test@mail.com")));
         }
     }
 
@@ -151,15 +141,6 @@ public class ClinicInvitationServiceImplTest {
 
         @Mocked
         private SecurityUtils securityUtils;
-
-        @Before
-        public void before() {
-            sut.setClinicRepository(clinicRepository);
-            sut.setClinicInvitationRepository(clinicInvitationRepository);
-            sut.setClinicStaffRepository(clinicStaffRepository);
-            sut.setUserRepository(userRepository);
-            sut.setFromEmail("noreply@majimena.org");
-        }
 
         @Test
         public void 招待がアクティベートできること() throws Exception {

@@ -15,6 +15,9 @@
             <column name="user_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="invited_user_id" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
             <column name="email" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
@@ -47,6 +50,10 @@
         <createIndex indexName="idx3_clinic_invitation"
                      tableName="clinic_invitation">
             <column name="user_id" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx4_clinic_invitation"
+                     tableName="clinic_invitation">
+            <column name="invited_user_id" type="varchar(50)"/>
         </createIndex>
     </changeSet>
 </databaseChangeLog>

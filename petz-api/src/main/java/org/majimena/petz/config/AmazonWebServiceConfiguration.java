@@ -5,11 +5,9 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceAsyncClient;
 import org.majimena.petz.common.aws.AmazonS3Service;
-import org.majimena.petz.common.aws.AmazonSESService;
 import org.majimena.petz.common.aws.impl.AmazonS3ServiceImpl;
-import org.majimena.petz.common.aws.impl.AmazonSESServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
@@ -37,13 +35,10 @@ public class AmazonWebServiceConfiguration implements EnvironmentAware {
 
     @Bean
     @Autowired
-    public AmazonSESService amazonSESService(AWSCredentialsProvider provider) {
-        AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(provider);
+    public AmazonSimpleEmailServiceAsyncClient amazonSESService(AWSCredentialsProvider provider) {
+        AmazonSimpleEmailServiceAsyncClient client = new AmazonSimpleEmailServiceAsyncClient(provider);
         client.setRegion(Region.getRegion(Regions.fromName(propertyResolver.getProperty("aws.ses.region"))));
-
-        AmazonSESServiceImpl service = new AmazonSESServiceImpl();
-        service.setAmazonSimpleEmailService(client);
-        return service;
+        return client;
     }
 
     @Bean

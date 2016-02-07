@@ -104,7 +104,7 @@ public class ClinicInvitationControllerTest {
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
                 result = null;
-                clinicInvitationService.inviteStaff("1", Sets.newHashSet("foo@localhost.com", "bar@localhost.com"));
+                clinicInvitationService.inviteStaff("1", "1", Sets.newHashSet("foo@localhost.com", "bar@localhost.com"));
                 result = null;
             }};
 
@@ -148,7 +148,7 @@ public class ClinicInvitationControllerTest {
                     .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
                     .andExpect(jsonPath("$.errors", hasSize(1)))
                     .andExpect(jsonPath("$.errors[0].field", is("emails")))
-                            //                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    //                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
                     .andExpect(jsonPath("$.errors[0].message", is("size must be between 1 and 20")));
 
             // サイズ不足
@@ -217,8 +217,8 @@ public class ClinicInvitationControllerTest {
         @Test
         public void 招待状が取得できること() throws Exception {
             new NonStrictExpectations() {{
-                clinicInvitationService.findClinicInvitationById("1");
-                result = new ClinicInvitation("1", new Clinic(), new User(), "foo@localhost", "foo");
+                clinicInvitationService.getClinicInvitationById("1");
+                result = new ClinicInvitation("1", new Clinic(), new User(), new User(), "foo@localhost", "foo");
             }};
 
             mockMvc.perform(get("/api/v1/clinics/100/invitations/1"))

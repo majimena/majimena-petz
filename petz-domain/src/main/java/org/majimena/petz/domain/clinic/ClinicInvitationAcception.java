@@ -23,7 +23,7 @@ public class ClinicInvitationAcception implements Serializable {
     private String clinicInvitationId;
 
     @NotEmpty
-    @Size(max = 60)
+    @Size(max = 20)
     private String activationKey;
 
 }

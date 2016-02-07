@@ -6,8 +6,7 @@ spring:
         active: dev
     datasource:
         dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
-#        url: jdbc:mysql://192.168.59.103:3306/petz?useUnicode=true&characterEncoding=utf8
-        url: jdbc:mysql://petz-test.ckhbsb0b3bmh.ap-northeast-1.rds.amazonaws.com:3306/petzdb?useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://dev.petz.io:3307/petzdb?useUnicode=true&characterEncoding=utf8
         databaseName:
         serverName: 
         username: root

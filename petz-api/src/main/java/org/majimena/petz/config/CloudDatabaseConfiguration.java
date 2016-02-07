@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 
+@Deprecated
 @Configuration
 @Profile(Constants.SPRING_PROFILE_CLOUD)
 public class CloudDatabaseConfiguration extends AbstractCloudConfig {

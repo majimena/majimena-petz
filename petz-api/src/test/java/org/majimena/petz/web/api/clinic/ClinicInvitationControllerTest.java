@@ -27,14 +27,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Errors;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,19 +60,14 @@ public class ClinicInvitationControllerTest {
     public static class InviteTest {
 
         private MockMvc mockMvc;
-
         @Tested
         private ClinicInvitationController sut = new ClinicInvitationController();
-
         @Injectable
         private ClinicInvitationRegistryValidator clinicInvitationRegistryValidator;
-
         @Injectable
         private ClinicInvitationService clinicInvitationService;
-
         @Injectable
         private ClinicInvitationAcceptionValidator clinicInvitationAcceptionValidator;
-
         @Mocked
         private SecurityUtils securityUtils;
 
@@ -112,7 +111,9 @@ public class ClinicInvitationControllerTest {
                     .contentType(TestUtils.APPLICATION_JSON_UTF8)
                     .content(TestUtils.convertObjectToJsonBytes(data)))
                     .andDo(print())
-                    .andExpect(status().isCreated());
+                    .andExpect(status().isOk())
+                    .andExpect(content().string(isEmptyString()))
+            ;
         }
 
         @Test
@@ -175,19 +176,14 @@ public class ClinicInvitationControllerTest {
     public static class ShowTest {
 
         private MockMvc mockMvc;
-
         @Tested
         private ClinicInvitationController sut = new ClinicInvitationController();
-
         @Injectable
         private ClinicInvitationRegistryValidator clinicInvitationRegistryValidator;
-
         @Injectable
         private ClinicInvitationService clinicInvitationService;
-
         @Injectable
         private ClinicInvitationAcceptionValidator clinicInvitationAcceptionValidator;
-
         @Mocked
         private SecurityUtils securityUtils;
 
@@ -218,7 +214,7 @@ public class ClinicInvitationControllerTest {
         public void 招待状が取得できること() throws Exception {
             new NonStrictExpectations() {{
                 clinicInvitationService.getClinicInvitationById("1");
-                result = new ClinicInvitation("1", new Clinic(), new User(), new User(), "foo@localhost", "foo");
+                result = Optional.of(new ClinicInvitation("1", Clinic.builder().id("100").build(), new User(), new User(), "foo@localhost", "foo"));
             }};
 
             mockMvc.perform(get("/api/v1/clinics/100/invitations/1"))
@@ -230,6 +226,20 @@ public class ClinicInvitationControllerTest {
                     .andExpect(jsonPath("$.email", is("foo@localhost")))
             ;
         }
+
+        @Test
+        public void 権限のない招待状は取得できないこと() throws Exception {
+            new NonStrictExpectations() {{
+                clinicInvitationService.getClinicInvitationById("1");
+                result = Optional.of(new ClinicInvitation("1", Clinic.builder().id("1").build(), new User(), new User(), "foo@localhost", "foo"));
+            }};
+
+            mockMvc.perform(get("/api/v1/clinics/100/invitations/1"))
+                    .andDo(print())
+                    .andExpect(status().isNotFound())
+                    .andExpect(content().string(isEmptyString()))
+            ;
+        }
     }
 
     @RunWith(SpringJUnit4ClassRunner.class)
@@ -238,19 +248,14 @@ public class ClinicInvitationControllerTest {
     public static class ActivateTest {
 
         private MockMvc mockMvc;
-
         @Tested
         private ClinicInvitationController sut = new ClinicInvitationController();
-
         @Injectable
         private ClinicInvitationRegistryValidator clinicInvitationRegistryValidator;
-
         @Injectable
         private ClinicInvitationService clinicInvitationService;
-
         @Injectable
         private ClinicInvitationAcceptionValidator clinicInvitationAcceptionValidator;
-
         @Mocked
         private SecurityUtils securityUtils;
 

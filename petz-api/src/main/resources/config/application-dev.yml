@@ -1,6 +1,11 @@
 server:
     port: 8080
 
+endpoints:
+    cors:
+        allowed-origins: http://localhost:9000
+        allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+
 spring:
     profiles:
         active: dev
@@ -52,3 +57,4 @@ cache:
     timeToLiveSeconds: 3600
     ehcache:
         maxBytesLocalHeap: 16M
+

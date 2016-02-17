@@ -116,12 +116,6 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP-agent</artifactId>
-        </dependency>
-        -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>

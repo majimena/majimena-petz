@@ -6,7 +6,6 @@ import com.codahale.metrics.servlets.MetricsServlet;
 import org.majimena.petz.common.factory.JsonFactory;
 import org.majimena.petz.web.filter.CachingHttpHeadersFilter;
 import org.majimena.petz.web.filter.CrossOriginResourceSharingFilter;
-import org.majimena.petz.web.filter.StaticResourcesProductionFilter;
 import org.majimena.petz.web.filter.gzip.GZipServletFilter;
 import org.majimena.petz.web.servlet.filter.AccessLogFilter;
 import org.slf4j.Logger;
@@ -20,12 +19,10 @@ import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.inject.Inject;
 import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -62,7 +59,6 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
 
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
             initCachingHttpHeadersFilter(servletContext, disps);
-            initStaticResourcesProductionFilter(servletContext, disps);
             initGzipFilter(servletContext, disps);
         }
 
@@ -111,25 +107,6 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         compressingFilter.addMappingForUrlPatterns(disps, true, "/api/*");
         compressingFilter.addMappingForUrlPatterns(disps, true, "/metrics/*");
         compressingFilter.setAsyncSupported(true);
-    }
-
-    /**
-     * Initializes the static resources production Filter.
-     */
-    @Deprecated
-    private void initStaticResourcesProductionFilter(ServletContext servletContext,
-                                                     EnumSet<DispatcherType> disps) {
-
-        log.debug("Registering static resources production Filter");
-        FilterRegistration.Dynamic staticResourcesProductionFilter =
-                servletContext.addFilter("staticResourcesProductionFilter",
-                        new StaticResourcesProductionFilter());
-
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/index.html");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/assets/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
-        staticResourcesProductionFilter.setAsyncSupported(true);
     }
 
     /**

@@ -1,14 +1,19 @@
 server:
     port: 5000
 
+endpoints:
+    cors:
+        allowed-origins: https://petz.io
+        allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+
 spring:
     profiles:
         active: prod
     datasource:
         dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
         url: jdbc:mysql://petz-test.ckhbsb0b3bmh.ap-northeast-1.rds.amazonaws.com:3306/petzdb?useUnicode=true&characterEncoding=utf8
-        databaseName: 
-        serverName: 
+        databaseName:
+        serverName:
         username: root
         password: password
         cachePrepStmts: true
@@ -30,7 +35,7 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: false
             hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
-            
+
     thymeleaf:
         mode: XHTML
         cache: true
@@ -54,4 +59,4 @@ http:
 cache:
     timeToLiveSeconds: 3600
     ehcache:
-        maxBytesLocalHeap: 256M
+        maxBytesLocalHeap: 128M

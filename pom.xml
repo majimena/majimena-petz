@@ -15,46 +15,61 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.2.3.RELEASE</version>
+        <version>1.3.2.RELEASE</version>
     </parent>
 
     <properties>
-        <spring-boot.version>1.2.3.RELEASE</spring-boot.version>
-        <spring-security-oauth2.version>2.0.1.RELEASE</spring-security-oauth2.version>
-        <spring-security.version>4.0.0.RELEASE</spring-security.version>
-        <usertype-core.version>3.2.0.GA</usertype-core.version>
-        <aws.version>1.10.1</aws.version>
-
-        <HikariCP.version>2.2.5</HikariCP.version>
-        <assertj-core.version>1.0.0m1</assertj-core.version>
-        <awaitility.version>1.4.0</awaitility.version>
-        <commons-io.version>2.4</commons-io.version>
-        <commons-lang.version>2.6</commons-lang.version>
-        <commons-validator.version>1.4.1</commons-validator.version>
-
-        <hibernate.version>4.3.6.Final</hibernate.version>
-        <hibernate-validator.version>5.2.3.Final</hibernate-validator.version>
-
+        <!-- Java -->
         <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
-        <json-path.version>0.9.1</json-path.version>
+
+        <!-- Spring -->
+        <spring-security-oauth2.version>2.0.8.RELEASE</spring-security-oauth2.version>
+        <spring-security.version>4.0.3.RELEASE</spring-security.version>
+        <spring-rest-exception-handler.version>1.1.1</spring-rest-exception-handler.version>
+        <!-- Hibernate -->
+        <hibernate.version>4.3.6.Final</hibernate.version>
+        <hibernate-validator.version>5.2.3.Final</hibernate-validator.version>
+        <!-- DataSource -->
+        <HikariCP.version>2.4.3</HikariCP.version>
+        <mysql-connector-java.version>5.1.34</mysql-connector-java.version>
+        <log4jdbc-log4j2-jdbc4.1.version>1.16</log4jdbc-log4j2-jdbc4.1.version>
+        <!-- AWS -->
+        <aws.version>1.10.1</aws.version>
+
+        <!-- Utils -->
+        <google-collections.version>1.0</google-collections.version>
+        <lombok.version>1.16.6</lombok.version>
+        <!-- Commons -->
+        <commons-io.version>2.4</commons-io.version>
+        <commons-lang3.version>3.4</commons-lang3.version>
+        <commons-validator.version>1.4.1</commons-validator.version>
+        <!-- Metrics -->
+        <metrics-spark-reporter.version>1.2</metrics-spark-reporter.version>
+        <metrics-spring.version>3.0.4</metrics-spring.version>
+        <dropwizard-metrics.version>3.1.1</dropwizard-metrics.version>
+        <!-- Liquibase -->
         <liquibase-hibernate4.version>3.5</liquibase-hibernate4.version>
         <liquibase-slf4j.version>1.2.1</liquibase-slf4j.version>
         <liquibase.version>3.3.2</liquibase.version>
+        <!-- Unit Test -->
+        <json-path.version>0.9.1</json-path.version>
+        <assertj-core.version>1.0.0m1</assertj-core.version>
+        <awaitility.version>1.4.0</awaitility.version>
+        <jmockit.version>1.17</jmockit.version>
+        <dbunit.version>2.5.1</dbunit.version>
+        <spring-test-dbunit.version>1.2.1</spring-test-dbunit.version>
+        <h2.version>1.4.191</h2.version>
+        <junit.version>4.12</junit.version>
+
+        <!-- Maven Plugin -->
         <maven-enforcer-plugin.version>1.3.1</maven-enforcer-plugin.version>
         <maven-sortpom-plugin.version>2.3.0</maven-sortpom-plugin.version>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <metrics-spark-reporter.version>1.2</metrics-spark-reporter.version>
-        <metrics-spring.version>3.0.4</metrics-spring.version>
-        <run.addResources>false</run.addResources>
 
-        <spring-security-oauth2.version>2.0.1.RELEASE</spring-security-oauth2.version>
-        <spring-security.version>4.0.0.RELEASE</spring-security.version>
-        <usertype-core.version>3.2.0.GA</usertype-core.version>
-        <aws.version>1.10.1</aws.version>
-
+        <!-- Sonar -->
         <sonar-maven-plugin.version>2.6</sonar-maven-plugin.version>
         <sonar.host.url>http://192.168.59.103:9090</sonar.host.url>
         <sonar.jdbc.password>123qwe</sonar.jdbc.password>
@@ -104,7 +119,7 @@
             <dependency>
                 <groupId>cz.jirutka.spring</groupId>
                 <artifactId>spring-rest-exception-handler</artifactId>
-                <version>1.0.3</version>
+                <version>${spring-rest-exception-handler.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ryantenney.metrics</groupId>
@@ -112,16 +127,74 @@
                 <version>${metrics-spring.version}</version>
                 <exclusions>
                     <exclusion>
-                        <artifactId>metrics-annotation</artifactId>
                         <groupId>com.codahale.metrics</groupId>
+                        <artifactId>metrics-annotation</artifactId>
                     </exclusion>
                     <exclusion>
-                        <artifactId>metrics-core</artifactId>
                         <groupId>com.codahale.metrics</groupId>
+                        <artifactId>metrics-core</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>com.codahale.metrics</groupId>
+                        <artifactId>metrics-healthchecks</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- Reporting -->
+            <dependency>
+                <groupId>fr.ippon.spark.metrics</groupId>
+                <artifactId>metrics-spark-reporter</artifactId>
+                <version>${metrics-spark-reporter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-annotation</artifactId>
+                <version>${dropwizard-metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
+                <version>${dropwizard-metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-ehcache</artifactId>
+                <version>${dropwizard-metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-graphite</artifactId>
+                <version>${dropwizard-metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-healthchecks</artifactId>
+                <version>${dropwizard-metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-json</artifactId>
+                <version>${dropwizard-metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-jvm</artifactId>
+                <version>${dropwizard-metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-servlet</artifactId>
+                <version>${dropwizard-metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-servlets</artifactId>
+                <version>${dropwizard-metrics.version}</version>
+                <exclusions>
                     <exclusion>
                         <artifactId>metrics-healthchecks</artifactId>
-                        <groupId>com.codahale.metrics</groupId>
+                        <groupId>io.dropwizard.metrics</groupId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -130,7 +203,7 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>5.1.34</version>
+                <version>${mysql-connector-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.zaxxer</groupId>
@@ -143,13 +216,8 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!-- The HikariCP Java Agent is disabled by default, as it is experimental
-            <dependency>
-                <groupId>com.zaxxer</groupId>
-                <artifactId>HikariCP-agent</artifactId>
-                <version>${HikariCP.version}</version>
-            </dependency>
-            -->
+
+            <!-- Hibernate -->
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-ehcache</artifactId>
@@ -207,9 +275,9 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons-lang.version}</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-logging</groupId>
@@ -233,8 +301,15 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.16.4</version>
+                <version>${lombok.version}</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <!-- Google -->
+            <dependency>
+                <groupId>com.google.collections</groupId>
+                <artifactId>google-collections</artifactId>
+                <version>${google-collections.version}</version>
             </dependency>
 
             <!-- Liquibase -->
@@ -253,6 +328,13 @@
                 <groupId>com.mattbertolini</groupId>
                 <artifactId>liquibase-slf4j</artifactId>
                 <version>${liquibase-slf4j.version}</version>
+            </dependency>
+
+            <!-- Logging -->
+            <dependency>
+                <groupId>org.bgee.log4jdbc-log4j2</groupId>
+                <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+                <version>${log4jdbc-log4j2-jdbc4.1.version}</version>
             </dependency>
 
             <!-- AWS -->
@@ -282,25 +364,25 @@
             <dependency>
                 <groupId>org.jmockit</groupId>
                 <artifactId>jmockit</artifactId>
-                <version>1.17</version>
+                <version>${jmockit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.dbunit</groupId>
                 <artifactId>dbunit</artifactId>
-                <version>2.5.0</version>
+                <version>${dbunit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.github.springtestdbunit</groupId>
                 <artifactId>spring-test-dbunit</artifactId>
-                <version>1.2.0</version>
+                <version>${spring-test-dbunit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
-                <version>1.4.191</version>
+                <version>${h2.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -324,7 +406,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
 

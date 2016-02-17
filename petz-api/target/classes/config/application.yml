@@ -2,6 +2,30 @@
 management.security.enabled: true
 security.basic.enabled: false
 
+
+# Health Check Indicators
+management:
+    health:
+        db:
+            enabled: true
+        diskspace:
+            enabled: true
+        mail:
+            enabled: false
+        redis:
+            enabled: false
+        mongo:
+            enabled: false
+        jms:
+            enabled: false
+        rabbit:
+            enabled: false
+        solr:
+            enabled: false
+        elasticsearch:
+            enabled: false
+
+
 # Disable Jolokia - An http/json bridge for remote JMX access
 endpoints.jolokia.enabled: false
 

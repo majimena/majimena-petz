@@ -6,7 +6,6 @@ import com.codahale.metrics.servlets.MetricsServlet;
 import org.majimena.petz.common.factory.JsonFactory;
 import org.majimena.petz.web.filter.CachingHttpHeadersFilter;
 import org.majimena.petz.web.filter.CrossOriginResourceSharingFilter;
-import org.majimena.petz.web.filter.StaticResourcesProductionFilter;
 import org.majimena.petz.web.filter.gzip.GZipServletFilter;
 import org.majimena.petz.web.servlet.filter.AccessLogFilter;
 import org.slf4j.Logger;
@@ -20,12 +19,10 @@ import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.inject.Inject;
 import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -58,17 +55,14 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         log.info("Web application configuration, using profiles: {}", Arrays.toString(env.getActiveProfiles()));
         EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
 
-        if (!env.acceptsProfiles(Constants.SPRING_PROFILE_FAST)) {
-            initMetrics(servletContext, disps);
-        }
+        initMetrics(servletContext, disps);
+
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
             initCachingHttpHeadersFilter(servletContext, disps);
-            initStaticResourcesProductionFilter(servletContext, disps);
             initGzipFilter(servletContext, disps);
         }
 
         // Original ServletFilter
-        initCharacterEncodingFilter(servletContext, disps);
         initCrossOriginResourceSharingFilter(servletContext);
         initAccessLogFilter(servletContext);
         initOpenEntityManagerInViewFilter(servletContext);
@@ -86,6 +80,7 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
      * Set up Mime types.
      */
     @Override
+    @Deprecated
     public void customize(ConfigurableEmbeddedServletContainer container) {
         MimeMappings mappings = new MimeMappings(MimeMappings.DEFAULT);
         // IE issue, see https://github.com/jhipster/generator-jhipster/pull/711
@@ -103,38 +98,21 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         FilterRegistration.Dynamic compressingFilter = servletContext.addFilter("gzipFilter", new GZipServletFilter());
         Map<String, String> parameters = new HashMap<>();
         compressingFilter.setInitParameters(parameters);
-        compressingFilter.addMappingForUrlPatterns(disps, true, "*.css");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "*.json");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "*.html");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "*.js");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "*.svg");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "*.ttf");
+//        compressingFilter.addMappingForUrlPatterns(disps, true, "*.css");
+//        compressingFilter.addMappingForUrlPatterns(disps, true, "*.json");
+//        compressingFilter.addMappingForUrlPatterns(disps, true, "*.html");
+//        compressingFilter.addMappingForUrlPatterns(disps, true, "*.js");
+//        compressingFilter.addMappingForUrlPatterns(disps, true, "*.svg");
+//        compressingFilter.addMappingForUrlPatterns(disps, true, "*.ttf");
         compressingFilter.addMappingForUrlPatterns(disps, true, "/api/*");
         compressingFilter.addMappingForUrlPatterns(disps, true, "/metrics/*");
         compressingFilter.setAsyncSupported(true);
     }
 
     /**
-     * Initializes the static resources production Filter.
-     */
-    private void initStaticResourcesProductionFilter(ServletContext servletContext,
-                                                     EnumSet<DispatcherType> disps) {
-
-        log.debug("Registering static resources production Filter");
-        FilterRegistration.Dynamic staticResourcesProductionFilter =
-                servletContext.addFilter("staticResourcesProductionFilter",
-                        new StaticResourcesProductionFilter());
-
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/index.html");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/assets/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
-        staticResourcesProductionFilter.setAsyncSupported(true);
-    }
-
-    /**
      * Initializes the cachig HTTP Headers Filter.
      */
+    @Deprecated
     private void initCachingHttpHeadersFilter(ServletContext servletContext,
                                               EnumSet<DispatcherType> disps) {
         log.debug("Registering Caching HTTP Headers Filter");
@@ -173,16 +151,6 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         metricsAdminServlet.setLoadOnStartup(2);
     }
 
-    private void initCharacterEncodingFilter(ServletContext context, EnumSet<DispatcherType> dispatcherTypes) {
-        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-        filter.setEncoding("UTF-8");
-        filter.setForceEncoding(true);
-
-        FilterRegistration.Dynamic dynamic = context.addFilter("characterEncodingFilter", filter);
-        dynamic.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
-        dynamic.setAsyncSupported(true);
-    }
-
     private void initAccessLogFilter(ServletContext context) {
         AccessLogFilter filter = new AccessLogFilter();
         filter.setJsonFactory(jsonFactory);
@@ -191,6 +159,8 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         registration.addMappingForUrlPatterns(null, false, "/*");
     }
 
+    @Deprecated
+    // see endpoints.cors property
     private void initCrossOriginResourceSharingFilter(ServletContext context) {
         CrossOriginResourceSharingFilter filter = new CrossOriginResourceSharingFilter();
 
@@ -198,6 +168,8 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         registration.addMappingForUrlPatterns(null, false, "/*");
     }
 
+    @Deprecated
+    // see spring.jpa.openInView property
     private void initOpenEntityManagerInViewFilter(ServletContext context) {
         OpenEntityManagerInViewFilter filter = new OpenEntityManagerInViewFilter();
         FilterRegistration registration = context.addFilter("openEntityManagerInViewFilter", filter);

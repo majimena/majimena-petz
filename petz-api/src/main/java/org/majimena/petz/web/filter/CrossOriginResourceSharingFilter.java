@@ -16,11 +16,11 @@ public class CrossOriginResourceSharingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // FIXME 環境ごとに許可先を変えられるようにする
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, PATCH, OPTIONS");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Requested-With, Origin, Accept, Authorization");
-        response.setHeader("Access-Control-Expose-Headers", "Link");
+//        response.setHeader("Access-Control-Allow-Origin", "*");
+//        response.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, PATCH, OPTIONS");
+//        response.setHeader("Access-Control-Max-Age", "3600");
+//        response.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Requested-With, Origin, Accept, Authorization");
+//        response.setHeader("Access-Control-Expose-Headers", "Link");
 
         if (!StringUtils.equals(StringUtils.upperCase(request.getMethod()), "OPTIONS")) {
             filterChain.doFilter(request, response);

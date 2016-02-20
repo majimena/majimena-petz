@@ -5,6 +5,9 @@ endpoints:
     cors:
         allowed-origins: http://localhost:9000
         allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+        allowed-headers: Content-Type,X-Requested-With,Origin,Accept,Authorization
+        exposed-headers: Link
+        max-age: 3600
 
 spring:
     profiles:

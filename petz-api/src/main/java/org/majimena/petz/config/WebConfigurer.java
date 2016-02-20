@@ -58,7 +58,6 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         initMetrics(servletContext, disps);
 
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
-            initCachingHttpHeadersFilter(servletContext, disps);
             initGzipFilter(servletContext, disps);
         }
 

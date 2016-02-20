@@ -13,15 +13,49 @@ import java.io.IOException;
  * CORSフィルタ.
  */
 public class CrossOriginResourceSharingFilter extends OncePerRequestFilter {
+
+    private String allowOrigin = "*";
+    private String allowMethods = "GET,POST,PUT,DELETE";
+    private Boolean allowCredentials = Boolean.TRUE;
+    private String allowHeaders = "Content-Type, X-Requested-With, Origin, Accept, Authorization";
+    private String exposeHeaders = "Link";
+    private Integer maxAge = 3600;
+
+    public void setAllowOrigin(String allowOrigin) {
+        this.allowOrigin = allowOrigin;
+    }
+
+    public void setAllowMethods(String allowMethods) {
+        this.allowMethods = allowMethods;
+    }
+
+    public void setAllowCredentials(Boolean allowCredentials) {
+        this.allowCredentials = allowCredentials;
+    }
+
+    public void setAllowHeaders(String allowHeaders) {
+        this.allowHeaders = allowHeaders;
+    }
+
+    public void setExposeHeaders(String exposeHeaders) {
+        this.exposeHeaders = exposeHeaders;
+    }
+
+    public void setMaxAge(Integer maxAge) {
+        this.maxAge = maxAge;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // FIXME 環境ごとに許可先を変えられるようにする
-//        response.setHeader("Access-Control-Allow-Origin", "*");
-//        response.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, PATCH, OPTIONS");
-//        response.setHeader("Access-Control-Max-Age", "3600");
-//        response.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Requested-With, Origin, Accept, Authorization");
-//        response.setHeader("Access-Control-Expose-Headers", "Link");
+        // write CORS headers
+        response.setHeader("Access-Control-Allow-Origin", allowOrigin);
+        response.setHeader("Access-Control-Allow-Methods", allowMethods);
+        response.setHeader("Access-Control-Allow-Credentials", allowCredentials.toString());
+        response.setHeader("Access-Control-Allow-Headers", allowHeaders);
+        response.setHeader("Access-Control-Expose-Headers", exposeHeaders);
+        response.setHeader("Access-Control-Max-Age", String.valueOf(maxAge));
 
+        // skip processing OPTIONS methods
         if (!StringUtils.equals(StringUtils.upperCase(request.getMethod()), "OPTIONS")) {
             filterChain.doFilter(request, response);
         }

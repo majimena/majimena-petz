@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.MimeMappings;
@@ -50,18 +51,27 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
     @Autowired
     private JsonFactory jsonFactory;
 
+    private RelaxedPropertyResolver propertyResolver;
+
+    private void init() {
+        propertyResolver = new RelaxedPropertyResolver(env, "endpoints.cors.");
+    }
+
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         log.info("Web application configuration, using profiles: {}", Arrays.toString(env.getActiveProfiles()));
-        EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
+        init();
 
+        // initialize metric filter
+        EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
         initMetrics(servletContext, disps);
 
+        // initialize gzip filter
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
             initGzipFilter(servletContext, disps);
         }
 
-        // Original ServletFilter
+        // initialize logging and cors filters
         initCrossOriginResourceSharingFilter(servletContext);
         initAccessLogFilter(servletContext);
         initOpenEntityManagerInViewFilter(servletContext);
@@ -158,10 +168,14 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         registration.addMappingForUrlPatterns(null, false, "/*");
     }
 
-    @Deprecated
-    // see endpoints.cors property
     private void initCrossOriginResourceSharingFilter(ServletContext context) {
         CrossOriginResourceSharingFilter filter = new CrossOriginResourceSharingFilter();
+        filter.setAllowCredentials(propertyResolver.getRequiredProperty("allow-credentials", Boolean.class));
+        filter.setAllowOrigin(propertyResolver.getRequiredProperty("allowed-origins"));
+        filter.setAllowMethods(propertyResolver.getRequiredProperty("allowed-methods"));
+        filter.setAllowHeaders(propertyResolver.getRequiredProperty("allowed-headers"));
+        filter.setExposeHeaders(propertyResolver.getRequiredProperty("exposed-headers"));
+        filter.setMaxAge(propertyResolver.getRequiredProperty("max-age", Integer.class));
 
         FilterRegistration registration = context.addFilter("crossOriginResourceSharingFilter", filter);
         registration.addMappingForUrlPatterns(null, false, "/*");

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import cz.jirutka.spring.exhandler.support.HttpMessageConverterUtils;
-import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.common.exceptions.ResourceConflictException;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.common.factory.JacksonJsonFactory;
@@ -19,6 +18,7 @@ import org.majimena.petz.datatype.deserializers.SexTypeDeserializer;
 import org.majimena.petz.datatype.serializers.EnumDataTypeSerializer;
 import org.majimena.petz.datatype.serializers.ISO8601LocalDateSerializer;
 import org.majimena.petz.datatype.serializers.ISO8601LocalDateTimeSerializer;
+import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.web.servlet.handler.ApplicationExceptionRestExceptionHandler;
 import org.majimena.petz.web.servlet.handler.BindExceptionRestExceptionHandler;
 import org.majimena.petz.web.servlet.handler.HttpMessageNotReadableExceptionHandler;
@@ -137,10 +137,5 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(mappingJackson2HttpMessageConverter());
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
     }
 }

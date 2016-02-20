@@ -2,12 +2,10 @@ package org.majimena.petz.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,9 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.inject.Inject;
 
@@ -37,16 +32,16 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Inject
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(passwordEncoder());
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-            .antMatchers(HttpMethod.OPTIONS, "/*/**")
-            .antMatchers(HttpMethod.GET, "/health")
-            .antMatchers(HttpMethod.POST, "/api/v1/signup")
+                .antMatchers(HttpMethod.OPTIONS, "/*/**")
+                .antMatchers(HttpMethod.GET, "/health")
+                .antMatchers(HttpMethod.POST, "/api/v1/signup")
         //                .antMatchers("/metrics/**");
         ;
     }
@@ -60,15 +55,5 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
         return new SecurityEvaluationContextExtension();
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**");
-            }
-        };
     }
 }

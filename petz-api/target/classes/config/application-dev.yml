@@ -28,7 +28,7 @@ spring:
     jpa:
         database-platform: org.hibernate.dialect.MySQLInnoDBDialect
         database: MYSQL
-        openInView: false
+        openInView: true
         show_sql: false
         generate-ddl: false
         hibernate:

@@ -74,7 +74,7 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         // initialize logging and cors filters
         initCrossOriginResourceSharingFilter(servletContext);
         initAccessLogFilter(servletContext);
-        initOpenEntityManagerInViewFilter(servletContext);
+//        initOpenEntityManagerInViewFilter(servletContext);
 
         super.onStartup(servletContext);
         log.info("Web application fully configured");

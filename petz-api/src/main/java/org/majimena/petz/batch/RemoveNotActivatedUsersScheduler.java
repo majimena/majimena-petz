@@ -30,7 +30,7 @@ public class RemoveNotActivatedUsersScheduler {
      * This is scheduled to get fired everyday, at 01:00 (am).
      * </p>
      */
-    @Scheduled(cron = "0 0 1 * * ?")
+//    @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
         LocalDateTime now = LocalDateTime.now();
         List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3L));

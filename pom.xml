@@ -39,6 +39,7 @@
 
         <!-- Utils -->
         <google-collections.version>1.0</google-collections.version>
+        <guava.version>19.0</guava.version>
         <lombok.version>1.16.6</lombok.version>
         <!-- Commons -->
         <commons-io.version>2.4</commons-io.version>
@@ -76,6 +77,14 @@
         <sonar.jdbc.url>jdbc:mysql://192.168.59.103:3306/sonar?useUnicode=true&amp;characterEncoding=utf8&amp;rewriteBatchedStatements=true</sonar.jdbc.url>
         <sonar.jdbc.username>sonar</sonar.jdbc.username>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>jcenter-snapshots</id>
+            <name>jcenter</name>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
+    </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -199,6 +208,18 @@
                 </exclusions>
             </dependency>
 
+            <!-- Swagger API Documents -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>2.3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>2.3.1</version>
+            </dependency>
+
             <!-- JPA and DataSource -->
             <dependency>
                 <groupId>mysql</groupId>
@@ -310,6 +331,11 @@
                 <groupId>com.google.collections</groupId>
                 <artifactId>google-collections</artifactId>
                 <version>${google-collections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
 
             <!-- Liquibase -->

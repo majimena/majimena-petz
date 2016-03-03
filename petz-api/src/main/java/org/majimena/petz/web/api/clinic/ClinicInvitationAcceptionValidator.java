@@ -2,11 +2,13 @@ package org.majimena.petz.web.api.clinic;
 
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.domain.ClinicInvitation;
+import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.clinic.ClinicInvitationAcception;
 import org.majimena.petz.domain.errors.ErrorCode;
 import org.majimena.petz.repository.ClinicInvitationRepository;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.web.api.AbstractValidator;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 
 import javax.inject.Inject;
@@ -23,6 +25,7 @@ public class ClinicInvitationAcceptionValidator extends AbstractValidator<Clinic
     private ClinicInvitationRepository clinicInvitationRepository;
 
     @Override
+    @Transactional(readOnly = true)
     protected void validate(Optional<ClinicInvitationAcception> target, Errors errors) {
         target.ifPresent(acception -> {
             // 招待状がなくなっていないかチェック
@@ -33,9 +36,11 @@ public class ClinicInvitationAcceptionValidator extends AbstractValidator<Clinic
             }
 
             // 自分に送られた招待状であるかチェック
-            String userId = invitation.getUser().getId();
-            if (!StringUtils.equals(SecurityUtils.getCurrentUserId(), userId)) {
-                errors.reject(ErrorCode.PTZ_001202.name());
+            User invited = invitation.getInvitedUser();
+            if (invited != null) {
+                if (!StringUtils.equals(SecurityUtils.getCurrentUserId(), invited.getId())) {
+                    errors.reject(ErrorCode.PTZ_001202.name());
+                }
             }
         });
     }

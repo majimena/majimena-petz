@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.majimena.petz.datatype.defs.MailAddress;
 import org.majimena.petz.datatype.defs.Name;
 
 import javax.validation.constraints.Size;
@@ -22,11 +23,15 @@ public class SignupRegistry implements Serializable {
 
     @NotEmpty
     @Size(max = Name.MAX_LENGTH)
-    private String username;
+    private String firstName;
+
+    @NotEmpty
+    @Size(max = Name.MAX_LENGTH)
+    private String lastName;
 
     @NotEmpty
     @Email
-    @Size(max = 100)
+    @Size(max = MailAddress.MAX_LENGTH)
     private String email;
 
     @NotEmpty

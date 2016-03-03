@@ -28,7 +28,8 @@ public class SignupRegistryValidatorTest {
 
     private static SignupRegistry newSignupRegistry() {
         return SignupRegistry.builder()
-                .username("12345678901234567890123456789012345678901234567890")
+                .firstName("12345678901234567890123456789012345678901234567890")
+                .lastName("12345678901234567890123456789012345678901234567890")
                 .email("example1@abcdefghij.com")
                 .password("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
                 .build();

@@ -2,8 +2,12 @@ package org.majimena.petz.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.common.exceptions.ApplicationException;
+import org.majimena.petz.common.factory.BeanFactory;
 import org.majimena.petz.common.utils.BeanFactoryUtils;
 import org.majimena.petz.common.utils.ExceptionUtils;
+import org.majimena.petz.common.utils.RandomUtils;
+import org.majimena.petz.datatype.LangKey;
+import org.majimena.petz.datatype.TimeZone;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.User;
@@ -87,21 +91,25 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer saveCustomer(String clinicId, Customer customer) throws ApplicationException {
-        User user;
+        User saved;
         // ユーザーが既にいるなら更新し、そうでなければ新規でアカウントを作成する
         if (StringUtils.isNotEmpty(customer.getUser().getId())) {
-            user = userService.updateUser(customer.getUser());
+            saved = userService.updateUser(customer.getUser());
         } else {
-            // FIXME 海外対応した場合は考える
-            customer.getUser().setUsername(customer.getLastName() + " " + customer.getFirstName());
-            user = userService.saveUser(customer.getUser());
+            // FIXME 海外対応した場合は別途考えること
+            User user = customer.getUser();
+            user.setUsername(user.getLastName() + " " + user.getFirstName());
+            user.setPassword(RandomUtils.generatePassword());
+            user.setLangKey(LangKey.JAPANESE);
+            user.setTimeZone(TimeZone.ASIA_TOKYO);
+            saved = userService.saveUser(customer.getUser());
         }
 
         // 顧客とするクリニックを取得する
         Clinic clinic = clinicRepository.getOne(clinicId);
 
         // 顧客情報を更新してアクティベートする
-        customer.setUser(user);
+        customer.setUser(saved);
         customer.setClinic(clinic);
         customer.setActivated(Boolean.TRUE);
         Customer created = customerRepository.save(customer);
@@ -117,7 +125,12 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer updateCustomer(Customer customer) throws ApplicationException {
         // 更新対象データを取得する
         Customer one = customerRepository.findOne(customer.getId());
+        User user = one.getUser();
         ExceptionUtils.throwIfNull(one);
+
+        // ユーザー情報を更新する
+        BeanFactoryUtils.copyNonNullProperties(customer.getUser(), user);
+        userService.updateUser(user);
 
         // データをコピーして保存する
         BeanFactoryUtils.copyNonNullProperties(customer, one);

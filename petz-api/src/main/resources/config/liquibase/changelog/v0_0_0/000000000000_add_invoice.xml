@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="000000000000_invoice" author="custom">
+        <createTable tableName="invoice">
+            <column name="id" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ticket_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subtotal" type="numeric(12,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tax" type="numeric(9,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total" type="numeric(12,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="receipt_amount" type="numeric(12,0)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="receipt_date_time" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="memo" type="varchar(2000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="paid" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="removed" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="000000000000_invoice_index" author="custom">
+        <createIndex indexName="idx1_invoice"
+                     tableName="invoice">
+            <column name="ticket_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

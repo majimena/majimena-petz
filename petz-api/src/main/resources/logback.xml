@@ -43,6 +43,7 @@
     <logger name="org.apache" level="WARN"/>
     <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
     <logger name="org.bson" level="WARN"/>
+    <logger name="org.eclipse.jetty" level="WARN"/>
     <logger name="org.hibernate.validator" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
@@ -70,7 +71,7 @@
         <resetJUL>true</resetJUL>
     </contextListener>
 
-    <root level="${logback.loglevel}">
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
 

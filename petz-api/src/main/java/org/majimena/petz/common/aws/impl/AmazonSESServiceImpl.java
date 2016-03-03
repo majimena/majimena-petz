@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 /**
  * Created by todoken on 2015/06/22.
  */
+@Deprecated
 public class AmazonSESServiceImpl implements AmazonSESService {
 
     private final Logger logger = LoggerFactory.getLogger(AmazonSESServiceImpl.class);

@@ -170,7 +170,7 @@ public class ClinicDashboardControllerTest {
                 .andExpect(jsonPath("$.status", is(400)))
                 .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
                 .andExpect(jsonPath("$.errors[0].field", is("month")))
-                .andExpect(jsonPath("$.errors[0].rejected", is(0)))
+                .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
                 .andExpect(jsonPath("$.errors[0].message", is("must be greater than or equal to 1")));
 
             // 最大値より大きい
@@ -217,7 +217,7 @@ public class ClinicDashboardControllerTest {
                 .andExpect(jsonPath("$.status", is(400)))
                 .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
                 .andExpect(jsonPath("$.errors[0].field", is("day")))
-                .andExpect(jsonPath("$.errors[0].rejected", is(0)))
+                .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
                 .andExpect(jsonPath("$.errors[0].message", is("must be greater than or equal to 1")));
 
             // 最大値より大きい

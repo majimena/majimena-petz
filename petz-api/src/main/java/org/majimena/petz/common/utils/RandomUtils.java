@@ -1,6 +1,6 @@
 package org.majimena.petz.common.utils;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;

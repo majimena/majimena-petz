@@ -28,26 +28,22 @@ public class Customer extends AbstractAuditingEntity implements Serializable {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Size(max = 50)
-    @Column(name = "first_name", length = 50)
-    private String firstName;
-
-    @Size(max = 50)
-    @Column(name = "last_name", length = 50)
-    private String lastName;
-
+    // TODO いるか？
     @NotNull
     @Column(name = "activated", nullable = false)
     private Boolean activated = Boolean.FALSE;
 
+    // TODO いるか？
     @NotNull
     @Column(name = "blocked", nullable = false)
     private Boolean blocked = Boolean.FALSE;

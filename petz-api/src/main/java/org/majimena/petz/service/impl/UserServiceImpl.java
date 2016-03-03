@@ -158,22 +158,28 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User saveUser(SignupRegistry registry) {
+        // ロールを作成する
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
         authorities.add(authority);
 
+        // パスワードのハッシュ化
         String encryptedPassword = passwordEncoder.encode(registry.getPassword());
 
+        // ユーザーを登録する
         User newUser = new User();
-        newUser.setUsername(registry.getUsername());
+        newUser.setFirstName(registry.getFirstName());
+        newUser.setLastName(registry.getLastName());
+        newUser.setUsername(registry.getFirstName());
         newUser.setEmail(registry.getEmail());
         newUser.setLogin(registry.getEmail());
         newUser.setPassword(encryptedPassword);
+        // TODO 海外対応を考える
         newUser.setLangKey(LangKey.JAPANESE);
         newUser.setTimeZone(TimeZone.ASIA_TOKYO);
+        newUser.setCountry("JP");
 
         // new user is not active
-        newUser.setCountry("JP"); // FIXME 海外対応
         newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtils.generateActivationKey());

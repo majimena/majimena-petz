@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="000000000000_clinic_staff" author="custom">
+        <createTable tableName="clinic_staff">
+            <column name="id" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="clinic_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activated_date" type="date">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="000000000000_clinic_staff_index" author="custom">
+        <createIndex indexName="idx1_clinic_staff"
+                     tableName="clinic_staff">
+            <column name="clinic_id" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx2_clinic_staff"
+                     tableName="clinic_staff">
+            <column name="user_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

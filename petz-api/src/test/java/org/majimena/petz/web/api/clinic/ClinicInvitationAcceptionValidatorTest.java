@@ -26,10 +26,8 @@ public class ClinicInvitationAcceptionValidatorTest {
 
     @Tested
     private ClinicInvitationAcceptionValidator sut = new ClinicInvitationAcceptionValidator();
-
     @Injectable
     private ClinicInvitationRepository clinicInvitationRepository;
-
     @Mocked
     private SecurityUtils securityUtils;
 
@@ -53,7 +51,28 @@ public class ClinicInvitationAcceptionValidatorTest {
     }
 
     @Test
-    public void 正常時はエラーにならないこと() throws Exception {
+    public void 正常時はエラーにならないこと_既存ユーザを招待する場合() throws Exception {
+        ClinicInvitationAcception data = newClinicInvitationAcception();
+        Errors errors = new BindException(data, "clinicInvitationAcception");
+
+        new NonStrictExpectations() {{
+            clinicInvitationRepository.findOne("invitation1");
+            result = ClinicInvitation.builder()
+                .user(User.builder().id("user1").build())
+                .invitedUser(User.builder().id("exist1").build())
+                .build();
+            SecurityUtils.getCurrentUserId();
+            result = "exist1";
+        }};
+
+        sut.validate(Optional.of(data), errors);
+
+        assertThat(errors, is(notNullValue()));
+        assertThat(errors.hasErrors(), is(false));
+    }
+
+    @Test
+    public void 正常時はエラーにならないこと_新規ユーザを招待する場合() throws Exception {
         ClinicInvitationAcception data = newClinicInvitationAcception();
         Errors errors = new BindException(data, "clinicInvitationAcception");
 
@@ -61,7 +80,7 @@ public class ClinicInvitationAcceptionValidatorTest {
             clinicInvitationRepository.findOne("invitation1");
             result = ClinicInvitation.builder().user(User.builder().id("user1").build()).build();
             SecurityUtils.getCurrentUserId();
-            result = "user1";
+            result = "exist1";
         }};
 
         sut.validate(Optional.of(data), errors);
@@ -96,7 +115,12 @@ public class ClinicInvitationAcceptionValidatorTest {
 
         new NonStrictExpectations() {{
             clinicInvitationRepository.findOne("invitation1");
-            result = ClinicInvitation.builder().user(User.builder().id("999").build()).build();
+            result = ClinicInvitation.builder()
+                .user(User.builder().id("999").build())
+                .invitedUser(User.builder().id("invited1").build())
+                .build();
+            SecurityUtils.getCurrentUserId();
+            result = "invited2";
         }};
 
         sut.validate(Optional.of(data), errors);

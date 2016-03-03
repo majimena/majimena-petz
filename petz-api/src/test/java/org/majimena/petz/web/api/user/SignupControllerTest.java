@@ -36,7 +36,8 @@ public class SignupControllerTest {
 
     private static SignupRegistry newSignupRegistry() {
         return SignupRegistry.builder()
-                .username("12345678901234567890123456789012345678901234567890")
+                .firstName("12345678901234567890123456789012345678901234567890")
+                .lastName("12345678901234567890123456789012345678901234567890")
                 .email("ken.todoroki123@abcdefghij.com")
                 .password("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
                 .build();
@@ -71,7 +72,15 @@ public class SignupControllerTest {
                 signupRegistryValidator.validate(data, errors);
                 result = null;
                 userService.saveUser(data);
-                result = User.builder().id("1").username(data.getUsername()).login(data.getEmail()).email(data.getEmail()).password(data.getPassword()).build();
+                result = User.builder()
+                        .id("1")
+                        .username(data.getFirstName())
+                        .firstName(data.getFirstName())
+                        .lastName(data.getLastName())
+                        .login(data.getEmail())
+                        .email(data.getEmail())
+                        .password(data.getPassword())
+                        .build();
             }};
 
             mockMvc.perform(post("/api/v1/signup")
@@ -81,17 +90,19 @@ public class SignupControllerTest {
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id", is("1")))
                     .andExpect(jsonPath("$.username", is("12345678901234567890123456789012345678901234567890")))
+                    .andExpect(jsonPath("$.firstName", is("12345678901234567890123456789012345678901234567890")))
+                    .andExpect(jsonPath("$.lastName", is("12345678901234567890123456789012345678901234567890")))
                     .andExpect(jsonPath("$.email", is("ken.todoroki123@abcdefghij.com")))
                     .andExpect(jsonPath("$.login", is("ken.todoroki123@abcdefghij.com")))
                     .andExpect(jsonPath("$.password", is(nullValue())));
         }
 
         @Test
-        public void ユーザ名にエラーがある場合は登録できないこと() throws Exception {
+        public void 氏名姓にエラーがある場合は登録できないこと() throws Exception {
             SignupRegistry data = newSignupRegistry();
 
             // 未入力
-            data.setUsername(null);
+            data.setLastName(null);
             mockMvc.perform(post("/api/v1/signup")
                     .contentType(TestUtils.APPLICATION_JSON_UTF8)
                     .content(TestUtils.convertObjectToJsonBytes(data)))
@@ -101,12 +112,12 @@ public class SignupControllerTest {
                     .andExpect(jsonPath("$.title", is("Validation Failed")))
                     .andExpect(jsonPath("$.status", is(400)))
                     .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
-                    .andExpect(jsonPath("$.errors[0].field", is("username")))
+                    .andExpect(jsonPath("$.errors[0].field", is("lastName")))
                     .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
                     .andExpect(jsonPath("$.errors[0].message", is("may not be empty")));
 
             // 桁数オーバー
-            data.setUsername("123456789012345678901234567890123456789012345678901");
+            data.setLastName("123456789012345678901234567890123456789012345678901");
             mockMvc.perform(post("/api/v1/signup")
                     .contentType(TestUtils.APPLICATION_JSON_UTF8)
                     .content(TestUtils.convertObjectToJsonBytes(data)))
@@ -116,7 +127,42 @@ public class SignupControllerTest {
                     .andExpect(jsonPath("$.title", is("Validation Failed")))
                     .andExpect(jsonPath("$.status", is(400)))
                     .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
-                    .andExpect(jsonPath("$.errors[0].field", is("username")))
+                    .andExpect(jsonPath("$.errors[0].field", is("lastName")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is("123456789012345678901234567890123456789012345678901")))
+                    .andExpect(jsonPath("$.errors[0].message", is("size must be between 0 and 50")));
+        }
+
+        @Test
+        public void 氏名名にエラーがある場合は登録できないこと() throws Exception {
+            SignupRegistry data = newSignupRegistry();
+
+            // 未入力
+            data.setFirstName(null);
+            mockMvc.perform(post("/api/v1/signup")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("firstName")))
+                    .andExpect(jsonPath("$.errors[0].rejected", is(nullValue())))
+                    .andExpect(jsonPath("$.errors[0].message", is("may not be empty")));
+
+            // 桁数オーバー
+            data.setFirstName("123456789012345678901234567890123456789012345678901");
+            mockMvc.perform(post("/api/v1/signup")
+                    .contentType(TestUtils.APPLICATION_JSON_UTF8)
+                    .content(TestUtils.convertObjectToJsonBytes(data)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.type", is("https://httpstatuses.com/400")))
+                    .andExpect(jsonPath("$.title", is("Validation Failed")))
+                    .andExpect(jsonPath("$.status", is(400)))
+                    .andExpect(jsonPath("$.detail", is("The content you've send contains validation errors.")))
+                    .andExpect(jsonPath("$.errors[0].field", is("firstName")))
                     .andExpect(jsonPath("$.errors[0].rejected", is("123456789012345678901234567890123456789012345678901")))
                     .andExpect(jsonPath("$.errors[0].message", is("size must be between 0 and 50")));
         }

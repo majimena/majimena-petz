@@ -20,7 +20,7 @@
     <pet id="1" name="ハチ" type="柴犬" color="ブラウン" blood="DEA1.1" profile="渋谷ハチ公" sex="MALE" birth_date="2000-01-01" user_id="1" created_by="hoge@hoge.com" created_date="2015-01-01"/>
     <pet_tag pet_id="1" tag_name="忠犬"/>
 
-    <customer id="customer1" clinic_id="0" user_id="1" first_name="TARO" last_name="PET" activated="false" blocked="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <customer id="customer1" clinic_id="0" user_id="1" activated="false" blocked="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
 
     <chart/>
 </dataset>

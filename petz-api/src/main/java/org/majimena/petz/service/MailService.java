@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
  * We use the @Async annotation to send e-mails asynchronously.
  * </p>
  */
+@Deprecated
 @Service
 public interface MailService {
 

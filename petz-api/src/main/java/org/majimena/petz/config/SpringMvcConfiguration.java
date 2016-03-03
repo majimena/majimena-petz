@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import cz.jirutka.spring.exhandler.support.HttpMessageConverterUtils;
-import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.common.exceptions.ResourceConflictException;
 import org.majimena.petz.common.exceptions.ResourceNotFoundException;
 import org.majimena.petz.common.factory.JacksonJsonFactory;
@@ -19,6 +18,7 @@ import org.majimena.petz.datatype.deserializers.SexTypeDeserializer;
 import org.majimena.petz.datatype.serializers.EnumDataTypeSerializer;
 import org.majimena.petz.datatype.serializers.ISO8601LocalDateSerializer;
 import org.majimena.petz.datatype.serializers.ISO8601LocalDateTimeSerializer;
+import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.web.servlet.handler.ApplicationExceptionRestExceptionHandler;
 import org.majimena.petz.web.servlet.handler.BindExceptionRestExceptionHandler;
 import org.majimena.petz.web.servlet.handler.HttpMessageNotReadableExceptionHandler;
@@ -34,6 +34,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
@@ -121,7 +122,7 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
         MappingJackson2HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter();
-        jacksonConverter.setSupportedMediaTypes(Arrays.asList(MediaType.valueOf("application/json")));
+        jacksonConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON));
         jacksonConverter.setObjectMapper(objectMapper());
         return jacksonConverter;
     }
@@ -136,5 +137,14 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(mappingJackson2HttpMessageConverter());
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+            .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+            .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }

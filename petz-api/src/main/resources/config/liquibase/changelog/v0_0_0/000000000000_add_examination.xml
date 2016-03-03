@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="000000000000_examination" author="custom">
+        <createTable tableName="examination">
+            <column name="id" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ticket_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="numeric(9,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tax_type" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tax_rate" type="numeric(3,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tax" type="numeric(9,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="numeric(3,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total" type="numeric(12,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="memo" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="examination_date_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="removed" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="000000000000_examination_index" author="custom">
+        <createIndex indexName="idx1_examination"
+                     tableName="examination">
+            <column name="ticket_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -1,12 +1,14 @@
 package org.majimena.petz.web.api.clinic;
 
 import com.codahale.metrics.annotation.Timed;
+import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.domain.ClinicInvitation;
 import org.majimena.petz.domain.clinic.ClinicInvitationAcception;
 import org.majimena.petz.domain.clinic.ClinicInvitationRegistry;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ClinicInvitationService;
 import org.majimena.petz.web.utils.ErrorsUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -52,11 +53,13 @@ public class ClinicInvitationController {
         ErrorsUtils.throwIfHasErrors(errors);
 
         // 招待状を送る
+        String userId = SecurityUtils.getCurrentUserId();
         Set<String> emails = new HashSet<>(Arrays.asList(registry.getEmails()));
-        clinicInvitationService.inviteStaff(clinicId, emails);
-        return ResponseEntity.created(URI.create("/api/v1/clinics/" + clinicId + "/invitations")).build();
+        clinicInvitationService.inviteStaff(clinicId, userId, emails);
+        return ResponseEntity.ok().build();
     }
 
+    @Deprecated
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/invitations/{invitationId}", method = RequestMethod.GET)
     public ResponseEntity<ClinicInvitation> get(@PathVariable String clinicId, @PathVariable String invitationId) {
@@ -65,8 +68,10 @@ public class ClinicInvitationController {
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // 招待状を取得する
-        ClinicInvitation invitation = clinicInvitationService.findClinicInvitationById(invitationId);
-        return ResponseEntity.ok().body(invitation);
+        return clinicInvitationService.getClinicInvitationById(invitationId)
+                .filter(invitation -> StringUtils.equals(clinicId, invitation.getClinic().getId()))
+                .map(invitation -> ResponseEntity.ok().body(invitation))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @Timed

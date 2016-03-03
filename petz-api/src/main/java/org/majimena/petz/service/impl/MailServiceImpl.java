@@ -1,6 +1,6 @@
 package org.majimena.petz.service.impl;
 
-import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.lang3.CharEncoding;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.service.MailService;
 import org.slf4j.Logger;

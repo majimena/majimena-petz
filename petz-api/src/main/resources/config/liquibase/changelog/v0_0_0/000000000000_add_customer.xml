@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="000000000000_customer" author="custom">
+        <createTable tableName="customer">
+            <column name="id" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="clinic_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="last_name" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="activated" type="boolean" valueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="blocked" type="boolean" valueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="000000000000_customer_index" author="custom">
+        <createIndex indexName="idx1_customer"
+                     tableName="customer"
+                     unique="true">
+            <column name="clinic_id" type="varchar(50)"/>
+            <column name="user_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

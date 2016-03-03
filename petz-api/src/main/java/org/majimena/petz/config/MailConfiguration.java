@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
+@Deprecated
 @Configuration
 public class MailConfiguration implements EnvironmentAware {
 

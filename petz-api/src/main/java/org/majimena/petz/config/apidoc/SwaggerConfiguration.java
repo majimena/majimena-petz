@@ -1,16 +1,11 @@
 package org.majimena.petz.config.apidoc;
 
-import org.majimena.petz.config.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.StopWatch;
 
 /**
  * Swagger configuration.
@@ -21,7 +16,6 @@ import org.springframework.util.StopWatch;
  */
 @Configuration
 //@EnableSwagger
-@Profile("!" + Constants.SPRING_PROFILE_FAST)
 public class SwaggerConfiguration implements EnvironmentAware {
 
     private final Logger log = LoggerFactory.getLogger(SwaggerConfiguration.class);

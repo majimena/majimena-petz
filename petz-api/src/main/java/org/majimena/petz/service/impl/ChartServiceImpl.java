@@ -1,7 +1,9 @@
 package org.majimena.petz.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.petz.common.factory.BeanFactory;
 import org.majimena.petz.common.utils.BeanFactoryUtils;
+import org.majimena.petz.common.utils.ExceptionUtils;
 import org.majimena.petz.domain.Chart;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
@@ -10,6 +12,7 @@ import org.majimena.petz.domain.chart.ChartCriteria;
 import org.majimena.petz.repository.ChartRepository;
 import org.majimena.petz.repository.ClinicRepository;
 import org.majimena.petz.repository.CustomerRepository;
+import org.majimena.petz.repository.PetRepository;
 import org.majimena.petz.repository.spec.ChartCriteriaSpec;
 import org.majimena.petz.service.ChartService;
 import org.majimena.petz.service.PetService;
@@ -46,6 +49,12 @@ public class ChartServiceImpl implements ChartService {
      */
     @Inject
     private CustomerRepository customerRepository;
+
+    /**
+     * ペットリポジトリ.
+     */
+    @Inject
+    private PetRepository petRepository;
 
     /**
      * ペットサービス.
@@ -120,17 +129,32 @@ public class ChartServiceImpl implements ChartService {
         return chartRepository.save(chart);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public Chart updateChart(Chart chart) {
+        // 更新対象のカルテを取得する
         Chart one = chartRepository.findOne(chart.getId());
-        if (one == null) {
-            // TODO
-            throw new RuntimeException("");
-        }
+        ExceptionUtils.throwIfNull(one);
+
+        // ペット情報が変更されているかもしれないので、更新する
+        Pet pet = one.getPet();
+        BeanFactoryUtils.copyNonNullProperties(chart.getPet(), pet);
+        petRepository.save(pet);
 
         // カルテを更新する
         BeanFactoryUtils.copyNonNullProperties(chart, one);
         return chartRepository.save(chart);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteChart(Chart chart) {
+        // 紐付けだけ外せば良いので、カルテ情報を物理削除する
+        chartRepository.delete(chart);
     }
 }

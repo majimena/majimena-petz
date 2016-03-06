@@ -141,5 +141,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void deleteCustomer(Customer customer) {
+        // 紐付けだけ外せば良いので、飼い主情報を物理削除する
+        customerRepository.delete(customer);
     }
 }

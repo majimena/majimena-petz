@@ -2,9 +2,8 @@ package org.majimena.petz.web.api.chart;
 
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.lang3.StringUtils;
-import org.majimena.petz.domain.Clinic;
-import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.domain.Chart;
+import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.chart.ChartCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ChartService;
@@ -82,8 +81,8 @@ public class ChartController {
         // カルテを取得する
         Optional<Chart> one = chartService.getChartByChartId(clinicId, chartId);
         return one
-            .map(chart -> ResponseEntity.ok().body(chart))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .map(chart -> ResponseEntity.ok().body(chart))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -106,7 +105,7 @@ public class ChartController {
         chart.setClinic(Clinic.builder().id(clinicId).build());
         Chart saved = chartService.saveChart(chart);
         return ResponseEntity.created(
-            URI.create("/api/v1/clinics/" + clinicId + "/charts/" + saved.getId())).body(saved);
+                URI.create("/api/v1/clinics/" + clinicId + "/charts/" + saved.getId())).body(saved);
     }
 
     /**
@@ -131,5 +130,30 @@ public class ChartController {
         chart.setClinic(Clinic.builder().id(clinicId).build());
         Chart saved = chartService.updateChart(chart);
         return ResponseEntity.ok().body(saved);
+    }
+
+    /**
+     * 自分のクリニックのカルテを削除する.
+     *
+     * @param clinicId クリニックID
+     * @param chartId  カルテID
+     * @return レスポンスエンティティ（通常時は200、認証失敗時は401、対象が見つからない場合は404）
+     */
+    @Timed
+    @RequestMapping(value = "/clinics/{clinicId}/charts/{chartId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> put(@PathVariable String clinicId, @PathVariable String chartId) {
+        // クリニックの権限チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(chartId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+
+        // カルテを削除する
+        return chartService.getChartByChartId(clinicId, chartId)
+                .filter(chart -> StringUtils.equals(clinicId, chart.getClinic().getId()))
+                .map(chart -> {
+                    chartService.deleteChart(chart);
+                    return ResponseEntity.ok().build();
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

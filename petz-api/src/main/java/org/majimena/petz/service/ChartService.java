@@ -44,4 +44,6 @@ public interface ChartService {
     Chart saveChart(Chart chart);
 
     Chart updateChart(Chart chart);
+
+    void deleteChart(Chart chart);
 }

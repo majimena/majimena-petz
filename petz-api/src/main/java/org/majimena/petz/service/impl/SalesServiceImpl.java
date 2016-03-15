@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class SalesServiceImpl implements SalesService {
             LocalDateTime from = DateTimeUtils.minOfDay(date);
             LocalDateTime to = DateTimeUtils.maxOfDay(date);
             BigDecimal sales = invoiceRepository.sumTotal(clinicId, from, to).orElse(BigDecimal.ZERO);
-            data.add(Arrays.asList(from.format(DateTimeFormatter.ofPattern("dd")), sales));
+            data.add(Arrays.asList(from.toEpochSecond(ZoneOffset.UTC) * 1000, sales));
         }
         return new Graph(Arrays.asList("Time", "Sales"), data);
     }

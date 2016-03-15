@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,7 +128,7 @@ public class TicketServiceImpl implements TicketService {
             LocalDateTime from = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i);
             LocalDateTime to = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i, 59, 59);
             long count = ticketRepository.count(TicketSpecs.of(clinicId, from, to));
-            data.add(Arrays.asList(i + ":00", BigDecimal.valueOf(count)));
+            data.add(Arrays.asList(from.toEpochSecond(ZoneOffset.UTC) * 1000, BigDecimal.valueOf(count)));
         }
         return new Graph(Arrays.asList("Time", "Reserved"), data);
     }

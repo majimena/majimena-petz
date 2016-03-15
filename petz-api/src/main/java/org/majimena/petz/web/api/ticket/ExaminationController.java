@@ -1,11 +1,13 @@
 package org.majimena.petz.web.api.ticket;
 
 import com.codahale.metrics.annotation.Timed;
+import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.domain.Examination;
 import org.majimena.petz.domain.ticket.ExaminationCriteria;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ExaminationService;
 import org.majimena.petz.web.utils.ErrorsUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -59,6 +61,22 @@ public class ExaminationController {
         criteria.setTicketId(ticketId);
         List<Examination> examinations = examinationService.getExaminationsByExaminationCriteria(criteria);
         return ResponseEntity.ok().body(examinations);
+    }
+
+    @Timed
+    @RequestMapping(value = "/clinics/{clinicId}/tickets/{ticketId}/examinations/{examinationId}", method = RequestMethod.GET)
+    public ResponseEntity<Examination> get(@PathVariable String clinicId, @PathVariable String ticketId, @PathVariable String examinationId) {
+        // クリニック権限のチェックとIDのコード体系チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(ticketId);
+        ErrorsUtils.throwIfNotIdentify(examinationId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+
+        // 検索する
+        return examinationService.getExaminationByExaminationId(examinationId)
+                .filter(examination -> StringUtils.equals(clinicId, examination.getTicket().getClinic().getId()))
+                .map(examination -> ResponseEntity.ok().body(examination))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

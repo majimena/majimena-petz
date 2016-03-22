@@ -200,6 +200,15 @@ public class ClinicServiceImpl implements ClinicService {
      * {@inheritDoc}
      */
     @Override
+    public Optional<ClinicStaff> getClinicStaffById(String staffId) {
+        ClinicStaff one = clinicStaffRepository.findOne(staffId);
+        return Optional.ofNullable(one);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     @Transactional(readOnly = true)
     public void deleteClinicStaff(String clinicId, String userId) {
         // 自分が所属するクリニックのスタッフだけが取得できるようにチェックする

@@ -3,6 +3,7 @@ package org.majimena.petz.repository.spec;
 import org.majimena.petz.common.utils.DateTimeUtils;
 import org.majimena.petz.datatype.TicketState;
 import org.majimena.petz.domain.clinic.ClinicOutlineCriteria;
+import org.majimena.petz.domain.ticket.ClinicChartTicketCriteria;
 import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -26,6 +27,20 @@ public class TicketSpecs {
                 .where(Optional.ofNullable(criteria.getClinicId()).map(TicketSpecs::equalClinicId).orElse(null))
                 .and(Optional.ofNullable(criteria.getPetId()).map(TicketSpecs::equalPetId).orElse(null))
                 .and(Optional.ofNullable(criteria.getUserId()).map(TicketSpecs::equalUserId).orElse(null))
+                .and(Optional.ofNullable(criteria.getState()).map(TicketSpecs::equalState).orElse(null))
+                .and(betweenStartDateTimeAndEndDateTime(criteria.getYear(), criteria.getMonth(), criteria.getDay()));
+    }
+
+    /**
+     * クリニックカルテチケットクライテリアをもとにスペックを作成する.
+     *
+     * @param criteria クリニックカルテチケットクライテリア
+     * @return スペック
+     */
+    public static Specification of(ClinicChartTicketCriteria criteria) {
+        return Specifications
+                .where(Optional.ofNullable(criteria.getClinicId()).map(TicketSpecs::equalClinicId).orElse(null))
+                .and(Optional.ofNullable(criteria.getChartId()).map(TicketSpecs::equalChartId).orElse(null))
                 .and(Optional.ofNullable(criteria.getState()).map(TicketSpecs::equalState).orElse(null))
                 .and(betweenStartDateTimeAndEndDateTime(criteria.getYear(), criteria.getMonth(), criteria.getDay()));
     }
@@ -56,6 +71,10 @@ public class TicketSpecs {
             query.orderBy(cb.asc(root.get("startDateTime")));
             return cb.equal(root.get("clinic").get("id"), clinicId);
         };
+    }
+
+    public static Specification equalChartId(String chartId) {
+        return (root, query, cb) -> cb.equal(root.get("chart").get("id"), chartId);
     }
 
     public static Specification equalUserId(String userId) {

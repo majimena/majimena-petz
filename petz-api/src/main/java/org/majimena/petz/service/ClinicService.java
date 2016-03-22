@@ -74,5 +74,7 @@ public interface ClinicService {
 
     List<ClinicStaff> getClinicStaffsById(String clinicId);
 
+    Optional<ClinicStaff> getClinicStaffById(String staffId);
+
     void deleteClinicStaff(String clinicId, String userId);
 }

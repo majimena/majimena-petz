@@ -2,6 +2,7 @@ package org.majimena.petz.service;
 
 import org.majimena.petz.domain.Ticket;
 import org.majimena.petz.domain.graph.Graph;
+import org.majimena.petz.domain.ticket.ClinicChartTicketCriteria;
 import org.majimena.petz.domain.ticket.TicketCriteria;
 
 import java.util.List;
@@ -19,6 +20,14 @@ public interface TicketService {
      * @return 該当するチケットの一覧
      */
     List<Ticket> getTicketsByTicketCriteria(TicketCriteria criteria);
+
+    /**
+     * クリニックカルテチケットクライテリアをもとに、チケットを検索する.
+     *
+     * @param criteria クリニックカルテチケットクライテリア
+     * @return 該当するチケットの一覧
+     */
+    List<Ticket> getTicketsByClinicChartTicketCriteria(ClinicChartTicketCriteria criteria);
 
     /**
      * チケットIDをもとに、チケットを取得する.

@@ -13,6 +13,7 @@ import org.majimena.petz.domain.TicketActivity;
 import org.majimena.petz.domain.TicketAttachment;
 import org.majimena.petz.domain.errors.ErrorCode;
 import org.majimena.petz.domain.graph.Graph;
+import org.majimena.petz.domain.ticket.ClinicChartTicketCriteria;
 import org.majimena.petz.domain.ticket.TicketCriteria;
 import org.majimena.petz.repository.ChartRepository;
 import org.majimena.petz.repository.ClinicRepository;
@@ -94,6 +95,15 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional(readOnly = true)
     public List<Ticket> getTicketsByTicketCriteria(TicketCriteria criteria) {
+        List<Ticket> tickets = ticketRepository.findAll(TicketSpecs.of(criteria));
+        return tickets;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Ticket> getTicketsByClinicChartTicketCriteria(ClinicChartTicketCriteria criteria) {
         List<Ticket> tickets = ticketRepository.findAll(TicketSpecs.of(criteria));
         return tickets;
     }

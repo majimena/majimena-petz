@@ -1,4 +1,4 @@
-package org.majimena.petz.web.api.clinic;
+package org.majimena.petz.web.api.staff;
 
 import org.apache.commons.validator.GenericValidator;
 import org.majimena.petz.domain.clinic.ClinicInvitationRegistry;

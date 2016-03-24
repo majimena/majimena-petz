@@ -1,4 +1,4 @@
-package org.majimena.petz.web.api.clinic;
+package org.majimena.petz.web.api.staff;
 
 import mockit.Injectable;
 import mockit.NonStrictExpectations;

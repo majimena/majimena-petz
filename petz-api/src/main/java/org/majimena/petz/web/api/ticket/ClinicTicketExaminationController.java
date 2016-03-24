@@ -27,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/v1")
-public class ExaminationController {
+public class ClinicTicketExaminationController {
 
     /**
      * 診察サービス.

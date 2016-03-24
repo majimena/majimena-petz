@@ -1,4 +1,4 @@
-package org.majimena.petz.web.api.clinic;
+package org.majimena.petz.web.api.customer;
 
 import junit.framework.TestCase;
 import mockit.Injectable;

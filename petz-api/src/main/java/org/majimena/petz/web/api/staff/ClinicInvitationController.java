@@ -1,4 +1,4 @@
-package org.majimena.petz.web.api.clinic;
+package org.majimena.petz.web.api.staff;
 
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.lang3.StringUtils;

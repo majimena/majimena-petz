@@ -1,4 +1,4 @@
-package org.majimena.petz.web.api.clinic;
+package org.majimena.petz.web.api.staff;
 
 import junit.framework.TestCase;
 import mockit.Mocked;
@@ -13,7 +13,6 @@ import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.ClinicStaff;
 import org.majimena.petz.domain.User;
 import org.majimena.petz.service.ClinicService;
-import org.majimena.petz.web.api.clinic.ClinicStaffController;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;

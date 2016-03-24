@@ -14,13 +14,10 @@ import org.majimena.petz.domain.Chart;
 import org.majimena.petz.domain.Clinic;
 import org.majimena.petz.domain.Customer;
 import org.majimena.petz.domain.Pet;
-import org.majimena.petz.domain.User;
 import org.majimena.petz.domain.chart.ChartCriteria;
 import org.majimena.petz.security.ResourceCannotAccessException;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ChartService;
-import org.majimena.petz.service.UserService;
-import org.majimena.petz.web.api.me.MyAccountController;
 import org.majimena.petz.web.utils.PaginationUtils;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.PageImpl;
@@ -33,22 +30,19 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * @see ChartController
+ * @see ClinicChartController
  */
 @RunWith(Enclosed.class)
-public class ChartControllerTest {
+public class ClinicChartControllerTest {
 
     private static Chart newChart() {
         return Chart.builder()
@@ -69,7 +63,7 @@ public class ChartControllerTest {
         private MockMvc mockMvc;
 
         @Tested
-        private ChartController sut = new ChartController();
+        private ClinicChartController sut = new ClinicChartController();
 
         @Injectable
         private ChartService chartService;

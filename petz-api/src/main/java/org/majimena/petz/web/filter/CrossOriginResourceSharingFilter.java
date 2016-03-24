@@ -48,16 +48,25 @@ public class CrossOriginResourceSharingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // write CORS headers
-        response.setHeader("Access-Control-Allow-Origin", allowOrigin);
-        response.setHeader("Access-Control-Allow-Methods", allowMethods);
-        response.setHeader("Access-Control-Allow-Credentials", allowCredentials.toString());
-        response.setHeader("Access-Control-Allow-Headers", allowHeaders);
-        response.setHeader("Access-Control-Expose-Headers", exposeHeaders);
-        response.setHeader("Access-Control-Max-Age", String.valueOf(maxAge));
+        setHeader(response, "Access-Control-Allow-Origin", allowOrigin);
+        setHeader(response, "Access-Control-Allow-Methods", allowMethods);
+        setHeader(response, "Access-Control-Allow-Credentials", allowCredentials.toString());
+        setHeader(response, "Access-Control-Allow-Headers", allowHeaders);
+        setHeader(response, "Access-Control-Expose-Headers", exposeHeaders);
+        setHeader(response, "Access-Control-Max-Age", String.valueOf(maxAge));
+
+        // cache control
+        setHeader(response, "Cache-Control", "no-cache, no-store, must-revalidate");
 
         // skip processing OPTIONS methods
         if (!StringUtils.equals(StringUtils.upperCase(request.getMethod()), "OPTIONS")) {
             filterChain.doFilter(request, response);
+        }
+    }
+
+    protected void setHeader(HttpServletResponse response, String name, String value) {
+        if (StringUtils.isNotEmpty(value)) {
+            response.setHeader(name, value);
         }
     }
 }

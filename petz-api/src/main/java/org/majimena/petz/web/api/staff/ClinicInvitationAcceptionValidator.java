@@ -1,4 +1,4 @@
-package org.majimena.petz.web.api.clinic;
+package org.majimena.petz.web.api.staff;
 
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.domain.ClinicInvitation;

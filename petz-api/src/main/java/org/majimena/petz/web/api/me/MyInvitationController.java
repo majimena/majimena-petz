@@ -6,7 +6,7 @@ import org.majimena.petz.domain.ClinicInvitation;
 import org.majimena.petz.domain.clinic.ClinicInvitationAcception;
 import org.majimena.petz.security.SecurityUtils;
 import org.majimena.petz.service.ClinicInvitationService;
-import org.majimena.petz.web.api.clinic.ClinicInvitationAcceptionValidator;
+import org.majimena.petz.web.api.staff.ClinicInvitationAcceptionValidator;
 import org.majimena.petz.web.utils.ErrorsUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

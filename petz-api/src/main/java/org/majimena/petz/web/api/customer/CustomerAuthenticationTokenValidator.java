@@ -1,4 +1,4 @@
-package org.majimena.petz.web.api.clinic;
+package org.majimena.petz.web.api.customer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petz.domain.User;

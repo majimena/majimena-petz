@@ -28,7 +28,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/v1")
-public class TicketAttachmentController {
+public class ClinicTicketAttachmentController {
 
     /**
      * チケット添付ファイルサービス.

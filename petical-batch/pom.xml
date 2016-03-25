@@ -5,15 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.majimena.petz</groupId>
-        <artifactId>petz-backend-parent</artifactId>
+        <groupId>org.majimena.petical</groupId>
+        <artifactId>petical-backend</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.majimena.petz</groupId>
-    <artifactId>petz-backend-batch</artifactId>
+    <groupId>org.majimena.petical</groupId>
+    <artifactId>petical-batch</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Petz: Petz Backend Batch Module</name>
+    <name>petical.io: Batch Module</name>
     <packaging>jar</packaging>
 
 </project>

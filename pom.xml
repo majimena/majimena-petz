@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.majimena.petz</groupId>
-    <artifactId>petz-backend-parent</artifactId>
+    <groupId>org.majimena.petical</groupId>
+    <artifactId>petical-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Petz: Petz Backend Module Parent</name>
+    <name>petical.io: Backend Module Parent</name>
     <prerequisites>
         <maven>3.0.0</maven>
     </prerequisites>
@@ -90,18 +90,18 @@
         <dependencies>
             <!-- Petz Relational Projects -->
             <dependency>
-                <groupId>org.majimena.petz</groupId>
-                <artifactId>petz-backend-api</artifactId>
+                <groupId>org.majimena.petical</groupId>
+                <artifactId>petical-api</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>org.majimena.petz</groupId>
-                <artifactId>petz-backend-domain</artifactId>
+                <groupId>org.majimena.petical</groupId>
+                <artifactId>petical-domain</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>org.majimena.petz</groupId>
-                <artifactId>petz-backend-batch</artifactId>
+                <groupId>org.majimena.petical</groupId>
+                <artifactId>petical-batch</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
 
@@ -626,7 +626,7 @@
                         <configuration>
                             <propertyName>jacocoArgs</propertyName>
                             <includes>
-                                <include>org.majimena.petz.*</include>
+                                <include>org.majimena.petical.*</include>
                             </includes>
                         </configuration>
                     </execution>
@@ -671,7 +671,7 @@
                     <username>root</username>
                     <password/>
                     <referenceUrl>
-                        hibernate:spring:org.majimena.petz.domain?dialect=org.hibernate.dialect.MySQLInnoDBDialect
+                        hibernate:spring:org.majimena.petical.domain?dialect=org.hibernate.dialect.MySQLInnoDBDialect
                     </referenceUrl>
                     <verbose>true</verbose>
                     <logging>debug</logging>
@@ -686,16 +686,16 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>org.majimena.petz.Application</mainClass>
+                    <mainClass>org.majimena.petical.Application</mainClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
     <modules>
-        <module>petz-api</module>
-        <module>petz-domain</module>
-        <module>petz-batch</module>
+        <module>petical-api</module>
+        <module>petical-domain</module>
+        <module>petical-batch</module>
     </modules>
 
 </project>

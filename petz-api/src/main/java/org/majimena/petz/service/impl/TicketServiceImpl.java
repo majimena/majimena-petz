@@ -137,10 +137,12 @@ public class TicketServiceImpl implements TicketService {
         for (int i = 0; i < 24; i++) {
             LocalDateTime from = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i);
             LocalDateTime to = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i, 59, 59);
-            long count = ticketRepository.count(TicketSpecs.of(clinicId, from, to));
-            data.add(Arrays.asList(from.toEpochSecond(ZoneOffset.UTC) * 1000, BigDecimal.valueOf(count)));
+
+            long completed = ticketRepository.count(TicketSpecs.of(clinicId, TicketState.COMPLETED, from, to));
+            long reserved = ticketRepository.count(TicketSpecs.of(clinicId, TicketState.RESERVED, from, to));
+            data.add(Arrays.asList(from.toEpochSecond(ZoneOffset.UTC) * 1000, BigDecimal.valueOf(completed), BigDecimal.valueOf(reserved)));
         }
-        return new Graph(Arrays.asList("Time", "Reserved"), data);
+        return new Graph(Arrays.asList("Time", "Completed", "Reserved"), data);
     }
 
     /**

@@ -122,16 +122,18 @@ public class ClinicServiceImpl implements ClinicService {
         // 本日の診察済のチケット件数
         criteria.setState(TicketState.COMPLETED);
         long examinated = ticketRepository.count(TicketSpecs.of(criteria));
+
         // 本日の売上金額
         LocalDateTime from = DateTimeUtils.from(criteria.getYear(), criteria.getMonth(), criteria.getDay());
         LocalDateTime to = DateTimeUtils.to(criteria.getYear(), criteria.getMonth(), criteria.getDay());
-        BigDecimal sales = invoiceRepository.sumTotal(criteria.getClinicId(), from, to).orElse(BigDecimal.ZERO);
+        Object result = invoiceRepository.sumTotal(criteria.getClinicId(), from, to);
+        Object[] results = (Object[]) result;
 
         return Optional.of(ClinicOutline.builder()
                 .reserve(BigDecimal.valueOf(reserve))
                 .chart(BigDecimal.valueOf(chart))
                 .examinated(BigDecimal.valueOf(examinated))
-                .sales(sales)
+                .sales((BigDecimal) results[0])
                 .build());
     }
 

@@ -56,13 +56,15 @@ public class TicketSpecs {
      * 指定した期間中のチケットを検索するスペックを作成する.
      *
      * @param clinicId クリニックID
+     * @param state    ステータス
      * @param from     開始日時（FROM）
      * @param to       終了日時（TO）
      * @return スペック
      */
-    public static Specification of(String clinicId, LocalDateTime from, LocalDateTime to) {
+    public static Specification of(String clinicId, TicketState state, LocalDateTime from, LocalDateTime to) {
         return Specifications
                 .where(TicketSpecs.equalClinicId(clinicId))
+                .and(TicketSpecs.equalState(state))
                 .and(TicketSpecs.betweenStartDateTime(from, to));
     }
 

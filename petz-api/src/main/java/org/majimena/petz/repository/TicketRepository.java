@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface TicketRepository
         extends JpaRepository<Ticket, String>, JpaSpecificationExecutor<Ticket> {
+
 }

@@ -2,7 +2,9 @@ package org.majimena.petz.common.utils;
 
 import org.majimena.petz.datetime.L10nDateTimeProvider;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Optional;
 
 /**
@@ -11,23 +13,43 @@ import java.util.Optional;
 public class DateTimeUtils {
 
     /**
-     * ミニマム時刻の日付に変換する.
+     * ミニマム時刻のローカル日時に変換する.
      *
-     * @param value 日時
-     * @return ミニマム時刻の時刻
+     * @param value ローカル日時
+     * @return ミニマム時刻のローカル日時
      */
     public static LocalDateTime minOfDay(LocalDateTime value) {
         return LocalDateTime.of(value.getYear(), value.getMonthValue(), value.getDayOfMonth(), 0, 0, 0);
     }
 
     /**
-     * マックス時刻の日付に変換する.
+     * マックス時刻のローカル日時に変換する.
      *
-     * @param value 日時
-     * @return マックス時刻の時刻
+     * @param value ローカル日時
+     * @return マックス時刻のローカル日時
      */
     public static LocalDateTime maxOfDay(LocalDateTime value) {
         return LocalDateTime.of(value.getYear(), value.getMonthValue(), value.getDayOfMonth(), 23, 59, 59);
+    }
+
+    /**
+     * ミニマム時刻のローカル日時に変換する.
+     *
+     * @param date ローカル日付
+     * @return ミニマム時刻のローカル日時
+     */
+    public static LocalDateTime minOfDay(LocalDate date) {
+        return LocalDateTime.of(date, LocalTime.MIN);
+    }
+
+    /**
+     * マックス時刻のローカル日時に変換する.
+     *
+     * @param date ローカル日付
+     * @return マックス時刻のローカル日時
+     */
+    public static LocalDateTime maxOfDay(LocalDate date) {
+        return LocalDateTime.of(date, LocalTime.MAX);
     }
 
     public static LocalDateTime from(Integer year, Integer month, Integer day) {

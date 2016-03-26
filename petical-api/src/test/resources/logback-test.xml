@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.majimena.petz" level="TRACE"/>
+    <logger name="org.majimena.petical" level="TRACE"/>
     <logger name="org.majimena.framework" level="TRACE"/>
 
     <logger name="org.springframework" level="INFO"/>

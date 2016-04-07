@@ -67,8 +67,9 @@ public class MyInvitationController {
 
         // 自分宛の招待状を取得する
         String userId = SecurityUtils.getCurrentUserId();
+        String login = SecurityUtils.getCurrentLoginId();
         return clinicInvitationService.getClinicInvitationById(invitationId)
-                .filter(invitation -> StringUtils.equals(userId, invitation.getInvitedUser().getId()))
+                .filter(invitation -> StringUtils.equals(login, invitation.getEmail()) || StringUtils.equals(userId, invitation.getInvitedUser().getId()))
                 .map(invitation -> ResponseEntity.ok().body(invitation))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

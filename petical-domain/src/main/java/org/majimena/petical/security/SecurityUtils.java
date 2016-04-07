@@ -60,13 +60,23 @@ public final class SecurityUtils {
     }
 
     /**
-     * 現在のユーザのIDを取得する.
+     * 現在ログインしているユーザーのIDを取得する.
      *
      * @return ユーザID
      */
     public static String getCurrentUserId() {
         Optional<PetzUser> principal = getPrincipal();
         return principal.map(p -> p.getUserId()).orElse(SYSTEM_ACCOUNT);
+    }
+
+    /**
+     * 現在ログインしているユーザーのログインIDを取得する.
+     *
+     * @return ログインID
+     */
+    public static String getCurrentLoginId() {
+        Optional<PetzUser> principal = getPrincipal();
+        return principal.map(p -> p.getUsername()).orElse(SYSTEM_ACCOUNT);
     }
 
     /**

@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,17 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
     @Override
     @Transactional(readOnly = true)
     public List<ClinicInvitation> getClinicInvitationsByUserId(String userId) {
-        List<ClinicInvitation> invitations = clinicInvitationRepository.findByInvitedUserId(userId);
+        List<ClinicInvitation> invitations = new ArrayList<>();
+
+        // ユーザIDが一致する招待状を取得する
+        List<ClinicInvitation> invitations1 = clinicInvitationRepository.findByInvitedUserId(userId);
+        invitations.addAll(invitations1);
+
+        // メールアドレス（ログインID）が一致する招待状を取得する
+        User one = userRepository.findOne(userId);
+        List<ClinicInvitation> invitations2 = clinicInvitationRepository.findByEmail(one.getLogin());
+        invitations.addAll(invitations2);
+
         return invitations;
     }
 

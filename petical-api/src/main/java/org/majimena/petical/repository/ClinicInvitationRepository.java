@@ -17,4 +17,11 @@ public interface ClinicInvitationRepository extends JpaRepository<ClinicInvitati
      * @return 該当するクリニックの招待状の一覧
      */
     List<ClinicInvitation> findByInvitedUserId(String userId);
+
+    /**
+     * メールアドレスをもとに、該当するクリニックの招待状を取得する.
+     * @param email メールアドレス（ログインIDと同じもので検索すること）
+     * @return 該当するクリニックの招待状の一覧
+     */
+    List<ClinicInvitation> findByEmail(String email);
 }

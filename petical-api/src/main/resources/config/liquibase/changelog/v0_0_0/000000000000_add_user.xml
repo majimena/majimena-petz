@@ -26,6 +26,12 @@
             <column name="last_name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="first_name_kana" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="last_name_kana" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
             <column name="email" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
@@ -60,6 +66,9 @@
                 <constraints nullable="true"/>
             </column>
             <column name="street" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="other" type="varchar(50)">
                 <constraints nullable="true"/>
             </column>
             <column name="phone_no" type="varchar(15)">

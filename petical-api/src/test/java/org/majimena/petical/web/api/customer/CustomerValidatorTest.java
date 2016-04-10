@@ -36,8 +36,7 @@ public class CustomerValidatorTest {
                 .id("customer1")
                 .clinic(Clinic.builder().id("1").build())
                 .user(User.builder().id("user1").login("test@example.com").build())
-                .blocked(Boolean.FALSE)
-                .activated(Boolean.TRUE)
+                .removed(Boolean.FALSE)
                 .build();
     }
 

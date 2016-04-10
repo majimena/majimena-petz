@@ -51,26 +51,19 @@ public class ClinicCustomerController {
      * 自分のクリニックの顧客を検索する.
      *
      * @param clinicId クリニックID
-     * @param offset   検索時のオフセット値
-     * @param limit    検索結果数の上限値
-     * @param criteria 検索条件
      * @return レスポンスエンティティ（通常時は200、入力エラー時は400、認証失敗時は401）
      * @throws URISyntaxException URIエラー
      */
     @Timed
     @RequestMapping(value = "/clinics/{clinicId}/customers", method = RequestMethod.GET)
-    public ResponseEntity<List<Customer>> getAll(@PathVariable String clinicId, @RequestParam(value = "page", required = false) Integer offset,
-                                                 @RequestParam(value = "per_page", required = false) Integer limit, @Valid CustomerCriteria criteria) throws URISyntaxException {
+    public ResponseEntity<List<Customer>> getAll(@PathVariable String clinicId) throws URISyntaxException {
         // クリニックの権限チェック
         ErrorsUtils.throwIfNotIdentify(clinicId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
-        criteria.setClinicId(clinicId);
 
-        // ページング検索する
-        Pageable pageable = PaginationUtils.generatePageRequest(offset, limit);
-        Page<Customer> users = customerService.getCustomersByCustomerCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(users, "/api/v1/clinics/" + clinicId + "/customers", offset, limit);
-        return new ResponseEntity<>(users.getContent(), headers, HttpStatus.OK);
+        // 検索する
+        List<Customer> customers = customerService.getCustomersByClinicId(clinicId);
+        return ResponseEntity.ok().body(customers);
     }
 
     /**

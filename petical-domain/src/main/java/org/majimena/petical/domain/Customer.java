@@ -37,13 +37,9 @@ public class Customer extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // TODO いるか？
-    @NotNull
-    @Column(name = "activated", nullable = false)
-    private Boolean activated = Boolean.FALSE;
+    @Column(name = "customer_code", nullable = true)
+    private String customerCode;
 
-    // TODO いるか？
-    @NotNull
-    @Column(name = "blocked", nullable = false)
-    private Boolean blocked = Boolean.FALSE;
+    @Column(name = "removed", nullable = false)
+    private Boolean removed = Boolean.FALSE;
 }

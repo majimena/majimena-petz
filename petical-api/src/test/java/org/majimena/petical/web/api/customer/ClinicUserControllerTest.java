@@ -72,8 +72,7 @@ public class ClinicUserControllerTest extends TestCase {
                 .id("customer1")
                 .clinic(Clinic.builder().id("1").build())
                 .user(newUser())
-                .activated(Boolean.FALSE)
-                .blocked(Boolean.FALSE)
+                .removed(Boolean.FALSE)
                 .build();
     }
 

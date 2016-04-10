@@ -7,6 +7,7 @@ import org.majimena.petical.domain.customer.CustomerCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,7 +15,15 @@ import java.util.Optional;
  */
 public interface CustomerService {
 
+    @Deprecated
     Page<Customer> getCustomersByCustomerCriteria(CustomerCriteria criteria, Pageable pageable);
+
+    /**
+     * クリニックに所属する全ての顧客を取得する.
+     * @param clinicId クリニックID
+     * @return 顧客情報
+     */
+    List<Customer> getCustomersByClinicId(String clinicId);
 
     Optional<Customer> getCustomerByCustomerId(String customerId);
 

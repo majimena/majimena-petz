@@ -15,16 +15,10 @@
             <column name="user_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="first_name" type="varchar(50)">
+            <column name="customer_code" type="varchar(50)">
                 <constraints nullable="true"/>
             </column>
-            <column name="last_name" type="varchar(50)">
-                <constraints nullable="true"/>
-            </column>
-            <column name="activated" type="boolean" valueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-            <column name="blocked" type="boolean" valueBoolean="false">
+            <column name="removed" type="boolean" valueBoolean="false">
                 <constraints nullable="false"/>
             </column>
             <column name="created_by" type="varchar(50)">
@@ -47,6 +41,12 @@
                      unique="true">
             <column name="clinic_id" type="varchar(50)"/>
             <column name="user_id" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx2_customer"
+                     tableName="customer"
+                     unique="true">
+            <column name="clinic_id" type="varchar(50)"/>
+            <column name="customer_code" type="varchar(50)"/>
         </createIndex>
     </changeSet>
 

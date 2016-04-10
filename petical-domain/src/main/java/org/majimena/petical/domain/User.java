@@ -82,6 +82,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "last_name", length = 50)
     private String lastName;
 
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "first_name_kana", length = 50)
+    private String firstNameKana;
+
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "last_name_kana", length = 50)
+    private String lastNameKana;
+
     @Email
     @Size(max = MailAddress.MAX_LENGTH)
     @Column(length = MailAddress.MAX_LENGTH, unique = true)
@@ -136,6 +144,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Size(max = 50)
     @Column(name = "street", length = 50, nullable = true)
     private String street;
+
+    @Size(max = 50)
+    @Column(name = "other", length = 50, nullable = true)
+    private String other;
 
     @Size(max = 15)
     @Column(name = "phone_no", length = 15, nullable = true)

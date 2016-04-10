@@ -17,6 +17,8 @@ public interface CustomerRepository extends JpaRepository<Customer, String>, Jpa
 
     Optional<Customer> findByClinicIdAndUserId(String clinicId, String userId);
 
+    Optional<Customer> findByClinicIdAndCustomerCode(String clinicId, String customerCode);
+
     @Deprecated
     @Query("select cu from Customer cu where cu.clinic.id = :clinicId order by cu.user.lastName, cu.user.firstName, cu.user.id")
     Page<Customer> findByClinicId(@Param("clinicId") String clinicId, Pageable pageable);

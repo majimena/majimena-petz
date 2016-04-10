@@ -53,8 +53,7 @@ public class ClinicCustomerControllerTest {
                 .id("customer123")
                 .clinic(Clinic.builder().id("c123").build())
                 .user(User.builder().id("u123").build())
-                .activated(Boolean.FALSE)
-                .blocked(Boolean.FALSE)
+                .removed(Boolean.FALSE)
                 .build();
     }
 

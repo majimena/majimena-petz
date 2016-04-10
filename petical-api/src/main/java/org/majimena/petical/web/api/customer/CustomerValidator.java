@@ -1,5 +1,6 @@
 package org.majimena.petical.web.api.customer;
 
+import org.apache.commons.lang3.StringUtils;
 import org.majimena.petical.domain.Customer;
 import org.majimena.petical.domain.errors.ErrorCode;
 import org.majimena.petical.repository.CustomerRepository;
@@ -38,6 +39,9 @@ public class CustomerValidator extends AbstractValidator<Customer> {
         target.ifPresent(customer -> {
             // 顧客IDが指定されている場合は該当データが存在するかチェック
             validateId(Optional.ofNullable(customer.getId()), customer.getClinic().getId(), errors);
+            // 顧客コードの重複チェック
+            validateCustomerCode(customer.getClinic().getId(), customer.getCustomerCode(), errors);
+
             // 変更しようとしているユーザー以外のユーザーのログインIDと重複していたらエラーにする
             validateLogin(Optional.ofNullable(customer.getId()), customer.getUser().getLogin(), errors);
         });
@@ -52,6 +56,13 @@ public class CustomerValidator extends AbstractValidator<Customer> {
                 ErrorsUtils.throwIfNotEqual(clinicId, one.getClinic().getId());
             }
         });
+    }
+
+    private void validateCustomerCode(String clinicId, String customerCode, Errors errors) {
+        if (StringUtils.isNotEmpty(customerCode)) {
+            customerRepository.findByClinicIdAndCustomerCode(clinicId, customerCode)
+                    .ifPresent(customer -> ErrorsUtils.reject(ErrorCode.PTZ_003001, errors));
+        }
     }
 
     private void validateLogin(Optional<String> value, String login, Errors errors) {

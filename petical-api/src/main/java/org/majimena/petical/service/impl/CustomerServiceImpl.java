@@ -16,7 +16,7 @@ import org.majimena.petical.domain.errors.ErrorCode;
 import org.majimena.petical.repository.ClinicRepository;
 import org.majimena.petical.repository.CustomerRepository;
 import org.majimena.petical.repository.UserRepository;
-import org.majimena.petical.repository.spec.CustomerCriteriaSpec;
+import org.majimena.petical.repository.spec.CustomerSpecs;
 import org.majimena.petical.service.CustomerService;
 import org.majimena.petical.service.UserService;
 import org.springframework.data.domain.Page;
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -49,10 +50,20 @@ public class CustomerServiceImpl implements CustomerService {
     /**
      * {@inheritDoc}
      */
+    @Deprecated
     @Override
     @Transactional(readOnly = true)
     public Page<Customer> getCustomersByCustomerCriteria(CustomerCriteria criteria, Pageable pageable) {
-        return customerRepository.findAll(new CustomerCriteriaSpec(criteria), pageable);
+        return customerRepository.findAll(new CustomerSpecs(criteria), pageable);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Customer> getCustomersByClinicId(String clinicId) {
+        return customerRepository.findAll(CustomerSpecs.of(clinicId), CustomerSpecs.asc());
     }
 
     /**
@@ -77,8 +88,7 @@ public class CustomerServiceImpl implements CustomerService {
                     Customer customer = Customer.builder()
                             .clinic(clinic)
                             .user(user)
-                            .activated(Boolean.FALSE)
-                            .blocked(Boolean.FALSE)
+                            .removed(Boolean.FALSE)
                             .build();
                     return customerRepository.save(customer);
                 })
@@ -91,17 +101,29 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer saveCustomer(String clinicId, Customer customer) throws ApplicationException {
         User saved;
+        User user = customer.getUser();
         // ユーザーが既にいるなら更新し、そうでなければ新規でアカウントを作成する
-        if (StringUtils.isNotEmpty(customer.getUser().getId())) {
-            saved = userService.updateUser(customer.getUser());
+        if (StringUtils.isNotEmpty(user.getId())) {
+            saved = userService.updateUser(user);
         } else {
+            // ログインIDとメールアドレスの空対応
+            if (StringUtils.isEmpty(user.getLogin())) {
+                String email = user.getEmail();
+                if (StringUtils.isEmpty(email)) {
+                    email = System.nanoTime() + "@petical.io";
+                }
+                user.setLogin(email);
+                user.setPassword(RandomUtils.generatePassword());
+            } else if (StringUtils.isEmpty(user.getEmail())) {
+                user.setEmail(user.getLogin());
+            }
+
             // FIXME 海外対応した場合は別途考えること
-            User user = customer.getUser();
             user.setUsername(user.getLastName() + " " + user.getFirstName());
             user.setPassword(RandomUtils.generatePassword());
             user.setLangKey(LangKey.JAPANESE);
             user.setTimeZone(TimeZone.ASIA_TOKYO);
-            saved = userService.saveUser(customer.getUser());
+            saved = userService.saveUser(user);
         }
 
         // 顧客とするクリニックを取得する
@@ -110,7 +132,7 @@ public class CustomerServiceImpl implements CustomerService {
         // 顧客情報を更新してアクティベートする
         customer.setUser(saved);
         customer.setClinic(clinic);
-        customer.setActivated(Boolean.TRUE);
+        customer.setRemoved(Boolean.FALSE);
         Customer created = customerRepository.save(customer);
 
         // TODO 顧客に登録完了のメールを送信

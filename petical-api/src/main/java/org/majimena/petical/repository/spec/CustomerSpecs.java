@@ -3,6 +3,7 @@ package org.majimena.petical.repository.spec;
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petical.domain.Customer;
 import org.majimena.petical.domain.customer.CustomerCriteria;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -14,28 +15,48 @@ import javax.persistence.criteria.Root;
 /**
  * Created by todoken on 2015/09/22.
  */
-public class CustomerCriteriaSpec implements Specification<Customer> {
+public class CustomerSpecs implements Specification<Customer> {
+
+    /**
+     * チケット添付ファイルのクライテリアのスペックを取得する.
+     *
+     * @param clinicId クリニックID
+     * @return スペック
+     */
+    public static Specification<Customer> of(String clinicId) {
+        return Specifications
+                .where(CustomerSpecs.equalClinicId(clinicId));
+    }
+
+    /**
+     * チケット添付ファイルのソート条件を取得する.
+     *
+     * @return ソート条件
+     */
+    public static Sort asc() {
+        return new Sort(Sort.Direction.ASC, "createdDate", "customerCode");
+    }
+
+    /**
+     * クリニックIDと完全一致するスペックを取得する.
+     *
+     * @param clinicId クリニックID
+     * @return スペック
+     */
+    private static Specification equalClinicId(String clinicId) {
+        return (root, query, cb) -> cb.equal(root.get("clinic").get("id"), clinicId);
+    }
+
+    // FIXME 以下は廃止処理
 
     private Specification<Customer> specification;
 
-    public CustomerCriteriaSpec(CustomerCriteria criteria) {
+    public CustomerSpecs(CustomerCriteria criteria) {
         this.specification = Specifications
             .where(equalClinicId(criteria.getClinicId()))
             .and(likeAfterLogin(criteria.getLogin()))
             .and(likeAfterEmail(criteria.getEmail()))
             .and(likeAnywhereCustomerName(criteria));
-    }
-
-    private Specification equalClinicId(String clinicId) {
-        if (StringUtils.isEmpty(clinicId)) {
-            return null;
-        }
-        return (root, query, cb) -> {
-            if (query.getResultType() != Long.class) {
-                root.fetch("user");
-            }
-            return cb.equal(root.get("clinic").get("id"), clinicId);
-        };
     }
 
     private Specification likeAfterLogin(String login) {

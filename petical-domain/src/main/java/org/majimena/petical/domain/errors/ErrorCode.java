@@ -67,6 +67,10 @@ public enum ErrorCode {
     PTZ_003999,
 
     // Chart
+    /**
+     * 該当するカルテ番号は既に存在しています。
+     */
+    PTZ_004001,
 
     // Product
     /**

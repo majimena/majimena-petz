@@ -44,6 +44,12 @@ public class ClinicChartController {
     private ChartService chartService;
 
     /**
+     * カルテバリデータ.
+     */
+    @Inject
+    private ChartValidator chartValidator;
+
+    /**
      * カルテを検索する.
      *
      * @param clinicId クリニックID
@@ -100,9 +106,13 @@ public class ClinicChartController {
         // クリニックの権限チェック
         ErrorsUtils.throwIfNotIdentify(clinicId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+        chart.setClinic(Clinic.builder().id(clinicId).build());
+
+        // 拡張バリデータを実施
+        chartValidator.validate(chart, errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // カルテを保存する
-        chart.setClinic(Clinic.builder().id(clinicId).build());
         Chart saved = chartService.saveChart(chart);
         return ResponseEntity.created(
                 URI.create("/api/v1/clinics/" + clinicId + "/charts/" + saved.getId())).body(saved);
@@ -125,6 +135,10 @@ public class ClinicChartController {
         ErrorsUtils.throwIfNotIdentify(clinicId);
         ErrorsUtils.throwIfNotIdentify(chartId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+
+        // 拡張バリデータを実施
+        chartValidator.validate(chart, errors);
+        ErrorsUtils.throwIfHasErrors(errors);
 
         // カルテを更新する
         chart.setClinic(Clinic.builder().id(clinicId).build());

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,9 @@ public class ISO8601LocalDateTimeDeserializer extends JsonDeserializer<LocalDate
         if (token == JsonToken.VALUE_STRING) {
             String value = parser.getText().trim();
             LOG.debug("deserialize value is {}.", value);
+            if (StringUtils.isEmpty(value)) {
+                return null;
+            }
 
             try {
                 ZonedDateTime dateTime = ZonedDateTime.parse(value, DateTimeFormatter.ISO_OFFSET_DATE_TIME);

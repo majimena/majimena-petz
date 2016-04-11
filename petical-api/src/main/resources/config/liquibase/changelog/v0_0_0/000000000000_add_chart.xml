@@ -21,8 +21,23 @@
             <column name="chart_no" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="rabid_vaccine_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mix_vaccine_name" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mix_vaccine_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="filaria_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="flea_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
             <column name="creation_date" type="timestamp">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>

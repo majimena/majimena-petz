@@ -117,9 +117,13 @@ public class ChartServiceImpl implements ChartService {
         chart.getPet().setUser(customer.getUser());
         Pet pet = petService.savePet(chart.getPet());
 
+        // カルテ番号を発行する
+        if (StringUtils.isEmpty(chart.getChartNo())) {
+            chart.setChartNo(String.valueOf(System.currentTimeMillis()));
+        }
+
         // カルテを保存する
         if (StringUtils.isEmpty(chart.getId())) {
-            chart.setChartNo(String.valueOf(System.currentTimeMillis()));
             chart.setCreationDate(LocalDateTime.now());
         }
         chart.setClinic(clinic);

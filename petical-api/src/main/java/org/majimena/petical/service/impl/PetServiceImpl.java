@@ -33,6 +33,9 @@ public class PetServiceImpl implements PetService {
     private CustomerRepository customerRepository;
 
     @Inject
+    private KindRepository kindRepository;
+
+    @Inject
     private TypeRepository typeRepository;
 
     @Inject
@@ -77,6 +80,7 @@ public class PetServiceImpl implements PetService {
     @Transactional
     public Pet savePet(Pet pet) {
         // ペットの種別、毛色、血液型を登録してペットと紐付けする（既にあれば登録しない）
+        Kind kind = kindRepository.save(pet.getKind());
         Type type = typeRepository.save(pet.getType());
         Color color = colorRepository.save(pet.getColor());
         Blood blood = null;
@@ -94,6 +98,7 @@ public class PetServiceImpl implements PetService {
         // 飼い主を親キーにしてペットを登録
         User user = userRepository.findOne(pet.getUser().getId());
         pet.setUser(user);
+        pet.setKind(kind);
         pet.setType(type);
         pet.setColor(color);
         pet.setBlood(blood);

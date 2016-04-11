@@ -21,4 +21,6 @@ public interface ChartRepository extends JpaRepository<Chart, String>, JpaSpecif
     List<Chart> findByCustomerId(String customerId);
 
     Optional<Chart> findByClinicIdAndCustomerIdAndPetId(String clinicId, String customerId, String petId);
+
+    Optional<Chart> findByClinicIdAndChartNo(String clinicId, String chartNo);
 }

@@ -60,13 +60,23 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
 
     @NotEmpty
     @Size(max = Name.MAX_LENGTH)
-    @Column(name = "name", length = 60, nullable = false)
+    @Column(name = "name", length = Name.MAX_LENGTH, nullable = false)
     private String name;
+
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "name_kana", length = Name.MAX_LENGTH, nullable = true)
+    private String nameKana;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @JsonSerialize(using = KindSerializer.class)
+    @JsonDeserialize(using = KindDeserializer.class)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "kind", nullable = false)
+    private Kind kind;
 
     @JsonSerialize(using = TypeSerializer.class)
     @JsonDeserialize(using = TypeDeserializer.class)
@@ -106,8 +116,19 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
     @Column(name = "birth_date", nullable = true)
     private LocalDateTime birthDate;
 
-    @Column(nullable = true)
-    private Boolean neutral = Boolean.FALSE;
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "rabid_register_no", length = Name.MAX_LENGTH, nullable = true)
+    private String rabidRegisterNo;
+
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "injection_report_no", length = Name.MAX_LENGTH, nullable = true)
+    private String injectionReportNo;
+
+    @Column(name = "neutral", nullable = true)
+    private Boolean neutral;
+
+    @Column(name = "dead", nullable = true)
+    private Boolean dead;
 
     @Size(max = Memo.MAX_LENGTH)
     @Column(name = "profile", length = 2000, nullable = true)

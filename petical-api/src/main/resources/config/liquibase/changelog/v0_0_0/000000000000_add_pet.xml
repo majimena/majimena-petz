@@ -12,7 +12,13 @@
             <column name="name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="name_kana" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
             <column name="user_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="kind" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="type" type="varchar(50)">
@@ -36,7 +42,16 @@
             <column name="birth_date" type="timestamp">
                 <constraints nullable="true"/>
             </column>
+            <column name="rabid_register_no" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="injection_report_no" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
             <column name="neutral" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dead" type="boolean">
                 <constraints nullable="true"/>
             </column>
             <column name="profile" type="varchar(2000)">
@@ -88,6 +103,10 @@
         <createIndex indexName="idx5_pet"
                      tableName="pet">
             <column name="blood" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx6_pet"
+                     tableName="pet">
+            <column name="kind" type="varchar(50)"/>
         </createIndex>
     </changeSet>
 

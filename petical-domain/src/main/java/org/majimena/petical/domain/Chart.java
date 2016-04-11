@@ -68,6 +68,34 @@ public class Chart extends AbstractAuditingEntity implements Serializable {
     @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
     @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
     @Convert(converter = LocalDateTimePersistenceConverter.class)
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "rabid_vaccine_date", nullable = true)
+    private LocalDateTime rabidVaccineDate;
+
+    @Size(max = 50)
+    @Column(name = "mix_vaccine_name", length = 50, nullable = true)
+    private String mixVaccineName;
+
+    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
+    @Column(name = "mix_vaccine_date", nullable = true)
+    private LocalDateTime mixVaccineDate;
+
+    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
+    @Column(name = "filaria_date", nullable = true)
+    private LocalDateTime filariaDate;
+
+    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
+    @Column(name = "flea_date", nullable = true)
+    private LocalDateTime fleaDate;
+
+    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
+    @Column(name = "creation_date", nullable = true)
     private LocalDateTime creationDate;
 }

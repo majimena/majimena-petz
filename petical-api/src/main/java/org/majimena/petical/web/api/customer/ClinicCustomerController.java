@@ -3,14 +3,9 @@ package org.majimena.petical.web.api.customer;
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petical.domain.Customer;
-import org.majimena.petical.domain.customer.CustomerCriteria;
 import org.majimena.petical.security.SecurityUtils;
 import org.majimena.petical.service.CustomerService;
 import org.majimena.petical.web.utils.ErrorsUtils;
-import org.majimena.petical.web.utils.PaginationUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -19,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
@@ -27,6 +21,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 顧客コントローラ.
@@ -63,6 +59,7 @@ public class ClinicCustomerController {
 
         // 検索する
         List<Customer> customers = customerService.getCustomersByClinicId(clinicId);
+        customers.forEach(customer -> customer.setClinic(null));
         return ResponseEntity.ok().body(customers);
     }
 

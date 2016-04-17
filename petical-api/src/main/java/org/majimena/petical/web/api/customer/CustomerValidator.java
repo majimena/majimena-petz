@@ -39,8 +39,11 @@ public class CustomerValidator extends AbstractValidator<Customer> {
         target.ifPresent(customer -> {
             // 顧客IDが指定されている場合は該当データが存在するかチェック
             validateId(Optional.ofNullable(customer.getId()), customer.getClinic().getId(), errors);
+
             // 顧客コードの重複チェック
-            validateCustomerCode(customer.getClinic().getId(), customer.getCustomerCode(), errors);
+            if (StringUtils.isEmpty(customer.getId())) {
+                validateCustomerCode(customer.getClinic().getId(), customer.getCustomerCode(), errors);
+            }
 
             // 変更しようとしているユーザー以外のユーザーのログインIDと重複していたらエラーにする
             validateLogin(Optional.ofNullable(customer.getId()), customer.getUser().getLogin(), errors);

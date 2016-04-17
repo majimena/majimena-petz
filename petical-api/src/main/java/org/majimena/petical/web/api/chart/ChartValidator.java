@@ -1,5 +1,6 @@
 package org.majimena.petical.web.api.chart;
 
+import org.apache.commons.lang3.StringUtils;
 import org.majimena.petical.domain.Chart;
 import org.majimena.petical.domain.Clinic;
 import org.majimena.petical.domain.Customer;
@@ -53,11 +54,18 @@ public class ChartValidator extends AbstractValidator<Chart> {
             chart.setClinic(clinic);
 
             // 顧客コードの存在チェック
-            Customer customer = validateCustomerCode(chart.getClinic().getId(), chart.getCustomer().getCustomerCode(), errors);
-            chart.setCustomer(customer);
+            if (StringUtils.isEmpty(chart.getCustomer().getId())) {
+                Customer customer = validateCustomerCode(chart.getClinic().getId(), chart.getCustomer().getCustomerCode(), errors);
+                chart.setCustomer(customer);
+            } else {
+                Customer customer = validateCustomerId(clinic.getId(), chart.getCustomer().getId());
+                chart.setCustomer(customer);
+            }
 
             // カルテ番号の未存在チェック
-            validateChartNo(chart.getClinic().getId(), chart.getChartNo(), errors);
+            if (StringUtils.isEmpty(chart.getId())) {
+                validateChartNo(chart.getClinic().getId(), chart.getChartNo(), errors);
+            }
         });
     }
 
@@ -76,6 +84,14 @@ public class ChartValidator extends AbstractValidator<Chart> {
         Clinic one = clinicRepository.findOne(clinicId);
         if (one == null) {
             ErrorsUtils.rejectValue("clinic", ErrorCode.PTZ_001999, errors);
+        }
+        return one;
+    }
+
+    private Customer validateCustomerId(String clinicId, String customerId) {
+        Customer one = customerRepository.findOne(customerId);
+        if (!StringUtils.equals(clinicId, one.getClinic().getId())) {
+            throw new IllegalArgumentException();
         }
         return one;
     }

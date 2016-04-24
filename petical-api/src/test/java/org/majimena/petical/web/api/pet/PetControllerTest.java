@@ -59,7 +59,7 @@ public class PetControllerTest {
         data.setId("p1");
         data.setName("POCHI");
         data.setUser(User.builder().id("1").build());
-        data.setTags(Sets.newHashSet(new Tag("Docs"), new Tag("In the Rooms")));
+//        data.setTags(Sets.newHashSet(new Tag("Docs"), new Tag("In the Rooms")));
         data.setColor(new Color("White"));
         data.setType(new Type("T.Poodle"));
         data.setBlood(new Blood("DEA1.1"));
@@ -110,7 +110,8 @@ public class PetControllerTest {
                 petService.getPetsByPetCriteria(new PetCriteria(), pageable);
                 result = new PageImpl<>(Arrays.asList(Pet.builder().id("p1").name("test data").profile("test data's profile")
                         .birthDate(LocalDateTime.of(2015, 2, 27, 15, 0)).sex(SexType.MALE)
-                        .type(new Type("type1")).tags(Sets.newHashSet(new Tag("tag1"), new Tag("tag2")))
+                        .type(new Type("type1"))
+//                        .tags(Sets.newHashSet(new Tag("tag1"), new Tag("tag2")))
                         .user(User.builder().id("u1").build())
                         .build()), pageable, 2);
             }};
@@ -160,7 +161,8 @@ public class PetControllerTest {
                 petService.findPetByPetId("p1");
                 result = Pet.builder().id("p1").name("test data").profile("test data's profile")
                         .birthDate(LocalDateTime.of(2015, 2, 27, 15, 0)).sex(SexType.MALE)
-                        .type(new Type("type1")).tags(Sets.newHashSet(new Tag("tag1"), new Tag("tag2")))
+                        .type(new Type("type1"))
+//                        .tags(Sets.newHashSet(new Tag("tag1"), new Tag("tag2")))
                         .user(User.builder().id("u1").build())
                         .build();
             }};

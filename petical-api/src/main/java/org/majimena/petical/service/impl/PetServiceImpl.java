@@ -2,6 +2,7 @@ package org.majimena.petical.service.impl;
 
 import org.majimena.petical.common.aws.AmazonS3Service;
 import org.majimena.petical.common.exceptions.ResourceNotFoundException;
+import org.majimena.petical.common.utils.ExceptionUtils;
 import org.majimena.petical.domain.*;
 import org.majimena.petical.domain.pet.PetCriteria;
 import org.majimena.petical.repository.*;
@@ -59,12 +60,33 @@ public class PetServiceImpl implements PetService {
         return petRepository.findByUserId(userId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Pet> getPetsByCustomerId(String customerId) {
+        // 飼い主からユーザーを特定する
+        Customer customer = customerRepository.findOne(customerId);
+        ExceptionUtils.throwIfNull(customer);
+
+        // ユーザーをもとに所有するペットを取得する
+        User user = customer.getUser();
+        return getPetsByUserId(user.getId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<Pet> getPetsByPetCriteria(PetCriteria criteria, Pageable pageable) {
         return petRepository.findAll(PetSpecs.of(criteria), pageable);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     public Pet findPetByPetId(String id) {
@@ -89,11 +111,11 @@ public class PetServiceImpl implements PetService {
         }
 
         // ペットのタグを登録してペットと紐付けする（既にあれば登録しない）
-        Set<Tag> tags = null;
-        if (pet.getTags() != null) {
-            tags = pet.getTags().stream()
-                .map(tag -> tagRepository.save(tag)).collect(Collectors.toSet());
-        }
+//        Set<Tag> tags = null;
+//        if (pet.getTags() != null) {
+//            tags = pet.getTags().stream()
+//                .map(tag -> tagRepository.save(tag)).collect(Collectors.toSet());
+//        }
 
         // 飼い主を親キーにしてペットを登録
         User user = userRepository.findOne(pet.getUser().getId());
@@ -102,7 +124,7 @@ public class PetServiceImpl implements PetService {
         pet.setType(type);
         pet.setColor(color);
         pet.setBlood(blood);
-        pet.setTags(tags);
+//        pet.setTags(tags);
         return petRepository.save(pet);
     }
 

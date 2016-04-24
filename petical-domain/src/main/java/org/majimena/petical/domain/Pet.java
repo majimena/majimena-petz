@@ -150,13 +150,13 @@ public class Pet extends AbstractAuditingEntity implements Serializable {
     @Column(name = "image", length = 200, nullable = true)
     private String image;
 
-    @JsonSerialize(using = TagSetSerializer.class)
-    @JsonDeserialize(using = TagSetDeserializer.class)
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "pet_tag",
-            joinColumns = {@JoinColumn(name = "pet_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "tag_name", referencedColumnName = "name")})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Tag> tags = Sets.newHashSet();
+//    @JsonSerialize(using = TagSetSerializer.class)
+//    @JsonDeserialize(using = TagSetDeserializer.class)
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "pet_tag",
+//            joinColumns = {@JoinColumn(name = "pet_id", referencedColumnName = "id")},
+//            inverseJoinColumns = {@JoinColumn(name = "tag_name", referencedColumnName = "name")})
+//    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//    private Set<Tag> tags = Sets.newHashSet();
 }

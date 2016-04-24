@@ -13,6 +13,7 @@ import org.majimena.petical.repository.ClinicRepository;
 import org.majimena.petical.repository.CustomerRepository;
 import org.majimena.petical.repository.PetRepository;
 import org.majimena.petical.repository.spec.ChartCriteriaSpec;
+import org.majimena.petical.repository.spec.ChartSpecs;
 import org.majimena.petical.service.ChartService;
 import org.majimena.petical.service.PetService;
 import org.springframework.data.domain.Page;
@@ -75,6 +76,16 @@ public class ChartServiceImpl implements ChartService {
      */
     @Override
     @Transactional(readOnly = true)
+    public List<Chart> getChartsByClinicId(String clinicId) {
+        return chartRepository.findAll(ChartSpecs.of(clinicId), ChartSpecs.asc());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Deprecated
+    @Override
+    @Transactional(readOnly = true)
     public Page<Chart> findChartsByChartCriteria(ChartCriteria criteria, Pageable pageable) {
         Page<Chart> charts = chartRepository.findAll(new ChartCriteriaSpec(criteria), pageable);
         // lazy load for relational entities
@@ -93,14 +104,13 @@ public class ChartServiceImpl implements ChartService {
     @Transactional(readOnly = true)
     public Optional<Chart> getChartByChartId(String clinicId, String chartId) {
         Chart one = chartRepository.findOne(chartId);
-        Optional<Chart> chart = Optional.ofNullable(one);
-        // lazy load for relational entities if chart is exists
-        chart.ifPresent(c -> {
-            c.getClinic().getId();
-            c.getCustomer().getId();
-            c.getPet().getId();
+        return Optional.ofNullable(one).map(chart -> {
+            // lazy load for relational entities if chart is exists
+            chart.getCustomer().getId();
+            chart.getCustomer().getUser().getId();
+            chart.getPet().getId();
+            return chart;
         });
-        return chart;
     }
 
     /**

@@ -51,9 +51,9 @@ public class LoggingAspect {
         }
         try {
             Object result = joinPoint.proceed();
-            if (log.isDebugEnabled()) {
+            if (log.isTraceEnabled()) {
                 try {
-                    log.debug("Exit: {}.{}() with result = {}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), result);
+                    log.trace("Exit: {}.{}() with result = {}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), result);
                 } catch (Exception e) {
                     // ignore exception
                 }

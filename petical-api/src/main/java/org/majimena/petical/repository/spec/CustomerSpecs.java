@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specifications;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -25,16 +26,19 @@ public class CustomerSpecs implements Specification<Customer> {
      */
     public static Specification<Customer> of(String clinicId) {
         return Specifications
-                .where(CustomerSpecs.equalClinicId(clinicId));
+                .where((root, query, cb) -> {
+                    root.fetch("user", JoinType.INNER);
+                    return cb.equal(root.get("clinic").get("id"), clinicId);
+                });
     }
 
     /**
-     * チケット添付ファイルのソート条件を取得する.
+     * 飼い主コード、作成日時の昇順でソートする.
      *
      * @return ソート条件
      */
     public static Sort asc() {
-        return new Sort(Sort.Direction.ASC, "createdDate", "customerCode");
+        return new Sort(Sort.Direction.ASC, "customerCode", "createdDate");
     }
 
     /**

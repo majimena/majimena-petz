@@ -14,7 +14,21 @@ import java.util.Optional;
  */
 public interface ChartService {
 
+    /**
+     * 飼い主IDをもとにカルテを取得する.
+     *
+     * @param customerId 飼い主ID
+     * @return カルテ一覧
+     */
     List<Chart> getChartsByCustomerId(String customerId);
+
+    /**
+     * クリニックIDをもとにカルテを取得する.
+     *
+     * @param clinicId クリニックID
+     * @return カルテ一覧
+     */
+    List<Chart> getChartsByClinicId(String clinicId);
 
     /**
      * カルテを検索する. ページングに対応するため, ページ情報が必要.
@@ -23,6 +37,7 @@ public interface ChartService {
      * @param pageable ページ情報
      * @return 検索条件に該当するカルテの一覧
      */
+    @Deprecated
     Page<Chart> findChartsByChartCriteria(ChartCriteria criteria, Pageable pageable);
 
     /**

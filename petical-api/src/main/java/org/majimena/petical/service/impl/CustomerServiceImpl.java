@@ -74,7 +74,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(readOnly = true)
     public Optional<Customer> getCustomerByCustomerId(String customerId) {
         Customer one = customerRepository.findOne(customerId);
-        return Optional.ofNullable(one);
+        return Optional.ofNullable(one)
+                .map(customer -> {
+                    customer.getUser().getId();
+                    return customer;
+                });
     }
 
     /**

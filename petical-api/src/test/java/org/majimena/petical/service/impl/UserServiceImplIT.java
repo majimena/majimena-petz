@@ -144,7 +144,7 @@ public class UserServiceImplIT {
         @Test
         @DatabaseSetup("classpath:/fixture/base.xml")
         public void パスワードが変更できること() throws Exception {
-            sut.changePassword(new PasswordRegistry("3", "admin", "drowssap"));
+            sut.changePassword(PasswordRegistry.builder().userId("3").oldPassword("admin").newPassword("drowssap").build());
 
             Optional<User> contact = sut.getUserByUserId("3");
             User result = contact.get();
@@ -155,13 +155,13 @@ public class UserServiceImplIT {
         @Test(expected = ApplicationException.class)
         @DatabaseSetup("classpath:/fixture/base.xml")
         public void パスワードが異なる場合はアプリ例外が発生すること() throws Exception {
-            sut.changePassword(new PasswordRegistry("3", "password", "drowssap"));
+            sut.changePassword(PasswordRegistry.builder().userId("3").oldPassword("admin").newPassword("drowssap").build());
         }
 
         @Test(expected = SystemException.class)
         @DatabaseSetup("classpath:/fixture/base.xml")
         public void ユーザーが存在しない場合はシステム例外が発生すること() throws Exception {
-            sut.changePassword(new PasswordRegistry("999", "admin", "drowssap"));
+            sut.changePassword(PasswordRegistry.builder().userId("999").oldPassword("admin").newPassword("drowssap").build());
         }
     }
 }

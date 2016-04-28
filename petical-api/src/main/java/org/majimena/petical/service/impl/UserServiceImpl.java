@@ -9,6 +9,7 @@ import org.majimena.petical.common.utils.ExceptionUtils;
 import org.majimena.petical.common.utils.RandomUtils;
 import org.majimena.petical.datatype.LangKey;
 import org.majimena.petical.datatype.TimeZone;
+import org.majimena.petical.datetime.L10nDateTimeProvider;
 import org.majimena.petical.domain.Authority;
 import org.majimena.petical.domain.User;
 import org.majimena.petical.domain.errors.ErrorCode;
@@ -56,45 +57,53 @@ public class UserServiceImpl implements UserService {
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         userRepository.findOneByActivationKey(key)
-                .map(user -> {
-                    // activate given user for the registration key.
-                    user.setActivated(true);
-                    user.setActivationKey(null);
-                    userRepository.save(user);
-                    log.debug("Activated user: {}", user);
-                    return user;
-                });
+            .map(user -> {
+                // activate given user for the registration key.
+                user.setActivated(true);
+                user.setActivationKey(null);
+                userRepository.save(user);
+                log.debug("Activated user: {}", user);
+                return user;
+            });
         return Optional.empty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Optional<User> completePasswordReset(String newPassword, String key) {
-        log.debug("Reset user password for reset key {}", key);
-
-        return userRepository.findOneByResetKey(key)
-                .filter(user -> {
-                    LocalDateTime oneDayAgo = LocalDateTime.now().minusHours(24);
-                    return user.getResetDate().isAfter(oneDayAgo);
-                })
-                .map(user -> {
-                    user.setActivated(true);
-                    user.setPassword(passwordEncoder.encode(newPassword));
-                    user.setResetKey(null);
-                    user.setResetDate(null);
-                    userRepository.save(user);
-                    return user;
-                });
+    public Optional<User> requestPasswordReset(String login) {
+        return userRepository.findOneByLogin(login)
+            .map(user -> {
+                // パスワードをリセットするキーを保存
+                user.setResetKey(RandomUtils.generateResetKey());
+                user.setResetDate(L10nDateTimeProvider.now().toLocalDateTime());
+                userRepository.save(user);
+                // パスワードをリセットするための確認メールを送信
+                return user;
+            });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Optional<User> requestPasswordReset(String mail) {
-        return userRepository.findOneByEmail(mail)
-                .map(user -> {
-                    user.setResetKey(RandomUtils.generateResetKey());
-                    user.setResetDate(LocalDateTime.now());
-                    userRepository.save(user);
-                    return user;
-                });
+    public Optional<User> resetPassword(String password, String key) {
+        return userRepository.findOneByResetKey(key)
+            .filter(user -> {
+                // パスワードリセットキーは一時間のみ有効（過ぎたら使えない）
+                LocalDateTime oneDayAgo = LocalDateTime.now().minusHours(1);
+                return user.getResetDate().isAfter(oneDayAgo);
+            })
+            .map(user -> {
+                // 新しいパスワードを設定する
+                user.setActivated(true);
+                user.setPassword(passwordEncoder.encode(password));
+                user.setResetKey(null);
+                user.setResetDate(null);
+                userRepository.save(user);
+                return user;
+            });
     }
 
     @Override
@@ -131,8 +140,8 @@ public class UserServiceImpl implements UserService {
         // 今はメアド検索しかないのでこのままでもOK
         Optional<User> user = userRepository.findOneByLogin(criteria.getEmail());
         return user
-                .map(u -> Arrays.asList(BeanFactory.create(u, new UserOutline())))
-                .orElse(Arrays.asList());
+            .map(u -> Arrays.asList(BeanFactory.create(u, new UserOutline())))
+            .orElse(Arrays.asList());
     }
 
     /**

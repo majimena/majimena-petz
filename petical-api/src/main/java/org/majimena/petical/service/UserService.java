@@ -70,14 +70,27 @@ public interface UserService {
 
     Optional<User> activateRegistration(String key);
 
-    Optional<User> completePasswordReset(String newPassword, String key);
-
-    Optional<User> requestPasswordReset(String mail);
-
     /**
      * パスワードを変更する.
      *
      * @param registry パスワード登録情報
      */
     void changePassword(PasswordRegistry registry);
+
+    /**
+     * パスワードをリセットするための要求を出します.
+     *
+     * @param login パスワードをリセットするユーザのログインID
+     * @return パスワードをリセットするユーザ（いない場合もある）
+     */
+    Optional<User> requestPasswordReset(String login);
+
+    /**
+     * パスワードをリセットする.
+     *
+     * @param password パスワード
+     * @param key      パスワードリセットのキー
+     * @return パスワードをリセットしたユーザ（いない場合もある）
+     */
+    Optional<User> resetPassword(String password, String key);
 }

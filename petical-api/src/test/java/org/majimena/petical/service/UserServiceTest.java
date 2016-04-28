@@ -69,7 +69,7 @@ public class UserServiceTest {
 
         userRepository.save(user);
 
-        Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
+        Optional<User> maybeUser = userService.resetPassword("johndoe2", user.getResetKey());
 
         assertThat(maybeUser.isPresent()).isFalse();
 
@@ -90,7 +90,7 @@ public class UserServiceTest {
 
         userRepository.save(user);
 
-        Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
+        Optional<User> maybeUser = userService.resetPassword("johndoe2", user.getResetKey());
 
         assertThat(maybeUser.isPresent()).isFalse();
 
@@ -114,7 +114,7 @@ public class UserServiceTest {
 
         userRepository.save(user);
 
-        Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
+        Optional<User> maybeUser = userService.resetPassword("johndoe2", user.getResetKey());
 
         assertThat(maybeUser.isPresent()).isTrue();
         assertThat(maybeUser.get().getResetDate()).isNull();

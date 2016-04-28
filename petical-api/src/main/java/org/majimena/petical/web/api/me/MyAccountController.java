@@ -13,11 +13,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -43,8 +41,8 @@ public class MyAccountController {
     public ResponseEntity<User> get() {
         String userId = SecurityUtils.getCurrentUserId();
         return userService.getUserByUserId(userId)
-                .map(u -> ResponseEntity.ok(u))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .map(u -> ResponseEntity.ok(u))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -82,29 +80,5 @@ public class MyAccountController {
         registry.setUserId(SecurityUtils.getCurrentUserId());
         userService.changePassword(registry);
         return ResponseEntity.ok().build();
-    }
-
-    @Timed
-    @RequestMapping(value = "/me/password", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> requestPasswordReset(@RequestBody String mail, HttpServletRequest request) {
-        return userService.requestPasswordReset(mail)
-                .map(user -> {
-                    String baseUrl = request.getScheme() +
-                            "://" +
-                            request.getServerName() +
-                            ":" +
-                            request.getServerPort();
-//                    mailService.sendPasswordResetMail(user, baseUrl);
-                    return ResponseEntity.ok().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @Timed
-    @RequestMapping(value = "/me/password", method = RequestMethod.POST)
-    public ResponseEntity<Void> finishPasswordReset(@RequestParam(value = "key") String key, @RequestParam(value = "newPassword") String newPassword) {
-        return userService.completePasswordReset(newPassword, key)
-                .map(user -> ResponseEntity.ok().build())
-                .orElse(ResponseEntity.notFound().build());
     }
 }

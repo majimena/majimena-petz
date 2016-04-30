@@ -11,7 +11,7 @@ import org.majimena.petical.domain.ClinicStaff;
 import org.majimena.petical.domain.User;
 import org.majimena.petical.domain.errors.ErrorCode;
 import org.majimena.petical.domain.user.Roles;
-import org.majimena.petical.manager.MailManager;
+import org.majimena.petical.common.provider.EmailProvider;
 import org.majimena.petical.repository.ClinicInvitationRepository;
 import org.majimena.petical.repository.ClinicRepository;
 import org.majimena.petical.repository.ClinicStaffRepository;
@@ -49,7 +49,7 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
     private UserRepository userRepository;
 
     @Inject
-    private MailManager mailManager;
+    private EmailProvider emailProvider;
 
     /**
      * {@inheritDoc}
@@ -119,11 +119,11 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
             if (invited.isPresent()) {
                 // 既存ユーザーに招待メールを送る
                 String subject = String.format("[重要] %sから招待状が届きました", clinic.getName());
-                mailManager.sendEmail(email, subject, "invitation1", params);
+                emailProvider.sendEmail(email, subject, "invitation1", params);
             } else {
                 // 新規ユーザーに招待メールを送る
                 String subject = String.format("[重要] %sから招待状が届きました", clinic.getName());
-                mailManager.sendEmail(email, subject, "invitation2", params);
+                emailProvider.sendEmail(email, subject, "invitation2", params);
             }
         });
     }

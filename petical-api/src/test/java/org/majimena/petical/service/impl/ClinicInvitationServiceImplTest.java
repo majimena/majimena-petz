@@ -15,7 +15,7 @@ import org.majimena.petical.domain.ClinicInvitation;
 import org.majimena.petical.domain.ClinicStaff;
 import org.majimena.petical.domain.User;
 import org.majimena.petical.domain.user.Roles;
-import org.majimena.petical.manager.MailManager;
+import org.majimena.petical.common.provider.EmailProvider;
 import org.majimena.petical.repository.ClinicInvitationRepository;
 import org.majimena.petical.repository.ClinicRepository;
 import org.majimena.petical.repository.ClinicStaffRepository;
@@ -51,7 +51,7 @@ public class ClinicInvitationServiceImplTest {
         @Injectable
         private UserRepository userRepository;
         @Injectable
-        private MailManager mailManager;
+        private EmailProvider emailProvider;
 
         @Test
         public void クリニックの招待状が送信されること_既にユーザが存在する場合(@Mocked SecurityUtils utils) throws Exception {
@@ -78,7 +78,7 @@ public class ClinicInvitationServiceImplTest {
                 String subject;
                 String content;
                 Map<String, Object> params;
-                mailManager.sendEmail(to = withCapture(), subject = withCapture(), content = withCapture(), params = withCapture());
+                emailProvider.sendEmail(to = withCapture(), subject = withCapture(), content = withCapture(), params = withCapture());
                 assertThat(to, is("test@mail.com"));
                 assertThat(subject, is("[重要] テストクリニックから招待状が届きました"));
                 assertThat(content, is("invitation1"));
@@ -116,7 +116,7 @@ public class ClinicInvitationServiceImplTest {
                 String subject;
                 String content;
                 Map<String, Object> params;
-                mailManager.sendEmail(to = withCapture(), subject = withCapture(), content = withCapture(), params = withCapture());
+                emailProvider.sendEmail(to = withCapture(), subject = withCapture(), content = withCapture(), params = withCapture());
                 assertThat(to, is("test@mail.com"));
                 assertThat(subject, is("[重要] テストクリニックから招待状が届きました"));
                 assertThat(content, is("invitation2"));
@@ -143,7 +143,7 @@ public class ClinicInvitationServiceImplTest {
         @Injectable
         private UserRepository userRepository;
         @Injectable
-        private MailManager mailManager;
+        private EmailProvider emailProvider;
 
         @Test
         public void 招待がアクティベートできること(@Mocked SecurityUtils utils) throws Exception {

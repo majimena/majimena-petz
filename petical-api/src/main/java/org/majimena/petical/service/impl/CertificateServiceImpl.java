@@ -1,11 +1,16 @@
 package org.majimena.petical.service.impl;
 
+import org.majimena.petical.datatype.CertificateType;
+import org.majimena.petical.datetime.L10nDateTimeProvider;
 import org.majimena.petical.domain.Certificate;
+import org.majimena.petical.domain.Chart;
 import org.majimena.petical.repository.CertificateRepository;
+import org.majimena.petical.repository.ChartRepository;
 import org.majimena.petical.service.CertificateService;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +25,12 @@ public class CertificateServiceImpl implements CertificateService {
      */
     @Inject
     private CertificateRepository certificateRepository;
+
+    /**
+     * カルテリポジトリ.
+     */
+    @Inject
+    private ChartRepository chartRepository;
 
     /**
      * {@inheritDoc}
@@ -44,6 +55,24 @@ public class CertificateServiceImpl implements CertificateService {
      */
     @Override
     public Certificate saveCertificate(Certificate certificate) {
+        LocalDateTime now = L10nDateTimeProvider.now().toLocalDateTime();
+
+        // 狂犬病予防接種の場合
+        if (certificate.getType() == CertificateType.RABID) {
+            Chart chart = certificate.getTicket().getChart();
+            Chart one = chartRepository.getOne(chart.getId());
+            one.setRabidVaccineDate(now.plusYears(1L));
+        }
+
+        // 混合ワクチンの場合
+        if (certificate.getType() == CertificateType.PREVENTION) {
+            Chart chart = certificate.getTicket().getChart();
+            Chart one = chartRepository.getOne(chart.getId());
+            one.setMixVaccineName(certificate.getVaccine().getName());
+            one.setMixVaccineDate(now.plusYears(1L));
+        }
+
+        // 証明書を保存する
         Certificate save = certificateRepository.save(certificate);
         return save;
     }

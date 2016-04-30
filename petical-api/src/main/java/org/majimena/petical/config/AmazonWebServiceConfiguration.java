@@ -8,6 +8,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceAsyncClient;
 import org.majimena.petical.common.aws.AmazonS3Service;
 import org.majimena.petical.common.aws.impl.AmazonS3ServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
@@ -20,6 +22,8 @@ import org.springframework.core.env.Environment;
  */
 @Configuration
 public class AmazonWebServiceConfiguration implements EnvironmentAware {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AmazonWebServiceConfiguration.class);
 
     private RelaxedPropertyResolver propertyResolver;
 
@@ -36,6 +40,8 @@ public class AmazonWebServiceConfiguration implements EnvironmentAware {
     @Bean
     @Autowired
     public AmazonSimpleEmailServiceAsyncClient amazonSESService(AWSCredentialsProvider provider) {
+        LOGGER.info("AWS SES AccessKey={}", provider.getCredentials().getAWSAccessKeyId());
+
         AmazonSimpleEmailServiceAsyncClient client = new AmazonSimpleEmailServiceAsyncClient(provider);
         client.setRegion(Region.getRegion(Regions.fromName(propertyResolver.getProperty("aws.ses.region"))));
         return client;
@@ -44,6 +50,8 @@ public class AmazonWebServiceConfiguration implements EnvironmentAware {
     @Bean
     @Autowired
     public AmazonS3Service amazonS3Service(AWSCredentialsProvider provider) {
+        LOGGER.info("AWS S3 AccessKey={}", provider.getCredentials().getAWSAccessKeyId());
+
         AmazonS3Client client = new AmazonS3Client(provider);
         client.setRegion(Region.getRegion(Regions.fromName(propertyResolver.getProperty("aws.s3.region"))));
 

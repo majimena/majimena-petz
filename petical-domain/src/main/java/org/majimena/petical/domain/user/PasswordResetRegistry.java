@@ -16,13 +16,11 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PasswordRegistry implements Serializable {
-
-    private String userId;
+public class PasswordResetRegistry implements Serializable {
 
     @NotEmpty
     @Size(min = 5, max = 100)
-    private String oldPassword;
+    private String resetKey;
 
     @NotEmpty
     @Size(min = 5, max = 100)

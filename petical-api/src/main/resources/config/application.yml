@@ -3,7 +3,7 @@ management.security.enabled: true
 security.basic.enabled: false
 
 
-# Health Check Indicators
+# SpringBoot組み込みヘルスチェック機構のON/OFF切り替え
 management:
     health:
         db:
@@ -37,17 +37,6 @@ async:
     maxPoolSize: 50
     queueCapacity: 10000
 
-mail:
-    host: localhost
-    port: 25
-    username:
-    password:
-    protocol: smtp
-    tls: false
-    auth: false
-# FIXME    from: noreply@petz.io
-    from: ken.todoroki@majimena.org
-
 authentication:
     oauth:
         clientid: majimenatestapp
@@ -55,14 +44,22 @@ authentication:
         # Token is valid 10 hours
         tokenValidityInSeconds: 36000
 
-swagger:
-    title: petz.io API
-    description: petz.io applications and beyond!
-    termsOfServiceUrl: https://petical.io/
-    contact:
-    license: CC BY-NC
-    licenseUrl: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+#swagger:
+#    title: petz.io API
+#    description: petz.io applications and beyond!
+#    termsOfServiceUrl: https://petical.io/
+#    contact:
+#    license: CC BY-NC
+#    licenseUrl: https://creativecommons.org/licenses/by-nc/4.0/legalcode
 
+# Mail Configuration
+email:
+    provider: SES
+    name: ペティカル (petical.io)
+    from: no-reply@petical.io
+    charset: ISO-2022-JP
+
+# Amazon Web Service Configuration
 aws:
     ses:
         region: us-west-2

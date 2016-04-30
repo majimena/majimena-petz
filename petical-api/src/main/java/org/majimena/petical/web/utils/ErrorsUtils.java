@@ -1,6 +1,8 @@
 package org.majimena.petical.web.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.GenericValidator;
+import org.majimena.petical.common.exceptions.ApplicationException;
 import org.majimena.petical.common.exceptions.ResourceNotFoundException;
 import org.majimena.petical.datatype.defs.ID;
 import org.majimena.petical.domain.errors.ErrorCode;
@@ -57,6 +59,28 @@ public class ErrorsUtils {
     public static void throwIfHasErrors(BindingResult errors) throws BindException {
         if (errors != null && errors.hasErrors()) {
             throw new BindException(errors);
+        }
+    }
+
+    /**
+     * 値が空の場合に例外を投げます.
+     *
+     * @param value チェックする値
+     */
+    public static void throwIfEmpty(String value) {
+        if (StringUtils.isEmpty(value)) {
+            throw new ApplicationException(ErrorCode.PTZ_999401);
+        }
+    }
+
+    /**
+     * 値がメールアドレスではない場合に例外を投げます.
+     *
+     * @param value チェックする値
+     */
+    public static void throwIfNotMailAddress(String value) {
+        if (StringUtils.isNotEmpty(value) && !GenericValidator.isEmail(value)) {
+            throw new ApplicationException(ErrorCode.PTZ_999802);
         }
     }
 

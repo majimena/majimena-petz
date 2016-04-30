@@ -17,6 +17,7 @@ import org.majimena.petical.domain.user.PasswordRegistry;
 import org.majimena.petical.domain.user.SignupRegistry;
 import org.majimena.petical.domain.user.UserCriteria;
 import org.majimena.petical.domain.user.UserOutline;
+import org.majimena.petical.mails.UserEmailService;
 import org.majimena.petical.repository.AuthorityRepository;
 import org.majimena.petical.repository.UserRepository;
 import org.majimena.petical.security.SecurityUtils;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -53,6 +55,9 @@ public class UserServiceImpl implements UserService {
     @Inject
     private AuthorityRepository authorityRepository;
 
+    @Inject
+    private UserEmailService userEmailService;
+
     @Override
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
@@ -72,6 +77,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public Optional<User> requestPasswordReset(String login) {
         return userRepository.findOneByLogin(login)
             .map(user -> {
@@ -80,6 +86,7 @@ public class UserServiceImpl implements UserService {
                 user.setResetDate(L10nDateTimeProvider.now().toLocalDateTime());
                 userRepository.save(user);
                 // パスワードをリセットするための確認メールを送信
+                userEmailService.sendPasswordResetMail(user);
                 return user;
             });
     }
@@ -88,12 +95,13 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public Optional<User> resetPassword(String password, String key) {
         return userRepository.findOneByResetKey(key)
             .filter(user -> {
                 // パスワードリセットキーは一時間のみ有効（過ぎたら使えない）
-                LocalDateTime oneDayAgo = LocalDateTime.now().minusHours(1);
-                return user.getResetDate().isAfter(oneDayAgo);
+                ZonedDateTime oneDayAgo = L10nDateTimeProvider.now().minusHours(1);
+                return user.getResetDate().isAfter(oneDayAgo.toLocalDateTime());
             })
             .map(user -> {
                 // 新しいパスワードを設定する

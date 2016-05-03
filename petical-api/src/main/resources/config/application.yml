@@ -1,0 +1,69 @@
+# Disable the spring security default configuration from spring-boot-actuator
+management.security.enabled: true
+security.basic.enabled: false
+
+
+# SpringBoot組み込みヘルスチェック機構のON/OFF切り替え
+management:
+    health:
+        db:
+            enabled: true
+        diskspace:
+            enabled: true
+        mail:
+            enabled: false
+        redis:
+            enabled: false
+        mongo:
+            enabled: false
+        jms:
+            enabled: false
+        rabbit:
+            enabled: false
+        solr:
+            enabled: false
+        elasticsearch:
+            enabled: false
+
+
+# Disable Jolokia - An http/json bridge for remote JMX access
+endpoints.jolokia.enabled: false
+
+# security configuration (this key should be unique for your application, and kept secret)
+jhipster.security.rememberme.key: 001d26f638de5f7b9754c0af140055c7f8774d7f
+
+async:
+    corePoolSize: 2
+    maxPoolSize: 50
+    queueCapacity: 10000
+
+authentication:
+    oauth:
+        clientid: majimenatestapp
+        secret: mySecretOAuthSecret
+        # Token is valid 10 hours
+        tokenValidityInSeconds: 36000
+
+#swagger:
+#    title: petz.io API
+#    description: petz.io applications and beyond!
+#    termsOfServiceUrl: https://petical.io/
+#    contact:
+#    license: CC BY-NC
+#    licenseUrl: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+
+# Mail Configuration
+email:
+    provider: SES
+    name: ペティカル (petical.io)
+    from: no-reply@petical.io
+    charset: ISO-2022-JP
+
+# Amazon Web Service Configuration
+aws:
+    ses:
+        region: us-west-2
+    s3:
+        region: ap-northeast-1
+        bucket: images.petical.io
+        type: image/jpeg

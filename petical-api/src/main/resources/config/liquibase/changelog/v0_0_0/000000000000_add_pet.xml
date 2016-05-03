@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="000000000000_pet" author="custom">
+        <createTable tableName="pet">
+            <column name="id" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name_kana" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="kind" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="color" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="blood" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="sex" type="varchar(10)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="microchip_no" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="microchip_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="birth_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="rabid_register_no" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="injection_report_no" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="neutral" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dead" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+            <column name="profile" type="varchar(2000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="allergia" type="varchar(2000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="drug" type="varchar(2000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="other" type="varchar(2000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="image" type="varchar(200)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="000000000000_pet_index" author="custom">
+        <createIndex indexName="idx1_pet"
+                     tableName="pet">
+            <column name="name" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx2_pet"
+                     tableName="pet">
+            <column name="user_id" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx3_pet"
+                     tableName="pet">
+            <column name="type" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx4_pet"
+                     tableName="pet">
+            <column name="color" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx5_pet"
+                     tableName="pet">
+            <column name="blood" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx6_pet"
+                     tableName="pet">
+            <column name="kind" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="000000000000_pet_tag" author="custom">
+        <createTable tableName="pet_tag">
+            <column name="pet_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="000000000000_pet_tag_index" author="custom">
+        <addPrimaryKey columnNames="pet_id, tag_name" tableName="pet_tag"/>
+    </changeSet>
+</databaseChangeLog>

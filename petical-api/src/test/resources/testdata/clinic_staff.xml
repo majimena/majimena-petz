@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <authority name="ROLE_USER"/>
+    <user id="1" login="login1" password="password1" activated="0" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <user id="2" login="login2" password="password2" activated="0" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <user_authority user_id="1" authority_name="ROLE_USER"/>
+    <user_authority user_id="2" authority_name="ROLE_USER"/>
+    <clinic id="1" email="foo@localhost.com" name="Name1" last_name="Yamada" first_name="Taro" description="Description1" country="JP" zip_code="1110000" state="Tokyo" city="Shinjuku" street="Kabuki-cho 1-1-1" phone_no="0311112222" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic id="2" email="bar@localhost.com" name="Name2" last_name="Yamada" first_name="Taro" description="Description2" country="JP" zip_code="1110000" state="Tokyo" city="Shinjuku" street="Kabuki-cho 1-1-1" phone_no="0311112222" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+
+    <clinic_staff id="1" clinic_id="1" user_id="1" role="ROLE_ADMIN" activated_date="2015-06-01" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic_staff id="2" clinic_id="1" user_id="2" role="ROLE_ADMIN" activated_date="2015-06-01" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic_staff id="3" clinic_id="2" user_id="1" role="ROLE_ADMIN" activated_date="2015-06-01" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+</dataset>

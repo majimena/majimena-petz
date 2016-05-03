@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <authority name="ROLE_USER"/>
+    <user id="1" login="login1" password="password" activated="0" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <user_authority user_id="1" authority_name="ROLE_USER"/>
+
+    <type name="トイプードル"/>
+    <type name="柴犬"/>
+    <color name="ホワイト"/>
+    <color name="ブラウン"/>
+    <blood name="DEA1.1"/>
+    <blood name="DEA1.2"/>
+    <tag name="室内犬"/>
+    <tag name="忠犬"/>
+
+    <clinic id="0" email="foo@localhost.com" name="Name 1" last_name="Yamada" first_name="Taro" description="Description 1" country="JP" zip_code="1110000" state="Tokyo" city="Shinjuku" street="Kabuki-cho 1-1-1" phone_no="0311112222" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic id="1" email="bar@localhost.com" name="Name 2" last_name="Yamada" first_name="Taro" description="Description 2" country="JP" zip_code="1110000" state="Tokyo" city="Shinjuku" street="Kabuki-cho 1-1-1" phone_no="0311112222" removed="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <clinic_staff/>
+
+    <pet id="1" name="ハチ" type="柴犬" color="ブラウン" blood="DEA1.1" profile="渋谷ハチ公" sex="MALE" birth_date="2000-01-01" user_id="1" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+    <pet_tag pet_id="1" tag_name="忠犬"/>
+
+    <customer id="customer1" clinic_id="0" user_id="1" activated="false" blocked="false" created_by="hoge@hoge.com" created_date="2015-01-01"/>
+
+    <chart/>
+</dataset>

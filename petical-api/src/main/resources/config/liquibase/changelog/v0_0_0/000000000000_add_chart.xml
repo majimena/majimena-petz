@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="000000000000_chart" author="custom">
+        <createTable tableName="chart">
+            <column name="id" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="clinic_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pet_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="chart_no" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rabid_vaccine_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mix_vaccine_name" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mix_vaccine_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="filaria_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="flea_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="creation_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="000000000000_chart_index" author="custom">
+        <createIndex indexName="idx1_chart"
+                     tableName="chart"
+                     unique="true">
+            <column name="clinic_id" type="varchar(50)"/>
+            <column name="chart_no" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx2_chart"
+                     tableName="chart">
+            <column name="clinic_id" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx3_chart"
+                     tableName="chart">
+            <column name="customer_id" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx4_chart"
+                     tableName="chart">
+            <column name="pet_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

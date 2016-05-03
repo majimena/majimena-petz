@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+
+    <changeSet id="000000000000_audit_event" author="custom">
+        <createTable tableName="audit_event">
+            <column name="event_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="principal" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_date" type="timestamp"/>
+            <column name="event_type" type="varchar(255)"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="000000000000_audit_event_data" author="custom">
+        <createTable tableName="audit_event_data">
+            <column name="event_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="varchar(255)"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="000000000000_audit_index" author="custom">
+        <addPrimaryKey columnNames="event_id, name" tableName="audit_event_data"/>
+
+        <createIndex indexName="idx1_audit_event"
+                     tableName="audit_event"
+                     unique="false">
+            <column name="principal" type="varchar(255)"/>
+            <column name="event_date" type="timestamp"/>
+        </createIndex>
+
+        <createIndex indexName="idx1_audit_event_data"
+                     tableName="audit_event_data"
+                     unique="false">
+            <column name="event_id" type="bigint"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title><span th:text="${clinic.name}"/> のアクティベーション</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p><span th:text="${email}"/> 様</p>
+    <p>
+        <span th:text="${user.lastName}"/> <span th:text="${user.firstName}"/> 様から <span th:text="${clinic.name}"/> への招待状が届きました。<br/>
+        以下のページにアクセスして、招待を承認してください。<br/>
+        <span th:text="${clinic.name}"/> の事業者専用ページがご利用可能になります。<br/>
+        なお、 petical.io にアカウントがないお客様の場合は、以下のページからアカウント登録をお済ませください。
+    </p>
+    <p>
+        <a th:href="@{http://localhost:9000/clinics/{clinicId}/invitations/{invitationId}(clinicId=${clinic.id},invitationId=${invitation.id})}">Activation Link</a><br/>
+        アクティベーションキー：<span th:text="${activationKey}"/>
+    </p>
+    <hr/>
+    <p>
+        ペット中心のクラウドコミュニティ　Petical.io<br/>
+        https://petical.io
+    </p>
+</body>
+</html>

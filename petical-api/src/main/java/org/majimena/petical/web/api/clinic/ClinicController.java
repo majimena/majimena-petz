@@ -1,12 +1,17 @@
 package org.majimena.petical.web.api.clinic;
 
 import com.codahale.metrics.annotation.Timed;
+import org.majimena.petical.client.recaptcha.RecaptchaRestAdapterFactory;
+import org.majimena.petical.client.recaptcha.SiteVerifyApi;
+import org.majimena.petical.client.recaptcha.SiteVerifyEntity;
 import org.majimena.petical.domain.Clinic;
 import org.majimena.petical.domain.clinic.ClinicCriteria;
+import org.majimena.petical.domain.errors.ErrorCode;
 import org.majimena.petical.security.SecurityUtils;
 import org.majimena.petical.service.ClinicService;
 import org.majimena.petical.web.utils.ErrorsUtils;
 import org.majimena.petical.web.utils.PaginationUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -47,6 +52,12 @@ public class ClinicController {
     @Inject
     private ClinicValidator clinicValidator;
 
+    /**
+     * シークレットキー.
+     */
+    @Value("${google.recaptcha.secret:xxxxxx}")
+    private String secret;
+
     // 今のところは使用しないAPI
     @Timed
     @RequestMapping(value = "/clinics", method = RequestMethod.GET)
@@ -76,7 +87,15 @@ public class ClinicController {
      */
     @Timed
     @RequestMapping(value = "/clinics", method = RequestMethod.POST)
-    public ResponseEntity<Clinic> post(@Valid @RequestBody Clinic clinic, BindingResult errors) throws BindException {
+    public ResponseEntity<Clinic> post(@RequestParam String captcha, @Valid @RequestBody Clinic clinic, BindingResult errors) throws BindException {
+        // キャプチャのバリデーション
+        SiteVerifyEntity entity = RecaptchaRestAdapterFactory.create()
+                .create(SiteVerifyApi.class)
+                .post(this.secret, captcha, "");
+        if (!entity.isSuccess()) {
+            ErrorsUtils.reject(ErrorCode.PTZ_999981, errors);
+        }
+
         // カスタムバリデータを行う
         clinicValidator.validate(clinic, errors);
         ErrorsUtils.throwIfHasErrors(errors);

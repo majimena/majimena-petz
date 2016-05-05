@@ -25,40 +25,15 @@ spring:
         prepStmtCacheSqlLimit: 2048
         useServerPrepStmts: true
 
-    jpa:
-        database-platform: org.hibernate.dialect.MySQLInnoDBDialect
-        database: MYSQL
-        openInView: true
-        show_sql: false
-        generate-ddl: false
-        hibernate:
-            ddl-auto: none
-            naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
-        properties:
-            hibernate.cache.use_second_level_cache: true
-            hibernate.cache.use_query_cache: false
-            hibernate.generate_statistics: true
-            hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
-    messages:
-        cache-seconds: 1
-    thymeleaf:
-        mode: XHTML
-        cache: false
+# security configuration (this key should be unique for your application, and kept secret)
+#jhipster.security.rememberme.key: 001d26f638de5f7b9754c0af140055c7f8774d7f
 
-metrics:
-    jmx.enabled: true
-    spark:
-        enabled: false
-        host: localhost
-        port: 9999
-    graphite:
-        enabled: false
-        host: localhost
-        port: 2003
-        prefix: majimenatest
+authentication:
+    oauth:
+        clientid: majimenatestapp
+        secret: mySecretOAuthSecret
+        # Token is valid 10 hours
+        tokenValidityInSeconds: 36000
 
-cache:
-    timeToLiveSeconds: 3600
-    ehcache:
-        maxBytesLocalHeap: 16M
+google.recaptcha.secret: 6LdjCx8TAAAAAIyO6X17rVDTxn8dLAUIT3uW-Awt
 

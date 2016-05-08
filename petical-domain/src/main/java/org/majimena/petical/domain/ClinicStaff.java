@@ -1,5 +1,7 @@
 package org.majimena.petical.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +11,9 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.majimena.petical.datatype.converters.LocalDatePersistenceConverter;
+import org.majimena.petical.datatype.converters.LocalDateTimePersistenceConverter;
+import org.majimena.petical.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
+import org.majimena.petical.datatype.serializers.ISO8601LocalDateTimeSerializer;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -22,6 +27,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * クリニックスタッフドメイン.
@@ -54,8 +60,10 @@ public class ClinicStaff extends AbstractAuditingEntity implements Serializable 
     @Column(name = "role", length = 60, nullable = false)
     private String role;
 
+    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
     @Column(name = "activated_date", nullable = true)
-    @Convert(converter = LocalDatePersistenceConverter.class)
-    private LocalDate activatedDate;
+    private LocalDateTime activatedDate;
 
 }

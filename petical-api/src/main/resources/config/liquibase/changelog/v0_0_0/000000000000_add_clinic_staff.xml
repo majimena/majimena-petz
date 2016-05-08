@@ -18,7 +18,7 @@
             <column name="role" type="varchar(60)">
                 <constraints nullable="false"/>
             </column>
-            <column name="activated_date" type="date">
+            <column name="activated_date" type="timestamp">
                 <constraints nullable="true"/>
             </column>
             <column name="created_by" type="varchar(50)">

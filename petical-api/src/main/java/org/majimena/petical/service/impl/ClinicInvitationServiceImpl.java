@@ -5,13 +5,14 @@ import org.majimena.petical.common.exceptions.ApplicationException;
 import org.majimena.petical.common.exceptions.SystemException;
 import org.majimena.petical.common.utils.ExceptionUtils;
 import org.majimena.petical.common.utils.RandomUtils;
+import org.majimena.petical.datetime.L10nDateTimeProvider;
 import org.majimena.petical.domain.Clinic;
 import org.majimena.petical.domain.ClinicInvitation;
 import org.majimena.petical.domain.ClinicStaff;
 import org.majimena.petical.domain.User;
 import org.majimena.petical.domain.errors.ErrorCode;
 import org.majimena.petical.domain.user.Roles;
-import org.majimena.petical.common.provider.EmailProvider;
+import org.majimena.petical.mails.ClinicStaffEmailService;
 import org.majimena.petical.repository.ClinicInvitationRepository;
 import org.majimena.petical.repository.ClinicRepository;
 import org.majimena.petical.repository.ClinicStaffRepository;
@@ -22,11 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -49,7 +48,7 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
     private UserRepository userRepository;
 
     @Inject
-    private EmailProvider emailProvider;
+    private ClinicStaffEmailService clinicStaffEmailService;
 
     /**
      * {@inheritDoc}
@@ -109,22 +108,7 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
             clinicInvitationRepository.save(invitation);
 
             // 招待メールを送信
-            Map<String, Object> params = new HashMap<>();
-            params.put("email", email);
-            params.put("clinic", clinic);
-            params.put("user", user);
-            params.put("invitedUser", invited.orElse(null));
-            params.put("invitation", invitation);
-            params.put("activationKey", activationKey);
-            if (invited.isPresent()) {
-                // 既存ユーザーに招待メールを送る
-                String subject = String.format("[重要] %sから招待状が届きました", clinic.getName());
-                emailProvider.sendEmail(email, subject, "invitation1", params);
-            } else {
-                // 新規ユーザーに招待メールを送る
-                String subject = String.format("[重要] %sから招待状が届きました", clinic.getName());
-                emailProvider.sendEmail(email, subject, "invitation2", params);
-            }
+            clinicStaffEmailService.sendInvitationMail(email, invitation);
         });
     }
 
@@ -134,6 +118,8 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
     @Override
     @Transactional
     public void activate(String invitationId, String activationKey) {
+        ZonedDateTime now = L10nDateTimeProvider.now();
+
         String login = SecurityUtils.getCurrentLogin();
         ClinicInvitation invitation = clinicInvitationRepository.findOne(invitationId);
 
@@ -143,7 +129,7 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
                 .clinic(invitation.getClinic())
                 .user(user.orElseThrow(() -> new SystemException("get unsaved user.")))
                 .role(Roles.ROLE_STAFF.name())
-                .activatedDate(LocalDate.now()).build();
+                .activatedDate(now.toLocalDateTime()).build();
 
         // アクティベーションキーの入力間違いがないかチェックする
         if (!StringUtils.equals(activationKey, invitation.getActivationKey())) {

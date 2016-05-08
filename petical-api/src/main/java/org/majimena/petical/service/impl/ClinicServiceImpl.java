@@ -6,6 +6,7 @@ import org.majimena.petical.common.utils.BeanFactoryUtils;
 import org.majimena.petical.common.utils.DateTimeUtils;
 import org.majimena.petical.common.utils.ExceptionUtils;
 import org.majimena.petical.datatype.TicketState;
+import org.majimena.petical.datetime.L10nDateTimeProvider;
 import org.majimena.petical.domain.Clinic;
 import org.majimena.petical.domain.ClinicStaff;
 import org.majimena.petical.domain.User;
@@ -33,6 +34,7 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -143,6 +145,8 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional
     public Clinic saveClinic(Clinic clinic) {
+        ZonedDateTime now = L10nDateTimeProvider.now();
+
         // クリニックを登録
         clinic.setRemoved(Boolean.FALSE);
         Clinic save = clinicRepository.save(clinic);
@@ -150,9 +154,8 @@ public class ClinicServiceImpl implements ClinicService {
         // クリニックのオーナーとして自分を登録
         String userId = SecurityUtils.getCurrentUserId();
         User user = userRepository.findOne(userId);
-        ClinicStaff staff = new ClinicStaff(null, save, user, "ROLE_OWNER", LocalDate.now());
+        ClinicStaff staff = new ClinicStaff(null, save, user, "ROLE_OWNER", now.toLocalDateTime());
         clinicStaffRepository.save(staff);
-
         return save;
     }
 

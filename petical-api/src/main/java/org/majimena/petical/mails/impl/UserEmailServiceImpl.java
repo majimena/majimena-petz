@@ -28,6 +28,7 @@ public class UserEmailServiceImpl implements UserEmailService {
     /**
      * {@inheritDoc}
      */
+    @Async
     @Override
     public void sendActivationMail(User user) {
         // アクティベーションメールを送信する

@@ -30,6 +30,19 @@ public class UserEmailServiceImpl implements UserEmailService {
      */
     @Async
     @Override
+    public void sendActivationMail(User user) {
+        // アクティベーションメールを送信する
+        String to = user.getEmail();
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("user", user);
+        emailProvider.sendEmail(to, "ユーザー登録完了のお知らせ", "user/ActivationEmail", variables);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Async
+    @Override
     public void sendPasswordResetMail(User user) {
         // メールアドレスが未登録の場合は注意喚起（既に会員登録されているのであり得ないエラー）
         if (StringUtils.isEmpty(user.getEmail())) {

@@ -10,6 +10,8 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
+import java.util.function.Predicate;
+
 /**
  * エラーオブジェクトを操作するユーティリティ.
  */

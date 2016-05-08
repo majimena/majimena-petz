@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -58,21 +57,6 @@ public class UserServiceImpl implements UserService {
     @Inject
     private UserEmailService userEmailService;
 
-    @Override
-    public Optional<User> activateRegistration(String key) {
-        log.debug("Activating user for activation key {}", key);
-        userRepository.findOneByActivationKey(key)
-            .map(user -> {
-                // activate given user for the registration key.
-                user.setActivated(true);
-                user.setActivationKey(null);
-                userRepository.save(user);
-                log.debug("Activated user: {}", user);
-                return user;
-            });
-        return Optional.empty();
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -80,15 +64,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Optional<User> requestPasswordReset(String login) {
         return userRepository.findOneByLogin(login)
-            .map(user -> {
-                // パスワードをリセットするキーを保存
-                user.setResetKey(RandomUtils.generateResetKey());
-                user.setResetDate(L10nDateTimeProvider.now().toLocalDateTime());
-                userRepository.save(user);
-                // パスワードをリセットするための確認メールを送信
-                userEmailService.sendPasswordResetMail(user);
-                return user;
-            });
+                .map(user -> {
+                    // パスワードをリセットするキーを保存
+                    user.setResetKey(RandomUtils.generateResetKey());
+                    user.setResetDate(L10nDateTimeProvider.now().toLocalDateTime());
+                    userRepository.save(user);
+                    // パスワードをリセットするための確認メールを送信
+                    userEmailService.sendPasswordResetMail(user);
+                    return user;
+                });
     }
 
     /**
@@ -98,20 +82,20 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Optional<User> resetPassword(String password, String key) {
         return userRepository.findOneByResetKey(key)
-            .filter(user -> {
-                // パスワードリセットキーは一時間のみ有効（過ぎたら使えない）
-                ZonedDateTime oneDayAgo = L10nDateTimeProvider.now().minusHours(1);
-                return user.getResetDate().isAfter(oneDayAgo.toLocalDateTime());
-            })
-            .map(user -> {
-                // 新しいパスワードを設定する
-                user.setActivated(true);
-                user.setPassword(passwordEncoder.encode(password));
-                user.setResetKey(null);
-                user.setResetDate(null);
-                userRepository.save(user);
-                return user;
-            });
+                .filter(user -> {
+                    // パスワードリセットキーは一時間のみ有効（過ぎたら使えない）
+                    ZonedDateTime oneDayAgo = L10nDateTimeProvider.now().minusHours(1);
+                    return user.getResetDate().isAfter(oneDayAgo.toLocalDateTime());
+                })
+                .map(user -> {
+                    // 新しいパスワードを設定する
+                    user.setActivated(true);
+                    user.setPassword(passwordEncoder.encode(password));
+                    user.setResetKey(null);
+                    user.setResetDate(null);
+                    userRepository.save(user);
+                    return user;
+                });
     }
 
     @Override
@@ -148,8 +132,8 @@ public class UserServiceImpl implements UserService {
         // 今はメアド検索しかないのでこのままでもOK
         Optional<User> user = userRepository.findOneByLogin(criteria.getEmail());
         return user
-            .map(u -> Arrays.asList(BeanFactory.create(u, new UserOutline())))
-            .orElse(Arrays.asList());
+                .map(u -> Arrays.asList(BeanFactory.create(u, new UserOutline())))
+                .orElse(Arrays.asList());
     }
 
     /**
@@ -184,24 +168,27 @@ public class UserServiceImpl implements UserService {
         String encryptedPassword = passwordEncoder.encode(registry.getPassword());
 
         // ユーザーを登録する
-        User newUser = new User();
-        newUser.setFirstName(registry.getFirstName());
-        newUser.setLastName(registry.getLastName());
-        newUser.setUsername(registry.getFirstName());
-        newUser.setEmail(registry.getEmail());
-        newUser.setLogin(registry.getEmail());
-        newUser.setPassword(encryptedPassword);
+        User user = new User();
+        user.setFirstName(registry.getFirstName());
+        user.setLastName(registry.getLastName());
+        user.setUsername(registry.getFirstName());
+        user.setEmail(registry.getEmail());
+        user.setLogin(registry.getEmail());
+        user.setPassword(encryptedPassword);
         // TODO 海外対応を考える
-        newUser.setLangKey(LangKey.JAPANESE);
-        newUser.setTimeZone(TimeZone.ASIA_TOKYO);
-        newUser.setCountry("JP");
+        user.setCountry("JP");
+        user.setLangKey(LangKey.JAPANESE);
+        user.setTimeZone(TimeZone.ASIA_TOKYO);
 
         // new user is not active
-        newUser.setActivated(false);
-        // new user gets registration key
-        newUser.setActivationKey(RandomUtils.generateActivationKey());
-        newUser.setAuthorities(authorities);
-        return userRepository.save(newUser);
+        user.setActivated(false);
+        user.setActivationKey(RandomUtils.generateActivationKey());
+        user.setAuthorities(authorities);
+        User newUser = userRepository.save(user);
+
+        // send activation mail
+        userEmailService.sendActivationMail(newUser);
+        return newUser;
     }
 
     /**
@@ -231,6 +218,19 @@ public class UserServiceImpl implements UserService {
         User created = userRepository.save(user);
 
         return created;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<User> activateRegistration(String key) {
+        return userRepository.findOneByActivationKey(key)
+                .map(user -> {
+                    user.setActivated(true);
+                    user.setActivationKey(null);
+                    return userRepository.save(user);
+                });
     }
 
     /**

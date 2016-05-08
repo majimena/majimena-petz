@@ -61,14 +61,20 @@ public interface UserService {
     User saveUser(User user);
 
     /**
+     * ユーザーをアクティベートする.
+     *
+     * @param key アクティベーションキー
+     * @return アクティベートしたユーザー
+     */
+    Optional<User> activateRegistration(String key);
+
+    /**
      * ユーザーを更新する.
      *
      * @param user 更するユーザー情報
      * @return 更新後のユーザー情報
      */
     User updateUser(User user);
-
-    Optional<User> activateRegistration(String key);
 
     /**
      * パスワードを変更する.

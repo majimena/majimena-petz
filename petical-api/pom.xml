@@ -114,6 +114,22 @@
             <artifactId>metrics-spring</artifactId>
         </dependency>
 
+        <!-- Reactive -->
+        <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxjava</artifactId>
+        </dependency>
+
+        <!-- REST Client -->
+        <dependency>
+            <groupId>com.squareup.retrofit</groupId>
+            <artifactId>retrofit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+
         <!-- Reporting -->
         <dependency>
             <groupId>fr.ippon.spark.metrics</groupId>

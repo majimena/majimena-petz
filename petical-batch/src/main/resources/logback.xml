@@ -27,6 +27,10 @@
     </appender>
 -->
     <logger name="io.petical.batch" level="TRACE"/>
+    <logger name="org.majimena.petical" level="DEBUG"/>
+    <logger name="org.majimena.framework" level="TRACE"/>
+    <logger name="com.amazonaws" level="INFO"/>
+    <logger name="com.amazonaws.services.simpleemail" level="DEBUG"/>
 
     <logger name="org.hibernate.validator" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>

@@ -1,10 +1,8 @@
-package io.petical.batch.scraping.websites;
+package org.majimena.petical.batch.scraping.websites;
 
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-
-import java.util.function.Consumer;
 
 import static org.junit.Assert.fail;
 

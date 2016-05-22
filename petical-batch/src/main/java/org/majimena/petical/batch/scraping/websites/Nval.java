@@ -1,4 +1,4 @@
-package io.petical.batch.scraping.websites;
+package org.majimena.petical.batch.scraping.websites;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
@@ -7,12 +7,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
+import org.majimena.petical.batch.scraping.utils.HtmlUnitUtils;
+import org.majimena.petical.batch.scraping.utils.NullableHashMap;
+import org.majimena.petical.batch.scraping.utils.NvalConvertUtils;
+import org.majimena.petical.batch.scraping.utils.NvalHtmlUnitUtils;
+import org.majimena.petical.batch.scraping.utils.ScrapingUtils;
 import org.majimena.petical.domain.Medicine;
-import io.petical.batch.scraping.utils.HtmlUnitUtils;
-import io.petical.batch.scraping.utils.NullableHashMap;
-import io.petical.batch.scraping.utils.NvalConvertUtils;
-import io.petical.batch.scraping.utils.NvalHtmlUnitUtils;
-import io.petical.batch.scraping.utils.ScrapingUtils;
 import org.apache.commons.lang3.StringUtils;
 import rx.Observable;
 

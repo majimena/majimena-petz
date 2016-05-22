@@ -1,4 +1,4 @@
-package io.petical.batch.scraping.utils;
+package org.majimena.petical.batch.scraping.utils;
 
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;

@@ -1,7 +1,6 @@
-package io.petical.batch.runner;
+package org.majimena.petical.batch.runner;
 
-import io.petical.batch.scraping.websites.Nval;
-import org.apache.tomcat.jdbc.pool.DataSource;
+import org.majimena.petical.batch.scraping.websites.Nval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -11,21 +10,29 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.MetricFilterAutoConfiguration;
+import org.springframework.boot.actuate.autoconfigure.MetricRepositoryAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
+import java.util.UUID;
+
 /**
+ * FIXME もっとObservableを活用して、いい感じにかけるはず
  * Created by todoken on 2016/05/19.
  */
-@EnableAutoConfiguration
+@SpringBootApplication
 @EnableBatchProcessing
-@EnableConfigurationProperties
+@ComponentScan
+@EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
 public class MedicineSynchronousRunner implements CommandLineRunner, InitializingBean {
     private static Logger logger = LoggerFactory.getLogger(MedicineSynchronousRunner.class);
 
@@ -62,9 +69,10 @@ public class MedicineSynchronousRunner implements CommandLineRunner, Initializin
                         logger.debug(medicine.toString());
                     }
                     try {
-                        SqlParameterSource source = itemSqlParameterSourceProvider.createSqlParameterSource(medicine);
+                        medicine.setId(UUID.randomUUID().toString());
+                        MedicineWrap wrap = new MedicineWrap(medicine);
+                        SqlParameterSource source = itemSqlParameterSourceProvider.createSqlParameterSource(wrap);
                         int[] ints = namedParameterJdbcTemplate.batchUpdate(sql, new SqlParameterSource[]{source});
-                        logger.info("medicineマスタを更新しました。" + ints.toString());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

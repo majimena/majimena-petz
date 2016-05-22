@@ -1,10 +1,10 @@
 package org.majimena.petical.security;
 
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.petical.authentication.PetzGrantedAuthority;
+import org.majimena.petical.authentication.PetzUser;
+import org.majimena.petical.authentication.PetzUserKey;
 import org.majimena.petical.datatype.TimeZone;
-import org.majimena.petical.domain.authentication.PetzGrantedAuthority;
-import org.majimena.petical.domain.authentication.PetzUser;
-import org.majimena.petical.domain.authentication.PetzUserKey;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;

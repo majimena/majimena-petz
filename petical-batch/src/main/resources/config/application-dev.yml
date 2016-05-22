@@ -1,0 +1,14 @@
+spring:
+    profiles:
+        active: dev
+    datasource:
+        dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
+        url: jdbc:mysql://dev.petz.io:3307/petzdb?useUnicode=true&characterEncoding=utf8
+        databaseName:
+        serverName:
+        username: root
+        password: password
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true

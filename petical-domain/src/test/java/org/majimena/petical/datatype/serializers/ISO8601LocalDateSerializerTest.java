@@ -6,10 +6,10 @@ import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import mockit.Verifications;
 import org.junit.Test;
+import org.majimena.petical.authentication.PetzUser;
+import org.majimena.petical.authentication.PetzUserKey;
 import org.majimena.petical.datatype.LangKey;
 import org.majimena.petical.datatype.TimeZone;
-import org.majimena.petical.domain.authentication.PetzUser;
-import org.majimena.petical.domain.authentication.PetzUserKey;
 import org.majimena.petical.security.SecurityUtils;
 import org.springframework.security.core.GrantedAuthority;
 

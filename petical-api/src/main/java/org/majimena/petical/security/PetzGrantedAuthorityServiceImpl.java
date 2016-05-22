@@ -1,6 +1,6 @@
 package org.majimena.petical.security;
 
-import org.majimena.petical.domain.authentication.PetzGrantedAuthority;
+import org.majimena.petical.authentication.PetzGrantedAuthority;
 import org.majimena.petical.repository.ClinicStaffRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

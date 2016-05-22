@@ -28,4 +28,6 @@
     <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_certificate.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_add_kind.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/v0_0_0/000000000000_load_data.xml" relativeToChangelogFile="false"/>
+
+    <include file="classpath:config/liquibase/changelog/v0_0_1/000000000000_add_medicine.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

@@ -37,7 +37,6 @@ public enum TimeZone implements EnumDataType, Serializable {
     /**
      * {@inheritDoc}
      */
-    @Override
     public String getName() {
         return name();
     }
@@ -45,7 +44,6 @@ public enum TimeZone implements EnumDataType, Serializable {
     /**
      * {@inheritDoc}
      */
-    @Override
     public String getValue() {
         return name();
     }

@@ -1,4 +1,4 @@
-package org.majimena.petical.domain.authentication;
+package org.majimena.petical.authentication;
 
 /**
  * ユーザーキー.

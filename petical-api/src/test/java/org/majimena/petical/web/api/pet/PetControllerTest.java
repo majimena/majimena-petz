@@ -1,6 +1,5 @@
 package org.majimena.petical.web.api.pet;
 
-import com.google.common.collect.Sets;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import org.junit.Before;
@@ -9,18 +8,17 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.majimena.petical.TestUtils;
 import org.majimena.petical.WebAppTestConfiguration;
+import org.majimena.petical.authentication.PetzUser;
+import org.majimena.petical.authentication.PetzUserKey;
 import org.majimena.petical.datatype.LangKey;
 import org.majimena.petical.datatype.SexType;
 import org.majimena.petical.datatype.TimeZone;
 import org.majimena.petical.domain.Blood;
 import org.majimena.petical.domain.Color;
 import org.majimena.petical.domain.Pet;
-import org.majimena.petical.domain.Tag;
 import org.majimena.petical.domain.Type;
 import org.majimena.petical.domain.User;
-import org.majimena.petical.domain.authentication.PetzUserKey;
 import org.majimena.petical.domain.pet.PetCriteria;
-import org.majimena.petical.domain.authentication.PetzUser;
 import org.majimena.petical.security.SecurityUtils;
 import org.majimena.petical.service.PetService;
 import org.majimena.petical.web.utils.PaginationUtils;

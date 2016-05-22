@@ -96,12 +96,12 @@
             </dependency>
             <dependency>
                 <groupId>org.majimena.petical</groupId>
-                <artifactId>petical-domain</artifactId>
+                <artifactId>petical-batch</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.majimena.petical</groupId>
-                <artifactId>petical-batch</artifactId>
+                <artifactId>petical-domain</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
 
@@ -167,6 +167,13 @@
                 <groupId>com.squareup.okhttp</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>2.7.5</version>
+            </dependency>
+
+            <!-- HTML UNIT -->
+            <dependency>
+                <groupId>net.sourceforge.htmlunit</groupId>
+                <artifactId>htmlunit</artifactId>
+                <version>2.20</version>
             </dependency>
 
             <!-- Reporting -->
@@ -713,8 +720,8 @@
 
     <modules>
         <module>petical-api</module>
-        <module>petical-domain</module>
         <module>petical-batch</module>
+        <module>petical-domain</module>
     </modules>
 
 </project>

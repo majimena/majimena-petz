@@ -15,6 +15,7 @@ import org.majimena.petical.batch.scraping.utils.ScrapingUtils;
 import org.majimena.petical.domain.Medicine;
 import org.apache.commons.lang3.StringUtils;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import java.util.List;
 import java.util.Map;
@@ -29,20 +30,24 @@ public class Nval {
 
     private String startUrl = "http://www.nval.go.jp/asp/asp_dbDR_idx.asp";
 
-    public Observable<HtmlPage> init() {
+    public WebClient createWebClient() {
+        // TODO ClientFactory
+        WebClient client = new WebClient(BrowserVersion.CHROME);
+        client.getOptions().setJavaScriptEnabled(true);
+        client.setAjaxController(new NicelyResynchronizingAjaxController());
+        client.waitForBackgroundJavaScript(10000);
+        client.getOptions().setRedirectEnabled(true);
+        client.getOptions().setThrowExceptionOnScriptError(false);
+        client.getOptions().setCssEnabled(false);
+        client.getOptions().setUseInsecureSSL(true);
+        client.getOptions().setThrowExceptionOnFailingStatusCode(false);
+        client.getCookieManager().setCookiesEnabled(true);
+        return client;
+    }
+
+    public Observable<HtmlPage> init(WebClient client) {
         return Observable.create(subscriber -> {
             try {
-                // TODO ClientFactory
-                WebClient client = new WebClient(BrowserVersion.CHROME);
-                client.getOptions().setJavaScriptEnabled(true);
-                client.setAjaxController(new NicelyResynchronizingAjaxController());
-                client.waitForBackgroundJavaScript(10000);
-                client.getOptions().setRedirectEnabled(true);
-                client.getOptions().setThrowExceptionOnScriptError(false);
-                client.getOptions().setCssEnabled(false);
-                client.getOptions().setUseInsecureSSL(true);
-                client.getOptions().setThrowExceptionOnFailingStatusCode(false);
-                client.getCookieManager().setCookiesEnabled(true);
                 HtmlPage page = client.getPage(startUrl);
                 subscriber.onNext(page);
                 subscriber.onCompleted();
@@ -100,19 +105,37 @@ public class Nval {
                             .forEach(page -> subscriber.onNext(page));
 
                     // 次のページへ
-//                    HtmlPage nextPage = temp.getAnchors().stream()
-//                            .filter(anchor -> NvalHtmlUnitUtils.equalAnchorText(anchor, "次の20件を表示する>>"))
-//                            .findFirst()
-//                            .map(anchor -> HtmlUnitUtils.click(anchor))
-//                            .orElse(null);
-//                    if (nextPage == null) {
-//                        break;
-//                    } else {
-//                        temp = nextPage;
-//                    }
-                    break;
+                    HtmlPage nextPage = temp.getAnchors().stream()
+                            .filter(anchor -> NvalHtmlUnitUtils.equalAnchorText(anchor, "次の20件を表示する>>"))
+                            .findFirst()
+                            .map(anchor -> HtmlUnitUtils.click(anchor))
+                            .orElse(null);
+                    if (nextPage == null) {
+                        break;
+                    } else {
+                        temp = nextPage;
+                    }
+//                    break;
                 }
 
+                subscriber.onCompleted();
+            } catch (Exception e) {
+                subscriber.onError(e);
+            }
+        });
+    }
+
+    public Observable<HtmlPage> next(HtmlPage htmlPage) {
+        return Observable.create(subscriber -> {
+            try {
+                HtmlPage nextPage = htmlPage.getAnchors().stream()
+                        .filter(anchor -> NvalHtmlUnitUtils.equalAnchorText(anchor, "次の20件を表示する>>"))
+                        .findFirst()
+                        .map(anchor -> HtmlUnitUtils.click(anchor))
+                        .orElse(null);
+                if (nextPage == null) {
+
+                }
                 subscriber.onCompleted();
             } catch (Exception e) {
                 subscriber.onError(e);

@@ -62,8 +62,8 @@ public class Medicine extends AbstractAuditingEntity implements Serializable {
     @Size(max = Description.MAX_LENGTH)
     @Column(name = "medicinal_effect_category", length = Description.MAX_LENGTH, nullable = true)
     private String medicinalEffectCategory;
-    @Size(max = Description.MAX_LENGTH)
-    @Column(name = "packing_unit", length = Description.MAX_LENGTH, nullable = true)
+    @Size(max = Text.MAX_LENGTH)
+    @Column(name = "packing_unit", nullable = true)
     private String packingUnit;
     @Size(max = Description.MAX_LENGTH)
     @Column(name = "target", length = Description.MAX_LENGTH, nullable = true)
@@ -83,8 +83,8 @@ public class Medicine extends AbstractAuditingEntity implements Serializable {
     @Size(max = Description.MAX_LENGTH)
     @Column(name = "storage_condition", length = Description.MAX_LENGTH, nullable = true)
     private String storageCondition;
-    @Size(max = Description.MAX_LENGTH)
-    @Column(name = "note", length = Description.MAX_LENGTH, nullable = true)
+    @Size(max = Text.MAX_LENGTH)
+    @Column(name = "note", nullable = true)
     private String note;
 
     @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)

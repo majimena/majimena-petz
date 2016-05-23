@@ -18,7 +18,7 @@ public class NvalTest {
         @Test
         public void testSearch() throws Exception {
             try {
-                sut.init()
+                sut.init(sut.createWebClient())
                         .flatMap(page -> sut.search(page))
                         .flatMap(page -> sut.extract(page))
                         .flatMap(page -> sut.format(page))

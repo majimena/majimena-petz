@@ -24,7 +24,7 @@
             <column name="medicinal_effect_category" type="varchar(255)">
                 <constraints nullable="true"/>
             </column>
-            <column name="packing_unit" type="varchar(255)">
+            <column name="packing_unit" type="text">
                 <constraints nullable="true"/>
             </column>
             <column name="target" type="varchar(255)">
@@ -45,31 +45,31 @@
             <column name="storage_condition" type="varchar(255)">
                 <constraints nullable="true"/>
             </column>
-            <column name="note" type="varchar(255)">
+            <column name="note" type="text">
                 <constraints nullable="true"/>
             </column>
-            <column name="modified_date" type="timestamp">
+            <column name="modified_date" type="datetime">
                 <constraints nullable="true"/>
             </column>
-            <column name="approved_date" type="timestamp">
+            <column name="approved_date" type="datetime">
                 <constraints nullable="true"/>
             </column>
             <column name="approved_type" type="varchar(255)">
                 <constraints nullable="true"/>
             </column>
-            <column name="approved_date1" type="timestamp">
+            <column name="approved_date1" type="datetime">
                 <constraints nullable="true"/>
             </column>
-            <column name="approved_date2" type="timestamp">
+            <column name="approved_date2" type="datetime">
                 <constraints nullable="true"/>
             </column>
-            <column name="approved_date3" type="timestamp">
+            <column name="approved_date3" type="datetime">
                 <constraints nullable="true"/>
             </column>
-            <column name="notified_date" type="timestamp">
+            <column name="notified_date" type="datetime">
                 <constraints nullable="true"/>
             </column>
-            <column name="re_examine_result_notice_date" type="timestamp">
+            <column name="re_examine_result_notice_date" type="datetime">
                 <constraints nullable="true"/>
             </column>
             <column name="maker_or_dealer_name" type="varchar(255)">
@@ -96,11 +96,11 @@
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" type="timestamp">
+            <column name="created_date" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="timestamp"/>
+            <column name="last_modified_date" type="datetime"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>

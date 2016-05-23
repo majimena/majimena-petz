@@ -25,10 +25,10 @@ public class TrimUtils {
         if (StringUtils.isEmpty(v)) {
             return null;
         }
-        if (StringUtils.length(v) == 1) {
-            System.out.println("調べる");
-            v.chars().forEach(s -> System.out.println(Integer.toHexString(s)));
-        }
+//        if (StringUtils.length(v) == 1) {
+//            System.out.println("調べる");
+//            v.chars().forEach(s -> System.out.println(Integer.toHexString(s)));
+//        }
         return v;
     }
 

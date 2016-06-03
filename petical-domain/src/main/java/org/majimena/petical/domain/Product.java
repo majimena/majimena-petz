@@ -11,9 +11,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.majimena.petical.datatype.CourseType;
 import org.majimena.petical.datatype.TaxType;
 import org.majimena.petical.datatype.defs.Description;
 import org.majimena.petical.datatype.defs.Name;
+import org.majimena.petical.datatype.deserializers.CourseTypeDeserializer;
 import org.majimena.petical.datatype.deserializers.TaxTypeDeserializer;
 import org.majimena.petical.datatype.serializers.EnumDataTypeSerializer;
 
@@ -56,23 +58,39 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     private Clinic clinic;
 
     @NotEmpty
+    @Enumerated(EnumType.STRING)
+    @JsonSerialize(using = EnumDataTypeSerializer.class)
+    @JsonDeserialize(using = CourseTypeDeserializer.class)
+    @Column(name = "course", length = 20, nullable = false)
+    private CourseType course;
+
+    @NotEmpty
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "category", length = Name.MAX_LENGTH, nullable = false)
+    private String category;
+
+    @NotEmpty
     @Size(max = Name.MAX_LENGTH)
     @Column(name = "name", length = Name.MAX_LENGTH, nullable = false)
     private String name;
+
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "unit", length = Name.MAX_LENGTH, nullable = false)
+    private String unit;
 
     @NotNull
     @Digits(integer = 9, fraction = 0)
     @Column(name = "price", precision = 9, scale = 0, nullable = false)
     private BigDecimal price;
 
-    @NotNull
+    // デフォルトEXCLUSIVE
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = EnumDataTypeSerializer.class)
     @JsonDeserialize(using = TaxTypeDeserializer.class)
     @Column(name = "tax_type", length = 20, nullable = false)
     private TaxType taxType;
 
-    @NotNull
+    // デフォルト0.08
     @Digits(integer = 1, fraction = 2)
     @Column(name = "tax_rate", precision = 3, scale = 2, nullable = false)
     private BigDecimal taxRate;

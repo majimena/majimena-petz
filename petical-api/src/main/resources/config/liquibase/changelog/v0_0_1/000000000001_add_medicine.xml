@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000000_medicine" author="custom">
+    <changeSet id="000000000001_medicine" author="custom">
         <createTable tableName="medicine">
             <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
@@ -30,7 +30,7 @@
             <column name="target" type="varchar(255)">
                 <constraints nullable="true"/>
             </column>
-            <column name="banning_period" type="varchar(255)">
+            <column name="banning_period" type="text">
                 <constraints nullable="true"/>
             </column>
             <column name="effect" type="text">
@@ -107,7 +107,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_medicine_index" author="custom">
+    <changeSet id="000000000001_medicine_index" author="custom">
         <createIndex indexName="idx1_medicine"
                      tableName="medicine">
             <column name="nval_id" type="varchar(255)"/>

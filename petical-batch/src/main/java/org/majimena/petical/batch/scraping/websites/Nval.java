@@ -15,8 +15,10 @@ import org.majimena.petical.batch.scraping.utils.ScrapingUtils;
 import org.majimena.petical.domain.Medicine;
 import org.apache.commons.lang3.StringUtils;
 import rx.Observable;
+import rx.Subscription;
 import rx.schedulers.Schedulers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -125,19 +127,15 @@ public class Nval {
         });
     }
 
-    public Observable<HtmlPage> next(HtmlPage htmlPage) {
-        return Observable.create(subscriber -> {
+    public void scrape(WebClient client) {
+        Observable<HtmlPage> toppage = Observable.create(subscriber -> {
+            HtmlPage page = null;
             try {
-                HtmlPage nextPage = htmlPage.getAnchors().stream()
-                        .filter(anchor -> NvalHtmlUnitUtils.equalAnchorText(anchor, "次の20件を表示する>>"))
-                        .findFirst()
-                        .map(anchor -> HtmlUnitUtils.click(anchor))
-                        .orElse(null);
-                if (nextPage == null) {
-
-                }
+                page = client.getPage(startUrl);
+                subscriber.onNext(page);
                 subscriber.onCompleted();
-            } catch (Exception e) {
+            } catch (IOException e) {
+                e.printStackTrace();
                 subscriber.onError(e);
             }
         });
@@ -147,6 +145,7 @@ public class Nval {
         return detail(htmlPage).flatMap(map -> convert(map));
     }
 
+    @Deprecated
     public Observable<Map<String, String>> detail(HtmlPage htmlPage) {
         return Observable.create(subscriber -> {
             try {
@@ -200,6 +199,7 @@ public class Nval {
         });
     }
 
+    @Deprecated
     public Observable<Medicine> convert(Map<String, String> map) {
         return Observable.create(subscriber -> {
             try {

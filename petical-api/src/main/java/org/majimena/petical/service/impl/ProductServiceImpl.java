@@ -2,6 +2,7 @@ package org.majimena.petical.service.impl;
 
 import org.majimena.petical.common.utils.BeanFactoryUtils;
 import org.majimena.petical.common.utils.ExceptionUtils;
+import org.majimena.petical.datatype.TaxType;
 import org.majimena.petical.domain.Product;
 import org.majimena.petical.domain.product.ProductCriteria;
 import org.majimena.petical.repository.ProductRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +54,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product saveProduct(Product product) {
+        // それぞれ変えられるようにしているが、固定値にしておく
+        product.setTaxType(TaxType.EXCLUSIVE);
+        product.setTaxRate(BigDecimal.valueOf(0.08));
+        product.setUnit("1");
         product.setRemoved(Boolean.FALSE);
+
         return productRepository.save(product);
     }
 

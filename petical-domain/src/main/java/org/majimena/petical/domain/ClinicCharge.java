@@ -70,14 +70,18 @@ public class ClinicCharge extends AbstractAuditingEntity implements Serializable
     @Column(name = "name", length = Name.MAX_LENGTH, nullable = false)
     private String name;
 
-    @Size(max = Name.MAX_LENGTH)
-    @Column(name = "unit", length = Name.MAX_LENGTH, nullable = false)
-    private String unit;
-
     @NotNull
     @Digits(integer = 9, fraction = 0)
     @Column(name = "price", precision = 9, scale = 0, nullable = false)
     private BigDecimal price;
+
+    @NotNull
+    @Column(name = "insurance", nullable = false)
+    private Boolean insurance;
+
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "unit", length = Name.MAX_LENGTH, nullable = false)
+    private String unit;
 
     // デフォルトEXCLUSIVE
     @Enumerated(EnumType.STRING)

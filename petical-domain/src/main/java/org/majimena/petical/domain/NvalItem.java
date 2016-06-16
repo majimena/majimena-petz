@@ -28,9 +28,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 動物用医薬品ドメイン.
+ * 動物用医薬品アイテム.
  */
-@Deprecated
 @Data
 @Builder
 @NoArgsConstructor
@@ -38,9 +37,9 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "medicine")
+@Table(name = "nval_item")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Medicine extends AbstractAuditingEntity implements Serializable {
+public class NvalItem extends AbstractAuditingEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")

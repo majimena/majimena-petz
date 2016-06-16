@@ -4,12 +4,12 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000001_product_base" author="custom">
-        <createTable tableName="product_base">
-            <column name="id" type="integer" autoIncrement="true">
+    <changeSet id="001_charge" author="custom">
+        <createTable tableName="charge">
+            <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="course" type="varchar(20)">
+            <column name="course" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="category" type="varchar(50)">
@@ -36,6 +36,14 @@
             <column name="description" type="varchar(2000)">
                 <constraints nullable="true"/>
             </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="datetime"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>

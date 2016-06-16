@@ -9,6 +9,7 @@ import java.util.Optional;
 /**
  * プロダクトサービス.
  */
+@Deprecated
 public interface ProductService {
 
     /**

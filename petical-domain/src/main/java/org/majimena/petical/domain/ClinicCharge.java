@@ -34,18 +34,17 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * 商品ドメイン.
+ * 動物病院診察料金.
  */
-@Deprecated
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
-@Table(name = "product")
+@Table(name = "clinic_charge")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Product extends AbstractAuditingEntity implements Serializable {
+public class ClinicCharge extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -57,8 +56,8 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     private Clinic clinic;
 
     @NotEmpty
-    @Size(max = 20)
-    @Column(name = "course", length = 20, nullable = false)
+    @Size(max = Name.MAX_LENGTH)
+    @Column(name = "course", length = Name.MAX_LENGTH, nullable = false)
     private String course;
 
     @NotEmpty
@@ -95,7 +94,4 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     @Size(max = Description.MAX_LENGTH)
     @Column(name = "description", length = Description.MAX_LENGTH, nullable = true)
     private String description;
-
-    @Column(name = "removed", nullable = false)
-    private Boolean removed;
 }

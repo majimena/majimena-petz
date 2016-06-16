@@ -1,20 +1,19 @@
 package org.majimena.petical.repository;
 
-import org.majimena.petical.domain.Product;
+import org.majimena.petical.domain.Charge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 /**
- * プロダクトリポジトリ.
+ * 診察料金リポジトリ.
  */
-@Deprecated
-public interface ProductRepository extends JpaRepository<Product, String>, JpaSpecificationExecutor<Product> {
+public interface ChargeRepository extends JpaRepository<Charge, String>, JpaSpecificationExecutor<Charge> {
 
-    @Query(value = "insert into product "
+    @Query(value = "insert into clinic_charge "
             + "select uuid(), :clinicId, course, category, name, price, insurance, unit, tax_type, tax_rate, description, false, :userId, now(), :userId, now() "
-            + "from product_base order by id", nativeQuery = true)
+            + "from charge order by id", nativeQuery = true)
     void setup(@Param("clinicId") String clinicId, @Param("userId") String userId);
 
 }

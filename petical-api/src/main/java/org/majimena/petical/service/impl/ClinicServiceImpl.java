@@ -18,6 +18,7 @@ import org.majimena.petical.repository.ChartRepository;
 import org.majimena.petical.repository.ClinicRepository;
 import org.majimena.petical.repository.ClinicStaffRepository;
 import org.majimena.petical.repository.InvoiceRepository;
+import org.majimena.petical.repository.ProductRepository;
 import org.majimena.petical.repository.TicketRepository;
 import org.majimena.petical.repository.UserRepository;
 import org.majimena.petical.repository.spec.ChartSpecs;
@@ -79,6 +80,12 @@ public class ClinicServiceImpl implements ClinicService {
      */
     @Inject
     private InvoiceRepository invoiceRepository;
+
+    /**
+     * 診察料金リポジトリ.
+     */
+    @Inject
+    private ProductRepository productRepository;
 
     /**
      * {@inheritDoc}
@@ -149,7 +156,10 @@ public class ClinicServiceImpl implements ClinicService {
 
         // クリニックを登録
         clinic.setRemoved(Boolean.FALSE);
-        Clinic save = clinicRepository.save(clinic);
+        Clinic save = clinicRepository.saveAndFlush(clinic);
+
+        // クリニック関連マスタの初期セットアップ
+        productRepository.setup(save.getId(), "system");
 
         // クリニックのオーナーとして自分を登録
         String userId = SecurityUtils.getCurrentUserId();

@@ -3,6 +3,7 @@ package org.majimena.petical.batch.scraping.websites;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -123,6 +124,7 @@ public class NvalScraperImpl {
         client.getCookieManager().setCookiesEnabled(true);
 
         HtmlPage page = client.getPage(startUrl);
+
         return page;
     }
 

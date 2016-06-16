@@ -26,8 +26,9 @@ import java.util.Optional;
 /**
  * プロダクトコントローラ.
  */
-@RestController
-@RequestMapping("/api/v1")
+@Deprecated
+//@RestController
+//@RequestMapping("/api/v1")
 public class ClinicProductController {
 
     /**

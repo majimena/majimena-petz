@@ -3,6 +3,7 @@ package org.majimena.petical.web.api;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Optional;
@@ -10,7 +11,7 @@ import java.util.Optional;
 /**
  * Created by todoken on 2015/06/25.
  */
-public abstract class AbstractValidator<T> implements Validator {
+public abstract class AbstractValidator<T extends Serializable> implements Validator {
 
     private Class<T> beanClass;
 
@@ -38,6 +39,10 @@ public abstract class AbstractValidator<T> implements Validator {
         validate(Optional.ofNullable((T) target), errors);
     }
 
-    protected abstract void validate(Optional<T> target, Errors errors);
+    protected void validate(Optional<T> target, Errors errors) {
+        target.ifPresent(t -> validate(t, errors));
+    }
 
+    protected void validate(T target, Errors errors) {
+    }
 }

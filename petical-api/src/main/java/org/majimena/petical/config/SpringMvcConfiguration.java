@@ -3,22 +3,12 @@ package org.majimena.petical.config;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import cz.jirutka.spring.exhandler.support.HttpMessageConverterUtils;
 import org.majimena.petical.common.exceptions.ResourceConflictException;
 import org.majimena.petical.common.exceptions.ResourceNotFoundException;
 import org.majimena.petical.common.factory.JacksonJsonFactory;
 import org.majimena.petical.common.factory.JsonFactory;
-import org.majimena.petical.datatype.EnumDataType;
-import org.majimena.petical.datatype.SexType;
-import org.majimena.petical.datatype.deserializers.ISO8601LocalDateDeserializer;
-import org.majimena.petical.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
-import org.majimena.petical.datatype.deserializers.SexTypeDeserializer;
-import org.majimena.petical.datatype.serializers.EnumDataTypeSerializer;
-import org.majimena.petical.datatype.serializers.ISO8601LocalDateSerializer;
-import org.majimena.petical.datatype.serializers.ISO8601LocalDateTimeSerializer;
 import org.majimena.petical.security.ResourceCannotAccessException;
 import org.majimena.petical.web.servlet.handler.ApplicationExceptionRestExceptionHandler;
 import org.majimena.petical.web.servlet.handler.BindExceptionRestExceptionHandler;
@@ -39,9 +29,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import javax.inject.Inject;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -98,31 +85,31 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
 
     // Jackson Configurations
 
-    @Inject
-    private Hibernate4Module hibernate4Module;
+//    @Inject
+//    private Hibernate4Module hibernate4Module;
 
     @Bean
     public ObjectMapper objectMapper() {
         return Jackson2ObjectMapperBuilder.json()
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
-                .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                .modules(Arrays.asList(jsr310Module(), hibernate4Module)).build();
+                .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).build();
+//                .modules(Arrays.asList(jsr310Module(), hibernate4Module)).build();
     }
 
-    @Bean
-    public JSR310Module jsr310Module() {
-        JSR310Module module = new JSR310Module();
-
-        module.addSerializer(LocalDate.class, new ISO8601LocalDateSerializer());
-        module.addSerializer(LocalDateTime.class, new ISO8601LocalDateTimeSerializer());
-        module.addSerializer(EnumDataType.class, new EnumDataTypeSerializer());
-
-        module.addDeserializer(LocalDate.class, new ISO8601LocalDateDeserializer());
-        module.addDeserializer(LocalDateTime.class, new ISO8601LocalDateTimeDeserializer());
-        module.addDeserializer(SexType.class, new SexTypeDeserializer());
-
-        return module;
-    }
+//    @Bean
+//    public JSR310Module jsr310Module() {
+//        JSR310Module module = new JSR310Module();
+//
+//        module.addSerializer(LocalDate.class, new ISO8601LocalDateSerializer());
+//        module.addSerializer(LocalDateTime.class, new ISO8601LocalDateTimeSerializer());
+//        module.addSerializer(EnumDataType.class, new EnumDataTypeSerializer());
+//
+//        module.addDeserializer(LocalDate.class, new ISO8601LocalDateDeserializer());
+//        module.addDeserializer(LocalDateTime.class, new ISO8601LocalDateTimeDeserializer());
+//        module.addDeserializer(SexType.class, new SexTypeDeserializer());
+//
+//        return module;
+//    }
 
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
@@ -147,9 +134,9 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html")
-            .addResourceLocations("classpath:/META-INF/resources/");
+                .addResourceLocations("classpath:/META-INF/resources/");
 
         registry.addResourceHandler("/webjars/**")
-            .addResourceLocations("classpath:/META-INF/resources/webjars/");
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }

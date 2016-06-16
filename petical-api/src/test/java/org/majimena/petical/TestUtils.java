@@ -2,17 +2,10 @@ package org.majimena.petical;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
-import org.majimena.petical.datatype.deserializers.ISO8601LocalDateDeserializer;
-import org.majimena.petical.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
-import org.majimena.petical.datatype.serializers.ISO8601LocalDateSerializer;
-import org.majimena.petical.datatype.serializers.ISO8601LocalDateTimeSerializer;
 import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Utility class for testing REST controllers.
@@ -37,12 +30,12 @@ public class TestUtils {
             throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        JSR310Module module = new JSR310Module();
-        module.addSerializer(LocalDate.class, new ISO8601LocalDateSerializer());
-        module.addSerializer(LocalDateTime.class, new ISO8601LocalDateTimeSerializer());
-        module.addDeserializer(LocalDate.class, new ISO8601LocalDateDeserializer());
-        module.addDeserializer(LocalDateTime.class, new ISO8601LocalDateTimeDeserializer());
-        mapper.registerModule(module);
+//        JSR310Module module = new JSR310Module();
+//        module.addSerializer(LocalDate.class, new ISO8601LocalDateSerializer());
+//        module.addSerializer(LocalDateTime.class, new ISO8601LocalDateTimeSerializer());
+//        module.addDeserializer(LocalDate.class, new ISO8601LocalDateDeserializer());
+//        module.addDeserializer(LocalDateTime.class, new ISO8601LocalDateTimeDeserializer());
+//        mapper.registerModule(module);
         return mapper.writeValueAsBytes(object);
     }
 

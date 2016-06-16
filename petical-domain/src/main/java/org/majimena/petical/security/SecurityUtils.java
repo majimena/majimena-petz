@@ -1,5 +1,6 @@
 package org.majimena.petical.security;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petical.authentication.PetzGrantedAuthority;
 import org.majimena.petical.authentication.PetzUser;
@@ -11,7 +12,10 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,13 +35,34 @@ public final class SecurityUtils {
         SecurityUtils.grantedAuthorityService = grantedAuthorityService;
     }
 
+    public static Optional<Authentication> getAuthentication() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication());
+    }
+
     public static Optional<PetzUser> getPrincipal() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         if (authentication != null) {
-            if (authentication.getPrincipal() instanceof PetzUser) {
-                return Optional.of((PetzUser) authentication.getPrincipal());
+            Object principal = authentication.getPrincipal();
+            try {
+                System.out.println(principal.getClass());
+                System.out.println(PetzUser.class);
+                System.out.println(principal instanceof PetzUser);
+                System.out.println(principal instanceof UserDetails);
+                // FIXME SpringSecurityのバージョンアップでおかしくなった
+                Object userId = PropertyUtils.getProperty(principal, "userId");
+//                Object params = PropertyUtils.getProperty(principal, "properties");
+//                System.out.println(userId);
+//                System.out.println(params);
+//                System.out.println(principal.getClass());
+//                System.out.println(userId);
+//                return Optional.of(new PetzUser((String) userId, "", "", new HashMap<>(), Arrays.asList()));
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
             }
+//            if (principal instanceof PetzUser) {
+//                return Optional.of((PetzUser) principal);
+//            }
         }
         return Optional.empty();
     }
@@ -65,8 +90,12 @@ public final class SecurityUtils {
      * @return ユーザID
      */
     public static String getCurrentUserId() {
-        Optional<PetzUser> principal = getPrincipal();
-        return principal.map(p -> p.getUserId()).orElse(SYSTEM_ACCOUNT);
+//        Optional<PetzUser> principal = getPrincipal();
+//        return principal.map(p -> p.getUserId()).orElse(SYSTEM_ACCOUNT);
+        // FIXME Principalが取れなくなったので一時凌ぎ
+        return getAuthentication()
+                .map(authentication -> getPropertyFromPrincipal(authentication, "userId"))
+                .orElse(SYSTEM_ACCOUNT);
     }
 
     /**
@@ -75,8 +104,11 @@ public final class SecurityUtils {
      * @return ログインID
      */
     public static String getCurrentLoginId() {
-        Optional<PetzUser> principal = getPrincipal();
-        return principal.map(p -> p.getUsername()).orElse(SYSTEM_ACCOUNT);
+//        Optional<PetzUser> principal = getPrincipal();
+//        return principal.map(p -> p.getUsername()).orElse(SYSTEM_ACCOUNT);
+        return getAuthentication()
+                .map(authentication -> getPropertyFromPrincipal(authentication, "username"))
+                .orElse(SYSTEM_ACCOUNT);
     }
 
     /**
@@ -182,6 +214,14 @@ public final class SecurityUtils {
     public static void throwIfUnmatchClinicId(String value1, String value2) {
         if (!StringUtils.equals(value1, value2)) {
             throw new ResourceCannotAccessException("Cannot access resource.");
+        }
+    }
+
+    private static String getPropertyFromPrincipal(Authentication authentication, String name) {
+        try {
+            return PropertyUtils.getProperty(authentication.getPrincipal(), name).toString();
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
         }
     }
 }

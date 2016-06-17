@@ -87,20 +87,20 @@
         </dependency>
 
         <!-- Spring Security for OAuth2 -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-data</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.security</groupId>-->
+            <!--<artifactId>spring-security-data</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
         </dependency>
 
         <!-- Spring Extension -->
-        <dependency>
-            <groupId>cz.jirutka.spring</groupId>
-            <artifactId>spring-rest-exception-handler</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>cz.jirutka.spring</groupId>-->
+            <!--<artifactId>spring-rest-exception-handler</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.ryantenney.metrics</groupId>
             <artifactId>metrics-spring</artifactId>

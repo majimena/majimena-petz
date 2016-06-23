@@ -96,6 +96,12 @@ public class TicketServiceImpl implements TicketService {
     @Transactional(readOnly = true)
     public List<Ticket> getTicketsByTicketCriteria(TicketCriteria criteria) {
         List<Ticket> tickets = ticketRepository.findAll(TicketSpecs.of(criteria));
+        tickets.forEach(ticket -> {
+            // lazy loading TODO eager fetchしないと性能が良くないかも
+            ticket.getChart().getCustomer().getId();
+            ticket.getChart().getCustomer().getUser().getId();
+            ticket.getChart().getPet().getId();
+        });
         return tickets;
     }
 

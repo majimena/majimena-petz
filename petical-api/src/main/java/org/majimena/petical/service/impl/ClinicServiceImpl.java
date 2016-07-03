@@ -14,11 +14,11 @@ import org.majimena.petical.domain.chart.ChartCriteria;
 import org.majimena.petical.domain.clinic.ClinicCriteria;
 import org.majimena.petical.domain.clinic.ClinicOutline;
 import org.majimena.petical.domain.clinic.ClinicOutlineCriteria;
+import org.majimena.petical.repository.ChargeRepository;
 import org.majimena.petical.repository.ChartRepository;
 import org.majimena.petical.repository.ClinicRepository;
 import org.majimena.petical.repository.ClinicStaffRepository;
 import org.majimena.petical.repository.InvoiceRepository;
-import org.majimena.petical.repository.ProductRepository;
 import org.majimena.petical.repository.TicketRepository;
 import org.majimena.petical.repository.UserRepository;
 import org.majimena.petical.repository.spec.ChartSpecs;
@@ -84,7 +84,7 @@ public class ClinicServiceImpl implements ClinicService {
      * 診察料金リポジトリ.
      */
     @Inject
-    private ProductRepository productRepository;
+    private ChargeRepository chargeRepository;
 
     /**
      * {@inheritDoc}
@@ -158,7 +158,7 @@ public class ClinicServiceImpl implements ClinicService {
         Clinic save = clinicRepository.saveAndFlush(clinic);
 
         // クリニック関連マスタの初期セットアップ
-        productRepository.setup(save.getId(), "system");
+        chargeRepository.setup(save.getId(), "system");
 
         // クリニックのオーナーとして自分を登録
         String userId = SecurityUtils.getCurrentUserId();

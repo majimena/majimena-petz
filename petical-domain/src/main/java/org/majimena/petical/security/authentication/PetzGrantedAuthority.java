@@ -1,4 +1,4 @@
-package org.majimena.petical.authentication;
+package org.majimena.petical.security.authentication;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,8 +1,8 @@
 package org.majimena.petical.security;
 
-import org.majimena.petical.authentication.PetzGrantedAuthority;
-import org.majimena.petical.authentication.PetzUser;
-import org.majimena.petical.authentication.PetzUserKey;
+import org.majimena.petical.security.authentication.PetzGrantedAuthority;
+import org.majimena.petical.security.authentication.PetzUser;
+import org.majimena.petical.security.authentication.PetzUserKey;
 import org.majimena.petical.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

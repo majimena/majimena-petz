@@ -6,7 +6,7 @@ import mockit.Tested;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.petical.authentication.PetzGrantedAuthority;
+import org.majimena.petical.security.authentication.PetzGrantedAuthority;
 import org.majimena.petical.domain.Clinic;
 import org.majimena.petical.domain.ClinicStaff;
 import org.majimena.petical.repository.ClinicStaffRepository;

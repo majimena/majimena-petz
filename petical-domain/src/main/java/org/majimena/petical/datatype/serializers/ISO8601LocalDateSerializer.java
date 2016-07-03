@@ -2,7 +2,7 @@ package org.majimena.petical.datatype.serializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import org.majimena.petical.authentication.PetzUserKey;
+import org.majimena.petical.security.authentication.PetzUserKey;
 import org.majimena.petical.datatype.TimeZone;
 import org.majimena.petical.security.SecurityUtils;
 

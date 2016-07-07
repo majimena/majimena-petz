@@ -1,4 +1,4 @@
-package org.majimena.petical.web.api.clinic;
+package org.majimena.petical.web.api.clinics;
 
 import com.codahale.metrics.annotation.Timed;
 import org.majimena.petical.client.recaptcha.RecaptchaRestAdapterFactory;

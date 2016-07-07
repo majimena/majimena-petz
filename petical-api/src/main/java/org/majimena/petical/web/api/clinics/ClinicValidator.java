@@ -1,4 +1,4 @@
-package org.majimena.petical.web.api.clinic;
+package org.majimena.petical.web.api.clinics;
 
 import org.majimena.petical.domain.Clinic;
 import org.majimena.petical.domain.errors.ErrorCode;

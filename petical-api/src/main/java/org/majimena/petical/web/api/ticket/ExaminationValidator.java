@@ -1,7 +1,6 @@
 package org.majimena.petical.web.api.ticket;
 
 import org.majimena.petical.domain.Examination;
-import org.majimena.petical.domain.Product;
 import org.majimena.petical.domain.Ticket;
 import org.majimena.petical.domain.errors.ErrorCode;
 import org.majimena.petical.repository.ExaminationRepository;
@@ -44,9 +43,6 @@ public class ExaminationValidator extends AbstractValidator<Examination> {
             Ticket ticket = validateTicket(Optional.ofNullable(examination.getTicket()), errors);
             examination.setTicket(ticket);
 
-            Product product = validateProduct(Optional.ofNullable(examination.getProduct()), errors);
-            examination.setProduct(product);
-
             validateExaminationId(Optional.ofNullable(examination.getId()), errors);
         });
     }
@@ -63,22 +59,6 @@ public class ExaminationValidator extends AbstractValidator<Examination> {
             // クリニック権限のチェック
             SecurityUtils.throwIfDoNotHaveClinicRoles(one.getClinic().getId());
             return one;
-        }).orElse(null);
-    }
-
-    private Product validateProduct(Optional<Product> value, Errors errors) {
-        return value.map(product -> {
-            // 診察内容の存在確認
-//            Product one = productRepository.findOne(product.getId());
-//            if (one == null) {
-//                ErrorsUtils.rejectValue("product", ErrorCode.PTZ_005999, errors);
-//                return null;
-//            }
-
-            // クリニック権限のチェック
-//            SecurityUtils.throwIfDoNotHaveClinicRoles(one.getClinic().getId());
-//            return one;
-            return product;
         }).orElse(null);
     }
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- クリニックが使用する医薬品を管理するためのひも付けマスタ -->
+
+    <changeSet id="001_clinic_medicine" author="custom">
+        <createTable tableName="clinic_medicine">
+            <column name="id" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="clinic_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="medicine_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!--<column name="用法（当面は自由入力）" type="varchar(50)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="用量（当面は自由入力）" type="numeric(9,0)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="datetime"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="001_medicine_index" author="custom">
+        <createIndex indexName="idx1_clinic_medicine"
+                     tableName="clinic_medicine">
+            <column name="clinic_id" type="varchar(50)"/>
+        </createIndex>
+        <createIndex indexName="idx2_clinic_medicine"
+                     tableName="clinic_medicine">
+            <column name="medicine_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

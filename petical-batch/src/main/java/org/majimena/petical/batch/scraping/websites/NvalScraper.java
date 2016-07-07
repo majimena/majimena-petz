@@ -18,6 +18,7 @@ import org.majimena.petical.batch.scraping.utils.NvalConvertUtils;
 import org.majimena.petical.batch.scraping.utils.NvalHtmlUnitUtils;
 import org.majimena.petical.batch.scraping.utils.ScrapingUtils;
 import org.majimena.petical.domain.Medicine;
+import org.majimena.petical.domain.NvalItem;
 import rx.Observable;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class NvalScraper {
         return null;
     }
 
-    public static Medicine parseDetail(HtmlPage htmlPage) {
+    public static NvalItem parseDetail(HtmlPage htmlPage) {
         WebResponse response = htmlPage.getWebResponse();
         String string = response.getContentAsString("MS932");
 
@@ -97,7 +98,7 @@ public class NvalScraper {
                 .forEach(anchor -> HtmlUnitUtils.click(anchor));
 
         // データタイプをドメインモデルに変換する
-        Medicine medicine = new Medicine();
+        NvalItem medicine = new NvalItem();
         medicine.setName(NvalConvertUtils.getString(collect, "name"));
         medicine.setCategoryName(NvalConvertUtils.getString(collect, "categoryName"));
         medicine.setSideEffect(NvalConvertUtils.getBoolean(collect, "sideEffect"));

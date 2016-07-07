@@ -14,6 +14,7 @@ import org.majimena.petical.batch.scraping.utils.NvalHtmlUnitUtils;
 import org.majimena.petical.batch.scraping.utils.ScrapingUtils;
 import org.majimena.petical.domain.Medicine;
 import org.apache.commons.lang3.StringUtils;
+import org.majimena.petical.domain.NvalItem;
 import rx.Observable;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
@@ -141,7 +142,7 @@ public class Nval {
         });
     }
 
-    public Observable<Medicine> format(HtmlPage htmlPage) {
+    public Observable<NvalItem> format(HtmlPage htmlPage) {
         return detail(htmlPage).flatMap(map -> convert(map));
     }
 
@@ -200,11 +201,11 @@ public class Nval {
     }
 
     @Deprecated
-    public Observable<Medicine> convert(Map<String, String> map) {
+    public Observable<NvalItem> convert(Map<String, String> map) {
         return Observable.create(subscriber -> {
             try {
                 // データタイプをドメインモデルに変換する
-                Medicine medicine = new Medicine();
+                NvalItem medicine = new NvalItem();
                 medicine.setName(NvalConvertUtils.getString(map, "name"));
                 medicine.setCategoryName(NvalConvertUtils.getString(map, "categoryName"));
                 medicine.setSideEffect(NvalConvertUtils.getBoolean(map, "sideEffect"));

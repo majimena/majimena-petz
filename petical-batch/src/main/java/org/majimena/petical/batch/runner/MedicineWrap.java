@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.majimena.petical.domain.Medicine;
+import org.majimena.petical.domain.NvalItem;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -53,7 +54,7 @@ public class MedicineWrap implements Serializable {
     private String lastModifiedBy;
     private Timestamp lastModifiedDate;
 
-    public MedicineWrap(Medicine medicine) {
+    public MedicineWrap(NvalItem medicine) {
         this.id = medicine.getId();
         this.nvalId = medicine.getNvalId();
         this.name = medicine.getName();

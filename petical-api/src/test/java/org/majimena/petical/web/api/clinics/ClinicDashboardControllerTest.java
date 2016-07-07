@@ -1,4 +1,4 @@
-package org.majimena.petical.web.api.clinic;
+package org.majimena.petical.web.api.clinics;
 
 import mockit.Injectable;
 import mockit.Mocked;

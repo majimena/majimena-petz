@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- NVALから取得した認可医薬品のみに選別したデータ（編集不可）＋ユーザが個々に追加したデータを管理するマスタ（編集可能） -->
+
+    <changeSet id="001_medicine" author="custom">
+        <createTable tableName="medicine">
+            <column name="id" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nval_id" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dealer_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="preparation_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="form_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="regulation_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="effect" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="side_effect" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+            <column name="official" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="datetime"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="001_medicine_index" author="custom">
+        <createIndex indexName="idx1_medicine"
+                     tableName="medicine">
+            <column name="nval_id" type="varchar(255)"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

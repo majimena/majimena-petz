@@ -16,6 +16,7 @@ import org.majimena.petical.batch.scraping.utils.NvalConvertUtils;
 import org.majimena.petical.batch.scraping.utils.NvalHtmlUnitUtils;
 import org.majimena.petical.batch.scraping.utils.ScrapingUtils;
 import org.majimena.petical.domain.Medicine;
+import org.majimena.petical.domain.NvalItem;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import rx.Observable;
 
@@ -35,7 +36,7 @@ public class NvalScraperImpl {
 
     private String startUrl = "http://www.nval.go.jp/asp/asp_dbDR_idx.asp";
 
-    public static Medicine parseDetail(HtmlPage htmlPage) {
+    public static NvalItem parseDetail(HtmlPage htmlPage) {
         // HTMLテーブルから詳細情報をパースして集める
         Map<String, String> collect = HtmlUnitUtils.getHtmlTables(htmlPage)
                 .flatMap(table -> {
@@ -79,7 +80,7 @@ public class NvalScraperImpl {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         // データタイプをドメインモデルに変換する
-        Medicine medicine = new Medicine();
+        NvalItem medicine = new NvalItem();
         medicine.setName(NvalConvertUtils.getString(collect, "name"));
         medicine.setCategoryName(NvalConvertUtils.getString(collect, "categoryName"));
         medicine.setSideEffect(NvalConvertUtils.getBoolean(collect, "sideEffect"));
@@ -181,7 +182,7 @@ public class NvalScraperImpl {
                 .map(cell -> HtmlAnchor.class.cast(cell.getFirstChild()))
                 .flatMap(anchor -> Stream.of(HtmlUnitUtils.click(anchor)))
                 .flatMap(page -> {
-                    Medicine medicine = NvalScraper.parseDetail(page);
+                    NvalItem medicine = NvalScraper.parseDetail(page);
                     medicine.setId(UUID.randomUUID().toString());
                     MedicineWrap wrap = new MedicineWrap(medicine);
                     return Stream.of(wrap);

@@ -21,7 +21,7 @@ public interface ClinicMedicineRepository extends JpaRepository<ClinicMedicine, 
      * @param userId   セットアップしたユーザーID
      */
     @Query(value = "insert into clinic_medicine "
-            + "select uuid(), :clinicId, id, 0, :userId, now(), :userId, now() from medicine order by id", nativeQuery = true)
+            + "select uuid(), :clinicId, id, 0, :userId, now(), :userId, now() from medicine where official=1 order by id", nativeQuery = true)
     void setup(@Param("clinicId") String clinicId, @Param("userId") String userId);
 
     /**

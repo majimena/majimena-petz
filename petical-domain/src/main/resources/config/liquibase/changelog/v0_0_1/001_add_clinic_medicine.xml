@@ -17,6 +17,9 @@
             <column name="medicine_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="display" type="boolean">
+                <constraints nullable="false"/>
+            </column>
             <!--<column name="用法（当面は自由入力）" type="varchar(50)">-->
                 <!--<constraints nullable="false"/>-->
             <!--</column>-->
@@ -37,7 +40,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet id="001_medicine_index" author="custom">
+    <changeSet id="001_clinic_medicine_index" author="custom">
         <createIndex indexName="idx1_clinic_medicine"
                      tableName="clinic_medicine">
             <column name="clinic_id" type="varchar(50)"/>

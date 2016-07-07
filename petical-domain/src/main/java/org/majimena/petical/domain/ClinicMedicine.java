@@ -10,6 +10,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -47,4 +48,8 @@ public class ClinicMedicine extends AbstractAuditingEntity implements Serializab
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medicine_id", nullable = false)
     private Medicine medicine;
+
+    @NotNull
+    @Column(name = "display", nullable = false)
+    private Boolean display;
 }

@@ -120,15 +120,18 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Ticket> getTicketByTicketId(String ticketId) {
-        Ticket ticket = ticketRepository.getOne(ticketId);
-        // lazy load
-        if (ticket != null) {
-            ticket.getChart().getId();
-            ticket.getChart().getPet().getId();
-            ticket.getChart().getCustomer().getId();
-            ticket.getChart().getCustomer().getUser().getId();
-        }
-        return Optional.ofNullable(ticket);
+        return Optional.ofNullable(ticketRepository.getOne(ticketId))
+                .map(ticket -> {
+                    // lazy load other entities
+                    ticket.getChart().getId();
+                    ticket.getChart().getPet().getId();
+                    ticket.getChart().getCustomer().getId();
+                    ticket.getChart().getCustomer().getUser().getId();
+                    if (ticket.getDiagnosis() != null) {
+                        ticket.getDiagnosis().getId();
+                    }
+                    return ticket;
+                });
     }
 
     /**

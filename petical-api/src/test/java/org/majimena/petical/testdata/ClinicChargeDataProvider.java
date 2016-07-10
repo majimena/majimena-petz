@@ -2,7 +2,7 @@ package org.majimena.petical.testdata;
 
 import org.majimena.petical.datatype.TaxType;
 import org.majimena.petical.domain.Clinic;
-import org.majimena.petical.domain.ClinicCharge;
+import org.majimena.petical.domain.ClinicInspection;
 
 import java.math.BigDecimal;
 
@@ -11,8 +11,8 @@ import java.math.BigDecimal;
  */
 public class ClinicChargeDataProvider {
     // POST用テストデータ
-    public static ClinicCharge newClinicCharge() {
-        return ClinicCharge.builder()
+    public static ClinicInspection newClinicCharge() {
+        return ClinicInspection.builder()
                 .clinic(Clinic.builder().id("1").build())
                 .course("12345678901234567890123456789012345678901234567890")
                 .category("12345678901234567890123456789012345678901234567890")

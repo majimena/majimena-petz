@@ -13,11 +13,13 @@ import org.majimena.petical.WebAppTestConfiguration;
 import org.majimena.petical.config.SpringMvcConfiguration;
 import org.majimena.petical.datatype.TaxType;
 import org.majimena.petical.domain.Clinic;
-import org.majimena.petical.domain.ClinicCharge;
+import org.majimena.petical.domain.ClinicInspection;
 import org.majimena.petical.security.ResourceCannotAccessException;
 import org.majimena.petical.security.SecurityUtils;
-import org.majimena.petical.service.ClinicChargeService;
+import org.majimena.petical.service.ClinicInspectionService;
 import org.majimena.petical.testdata.ClinicChargeDataProvider;
+import org.majimena.petical.web.api.clinics.inspections.ClinicInspectionValidator;
+import org.majimena.petical.web.api.clinics.inspections.ClinicInspectionController;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -40,10 +42,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * @see ClinicChargeController
+ * @see ClinicInspectionController
  */
 @RunWith(Enclosed.class)
-public class ClinicChargeControllerTest {
+public class ClinicInspectionControllerTest {
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @SpringApplicationConfiguration(classes = WebAppTestConfiguration.class)
@@ -52,11 +54,11 @@ public class ClinicChargeControllerTest {
 
         private MockMvc mockMvc;
         @Tested
-        private ClinicChargeController sut = new ClinicChargeController();
+        private ClinicInspectionController sut = new ClinicInspectionController();
         @Injectable
-        private ClinicChargeService clinicChargeService;
+        private ClinicInspectionService clinicInspectionService;
         @Injectable
-        private ClinicChargeValidator clinicChargeValidator;
+        private ClinicInspectionValidator clinicInspectionValidator;
         @Mocked
         private SecurityUtils securityUtils;
 
@@ -85,13 +87,13 @@ public class ClinicChargeControllerTest {
 
         @Test
         public void プロダクトが検索できること() throws Exception {
-            ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+            ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
 
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
                 result = null;
 
-                clinicChargeService.getClinicChargesByClinicId("1");
+                clinicInspectionService.getClinicChargesByClinicId("1");
                 data.setId("charge1");
                 data.setClinic(Clinic.builder().id("1").build());
                 result = Arrays.asList(data);
@@ -118,11 +120,11 @@ public class ClinicChargeControllerTest {
 
         private MockMvc mockMvc;
         @Tested
-        private ClinicChargeController sut = new ClinicChargeController();
+        private ClinicInspectionController sut = new ClinicInspectionController();
         @Injectable
-        private ClinicChargeService clinicChargeService;
+        private ClinicInspectionService clinicInspectionService;
         @Injectable
-        private ClinicChargeValidator clinicChargeValidator;
+        private ClinicInspectionValidator clinicInspectionValidator;
         @Mocked
         private SecurityUtils securityUtils;
 
@@ -151,7 +153,7 @@ public class ClinicChargeControllerTest {
 
         @Test
         public void 診察料金が検索できること() throws Exception {
-            ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+            ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
 
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
@@ -159,7 +161,7 @@ public class ClinicChargeControllerTest {
                 SecurityUtils.isUserInClinic("1");
                 result = true;
 
-                clinicChargeService.getClinicChargeById("2");
+                clinicInspectionService.getClinicChargeById("2");
                 data.setId("2");
                 data.setClinic(Clinic.builder().id("1").build());
                 result = Optional.of(data);
@@ -180,13 +182,13 @@ public class ClinicChargeControllerTest {
 
         @Test
         public void 権限がない診察料金は404になること() throws Exception {
-            ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+            ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
 
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
                 result = null;
 
-                clinicChargeService.getClinicChargeById("2");
+                clinicInspectionService.getClinicChargeById("2");
                 data.setId("2");
                 data.setClinic(Clinic.builder().id("3").build());
                 result = Optional.of(data);
@@ -206,7 +208,7 @@ public class ClinicChargeControllerTest {
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
                 result = null;
 
-                clinicChargeService.getClinicChargeById("2");
+                clinicInspectionService.getClinicChargeById("2");
                 result = Optional.ofNullable(null);
             }};
 
@@ -223,11 +225,11 @@ public class ClinicChargeControllerTest {
 
         private MockMvc mockMvc;
         @Tested
-        private ClinicChargeController sut = new ClinicChargeController();
+        private ClinicInspectionController sut = new ClinicInspectionController();
         @Injectable
-        private ClinicChargeService clinicChargeService;
+        private ClinicInspectionService clinicInspectionService;
         @Injectable
-        private ClinicChargeValidator clinicChargeValidator;
+        private ClinicInspectionValidator clinicInspectionValidator;
         @Mocked
         private SecurityUtils securityUtils;
 
@@ -240,7 +242,7 @@ public class ClinicChargeControllerTest {
 
         @Test
         public void 権限がない場合はアクセスできないこと() throws Exception {
-            ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+            ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
 
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
@@ -260,15 +262,15 @@ public class ClinicChargeControllerTest {
 
         @Test
         public void 動物病院診察料金が登録されること() throws Exception {
-            ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+            ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
 
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
                 result = null;
-                clinicChargeValidator.validate(data, (Errors) any);
+                clinicInspectionValidator.validate(data, (Errors) any);
                 result = null;
 
-                clinicChargeService.saveClinicCharge(data);
+                clinicInspectionService.saveClinicCharge(data);
                 data.setId("2");
                 data.setClinic(Clinic.builder().id("1").build());
                 result = data;
@@ -291,7 +293,7 @@ public class ClinicChargeControllerTest {
 
         @Test
         public void 入力エラーがある場合は動物病院診察料金が登録されないこと() throws Exception {
-            ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+            ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
 
             // 未入力
             data.setName("");
@@ -470,11 +472,11 @@ public class ClinicChargeControllerTest {
 
         private MockMvc mockMvc;
         @Tested
-        private ClinicChargeController sut = new ClinicChargeController();
+        private ClinicInspectionController sut = new ClinicInspectionController();
         @Injectable
-        private ClinicChargeService clinicChargeService;
+        private ClinicInspectionService clinicInspectionService;
         @Injectable
-        private ClinicChargeValidator clinicChargeValidator;
+        private ClinicInspectionValidator clinicInspectionValidator;
         @Mocked
         private SecurityUtils securityUtils;
 
@@ -487,7 +489,7 @@ public class ClinicChargeControllerTest {
 
         @Test
         public void 権限がない場合はアクセスできないこと() throws Exception {
-            ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+            ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
 
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
@@ -507,15 +509,15 @@ public class ClinicChargeControllerTest {
 
         @Test
         public void 動物病院診察料金が更新されること() throws Exception {
-            ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+            ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
 
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
                 result = null;
-                clinicChargeValidator.validate(data, (Errors) any);
+                clinicInspectionValidator.validate(data, (Errors) any);
                 result = null;
 
-                clinicChargeService.updateClinicCharge(data);
+                clinicInspectionService.updateClinicCharge(data);
                 data.setId("2");
                 data.setClinic(Clinic.builder().id("1").build());
                 result = data;
@@ -538,7 +540,7 @@ public class ClinicChargeControllerTest {
 
         @Test
         public void 入力エラーがある場合はプロダクトが登録されないこと() throws Exception {
-            ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+            ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
 
             data.setName("");
             mockMvc.perform(put("/api/v1/clinics/1/charges/2")
@@ -563,11 +565,11 @@ public class ClinicChargeControllerTest {
 
         private MockMvc mockMvc;
         @Tested
-        private ClinicChargeController sut = new ClinicChargeController();
+        private ClinicInspectionController sut = new ClinicInspectionController();
         @Injectable
-        private ClinicChargeService clinicChargeService;
+        private ClinicInspectionService clinicInspectionService;
         @Injectable
-        private ClinicChargeValidator clinicChargeValidator;
+        private ClinicInspectionValidator clinicInspectionValidator;
         @Mocked
         private SecurityUtils securityUtils;
 
@@ -599,11 +601,11 @@ public class ClinicChargeControllerTest {
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
                 result = null;
-                clinicChargeService.getClinicChargeById("2");
-                result = Optional.of(ClinicCharge.builder().id("2").clinic(Clinic.builder().id("1").build()).build());
+                clinicInspectionService.getClinicChargeById("2");
+                result = Optional.of(ClinicInspection.builder().id("2").clinic(Clinic.builder().id("1").build()).build());
                 SecurityUtils.isUserInClinic("1");
                 result = true;
-                clinicChargeService.removeClinicCharge(ClinicCharge.builder().id("2").build());
+                clinicInspectionService.removeClinicCharge(ClinicInspection.builder().id("2").build());
                 result = null;
             }};
 
@@ -618,7 +620,7 @@ public class ClinicChargeControllerTest {
             new NonStrictExpectations() {{
                 SecurityUtils.throwIfDoNotHaveClinicRoles("1");
                 result = null;
-                clinicChargeService.getClinicChargeById("2");
+                clinicInspectionService.getClinicChargeById("2");
                 result = Optional.empty();
             }};
 

@@ -31,7 +31,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * 診察料金.
+ * 検査.
  */
 @Data
 @Builder
@@ -39,9 +39,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
-@Table(name = "charge")
+@Table(name = "inspection")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Charge extends AbstractAuditingEntity implements Serializable {
+public class Inspection extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "system-uuid")

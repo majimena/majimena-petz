@@ -6,12 +6,13 @@ import mockit.NonStrictExpectations;
 import mockit.Tested;
 import org.junit.Test;
 import org.majimena.petical.domain.Clinic;
-import org.majimena.petical.domain.ClinicCharge;
-import org.majimena.petical.repository.ClinicChargeRepository;
+import org.majimena.petical.domain.ClinicInspection;
+import org.majimena.petical.repository.ClinicInspectionRepository;
 import org.majimena.petical.repository.ClinicRepository;
 import org.majimena.petical.security.ResourceCannotAccessException;
 import org.majimena.petical.security.SecurityUtils;
 import org.majimena.petical.testdata.ClinicChargeDataProvider;
+import org.majimena.petical.web.api.clinics.inspections.ClinicInspectionValidator;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
@@ -20,26 +21,26 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
- * @see ClinicChargeValidator
+ * @see ClinicInspectionValidator
  */
-public class ClinicChargeValidatorTest {
+public class ClinicInspectionValidatorTest {
 
     @Mocked
     SecurityUtils securityUtils;
     @Tested
-    private ClinicChargeValidator sut = new ClinicChargeValidator();
+    private ClinicInspectionValidator sut = new ClinicInspectionValidator();
     @Injectable
     private ClinicRepository clinicRepository;
     @Injectable
-    private ClinicChargeRepository clinicChargeRepository;
+    private ClinicInspectionRepository clinicInspectionRepository;
 
     @Test
     public void 正常時はエラーにならないこと() throws Exception {
-        ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+        ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
         Errors errors = new BindException(data, "clinicCharge");
 
         new NonStrictExpectations() {{
-            clinicChargeRepository.findOne("2");
+            clinicInspectionRepository.findOne("2");
             result = data;
             SecurityUtils.throwIfDoNotHaveClinicRoles("1");
             result = null;
@@ -56,7 +57,7 @@ public class ClinicChargeValidatorTest {
 
     @Test
     public void IDが指定されていない場合でもエラーにならないこと() throws Exception {
-        ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+        ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
         Errors errors = new BindException(data, "clinicCharge");
 
         new NonStrictExpectations() {{
@@ -73,11 +74,11 @@ public class ClinicChargeValidatorTest {
 
     @Test
     public void IDが存在しない場合はエラーになること() throws Exception {
-        ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+        ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
         Errors errors = new BindException(data, "clinicCharge");
 
         new NonStrictExpectations() {{
-            clinicChargeRepository.findOne("2");
+            clinicInspectionRepository.findOne("2");
             result = null;
         }};
 
@@ -92,11 +93,11 @@ public class ClinicChargeValidatorTest {
 
     @Test(expected = ResourceCannotAccessException.class)
     public void IDが別クリニックのデータである場合は例外になること() throws Exception {
-        ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+        ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
         Errors errors = new BindException(data, "clinicCharge");
 
         new NonStrictExpectations() {{
-            clinicChargeRepository.findOne("2");
+            clinicInspectionRepository.findOne("2");
             result = data;
             SecurityUtils.throwIfDoNotHaveClinicRoles("1");
             result = new ResourceCannotAccessException();
@@ -108,7 +109,7 @@ public class ClinicChargeValidatorTest {
 
     @Test
     public void クリニックが存在しない場合はエラーになること() throws Exception {
-        ClinicCharge data = ClinicChargeDataProvider.newClinicCharge();
+        ClinicInspection data = ClinicChargeDataProvider.newClinicCharge();
         Errors errors = new BindException(data, "clinicCharge");
 
         new NonStrictExpectations() {{

@@ -34,7 +34,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * 動物病院診察料金.
+ * 動物病院管理下の検査マスタ.
  */
 @Data
 @Builder
@@ -42,16 +42,16 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
-@Table(name = "clinic_charge")
+@Table(name = "clinic_inspection")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ClinicCharge extends AbstractAuditingEntity implements Serializable {
+public class ClinicInspection extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 

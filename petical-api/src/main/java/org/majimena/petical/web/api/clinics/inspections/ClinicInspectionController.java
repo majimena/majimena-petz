@@ -1,10 +1,10 @@
-package org.majimena.petical.web.api.charge;
+package org.majimena.petical.web.api.clinics.inspections;
 
 import com.codahale.metrics.annotation.Timed;
 import org.majimena.petical.domain.Clinic;
-import org.majimena.petical.domain.ClinicCharge;
+import org.majimena.petical.domain.ClinicInspection;
 import org.majimena.petical.security.SecurityUtils;
-import org.majimena.petical.service.ClinicChargeService;
+import org.majimena.petical.service.ClinicInspectionService;
 import org.majimena.petical.web.utils.ErrorsUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +22,17 @@ import java.net.URI;
 import java.util.List;
 
 /**
- * プロダクトコントローラ.
+ * 動物病院検査コントローラ.
  */
 @RestController
-@RequestMapping("/api/v1/clinics/{clinicId}/charges")
-public class ClinicChargeController {
+@RequestMapping("/api/v1/clinics/{clinicId}/inspections")
+public class ClinicInspectionController {
 
     @Inject
-    private ClinicChargeService clinicChargeService;
+    private ClinicInspectionService clinicInspectionService;
 
     @Inject
-    private ClinicChargeValidator clinicChargeValidator;
+    private ClinicInspectionValidator clinicInspectionValidator;
 
     /**
      * 動物病院診察料金を全て取得する.
@@ -42,12 +42,13 @@ public class ClinicChargeController {
      */
     @Timed
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<ClinicCharge>> get(@PathVariable String clinicId) {
+    public ResponseEntity<List<ClinicInspection>> get(@PathVariable String clinicId) {
         // クリニックの権限チェック
         ErrorsUtils.throwIfNotIdentify(clinicId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
-        List<ClinicCharge> list = clinicChargeService.getClinicChargesByClinicId(clinicId);
+        // 動物病院検査情報を全て取得
+        List<ClinicInspection> list = clinicInspectionService.getClinicChargesByClinicId(clinicId);
         return ResponseEntity.ok().body(list);
     }
 
@@ -60,14 +61,14 @@ public class ClinicChargeController {
      */
     @Timed
     @RequestMapping(value = "/{chargeId}", method = RequestMethod.GET)
-    public ResponseEntity<ClinicCharge> get(@PathVariable String clinicId, @PathVariable String chargeId) {
+    public ResponseEntity<ClinicInspection> get(@PathVariable String clinicId, @PathVariable String chargeId) {
         // クリニックの権限チェック
         ErrorsUtils.throwIfNotIdentify(clinicId);
         ErrorsUtils.throwIfNotIdentify(chargeId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // プロダクトを検索してデータの権限をチェックする
-        return clinicChargeService.getClinicChargeById(chargeId)
+        return clinicInspectionService.getClinicChargeById(chargeId)
                 .filter(charge -> SecurityUtils.isUserInClinic(charge.getClinic().getId()))
                 .map(charge -> ResponseEntity.ok().body(charge))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -84,18 +85,18 @@ public class ClinicChargeController {
      */
     @Timed
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<ClinicCharge> post(@PathVariable String clinicId, @Valid @RequestBody ClinicCharge charge, BindingResult errors) throws BindException {
+    public ResponseEntity<ClinicInspection> post(@PathVariable String clinicId, @Valid @RequestBody ClinicInspection charge, BindingResult errors) throws BindException {
         // クリニックの権限チェック
         ErrorsUtils.throwIfNotIdentify(clinicId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // カスタムバリデーションを行う
         charge.setClinic(Clinic.builder().id(clinicId).build());
-        clinicChargeValidator.validate(charge, errors);
+        clinicInspectionValidator.validate(charge, errors);
         ErrorsUtils.throwIfHasErrors(errors);
 
         // プロダクトを保存する
-        ClinicCharge saved = clinicChargeService.saveClinicCharge(charge);
+        ClinicInspection saved = clinicInspectionService.saveClinicCharge(charge);
         return ResponseEntity.created(
                 URI.create("/api/v1/clinics/" + clinicId + "/charges/" + saved.getId())).body(saved);
     }
@@ -112,8 +113,8 @@ public class ClinicChargeController {
      */
     @Timed
     @RequestMapping(value = "/{chargeId}", method = RequestMethod.PUT)
-    public ResponseEntity<ClinicCharge> put(@PathVariable String clinicId, @PathVariable String chargeId,
-                                            @Valid @RequestBody ClinicCharge charge, BindingResult errors) throws BindException {
+    public ResponseEntity<ClinicInspection> put(@PathVariable String clinicId, @PathVariable String chargeId,
+                                                @Valid @RequestBody ClinicInspection charge, BindingResult errors) throws BindException {
         // クリニックの権限チェック
         ErrorsUtils.throwIfNotIdentify(clinicId);
         ErrorsUtils.throwIfNotIdentify(chargeId);
@@ -122,11 +123,11 @@ public class ClinicChargeController {
         // カスタムバリデーションを行う
         charge.setId(chargeId);
         charge.setClinic(Clinic.builder().id(clinicId).build());
-        clinicChargeValidator.validate(charge, errors);
+        clinicInspectionValidator.validate(charge, errors);
         ErrorsUtils.throwIfHasErrors(errors);
 
         // プロダクトを保存する
-        ClinicCharge saved = clinicChargeService.updateClinicCharge(charge);
+        ClinicInspection saved = clinicInspectionService.updateClinicCharge(charge);
         return ResponseEntity.ok().body(saved);
     }
 
@@ -147,10 +148,10 @@ public class ClinicChargeController {
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // プロダクトを削除する
-        return clinicChargeService.getClinicChargeById(chargeId)
+        return clinicInspectionService.getClinicChargeById(chargeId)
                 .filter(charge -> SecurityUtils.isUserInClinic(charge.getClinic().getId()))
                 .map(charge -> {
-                    clinicChargeService.removeClinicCharge(charge);
+                    clinicInspectionService.removeClinicCharge(charge);
                     return ResponseEntity.ok().build();
                 })
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));

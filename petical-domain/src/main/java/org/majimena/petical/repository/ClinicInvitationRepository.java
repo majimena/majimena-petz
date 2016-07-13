@@ -11,17 +11,11 @@ import java.util.List;
 public interface ClinicInvitationRepository extends JpaRepository<ClinicInvitation, String> {
 
     /**
-     * ユーザーIDをもとに、該当するクリニックの招待状を取得する.
+     * ユーザーIDまたはメールアドレスをもとに、該当するクリニックの招待状を取得する.
      *
      * @param userId ユーザーID
+     * @param email  メールアドレス
      * @return 該当するクリニックの招待状の一覧
      */
-    List<ClinicInvitation> findByInvitedUserId(String userId);
-
-    /**
-     * メールアドレスをもとに、該当するクリニックの招待状を取得する.
-     * @param email メールアドレス（ログインIDと同じもので検索すること）
-     * @return 該当するクリニックの招待状の一覧
-     */
-    List<ClinicInvitation> findByEmail(String email);
+    List<ClinicInvitation> findByInvitedUserIdOrEmailOrderByCreatedDateAsc(String userId, String email);
 }

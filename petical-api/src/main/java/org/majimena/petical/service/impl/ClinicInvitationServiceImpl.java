@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -56,17 +55,18 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
     @Override
     @Transactional(readOnly = true)
     public List<ClinicInvitation> getClinicInvitationsByUserId(String userId) {
-        List<ClinicInvitation> invitations = new ArrayList<>();
-
-        // ユーザIDが一致する招待状を取得する
-        List<ClinicInvitation> invitations1 = clinicInvitationRepository.findByInvitedUserId(userId);
-        invitations.addAll(invitations1);
-
-        // メールアドレス（ログインID）が一致する招待状を取得する
+        // ユーザーを取得
         User one = userRepository.findOne(userId);
-        List<ClinicInvitation> invitations2 = clinicInvitationRepository.findByEmail(one.getLogin());
-        invitations.addAll(invitations2);
+        ExceptionUtils.throwIfNull(one);
 
+        // ユーザIDかメールアドレスが一致する招待状を取得する
+        List<ClinicInvitation> invitations = clinicInvitationRepository.findByInvitedUserIdOrEmailOrderByCreatedDateAsc(userId, one.getEmail());
+        invitations.forEach(invitation -> {
+            // lazy loading other entities
+            invitation.getClinic().getId();
+            invitation.getInvitedUser().getId();
+            invitation.getUser().getId();
+        });
         return invitations;
     }
 

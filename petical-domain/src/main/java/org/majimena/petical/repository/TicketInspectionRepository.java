@@ -11,6 +11,12 @@ import java.util.List;
  */
 public interface TicketInspectionRepository extends JpaRepository<TicketInspection, String>, JpaSpecificationExecutor<TicketInspection> {
 
+    /**
+     * チケットをもとにチケットの検査情報を取得する.
+     *
+     * @param ticketId チケットID
+     * @return チケットが持つ検査情報
+     */
     List<TicketInspection> findByTicketIdOrderByCreatedDateAsc(String ticketId);
 
 }

@@ -17,6 +17,7 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -26,7 +27,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Audited
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractAuditingEntity {
+public abstract class AbstractAuditingEntity implements Serializable {
 
     @CreatedBy
     @Column(name = "created_by", nullable = false, length = 50, updatable = false)

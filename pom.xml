@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.3.2.RELEASE</version>
+        <version>1.3.5.RELEASE</version>
     </parent>
 
     <properties>
@@ -24,7 +24,7 @@
         <javax.inject.version>1</javax.inject.version>
 
         <!-- Spring -->
-        <spring-security-oauth2.version>2.0.8.RELEASE</spring-security-oauth2.version>
+        <spring-security-oauth2.version>2.0.9.RELEASE</spring-security-oauth2.version>
         <spring-security.version>4.0.3.RELEASE</spring-security.version>
         <spring-rest-exception-handler.version>1.1.1</spring-rest-exception-handler.version>
         <!-- Hibernate -->
@@ -96,12 +96,12 @@
             </dependency>
             <dependency>
                 <groupId>org.majimena.petical</groupId>
-                <artifactId>petical-domain</artifactId>
+                <artifactId>petical-batch</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.majimena.petical</groupId>
-                <artifactId>petical-batch</artifactId>
+                <artifactId>petical-domain</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
 
@@ -167,6 +167,13 @@
                 <groupId>com.squareup.okhttp</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>2.7.5</version>
+            </dependency>
+
+            <!-- HTML UNIT -->
+            <dependency>
+                <groupId>net.sourceforge.htmlunit</groupId>
+                <artifactId>htmlunit</artifactId>
+                <version>2.20</version>
             </dependency>
 
             <!-- Reporting -->
@@ -713,8 +720,8 @@
 
     <modules>
         <module>petical-api</module>
-        <module>petical-domain</module>
         <module>petical-batch</module>
+        <module>petical-domain</module>
     </modules>
 
 </project>

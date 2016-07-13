@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * ペットサービスの実装.

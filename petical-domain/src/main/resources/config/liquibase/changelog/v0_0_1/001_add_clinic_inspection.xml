@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- 動物病院が管理する検査マスタ（こちらが各動物病院が自由に利用カスタマイズして利用できるマスタ） -->
+
+    <changeSet id="001_clinic_inspection" author="custom">
+        <createTable tableName="clinic_inspection">
+            <column name="id" type="varchar(50)" remarks="ID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="clinic_id" type="varchar(50)" remarks="動物病院ID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course" type="varchar(50)" remarks="科目">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="varchar(50)" remarks="カテゴリ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)" remarks="名称">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="numeric(9,0)" remarks="価格">
+                <constraints nullable="false"/>
+            </column>
+            <column name="insurance" type="boolean" remarks="保険対応可">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit" type="varchar(50)" remarks="単位">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tax_type" type="varchar(20)" remarks="税区分">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tax_rate" type="numeric(3,2)" remarks="税率">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(2000)" remarks="説明">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="varchar(50)" remarks="作成者">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime" remarks="作成日">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="001_clinic_inspection_index" author="custom">
+        <createIndex indexName="idx1_clinic_inspection"
+                     tableName="clinic_inspection">
+            <column name="clinic_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

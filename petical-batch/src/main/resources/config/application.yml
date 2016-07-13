@@ -1,0 +1,51 @@
+# Disable the spring security default configuration from spring-boot-actuator
+management.security.enabled: false
+security.basic.enabled: false
+liquibase.enabled: false
+
+spring:
+    jpa:
+        database-platform: org.hibernate.dialect.MySQLInnoDBDialect
+        database: MYSQL
+        openInView: true
+        show_sql: false
+        generate-ddl: false
+        hibernate:
+            ddl-auto: none
+            naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
+        properties:
+            hibernate.cache.use_second_level_cache: true
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: true
+            hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+    messages:
+        cache-seconds: 1
+    thymeleaf:
+        mode: XHTML
+        cache: false
+
+cache:
+    timeToLiveSeconds: 3600
+    ehcache:
+        maxBytesLocalHeap: 16M
+
+async:
+    corePoolSize: 2
+    maxPoolSize: 50
+    queueCapacity: 10000
+
+# Mail Configuration
+email:
+    provider: SES
+    name: ペティカル (petical.io)
+    from: no-reply@petical.io
+    charset: ISO-2022-JP
+
+# Amazon Web Service Configuration
+aws:
+    ses:
+        region: us-west-2
+    s3:
+        region: ap-northeast-1
+        bucket: images.petical.io
+        type: image/jpeg

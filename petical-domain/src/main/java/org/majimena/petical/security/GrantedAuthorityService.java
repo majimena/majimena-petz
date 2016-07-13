@@ -1,6 +1,6 @@
 package org.majimena.petical.security;
 
-import org.majimena.petical.domain.authentication.PetzGrantedAuthority;
+import org.majimena.petical.security.authentication.PetzGrantedAuthority;
 
 import java.util.List;
 

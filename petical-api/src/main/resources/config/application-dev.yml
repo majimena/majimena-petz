@@ -4,7 +4,7 @@ server:
 endpoints:
     cors:
         allow-credentials: true
-        allowed-origins: http://localhost:9000
+        allowed-origins: http://localhost:9001
         allowed-methods: GET,POST,PUT,DELETE,OPTIONS
         allowed-headers: Content-Type,X-Requested-With,Origin,Accept,Authorization
         exposed-headers: Link

@@ -69,7 +69,7 @@ public class CustomerAuthenticationTokenValidatorTest {
         Errors errors = new BindException(data, "customerAuthenticationToken");
 
         new NonStrictExpectations() {{
-            userRepository.findOneByLogin("test@example.com");
+            userRepository.findOneByActivatedIsTrueAndLogin("test@example.com");
             result = Optional.of(newUser());
             customerRepository.findByClinicIdAndUserId("1", "user1");
             result = Optional.empty();
@@ -88,7 +88,7 @@ public class CustomerAuthenticationTokenValidatorTest {
         Errors errors = new BindException(data, "customerAuthenticationToken");
 
         new NonStrictExpectations() {{
-            userRepository.findOneByLogin("test@example.com");
+            userRepository.findOneByActivatedIsTrueAndLogin("test@example.com");
             result = Optional.of(newUser());
             customerRepository.findByClinicIdAndUserId("1", "user1");
             result = Optional.empty();
@@ -109,7 +109,7 @@ public class CustomerAuthenticationTokenValidatorTest {
         Errors errors = new BindException(data, "customerAuthenticationToken");
 
         new NonStrictExpectations() {{
-            userRepository.findOneByLogin("test@example.com");
+            userRepository.findOneByActivatedIsTrueAndLogin("test@example.com");
             result = Optional.of(newUser());
             customerRepository.findByClinicIdAndUserId("1", "user1");
             result = Optional.empty();
@@ -130,7 +130,7 @@ public class CustomerAuthenticationTokenValidatorTest {
         Errors errors = new BindException(data, "customerAuthenticationToken");
 
         new NonStrictExpectations() {{
-            userRepository.findOneByLogin("test@example.com");
+            userRepository.findOneByActivatedIsTrueAndLogin("test@example.com");
             result = Optional.of(newUser());
             customerRepository.findByClinicIdAndUserId("1", "user1");
             result = Optional.empty();
@@ -150,7 +150,7 @@ public class CustomerAuthenticationTokenValidatorTest {
         Errors errors = new BindException(data, "customerAuthenticationToken");
 
         new NonStrictExpectations() {{
-            userRepository.findOneByLogin("test@example.com");
+            userRepository.findOneByActivatedIsTrueAndLogin("test@example.com");
             result = Optional.empty();
         }};
 
@@ -168,7 +168,7 @@ public class CustomerAuthenticationTokenValidatorTest {
         Errors errors = new BindException(data, "customerAuthenticationToken");
 
         new NonStrictExpectations() {{
-            userRepository.findOneByLogin("test@example.com");
+            userRepository.findOneByActivatedIsTrueAndLogin("test@example.com");
             result = Optional.of(newUser());
             customerRepository.findByClinicIdAndUserId("1", "user1");
             result = Optional.of(Customer.builder().id("customer1").build());

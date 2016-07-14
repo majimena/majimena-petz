@@ -113,7 +113,7 @@ public class UserServiceImplIT {
             user.setPhoneNo("0311112222");
             user.setMobilePhoneNo("09011112222");
 
-            User result = sut.saveUser(user);
+            User result = sut.activate(user);
 
             assertThat(result.getId(), is(notNullValue()));
             assertThat(result.getUsername(), is("テストデータ"));

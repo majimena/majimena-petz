@@ -87,7 +87,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer saveCustomer(CustomerAuthenticationToken token) throws ApplicationException {
         // 指定クリニックと指定ユーザーを紐付けて顧客登録する
         Clinic clinic = clinicRepository.findOne(token.getClinicId());
-        return userRepository.findOneByLogin(token.getLogin())
+        return userRepository.findOneByActivatedIsTrueAndLogin(token.getLogin())
                 .map(user -> {
                     Customer customer = Customer.builder()
                             .clinic(clinic)
@@ -127,7 +127,7 @@ public class CustomerServiceImpl implements CustomerService {
             user.setPassword(RandomUtils.generatePassword());
             user.setLangKey(LangKey.JAPANESE);
             user.setTimeZone(TimeZone.ASIA_TOKYO);
-            saved = userService.saveUser(user);
+            saved = userService.activate(user);
         }
 
         // 顧客とするクリニックを取得する

@@ -43,7 +43,7 @@ public class PetzUserDetailsServiceImplTest {
     @Test
     public void 認証できること() throws Exception {
         new NonStrictExpectations() {{
-            userRepository.findOneByLogin("login1");
+            userRepository.findOneByActivatedIsTrueAndLogin("login1");
             result = Optional.of(createUser());
         }};
 
@@ -59,7 +59,7 @@ public class PetzUserDetailsServiceImplTest {
     @Test(expected = UsernameNotFoundException.class)
     public void 認証できないこと() throws Exception {
         new NonStrictExpectations() {{
-            userRepository.findOneByLogin("login9");
+            userRepository.findOneByActivatedIsTrueAndLogin("login9");
             result = Optional.empty();
         }};
 

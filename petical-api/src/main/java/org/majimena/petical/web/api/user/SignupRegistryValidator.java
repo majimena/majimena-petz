@@ -35,7 +35,7 @@ public class SignupRegistryValidator extends AbstractValidator<SignupRegistry> {
     }
 
     private void validateLogin(String login, Errors errors) {
-        Optional<User> one = userRepository.findOneByLogin(login);
+        Optional<User> one = userRepository.findOneByActivatedIsTrueAndLogin(login);
         one.ifPresent(u -> ErrorsUtils.rejectValue("email", ErrorCode.PTZ_000101, errors));
     }
 }

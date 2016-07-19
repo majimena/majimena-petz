@@ -1,4 +1,4 @@
-package org.majimena.petical.web.api.customer;
+package org.majimena.petical.web.api.clinics.customers;
 
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petical.domain.Customer;

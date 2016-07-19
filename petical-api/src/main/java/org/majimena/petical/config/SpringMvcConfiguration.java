@@ -3,14 +3,18 @@ package org.majimena.petical.config;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver;
 import cz.jirutka.spring.exhandler.support.HttpMessageConverterUtils;
 import org.majimena.petical.common.exceptions.ResourceConflictException;
 import org.majimena.petical.common.exceptions.ResourceNotFoundException;
 import org.majimena.petical.common.factory.JacksonJsonFactory;
 import org.majimena.petical.common.factory.JsonFactory;
+import org.majimena.petical.config.jackson.BooleanDeserializer;
+import org.majimena.petical.config.jackson.BooleanSerializer;
 import org.majimena.petical.datatype.EnumDataType;
 import org.majimena.petical.datatype.SexType;
 import org.majimena.petical.datatype.deserializers.ISO8601LocalDateDeserializer;
@@ -26,6 +30,7 @@ import org.majimena.petical.web.servlet.handler.HttpMessageNotReadableExceptionH
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -42,6 +47,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -116,10 +122,12 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
         module.addSerializer(LocalDate.class, new ISO8601LocalDateSerializer());
         module.addSerializer(LocalDateTime.class, new ISO8601LocalDateTimeSerializer());
         module.addSerializer(EnumDataType.class, new EnumDataTypeSerializer());
+//        module.addSerializer(Boolean.class, new BooleanSerializer());
 
         module.addDeserializer(LocalDate.class, new ISO8601LocalDateDeserializer());
         module.addDeserializer(LocalDateTime.class, new ISO8601LocalDateTimeDeserializer());
         module.addDeserializer(SexType.class, new SexTypeDeserializer());
+//        module.addDeserializer(Boolean.class, new BooleanDeserializer());
 
         return module;
     }
@@ -152,4 +160,23 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/webjars/**")
             .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
+
+//    public class JacksonConfiguration {
+//        @Bean
+//        @Primary
+//        public ObjectMapper objectMapper() {
+//            ObjectMapper mapper = new ObjectMapper();
+//            mapper.registerModule(new JavaTimeModule());
+//            mapper.registerModule(new CustomJava8DateTimeModule());
+//            return mapper;
+//        }
+//
+//        private static class CustomJava8DateTimeModule extends SimpleModule {
+//            public CustomJava8DateTimeModule() {
+//                addSerializer(LocalDate.class, CustomLocalDateSerializer.INSTANCE);
+//                addSerializer(ZonedDateTime.class, CustomZonedDateTimeSerializer.INSTANCE);
+//                addKeySerializer(ZonedDateTime.class, CustomZonedDateTimeSerializer.INSTANCE);
+//            }
+//        }
+//    }
 }

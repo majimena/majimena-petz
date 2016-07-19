@@ -1,4 +1,4 @@
-package org.majimena.petical.web.api.customer;
+package org.majimena.petical.web.api.clinics.customers;
 
 import com.codahale.metrics.annotation.Timed;
 import org.majimena.petical.domain.Customer;

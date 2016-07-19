@@ -1,9 +1,11 @@
-package org.majimena.petical.web.api.customer;
+package org.majimena.petical.web.api.clinics.customers;
 
 import com.codahale.metrics.annotation.Timed;
-import org.majimena.petical.domain.Pet;
+import org.apache.commons.lang3.StringUtils;
+import org.majimena.petical.domain.Chart;
 import org.majimena.petical.security.SecurityUtils;
-import org.majimena.petical.service.PetService;
+import org.majimena.petical.service.ChartService;
+import org.majimena.petical.service.CustomerService;
 import org.majimena.petical.web.utils.ErrorsUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,20 +14,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * 飼い主のペットのコントローラ.
+ * クリニック顧客カルテコントローラ.
  */
 @RestController
-@RequestMapping("/api/v1/clinics/{clinicId}/customers/{customerId}/pets")
-public class ClinicCustomerPetController {
+@RequestMapping("/api/v1/clinics/{clinicId}/customers/{customerId}/charts")
+public class ClinicCustomerChartController {
+
+    /**
+     * カルテサービス.
+     */
+    @Inject
+    private ChartService chartService;
 
     /**
      * 顧客サービス.
      */
     @Inject
-    private PetService petService;
+    private CustomerService customerService;
 
     /**
      * クリニックで管理しているこの顧客のカルテを取得する.
@@ -36,15 +45,17 @@ public class ClinicCustomerPetController {
      */
     @Timed
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<Pet>> get(@PathVariable String clinicId, @PathVariable String customerId) {
+    public ResponseEntity<List<Chart>> get(@PathVariable String clinicId, @PathVariable String customerId) {
         // クリニックの権限チェック
         ErrorsUtils.throwIfNotIdentify(clinicId);
         ErrorsUtils.throwIfNotIdentify(customerId);
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // 参照可能な顧客であれば、その顧客のカルテを全て取得する
-        List<Pet> charts = petService.getPetsByCustomerId(customerId);
-        // FIXME 余計なレスポンスは返さないようにする
+        List<Chart> charts = customerService.getCustomerByCustomerId(customerId)
+                .filter(customer -> StringUtils.equals(clinicId, customer.getClinic().getId()))
+                .map(customer -> chartService.getChartsByCustomerId(customer.getId()))
+                .orElse(Arrays.asList());
         return ResponseEntity.ok().body(charts);
     }
 }

@@ -110,7 +110,8 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public List<Ticket> getTicketsByClinicChartTicketCriteria(ClinicChartTicketCriteria criteria) {
-        List<Ticket> tickets = ticketRepository.findAll(TicketSpecs.of(criteria));
+        // TODO 個別でサービス作ったほうが保守はしやすいかも
+        List<Ticket> tickets = ticketRepository.findAll(TicketSpecs.of(criteria), TicketSpecs.desc());
         return tickets;
     }
 

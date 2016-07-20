@@ -70,4 +70,23 @@ public class TicketInspectionController {
                 .map(saved -> ResponseEntity.created(URI.create("/api/v1/clinics/" + clinicId + "/tickets/" + ticketId + "/inspections/" + saved.getId() + "/")).body(saved))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @Timed
+    @RequestMapping(value = "/{inspectionId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> delete(@PathVariable String clinicId, @PathVariable String ticketId, @PathVariable String inspectionId) {
+        // クリニック権限のチェックとIDのコード体系チェック
+        ErrorsUtils.throwIfNotIdentify(clinicId);
+        ErrorsUtils.throwIfNotIdentify(ticketId);
+        ErrorsUtils.throwIfNotIdentify(inspectionId);
+        SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
+
+        // チケットの権限チェックをして、問題なければ検査情報を削除する
+        return ticketService.getTicketByTicketId(ticketId)
+                .filter(ticket -> StringUtils.equals(ticket.getClinic().getId(), clinicId))
+                .map(ticket -> {
+                    ticketInspectionService.removeTicketInspectionById(inspectionId);
+                    return ResponseEntity.ok().build();
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }

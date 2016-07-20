@@ -5,6 +5,7 @@ import org.majimena.petical.datatype.TicketState;
 import org.majimena.petical.domain.clinic.ClinicOutlineCriteria;
 import org.majimena.petical.domain.ticket.ClinicChartTicketCriteria;
 import org.majimena.petical.domain.ticket.TicketCriteria;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -15,6 +16,12 @@ import java.util.Optional;
  * スケジュールを検索するスペック.
  */
 public class TicketSpecs {
+
+    public static Sort desc() {
+        Sort.Order order1 = new Sort.Order(Sort.Direction.DESC, "startDateTime");
+        Sort.Order order2 = new Sort.Order(Sort.Direction.ASC, "id");
+        return new Sort(order1, order2);
+    }
 
     /**
      * チケット検索条件をもとにスペックを作成する.

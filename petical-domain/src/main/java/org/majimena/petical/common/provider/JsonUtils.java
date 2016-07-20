@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.majimena.petical.common.exceptions.SystemException;
 
 /**
- * JSONプロバイダ.
+ * JSONのユーティリティ.
  */
-public class JsonProvider {
+public class JsonUtils {
     /**
      * JSON文字列に変換する.
      *

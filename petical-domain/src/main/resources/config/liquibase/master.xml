@@ -40,4 +40,6 @@
     <include file="classpath:config/liquibase/changelog/v0_0_1/001_mod_ticket.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/v0_0_1/001_add_ticket_inspection.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/v0_0_1/001_mod_user.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_1/001_add_ticket_account.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_1/001_add_ticket_payment.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

@@ -112,6 +112,11 @@ public class TicketServiceImpl implements TicketService {
     public List<Ticket> getTicketsByClinicChartTicketCriteria(ClinicChartTicketCriteria criteria) {
         // TODO 個別でサービス作ったほうが保守はしやすいかも
         List<Ticket> tickets = ticketRepository.findAll(TicketSpecs.of(criteria), TicketSpecs.desc());
+        tickets.forEach(ticket -> {
+            if (ticket.getDiagnosis() != null) {
+                ticket.getDiagnosis().getId();
+            }
+        });
         return tickets;
     }
 

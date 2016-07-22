@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="001_ticket_payment" author="custom">
+        <createTable tableName="ticket_payment" remarks="チケット支払">
+            <column name="id" type="varchar(50)" remarks="チケット支払ID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ticket_id" type="varchar(50)" remarks="チケットID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(20)" remarks="支払方法">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total" type="numeric(12,0)" remarks="請求額">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="numeric(12,0)" remarks="受領額">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed" type="numeric(9,0)" remarks="お釣り">
+                <constraints nullable="false"/>
+            </column>
+            <column name="memo" type="varchar(2000)" remarks="メモ">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="varchar(50)" remarks="作成者">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime" remarks="作成日">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="001_ticket_payment_index" author="custom">
+        <createIndex indexName="idx1_ticket_payment"
+                     tableName="ticket_payment">
+            <column name="ticket_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

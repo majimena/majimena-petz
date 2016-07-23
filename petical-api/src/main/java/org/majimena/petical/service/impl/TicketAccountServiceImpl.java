@@ -1,11 +1,15 @@
 package org.majimena.petical.service.impl;
 
+import org.majimena.petical.common.exceptions.ApplicationException;
 import org.majimena.petical.datatype.TicketState;
 import org.majimena.petical.domain.Ticket;
 import org.majimena.petical.domain.TicketAccount;
 import org.majimena.petical.domain.TicketInspection;
+import org.majimena.petical.domain.TicketPayment;
+import org.majimena.petical.domain.errors.ErrorCode;
 import org.majimena.petical.repository.TicketAccountRepository;
 import org.majimena.petical.repository.TicketInspectionRepository;
+import org.majimena.petical.repository.TicketPaymentRepository;
 import org.majimena.petical.repository.TicketRepository;
 import org.majimena.petical.service.TicketAccountService;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,12 @@ public class TicketAccountServiceImpl implements TicketAccountService {
     private TicketInspectionRepository ticketInspectionRepository;
 
     /**
+     * チケット支払リポジトリ.
+     */
+    @Inject
+    private TicketPaymentRepository ticketPaymentRepository;
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -53,6 +63,12 @@ public class TicketAccountServiceImpl implements TicketAccountService {
             if (force) {
                 ticketAccountRepository.removeByTicketId(ticketId);
                 accounts = new ArrayList<>();
+            }
+
+            // 既に会計情報が作成されている場合は変更できない
+            List<TicketPayment> payments = ticketPaymentRepository.findByTicketId(ticketId);
+            if (!payments.isEmpty()) {
+                throw new ApplicationException(ErrorCode.PTZ_100201);
             }
 
             // 検査内容から会計情報を作成する

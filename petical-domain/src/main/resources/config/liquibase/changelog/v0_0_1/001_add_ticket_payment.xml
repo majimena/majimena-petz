@@ -12,6 +12,9 @@
             <column name="ticket_id" type="varchar(50)" remarks="チケットID">
                 <constraints nullable="false"/>
             </column>
+            <column name="date" type="datetime" remarks="支払日">
+                <constraints nullable="false"/>
+            </column>
             <column name="type" type="varchar(20)" remarks="支払方法">
                 <constraints nullable="false"/>
             </column>
@@ -19,6 +22,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="amount" type="numeric(12,0)" remarks="受領額">
+                <constraints nullable="false"/>
+            </column>
+            <column name="discount" type="numeric(12,0)" remarks="割引額">
                 <constraints nullable="false"/>
             </column>
             <column name="changed" type="numeric(9,0)" remarks="お釣り">

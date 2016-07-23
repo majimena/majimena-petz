@@ -11,11 +11,15 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.majimena.petical.datatype.PaymentType;
+import org.majimena.petical.datatype.converters.LocalDateTimePersistenceConverter;
 import org.majimena.petical.datatype.defs.Description;
+import org.majimena.petical.datatype.deserializers.ISO8601LocalDateTimeDeserializer;
 import org.majimena.petical.datatype.deserializers.PaymentTypeDeserializer;
 import org.majimena.petical.datatype.serializers.EnumDataTypeSerializer;
+import org.majimena.petical.datatype.serializers.ISO8601LocalDateTimeSerializer;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,6 +33,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * チケット支払エンティティ.
@@ -59,7 +64,16 @@ public class TicketPayment extends AbstractAuditingEntity implements Serializabl
     private Ticket ticket;
 
     /**
-     * 支払方法.
+     * 支払日.
+     */
+    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
+    @Column(name = "date", nullable = true)
+    private LocalDateTime date;
+
+    /**
+     * 支払方法. // FIXME input-selectにする
      */
     @NotNull
     @JsonSerialize(using = EnumDataTypeSerializer.class)
@@ -71,10 +85,17 @@ public class TicketPayment extends AbstractAuditingEntity implements Serializabl
     /**
      * 請求額.
      */
-    @NotNull
     @Digits(integer = 12, fraction = 0)
     @Column(name = "total", precision = 12, scale = 0, nullable = false)
     private BigDecimal total;
+
+    /**
+     * 割引額.
+     */
+    @NotNull
+    @Digits(integer = 12, fraction = 0)
+    @Column(name = "discount", precision = 12, scale = 0, nullable = false)
+    private BigDecimal discount;
 
     /**
      * 受領額.
@@ -87,7 +108,6 @@ public class TicketPayment extends AbstractAuditingEntity implements Serializabl
     /**
      * お釣り.
      */
-    @NotNull
     @Digits(integer = 9, fraction = 0)
     @Column(name = "changed", precision = 9, scale = 0, nullable = false)
     private BigDecimal changed;

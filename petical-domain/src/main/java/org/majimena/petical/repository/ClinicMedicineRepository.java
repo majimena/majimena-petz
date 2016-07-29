@@ -4,6 +4,7 @@ import org.majimena.petical.domain.ClinicMedicine;
 import org.majimena.petical.domain.Medicine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -22,7 +23,8 @@ public interface ClinicMedicineRepository extends JpaRepository<ClinicMedicine, 
      */
     @Query(value = "insert into clinic_medicine "
             + "select uuid(), :clinicId, id, 0, :userId, now(), :userId, now() from medicine where official=1 order by id", nativeQuery = true)
-    void setup(@Param("clinicId") String clinicId, @Param("userId") String userId);
+    @Modifying
+    int setup(@Param("clinicId") String clinicId, @Param("userId") String userId);
 
     /**
      * 個別動物病院向けの医薬品マスタから使用可能な医薬品を全て取得する.

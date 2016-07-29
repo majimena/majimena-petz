@@ -38,14 +38,6 @@ public interface TicketService {
     Optional<Ticket> getTicketByTicketId(String ticketId);
 
     /**
-     * 本日分のチケットのグラフデータを取得する.
-     *
-     * @param clinicId クリニックID
-     * @return 本日分のチケットデータ
-     */
-    Graph getTodaysTicketGraphByClinicId(String clinicId);
-
-    /**
      * チケットを新規作成する.
      *
      * @param ticket チケット

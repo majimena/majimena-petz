@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- チケットにひも付ける検査トラン -->
+
+    <changeSet id="001_ticket_account" author="custom">
+        <createTable tableName="ticket_account" remarks="チケット会計トラン">
+            <column name="id" type="varchar(50)" remarks="チケット会計ID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ticket_id" type="varchar(50)" remarks="チケットID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)" remarks="明細名称">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="numeric(6,0)" remarks="数量">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="numeric(9,0)" remarks="単価">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="numeric(9,0)" remarks="金額">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tax" type="numeric(9,0)" remarks="税額">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subtotal" type="numeric(9,0)" remarks="小計">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(50)" remarks="作成者">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime" remarks="作成日">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="001_ticket_account_index" author="custom">
+        <createIndex indexName="idx1_ticket_account"
+                     tableName="ticket_account">
+            <column name="ticket_id" type="varchar(50)"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

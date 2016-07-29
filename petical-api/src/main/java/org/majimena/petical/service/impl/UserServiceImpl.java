@@ -13,6 +13,7 @@ import org.majimena.petical.datetime.L10nDateTimeProvider;
 import org.majimena.petical.domain.Authority;
 import org.majimena.petical.domain.User;
 import org.majimena.petical.domain.errors.ErrorCode;
+import org.majimena.petical.domain.user.ActivationRegistry;
 import org.majimena.petical.domain.user.PasswordRegistry;
 import org.majimena.petical.domain.user.SignupRegistry;
 import org.majimena.petical.domain.user.UserCriteria;
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Optional<User> requestPasswordReset(String login) {
-        return userRepository.findOneByLogin(login)
+        return userRepository.findOneByActivatedIsTrueAndLogin(login)
                 .map(user -> {
                     // パスワードをリセットするキーを保存
                     user.setResetKey(RandomUtils.generateResetKey());
@@ -130,7 +131,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserOutline> getUsersByUserCriteria(final UserCriteria criteria) {
         // 今はメアド検索しかないのでこのままでもOK
-        Optional<User> user = userRepository.findOneByLogin(criteria.getEmail());
+        Optional<User> user = userRepository.findOneByActivatedIsTrueAndLogin(criteria.getEmail());
         return user
                 .map(u -> Arrays.asList(BeanFactory.create(u, new UserOutline())))
                 .orElse(Arrays.asList());
@@ -151,51 +152,61 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Optional<User> getUserByLogin(String loginId) {
-        return userRepository.findOneByLogin(loginId);
+        return userRepository.findOneByActivatedIsTrueAndLogin(loginId);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public User saveUser(SignupRegistry registry) {
+    public void signup(SignupRegistry registry) {
+        // もしアクティベートされていないユーザーがいたら、間違えてもう一度ユーザー登録していると思われるので削除する
+        userRepository.findOneByLogin(registry.getEmail())
+                .filter(user -> !user.getActivated())
+                .ifPresent(user -> {
+                    userRepository.delete(user);
+                    userRepository.flush();
+                });
+
         // ロールを作成する
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
         authorities.add(authority);
 
-        // パスワードのハッシュ化
-        String encryptedPassword = passwordEncoder.encode(registry.getPassword());
-
-        // ユーザーを登録する
+        // 基本ユーザーを登録する（アクティベート前なのでログインできないユーザー）
         User user = new User();
-        user.setFirstName(registry.getFirstName());
-        user.setLastName(registry.getLastName());
-        user.setUsername(registry.getFirstName());
+        user.setUsername("Not Activated User");
         user.setEmail(registry.getEmail());
         user.setLogin(registry.getEmail());
-        user.setPassword(encryptedPassword);
-        // TODO 海外対応を考える
+        user.setPassword("not-activated-user-password");
         user.setCountry("JP");
         user.setLangKey(LangKey.JAPANESE);
         user.setTimeZone(TimeZone.ASIA_TOKYO);
-
-        // new user is not active
         user.setActivated(false);
         user.setActivationKey(RandomUtils.generateActivationKey());
         user.setAuthorities(authorities);
-        User newUser = userRepository.save(user);
+        User saved = userRepository.save(user);
 
-        // send activation mail
-        userEmailService.sendActivationMail(newUser);
-        return newUser;
+        // 登録メールアドレスに確認メールを送る
+        userEmailService.sendActivationMail(saved);
+    }
+
+    @Override
+    public Optional<User> activate(ActivationRegistry registry) {
+        return userRepository.findOneByActivationKey(registry.getActivationKey())
+                .map(user -> {
+                    // パスワードを設定してアクティベートする
+                    String password = passwordEncoder.encode(registry.getPassword());
+                    user.setPassword(password);
+                    user.setUsername(registry.getUsername());
+                    user.setActivated(Boolean.TRUE);
+                    user.setActivationKey(null);
+                    return userRepository.save(user);
+                });
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public User saveUser(User user) {
+    public User activate(User user) {
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
         authorities.add(authority);
@@ -224,6 +235,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public Optional<User> activateRegistration(String key) {
         return userRepository.findOneByActivationKey(key)
                 .map(user -> {
@@ -264,7 +276,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserInformation(String firstName, String lastName, String email) {
-        userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).ifPresent(u -> {
+        userRepository.findOneByActivatedIsTrueAndLogin(SecurityUtils.getCurrentLogin()).ifPresent(u -> {
             u.setFirstName(firstName);
             u.setLastName(lastName);
             u.setEmail(email);

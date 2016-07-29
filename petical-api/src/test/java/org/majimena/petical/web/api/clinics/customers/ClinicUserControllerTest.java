@@ -1,4 +1,4 @@
-package org.majimena.petical.web.api.customer;
+package org.majimena.petical.web.api.clinics.customers;
 
 import junit.framework.TestCase;
 import mockit.Injectable;

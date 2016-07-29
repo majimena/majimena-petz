@@ -1,6 +1,6 @@
 package org.majimena.petical.service.impl;
 
-import org.majimena.petical.common.provider.JsonProvider;
+import org.majimena.petical.common.provider.JsonUtils;
 import org.majimena.petical.common.utils.ExceptionUtils;
 import org.majimena.petical.domain.ClinicInspection;
 import org.majimena.petical.domain.TicketInspection;
@@ -61,8 +61,19 @@ public class TicketInspectionServiceImpl implements TicketInspectionService {
         inspection.setAmount(amount);
         inspection.setTax(tax);
         inspection.setSubtotal(amount.add(tax));
-        inspection.setOriginal(JsonProvider.toJson(i));
+        inspection.setOriginal(JsonUtils.toJson(i));
 
         return ticketInspectionRepository.save(inspection);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public void removeTicketInspectionById(String ticketInspectionId) {
+        TicketInspection inspection = ticketInspectionRepository.findOne(ticketInspectionId);
+        ExceptionUtils.throwIfNull(inspection);
+        ticketInspectionRepository.delete(inspection);
     }
 }

@@ -35,7 +35,7 @@ public class PetzUserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(final String login) {
-        return userRepository.findOneByLogin(login)
+        return userRepository.findOneByActivatedIsTrueAndLogin(login)
                 .map(user -> {
                     // ユーザー権限
                     List<GrantedAuthority> authorities = user.getAuthorities().stream()

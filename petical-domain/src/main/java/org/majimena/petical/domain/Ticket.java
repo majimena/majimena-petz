@@ -33,6 +33,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -99,6 +100,30 @@ public class Ticket extends AbstractAuditingEntity implements Serializable {
     @Convert(converter = LocalDateTimePersistenceConverter.class)
     @Column(name = "end_date_time", nullable = false)
     private LocalDateTime endDateTime;
+
+    /**
+     * 消費税.
+     */
+    @Column(name = "tax", precision = 9, scale = 0, nullable = true)
+    private BigDecimal tax;
+
+    /**
+     * 請求金額.
+     */
+    @Column(name = "total", precision = 9, scale = 0, nullable = true)
+    private BigDecimal total;
+
+    /**
+     * 不足金額.
+     */
+    @Column(name = "balance", precision = 9, scale = 0, nullable = true)
+    private BigDecimal balance;
+
+    /**
+     * 値引金額.
+     */
+    @Column(name = "discount", precision = 9, scale = 0, nullable = true)
+    private BigDecimal discount;
 
     /**
      * 主訴・稟告.

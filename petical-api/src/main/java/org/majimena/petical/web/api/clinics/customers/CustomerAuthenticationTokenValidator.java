@@ -1,4 +1,4 @@
-package org.majimena.petical.web.api.customer;
+package org.majimena.petical.web.api.clinics.customers;
 
 import org.apache.commons.lang3.StringUtils;
 import org.majimena.petical.domain.User;
@@ -44,7 +44,7 @@ public class CustomerAuthenticationTokenValidator extends AbstractValidator<Cust
 
     private User validateLogin(CustomerAuthenticationToken token, Errors errors) {
         // ログインIDで検索
-        return userRepository.findOneByLogin(token.getLogin())
+        return userRepository.findOneByActivatedIsTrueAndLogin(token.getLogin())
                 .map(user -> {
                     // 氏名、電話番号が同じかチェック
                     ErrorsUtils.rejectIfNotEquals(ErrorCode.PTZ_000201, token.getFirstName(), user.getFirstName(), errors);

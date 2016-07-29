@@ -28,13 +28,13 @@ public class UserEmailServiceImpl implements UserEmailService {
     /**
      * {@inheritDoc}
      */
-    @Async
     @Override
     public void sendActivationMail(User user) {
         // アクティベーションメールを送信する
         String to = user.getEmail();
         Map<String, Object> variables = new HashMap<>();
         variables.put("user", user);
+        variables.put("url", "https://petical.io/signup/activate?key=" + user.getActivationKey() + "&user=" + user.getLogin());
         emailProvider.sendEmail(to, "ユーザー登録完了のお知らせ", "user/ActivationEmail", variables);
     }
 

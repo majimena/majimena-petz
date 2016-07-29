@@ -1,4 +1,4 @@
-package org.majimena.petical.web.api.customer;
+package org.majimena.petical.web.api.clinics.customers;
 
 import mockit.Injectable;
 import mockit.NonStrictExpectations;
@@ -59,7 +59,7 @@ public class CustomerValidatorTest {
         new NonStrictExpectations() {{
             customerRepository.findOne("customer1");
             result = Customer.builder().id("customer1").clinic(Clinic.builder().id("1").build()).build();
-            userRepository.findOneByLogin("test@example.com");
+            userRepository.findOneByActivatedIsTrueAndLogin("test@example.com");
             result = null;
         }};
 

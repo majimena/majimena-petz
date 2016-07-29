@@ -56,7 +56,7 @@ public class ClinicInvitationRegistryValidatorTest {
         Errors errors = new BindException(data, "clinicInvitationRegistry");
 
         new NonStrictExpectations() {{
-            userRepository.findOneByLogin("foo@bar.com");
+            userRepository.findOneByActivatedIsTrueAndLogin("foo@bar.com");
             result = Optional.of(User.builder().id("user1").login("foo@bar.com").build());
             clinicStaffRepository.findByClinicIdAndUserId("1", "user1");
             result = Optional.ofNullable(null);
@@ -89,7 +89,7 @@ public class ClinicInvitationRegistryValidatorTest {
         Errors errors = new BindException(data, "clinicInvitationRegistry");
 
         new NonStrictExpectations() {{
-            userRepository.findOneByLogin("foo@bar.com");
+            userRepository.findOneByActivatedIsTrueAndLogin("foo@bar.com");
             result = Optional.of(User.builder().id("user1").login("foo@bar.com").build());
             clinicStaffRepository.findByClinicIdAndUserId("1", "user1");
             result = Optional.of(ClinicStaff.builder().id("staff1").build());

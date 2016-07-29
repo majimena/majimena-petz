@@ -7,17 +7,25 @@
     <changeSet id="001_mod_ticket" author="custom">
         <dropColumn tableName="ticket" columnName="memo"></dropColumn>
         <addColumn tableName="ticket">
-            <column name="autognosis" type="varchar(2000)" afterColumn="end_date_time">
+            <column name="total" type="numeric(12,0)" afterColumn="end_date_time" remarks="請求額">
                 <constraints nullable="true"/>
             </column>
-        </addColumn>
-        <addColumn tableName="ticket">
-            <column name="diagnosis_id" type="varchar(50)" afterColumn="autognosis">
+            <column name="balance" type="numeric(12,0)" afterColumn="total" remarks="不足金額">
                 <constraints nullable="true"/>
             </column>
-        </addColumn>
-        <addColumn tableName="ticket">
-            <column name="memo" type="varchar(10000)" afterColumn="diagnosis_id">
+            <column name="tax" type="numeric(9,0)" afterColumn="balance" remarks="税額">
+                <constraints nullable="true"/>
+            </column>
+            <column name="discount" type="numeric(9,0)" afterColumn="tax" remarks="値引額">
+                <constraints nullable="true"/>
+            </column>
+            <column name="autognosis" type="varchar(2000)" afterColumn="discount" remarks="稟告">
+                <constraints nullable="true"/>
+            </column>
+            <column name="diagnosis_id" type="varchar(50)" afterColumn="autognosis" remarks="診断結果ID">
+                <constraints nullable="true"/>
+            </column>
+            <column name="memo" type="varchar(10000)" afterColumn="diagnosis_id" remarks="診断結果メモ">
                 <constraints nullable="true"/>
             </column>
         </addColumn>

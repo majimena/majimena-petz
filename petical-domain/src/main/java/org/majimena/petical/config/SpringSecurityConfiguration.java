@@ -44,7 +44,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/api/v1/password")
                 .antMatchers(HttpMethod.POST, "/api/v1/password")
                 .antMatchers(HttpMethod.POST, "/api/v1/signup")
-                .antMatchers(HttpMethod.GET, "/api/v1/activate")
+                .antMatchers(HttpMethod.POST, "/api/v1/activate")
         //                .antMatchers("/metrics/**");
         ;
     }

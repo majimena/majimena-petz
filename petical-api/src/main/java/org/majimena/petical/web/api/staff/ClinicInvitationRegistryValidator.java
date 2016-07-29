@@ -41,7 +41,7 @@ public class ClinicInvitationRegistryValidator extends AbstractValidator<ClinicI
             }
 
             // 同一メールアドレスが既にスタッフとして登録されていないかチェック
-            userRepository.findOneByLogin(email).ifPresent(user ->
+            userRepository.findOneByActivatedIsTrueAndLogin(email).ifPresent(user ->
                     clinicStaffRepository.findByClinicIdAndUserId(target.getClinicId(), user.getId())
                             .ifPresent(staff -> errors.rejectValue("emails", ErrorCode.PTZ_001204.name())));
         }

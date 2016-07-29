@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -56,17 +55,18 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
     @Override
     @Transactional(readOnly = true)
     public List<ClinicInvitation> getClinicInvitationsByUserId(String userId) {
-        List<ClinicInvitation> invitations = new ArrayList<>();
-
-        // ユーザIDが一致する招待状を取得する
-        List<ClinicInvitation> invitations1 = clinicInvitationRepository.findByInvitedUserId(userId);
-        invitations.addAll(invitations1);
-
-        // メールアドレス（ログインID）が一致する招待状を取得する
+        // ユーザーを取得
         User one = userRepository.findOne(userId);
-        List<ClinicInvitation> invitations2 = clinicInvitationRepository.findByEmail(one.getLogin());
-        invitations.addAll(invitations2);
+        ExceptionUtils.throwIfNull(one);
 
+        // ユーザIDかメールアドレスが一致する招待状を取得する
+        List<ClinicInvitation> invitations = clinicInvitationRepository.findByInvitedUserIdOrEmailOrderByCreatedDateAsc(userId, one.getEmail());
+        invitations.forEach(invitation -> {
+            // lazy loading other entities
+            invitation.getClinic().getId();
+            invitation.getInvitedUser().getId();
+            invitation.getUser().getId();
+        });
         return invitations;
     }
 
@@ -95,7 +95,7 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
         // 送信先を特定する
         emails.stream().forEach(email -> {
             // 招待先が既存ユーザーならユーザーを取得
-            Optional<User> invited = userRepository.findOneByLogin(email);
+            Optional<User> invited = userRepository.findOneByActivatedIsTrueAndLogin(email);
 
             // クリニック招待状を作成する
             String activationKey = RandomUtils.generateActivationKey();
@@ -124,7 +124,7 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
         ClinicInvitation invitation = clinicInvitationRepository.findOne(invitationId);
 
         // 招待を承認してアクティベートする（validation済みであること）
-        Optional<User> user = userRepository.findOneByLogin(login);
+        Optional<User> user = userRepository.findOneByActivatedIsTrueAndLogin(login);
         ClinicStaff staff = ClinicStaff.builder()
                 .clinic(invitation.getClinic())
                 .user(user.orElseThrow(() -> new SystemException("get unsaved user.")))

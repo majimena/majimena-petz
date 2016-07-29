@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="001_nval_item" author="custom">
+        <createTable tableName="nval_item">
+            <column name="id" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nval_id" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="category_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="side_effect" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+            <column name="medicinal_effect_category" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="packing_unit" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="target" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="banning_period" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="effect" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dosage" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="attention" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="storage_condition" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="note" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="modified_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="approved_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="approved_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="approved_date1" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="approved_date2" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="approved_date3" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="notified_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="re_examine_result_notice_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="maker_or_dealer_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="selected_maker_or_dealer_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="preparation_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="form_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="regulation_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="available_period" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ruminant_by_products" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="datetime"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value="ENGINE=INNODB CHARSET=UTF8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="001_nval_item_index" author="custom">
+        <createIndex indexName="idx1_nval_item"
+                     tableName="nval_item">
+            <column name="nval_id" type="varchar(255)"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -96,6 +96,12 @@ public class TicketServiceImpl implements TicketService {
     @Transactional(readOnly = true)
     public List<Ticket> getTicketsByTicketCriteria(TicketCriteria criteria) {
         List<Ticket> tickets = ticketRepository.findAll(TicketSpecs.of(criteria));
+        tickets.forEach(ticket -> {
+            // lazy loading TODO eager fetchしないと性能が良くないかも
+            ticket.getChart().getCustomer().getId();
+            ticket.getChart().getCustomer().getUser().getId();
+            ticket.getChart().getPet().getId();
+        });
         return tickets;
     }
 
@@ -104,7 +110,13 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public List<Ticket> getTicketsByClinicChartTicketCriteria(ClinicChartTicketCriteria criteria) {
-        List<Ticket> tickets = ticketRepository.findAll(TicketSpecs.of(criteria));
+        // TODO 個別でサービス作ったほうが保守はしやすいかも
+        List<Ticket> tickets = ticketRepository.findAll(TicketSpecs.of(criteria), TicketSpecs.desc());
+        tickets.forEach(ticket -> {
+            if (ticket.getDiagnosis() != null) {
+                ticket.getDiagnosis().getId();
+            }
+        });
         return tickets;
     }
 
@@ -114,35 +126,18 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Ticket> getTicketByTicketId(String ticketId) {
-        Ticket ticket = ticketRepository.getOne(ticketId);
-        // lazy load
-        if (ticket != null) {
-            ticket.getChart().getId();
-            ticket.getChart().getPet().getId();
-            ticket.getChart().getCustomer().getId();
-            ticket.getChart().getCustomer().getUser().getId();
-        }
-        return Optional.ofNullable(ticket);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Graph getTodaysTicketGraphByClinicId(String clinicId) {
-        ZonedDateTime now = L10nDateTimeProvider.now();
-
-        List<List<Object>> data = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
-            LocalDateTime from = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i);
-            LocalDateTime to = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i, 59, 59);
-
-            long completed = ticketRepository.count(TicketSpecs.of(clinicId, TicketState.COMPLETED, from, to));
-            long reserved = ticketRepository.count(TicketSpecs.of(clinicId, TicketState.RESERVED, from, to));
-            data.add(Arrays.asList(from.toEpochSecond(ZoneOffset.UTC) * 1000, BigDecimal.valueOf(completed), BigDecimal.valueOf(reserved)));
-        }
-        return new Graph(Arrays.asList("Time", "Completed", "Reserved"), data);
+        return Optional.ofNullable(ticketRepository.getOne(ticketId))
+                .map(ticket -> {
+                    // lazy load other entities
+                    ticket.getChart().getId();
+                    ticket.getChart().getPet().getId();
+                    ticket.getChart().getCustomer().getId();
+                    ticket.getChart().getCustomer().getUser().getId();
+                    if (ticket.getDiagnosis() != null) {
+                        ticket.getDiagnosis().getId();
+                    }
+                    return ticket;
+                });
     }
 
     /**

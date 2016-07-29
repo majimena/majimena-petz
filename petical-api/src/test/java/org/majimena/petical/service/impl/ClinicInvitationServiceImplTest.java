@@ -60,7 +60,7 @@ public class ClinicInvitationServiceImplTest {
                 result = Clinic.builder().id("10").name("テストクリニック").description("テストクリニックの説明").build();
                 userRepository.findOne("1");
                 result = User.builder().id("1").login("login").langKey(LangKey.JAPANESE).build();
-                userRepository.findOneByLogin("test@mail.com");
+                userRepository.findOneByActivatedIsTrueAndLogin("test@mail.com");
                 result = Optional.of(User.builder().id("2").login("login").langKey(LangKey.JAPANESE).build());
             }};
 
@@ -98,7 +98,7 @@ public class ClinicInvitationServiceImplTest {
                 result = Clinic.builder().id("10").name("テストクリニック").description("テストクリニックの説明").build();
                 userRepository.findOne("1");
                 result = User.builder().id("1").login("login").langKey(LangKey.JAPANESE).build();
-                userRepository.findOneByLogin("test@mail.com");
+                userRepository.findOneByActivatedIsTrueAndLogin("test@mail.com");
                 result = Optional.empty();
             }};
 
@@ -157,7 +157,7 @@ public class ClinicInvitationServiceImplTest {
                     .activationKey("1234567890")
                     .user(User.builder().id("10").login("login").build())
                     .clinic(Clinic.builder().id("100").name("テストクリニック").build()).build();
-                userRepository.findOneByLogin("foo");
+                userRepository.findOneByActivatedIsTrueAndLogin("foo");
                 result = Optional.of(User.builder().id("1000").login("foo").langKey(LangKey.JAPANESE).build());
             }};
 
@@ -188,7 +188,7 @@ public class ClinicInvitationServiceImplTest {
                 result = ClinicInvitation.builder().id("1").email("").activationKey("1234567890")
                     .user(User.builder().id("10").login("login").build())
                     .clinic(Clinic.builder().id("100").name("テストクリニック").build()).build();
-                userRepository.findOneByLogin("foo");
+                userRepository.findOneByActivatedIsTrueAndLogin("foo");
                 result = Optional.empty();
             }};
 

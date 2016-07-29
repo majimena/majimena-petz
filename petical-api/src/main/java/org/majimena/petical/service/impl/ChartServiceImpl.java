@@ -68,7 +68,12 @@ public class ChartServiceImpl implements ChartService {
     @Override
     @Transactional(readOnly = true)
     public List<Chart> getChartsByCustomerId(String customerId) {
-        return chartRepository.findByCustomerId(customerId);
+        List<Chart> charts = chartRepository.findByCustomerId(customerId);
+        charts.forEach(chart -> {
+            chart.getCustomer().getId();
+            chart.getPet().getId();
+        });
+        return charts;
     }
 
     /**
@@ -155,7 +160,7 @@ public class ChartServiceImpl implements ChartService {
         // ペット情報が変更されているかもしれないので、更新する
         Pet pet = one.getPet();
         BeanFactoryUtils.copyNonNullProperties(chart.getPet(), pet);
-        petRepository.save(pet);
+        petService.savePet(pet);
 
         // カルテを更新する
         BeanFactoryUtils.copyNonNullProperties(chart, one);

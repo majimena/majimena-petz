@@ -1,8 +1,8 @@
 package org.majimena.petical.security;
 
-import org.majimena.petical.domain.authentication.PetzGrantedAuthority;
-import org.majimena.petical.domain.authentication.PetzUser;
-import org.majimena.petical.domain.authentication.PetzUserKey;
+import org.majimena.petical.security.authentication.PetzGrantedAuthority;
+import org.majimena.petical.security.authentication.PetzUser;
+import org.majimena.petical.security.authentication.PetzUserKey;
 import org.majimena.petical.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,7 +35,7 @@ public class PetzUserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(final String login) {
-        return userRepository.findOneByLogin(login)
+        return userRepository.findOneByActivatedIsTrueAndLogin(login)
                 .map(user -> {
                     // ユーザー権限
                     List<GrantedAuthority> authorities = user.getAuthorities().stream()

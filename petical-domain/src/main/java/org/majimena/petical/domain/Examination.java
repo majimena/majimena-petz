@@ -58,10 +58,10 @@ public class Examination extends AbstractAuditingEntity implements Serializable 
     @JoinColumn(name = "ticket_id", nullable = false)
     private Ticket ticket;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+//    @NotNull
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "product_id", nullable = false)
+//    private Product product;
 
     @NotNull
     @Size(max = Name.MAX_LENGTH)

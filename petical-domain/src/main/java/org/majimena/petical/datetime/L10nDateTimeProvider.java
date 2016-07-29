@@ -4,7 +4,9 @@ import org.majimena.petical.datatype.TimeZone;
 import org.majimena.petical.security.SecurityUtils;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * ローカル日時プロバイダ.
@@ -18,6 +20,22 @@ public class L10nDateTimeProvider {
      */
     public static ZonedDateTime now() {
         return ZonedDateTime.now(TimeZone.UTC.getZoneId());
+    }
+
+    /**
+     * ゾーン情報を持つ現在日を取得する.
+     * FIXME 間違ってる？？
+     *
+     * @return ゾーン情報を持つ現在日時
+     */
+    public static ZonedDateTime today() {
+        TimeZone zone = SecurityUtils.getCurrentTimeZone();
+        ZonedDateTime now = ZonedDateTime.now(zone.getZoneId());
+        return now.withNano(0).withSecond(0);
+    }
+
+    public static LocalDateTime from(String datetime, DateTimeFormatter formatter) {
+        return LocalDateTime.from(formatter.parse(datetime));
     }
 
     /**

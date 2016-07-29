@@ -2,6 +2,7 @@ package org.majimena.petical.service;
 
 import org.majimena.petical.common.exceptions.ApplicationException;
 import org.majimena.petical.domain.Customer;
+import org.majimena.petical.domain.User;
 import org.majimena.petical.domain.customer.CustomerAuthenticationToken;
 import org.majimena.petical.domain.customer.CustomerCriteria;
 import org.springframework.data.domain.Page;
@@ -34,9 +35,15 @@ public interface CustomerService {
      * @return 顧客情報
      * @throws ApplicationException 認証に失敗した場合に発生する例外
      */
+    @Deprecated
     Customer saveCustomer(CustomerAuthenticationToken token) throws ApplicationException;
 
+    @Deprecated
     Customer saveCustomer(String clinicId, Customer customer) throws ApplicationException;
+
+    Customer createCustomerAndUser(Customer customer) throws ApplicationException;
+
+    Customer mergeCustomer(User user, Customer customer) throws ApplicationException;
 
     /**
      * 顧客情報を更新する.

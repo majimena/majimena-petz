@@ -1,11 +1,9 @@
 package org.majimena.petical.web.api.ticket;
 
 import org.majimena.petical.domain.Examination;
-import org.majimena.petical.domain.Product;
 import org.majimena.petical.domain.Ticket;
 import org.majimena.petical.domain.errors.ErrorCode;
 import org.majimena.petical.repository.ExaminationRepository;
-import org.majimena.petical.repository.ProductRepository;
 import org.majimena.petical.repository.TicketRepository;
 import org.majimena.petical.security.SecurityUtils;
 import org.majimena.petical.web.api.AbstractValidator;
@@ -30,12 +28,6 @@ public class ExaminationValidator extends AbstractValidator<Examination> {
     private TicketRepository ticketRepository;
 
     /**
-     * プロダクトリポジトリ.
-     */
-    @Inject
-    private ProductRepository productRepository;
-
-    /**
      * 診察リポジトリ.
      */
     @Inject
@@ -51,9 +43,6 @@ public class ExaminationValidator extends AbstractValidator<Examination> {
             Ticket ticket = validateTicket(Optional.ofNullable(examination.getTicket()), errors);
             examination.setTicket(ticket);
 
-            Product product = validateProduct(Optional.ofNullable(examination.getProduct()), errors);
-            examination.setProduct(product);
-
             validateExaminationId(Optional.ofNullable(examination.getId()), errors);
         });
     }
@@ -64,21 +53,6 @@ public class ExaminationValidator extends AbstractValidator<Examination> {
             Ticket one = ticketRepository.findOne(ticket.getId());
             if (one == null) {
                 ErrorsUtils.rejectValue("ticket", ErrorCode.PTZ_100999, errors);
-                return null;
-            }
-
-            // クリニック権限のチェック
-            SecurityUtils.throwIfDoNotHaveClinicRoles(one.getClinic().getId());
-            return one;
-        }).orElse(null);
-    }
-
-    private Product validateProduct(Optional<Product> value, Errors errors) {
-        return value.map(product -> {
-            // 診察内容の存在確認
-            Product one = productRepository.findOne(product.getId());
-            if (one == null) {
-                ErrorsUtils.rejectValue("product", ErrorCode.PTZ_005999, errors);
                 return null;
             }
 

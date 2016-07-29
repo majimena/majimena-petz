@@ -3,7 +3,7 @@ package org.majimena.petical.web.api.ticket;
 import com.codahale.metrics.annotation.Timed;
 import org.majimena.petical.domain.graph.Graph;
 import org.majimena.petical.security.SecurityUtils;
-import org.majimena.petical.service.TicketService;
+import org.majimena.petical.service.ClinicSummaryService;
 import org.majimena.petical.web.utils.ErrorsUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +19,11 @@ import javax.inject.Inject;
 @RestController
 @RequestMapping("/api/v1")
 public class ClinicTicketSummaryController {
-
     /**
-     * チケットサービス.
+     * 動物病院サマリサービス.
      */
     @Inject
-    private TicketService ticketService;
+    private ClinicSummaryService clinicSummaryService;
 
     /**
      * クリニックのチケットのサマリを取得する.
@@ -40,7 +39,7 @@ public class ClinicTicketSummaryController {
         SecurityUtils.throwIfDoNotHaveClinicRoles(clinicId);
 
         // 本日分のチケットのサマリを取得
-        Graph graph = ticketService.getTodaysTicketGraphByClinicId(clinicId);
+        Graph graph = clinicSummaryService.createTodaysTicketGraph(clinicId);
         return ResponseEntity.ok().body(graph);
     }
 }

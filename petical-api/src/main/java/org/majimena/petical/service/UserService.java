@@ -2,6 +2,7 @@ package org.majimena.petical.service;
 
 import org.majimena.petical.datatype.LangKey;
 import org.majimena.petical.domain.User;
+import org.majimena.petical.domain.user.ActivationRegistry;
 import org.majimena.petical.domain.user.PasswordRegistry;
 import org.majimena.petical.domain.user.SignupRegistry;
 import org.majimena.petical.domain.user.UserCriteria;
@@ -45,12 +46,9 @@ public interface UserService {
      */
     Optional<User> getUserByLogin(String loginId);
 
-    /**
-     * ユーザーを新規登録（サインアップ）する.
-     *
-     * @param registry 新規ユーザー
-     */
-    User saveUser(SignupRegistry registry);
+    void signup(SignupRegistry registry);
+
+    Optional<User> activate(ActivationRegistry registry);
 
     /**
      * ユーザーを新規登録する.
@@ -58,7 +56,7 @@ public interface UserService {
      * @param user ユーザー情報
      * @return 登録したユーザー情報
      */
-    User saveUser(User user);
+    User activate(User user);
 
     /**
      * ユーザーをアクティベートする.

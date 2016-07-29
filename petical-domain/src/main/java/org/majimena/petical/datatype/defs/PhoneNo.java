@@ -9,5 +9,5 @@ public class PhoneNo {
 
     public static final int MAX_LENGTH = 15;
 
-    public static final String REGEXP = "^[0-9]+$";
+    public static final String REGEXP = "^[0-9|-]+$";
 }

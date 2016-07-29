@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="001_mod_ticket" author="custom">
+        <dropColumn tableName="ticket" columnName="memo"></dropColumn>
+        <addColumn tableName="ticket">
+            <column name="total" type="numeric(12,0)" afterColumn="end_date_time" remarks="請求額">
+                <constraints nullable="true"/>
+            </column>
+            <column name="balance" type="numeric(12,0)" afterColumn="total" remarks="不足金額">
+                <constraints nullable="true"/>
+            </column>
+            <column name="tax" type="numeric(9,0)" afterColumn="balance" remarks="税額">
+                <constraints nullable="true"/>
+            </column>
+            <column name="discount" type="numeric(9,0)" afterColumn="tax" remarks="値引額">
+                <constraints nullable="true"/>
+            </column>
+            <column name="autognosis" type="varchar(2000)" afterColumn="discount" remarks="稟告">
+                <constraints nullable="true"/>
+            </column>
+            <column name="diagnosis_id" type="varchar(50)" afterColumn="autognosis" remarks="診断結果ID">
+                <constraints nullable="true"/>
+            </column>
+            <column name="memo" type="varchar(10000)" afterColumn="diagnosis_id" remarks="診断結果メモ">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <sql>ALTER TABLE ticket MODIFY COLUMN chart_id varchar(50) NOT NULL;</sql>
+    </changeSet>
+</databaseChangeLog>

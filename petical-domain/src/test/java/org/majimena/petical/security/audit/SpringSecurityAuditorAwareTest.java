@@ -1,10 +1,10 @@
 package org.majimena.petical.security.audit;
 
 import org.junit.Test;
+import org.majimena.petical.security.authentication.PetzUser;
+import org.majimena.petical.security.authentication.PetzUserKey;
 import org.majimena.petical.datatype.LangKey;
 import org.majimena.petical.datatype.TimeZone;
-import org.majimena.petical.domain.authentication.PetzUser;
-import org.majimena.petical.domain.authentication.PetzUserKey;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

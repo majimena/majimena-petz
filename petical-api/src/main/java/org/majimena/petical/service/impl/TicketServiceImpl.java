@@ -144,26 +144,6 @@ public class TicketServiceImpl implements TicketService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
-    public Graph getTodaysTicketGraphByClinicId(String clinicId) {
-        ZonedDateTime now = L10nDateTimeProvider.now();
-
-        List<List<Object>> data = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
-            LocalDateTime from = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i);
-            LocalDateTime to = L10nDateTimeProvider.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), i, 59, 59);
-
-            long completed = ticketRepository.count(TicketSpecs.of(clinicId, TicketState.COMPLETED, from, to));
-            long reserved = ticketRepository.count(TicketSpecs.of(clinicId, TicketState.RESERVED, from, to));
-            data.add(Arrays.asList(from.toEpochSecond(ZoneOffset.UTC) * 1000, BigDecimal.valueOf(completed), BigDecimal.valueOf(reserved)));
-        }
-        return new Graph(Arrays.asList("Time", "Completed", "Reserved"), data);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     @Transactional
     public Ticket saveTicket(Ticket ticket) {
         // クリニックを特定する

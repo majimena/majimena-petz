@@ -1,4 +1,4 @@
-package org.majimena.petical.web.api.ticket.inspections;
+package org.majimena.petical.web.api.clinics.tickets;
 
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.lang3.StringUtils;

@@ -23,6 +23,7 @@ import org.majimena.petical.datatype.deserializers.SexTypeDeserializer;
 import org.majimena.petical.datatype.serializers.EnumDataTypeSerializer;
 import org.majimena.petical.datatype.serializers.ISO8601LocalDateSerializer;
 import org.majimena.petical.datatype.serializers.ISO8601LocalDateTimeSerializer;
+import org.majimena.petical.datatype.serializers.ISO8601ZonedDateTimeSerializer;
 import org.majimena.petical.security.ResourceCannotAccessException;
 import org.majimena.petical.web.servlet.handler.ApplicationExceptionRestExceptionHandler;
 import org.majimena.petical.web.servlet.handler.BindExceptionRestExceptionHandler;
@@ -121,6 +122,7 @@ public class SpringMvcConfiguration extends WebMvcConfigurerAdapter {
 
         module.addSerializer(LocalDate.class, new ISO8601LocalDateSerializer());
         module.addSerializer(LocalDateTime.class, new ISO8601LocalDateTimeSerializer());
+        module.addSerializer(ZonedDateTime.class, new ISO8601ZonedDateTimeSerializer());
         module.addSerializer(EnumDataType.class, new EnumDataTypeSerializer());
 //        module.addSerializer(Boolean.class, new BooleanSerializer());
 

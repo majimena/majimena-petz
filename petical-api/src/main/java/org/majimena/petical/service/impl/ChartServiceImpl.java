@@ -160,7 +160,7 @@ public class ChartServiceImpl implements ChartService {
         // ペット情報が変更されているかもしれないので、更新する
         Pet pet = one.getPet();
         BeanFactoryUtils.copyNonNullProperties(chart.getPet(), pet);
-        petRepository.save(pet);
+        petService.savePet(pet);
 
         // カルテを更新する
         BeanFactoryUtils.copyNonNullProperties(chart, one);

@@ -5,42 +5,45 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="now" value="now()" dbms="mysql,h2"/>
-    <property name="now" value="current_timestamp" dbms="postgresql"/>
 
-    <changeSet id="000000000000_ticket" author="custom">
-        <createTable tableName="ticket">
-            <column name="id" type="varchar(50)">
+    <changeSet id="000_ticket" author="custom">
+        <createTable tableName="ticket" remarks="チケットトラン">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="clinic_id" type="varchar(50)">
+            <column name="clinic_id" type="varchar(50)" remarks="動物病院ID">
                 <constraints nullable="false"/>
             </column>
-            <column name="chart_id" type="varchar(50)"/>
-            <column name="state" type="varchar(20)">
+            <column name="chart_id" type="varchar(50)" remarks="カルテID">
+                <constraints nullable="true"/>
+            </column>
+            <column name="state" type="varchar(20)" remarks="ステート">
                 <constraints nullable="false"/>
             </column>
-            <column name="memo" type="varchar(50)"/>
-            <column name="start_date_time" type="timestamp">
+            <column name="memo" type="varchar(50)" remarks="メモ">
+                <constraints nullable="true"/>
+            </column>
+            <column name="start_date_time" type="datetime" remarks="開始日時">
                 <constraints nullable="false"/>
             </column>
-            <column name="end_date_time" type="timestamp">
+            <column name="end_date_time" type="datetime" remarks="終了日時">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_by" type="varchar(50)">
+            <column name="created_by" type="varchar(50)" remarks="作成者">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" type="timestamp">
+            <column name="created_date" type="datetime" remarks="作成日">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="timestamp"/>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_ticket_index" author="custom">
+    <changeSet id="000_ticket_index" author="custom">
         <createIndex indexName="idx1_ticket"
                      tableName="ticket">
             <column name="clinic_id" type="varchar(50)"/>
@@ -51,11 +54,11 @@
         </createIndex>
         <createIndex indexName="idx3_ticket"
                      tableName="ticket">
-            <column name="start_date_time" type="timestamp"/>
+            <column name="start_date_time" type="datetime"/>
         </createIndex>
         <createIndex indexName="idx4_ticket"
                      tableName="ticket">
-            <column name="end_date_time" type="timestamp"/>
+            <column name="end_date_time" type="datetime"/>
         </createIndex>
     </changeSet>
 

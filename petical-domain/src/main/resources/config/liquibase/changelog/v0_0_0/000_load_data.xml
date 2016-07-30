@@ -4,13 +4,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000000_load_data" author="custom">
+    <changeSet id="000_load_data" author="custom">
         <loadData encoding="UTF-8"
                   file="config/liquibase/data/users.csv"
                   separator=";"
                   tableName="user">
             <column name="activated" type="boolean"/>
-            <column name="created_date" type="timestamp"/>
+            <column name="created_date" type="datetime"/>
         </loadData>
 
         <loadData encoding="UTF-8"

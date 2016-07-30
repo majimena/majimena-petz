@@ -4,62 +4,65 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000000_clinic" author="custom">
-        <createTable tableName="clinic">
-            <column name="id" type="varchar(50)">
+    <changeSet id="000_clinic" author="custom">
+        <createTable tableName="clinic" remarks="動物病院マスタ">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(50)">
+            <column name="name" type="varchar(50)" remarks="動物病院名">
                 <constraints nullable="false"/>
             </column>
-            <column name="first_name" type="varchar(50)">
+            <column name="first_name" type="varchar(50)" remarks="院長姓">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_name" type="varchar(50)">
+            <column name="last_name" type="varchar(50)" remarks="院長名">
                 <constraints nullable="false"/>
             </column>
-            <column name="country" type="varchar(2)">
+            <column name="country" type="varchar(2)" remarks="国">
                 <constraints nullable="false"/>
             </column>
-            <column name="zip_code" type="varchar(10)">
+            <column name="zip_code" type="varchar(10)" remarks="郵便番号">
                 <constraints nullable="false"/>
             </column>
-            <column name="state" type="varchar(50)">
+            <column name="state" type="varchar(50)" remarks="都道府県">
                 <constraints nullable="false"/>
             </column>
-            <column name="city" type="varchar(50)">
+            <column name="city" type="varchar(50)" remarks="市区町村">
                 <constraints nullable="false"/>
             </column>
-            <column name="street" type="varchar(50)">
+            <column name="street" type="varchar(50)" remarks="番地">
                 <constraints nullable="true"/>
             </column>
-            <column name="phone_no" type="varchar(15)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="email" type="varchar(100)">
+            <column name="other" type="varchar(50)" remarks="その他">
                 <constraints nullable="true"/>
             </column>
-            <column name="description" type="varchar(200)">
+            <column name="phone_no" type="varchar(15)" remarks="電話番号">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(100)" remarks="メールアドレス">
                 <constraints nullable="true"/>
             </column>
-            <column name="removed" type="boolean">
+            <column name="description" type="varchar(200)" remarks="説明">
+                <constraints nullable="true"/>
+            </column>
+            <column name="removed" type="boolean" remarks="削除フラグ">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_by" type="varchar(50)">
+            <column name="created_by" type="varchar(50)" remarks="作成者">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" type="timestamp">
+            <column name="created_date" type="datetime" remarks="作成日">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="timestamp"/>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_clinic_index" author="custom">
+    <changeSet id="000_clinic_index" author="custom">
         <createIndex indexName="idx1_clinic"
                      tableName="clinic">
             <column name="name" type="varchar(50)"/>

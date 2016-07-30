@@ -4,9 +4,9 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000000_type" author="custom">
-        <createTable tableName="type">
-            <column name="name" type="varchar(50)">
+    <changeSet id="000_kind" author="custom">
+        <createTable tableName="kind" remarks="種類マスタ">
+            <column name="name" type="varchar(50)" remarks="種類">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
         </createTable>

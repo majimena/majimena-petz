@@ -6,45 +6,45 @@
 
     <property name="now" value="now()" dbms="mysql,h2"/>
 
-    <changeSet id="000000000000_audit_event" author="custom">
-        <createTable tableName="audit_event">
-            <column name="event_id" type="bigint" autoIncrement="true">
+    <changeSet id="000_audit_event" author="custom">
+        <createTable tableName="audit_event" remarks="監査イベント">
+            <column name="event_id" type="bigint" autoIncrement="true" remarks="イベントID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="principal" type="varchar(255)">
+            <column name="principal" type="varchar(255)" remarks="プリンシパル">
                 <constraints nullable="false"/>
             </column>
-            <column name="event_date" type="timestamp"/>
-            <column name="event_type" type="varchar(255)"/>
+            <column name="event_date" type="datetime" remarks="イベント日"/>
+            <column name="event_type" type="varchar(255)" remarks="イベント区分"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_audit_event_data" author="custom">
-        <createTable tableName="audit_event_data">
-            <column name="event_id" type="bigint">
+    <changeSet id="000_audit_event_data" author="custom">
+        <createTable tableName="audit_event_data" remarks="監査イベントデータ">
+            <column name="event_id" type="bigint" remarks="イベントID">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)">
+            <column name="name" type="varchar(255)" remarks="名称">
                 <constraints nullable="false"/>
             </column>
-            <column name="value" type="varchar(255)"/>
+            <column name="value" type="varchar(255)" remarks="値"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_audit_index" author="custom">
+    <changeSet id="000_audit_index" author="custom">
         <addPrimaryKey columnNames="event_id, name" tableName="audit_event_data"/>
 
         <createIndex indexName="idx1_audit_event"
                      tableName="audit_event"
                      unique="false">
             <column name="principal" type="varchar(255)"/>
-            <column name="event_date" type="timestamp"/>
+            <column name="event_date" type="datetime"/>
         </createIndex>
 
         <createIndex indexName="idx1_audit_event_data"

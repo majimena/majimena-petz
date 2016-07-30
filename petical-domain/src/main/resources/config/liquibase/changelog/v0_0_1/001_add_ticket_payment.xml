@@ -6,7 +6,7 @@
 
     <changeSet id="001_ticket_payment" author="custom">
         <createTable tableName="ticket_payment" remarks="チケット支払">
-            <column name="id" type="varchar(50)" remarks="チケット支払ID">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="ticket_id" type="varchar(50)" remarks="チケットID">

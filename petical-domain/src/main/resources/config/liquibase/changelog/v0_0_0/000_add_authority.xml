@@ -4,9 +4,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000000_authority" author="custom">
-        <createTable tableName="authority">
-            <column name="name" type="varchar(50)">
+    <changeSet id="000_authority" author="custom">
+        <createTable tableName="authority" remarks="認可マスタ">
+            <column name="name" type="varchar(50)" remarks="認可名">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
         </createTable>
@@ -15,12 +15,12 @@
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_user_authority" author="custom">
-        <createTable tableName="user_authority">
-            <column name="user_id" type="varchar(50)">
+    <changeSet id="000_user_authority" author="custom">
+        <createTable tableName="user_authority" remarks="ユーザ認可マスタ">
+            <column name="user_id" type="varchar(50)" remarks="ユーザID">
                 <constraints nullable="false"/>
             </column>
-            <column name="authority_name" type="varchar(50)">
+            <column name="authority_name" type="varchar(50)" remarks="認可名">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -29,7 +29,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_user_authority_index" author="custom">
+    <changeSet id="000_user_authority_index" author="custom">
         <addPrimaryKey columnNames="user_id, authority_name"
                        tableName="user_authority"/>
     </changeSet>

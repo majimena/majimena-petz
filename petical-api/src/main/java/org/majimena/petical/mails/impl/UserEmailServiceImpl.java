@@ -6,6 +6,7 @@ import org.majimena.petical.domain.User;
 import org.majimena.petical.domain.errors.ErrorCode;
 import org.majimena.petical.mails.UserEmailService;
 import org.majimena.petical.common.provider.EmailProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,12 @@ public class UserEmailServiceImpl implements UserEmailService {
     private EmailProvider emailProvider;
 
     /**
+     * アクティベーションURL.
+     */
+    @Value("${app.mail.user-activation-url}")
+    private String activationUrl;
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -34,7 +41,7 @@ public class UserEmailServiceImpl implements UserEmailService {
         String to = user.getEmail();
         Map<String, Object> variables = new HashMap<>();
         variables.put("user", user);
-        variables.put("url", "https://petical.io/signup/activate?key=" + user.getActivationKey() + "&user=" + user.getLogin());
+        variables.put("url", activationUrl + "?key=" + user.getActivationKey() + "&user=" + user.getLogin());
         emailProvider.sendEmail(to, "ユーザー登録完了のお知らせ", "user/ActivationEmail", variables);
     }
 

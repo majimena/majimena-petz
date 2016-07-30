@@ -4,56 +4,59 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000000_chart" author="custom">
-        <createTable tableName="chart">
-            <column name="id" type="varchar(50)">
+    <changeSet id="000_chart" author="custom">
+        <createTable tableName="chart" remarks="カルテマスタ">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="clinic_id" type="varchar(50)">
+            <column name="clinic_id" type="varchar(50)" remarks="動物病院ID">
                 <constraints nullable="false"/>
             </column>
-            <column name="customer_id" type="varchar(50)">
+            <column name="customer_id" type="varchar(50)" remarks="飼い主ID">
                 <constraints nullable="false"/>
             </column>
-            <column name="pet_id" type="varchar(50)">
+            <column name="pet_id" type="varchar(50)" remarks="ペットID">
                 <constraints nullable="false"/>
             </column>
-            <column name="chart_no" type="varchar(50)">
+            <column name="chart_no" type="varchar(50)" remarks="カルテ番号">
                 <constraints nullable="false"/>
             </column>
-            <column name="rabid_vaccine_date" type="timestamp">
+            <column name="rabid_vaccine_date" type="datetime" remarks="狂犬病予防接種日">
                 <constraints nullable="true"/>
             </column>
-            <column name="mix_vaccine_name" type="varchar(50)">
+            <column name="mix_vaccine_name" type="varchar(50)" remarks="混合ワクチン名">
                 <constraints nullable="true"/>
             </column>
-            <column name="mix_vaccine_date" type="timestamp">
+            <column name="mix_vaccine_date" type="datetime" remarks="混合ワクチン接種日">
                 <constraints nullable="true"/>
             </column>
-            <column name="filaria_date" type="timestamp">
+            <column name="filaria_date" type="datetime" remarks="フィラリア予防日">
                 <constraints nullable="true"/>
             </column>
-            <column name="flea_date" type="timestamp">
+            <column name="flea_date" type="datetime" remarks="ノミ予防日">
                 <constraints nullable="true"/>
             </column>
-            <column name="creation_date" type="timestamp">
+            <column name="creation_date" type="datetime" remarks="作成日">
                 <constraints nullable="true"/>
             </column>
-            <column name="created_by" type="varchar(50)">
+            <column name="removed" type="boolean" valueBoolean="false" remarks="削除フラグ">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" type="timestamp">
+            <column name="created_by" type="varchar(50)" remarks="作成者">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="timestamp"/>
+            <column name="created_date" type="datetime" remarks="作成日">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_chart_index" author="custom">
+    <changeSet id="000_chart_index" author="custom">
         <createIndex indexName="idx1_chart"
                      tableName="chart"
                      unique="true">

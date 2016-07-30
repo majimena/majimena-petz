@@ -4,41 +4,41 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000000_ticket_activity" author="custom">
-        <createTable tableName="ticket_activity">
-            <column name="id" type="varchar(50)">
+    <changeSet id="000_ticket_activity" author="custom">
+        <createTable tableName="ticket_activity" remarks="チケットアクティビティ">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="ticket_id" type="varchar(50)">
+            <column name="ticket_id" type="varchar(50)" remarks="チケットID">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="varchar(20)">
+            <column name="type" type="varchar(20)" remarks="区分">
                 <constraints nullable="false"/>
             </column>
-            <column name="state_from" type="varchar(20)">
+            <column name="state_from" type="varchar(20)" remarks="元ステート">
                 <constraints nullable="false"/>
             </column>
-            <column name="state_to" type="varchar(20)">
+            <column name="state_to" type="varchar(20)" remarks="先ステート">
                 <constraints nullable="false"/>
             </column>
-            <column name="change_date_time" type="timestamp">
+            <column name="change_date_time" type="datetime" remarks="変更日時">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_by" type="varchar(50)">
+            <column name="created_by" type="varchar(50)" remarks="作成者">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" type="timestamp">
+            <column name="created_date" type="datetime" remarks="作成日">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="timestamp"/>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_ticket_activity_index" author="custom">
+    <changeSet id="000_ticket_activity_index" author="custom">
         <createIndex indexName="idx1_ticket_activity"
                      tableName="ticket_activity">
             <column name="ticket_id" type="varchar(50)"/>

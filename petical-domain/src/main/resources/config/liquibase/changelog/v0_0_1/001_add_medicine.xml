@@ -7,45 +7,45 @@
     <!-- NVALから取得した認可医薬品のみに選別したデータ（編集不可）＋ユーザが個々に追加したデータを管理するマスタ（編集可能） -->
 
     <changeSet id="001_medicine" author="custom">
-        <createTable tableName="medicine">
-            <column name="id" type="varchar(50)">
+        <createTable tableName="medicine" remarks="医薬品マスタ">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="nval_id" type="varchar(255)">
+            <column name="nval_id" type="varchar(255)" remarks="NVALID">
                 <constraints nullable="true"/>
             </column>
-            <column name="name" type="varchar(255)">
+            <column name="name" type="varchar(255)" remarks="医薬品名">
                 <constraints nullable="true"/>
             </column>
-            <column name="dealer_name" type="varchar(255)">
+            <column name="dealer_name" type="varchar(255)" remarks="製造者名">
                 <constraints nullable="true"/>
             </column>
-            <column name="preparation_type" type="varchar(255)">
+            <column name="preparation_type" type="varchar(255)" remarks="製剤区分">
                 <constraints nullable="true"/>
             </column>
-            <column name="form_type" type="varchar(255)">
+            <column name="form_type" type="varchar(255)" remarks="剤型区分">
                 <constraints nullable="true"/>
             </column>
-            <column name="regulation_type" type="varchar(255)">
+            <column name="regulation_type" type="varchar(255)" remarks="規制区分">
                 <constraints nullable="true"/>
             </column>
-            <column name="effect" type="text">
+            <column name="effect" type="text" remarks="効能効果">
                 <constraints nullable="true"/>
             </column>
-            <column name="side_effect" type="boolean">
+            <column name="side_effect" type="boolean" remarks="副作用">
                 <constraints nullable="true"/>
             </column>
-            <column name="official" type="boolean">
+            <column name="official" type="boolean" remarks="公開フラグ">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_by" type="varchar(50)">
+            <column name="created_by" type="varchar(50)" remarks="作成者">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" type="datetime">
+            <column name="created_date" type="datetime" remarks="作成日">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="datetime"/>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>

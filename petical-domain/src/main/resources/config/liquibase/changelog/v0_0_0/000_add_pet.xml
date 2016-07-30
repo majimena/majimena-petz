@@ -4,86 +4,86 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000000_pet" author="custom">
-        <createTable tableName="pet">
-            <column name="id" type="varchar(50)">
+    <changeSet id="000_pet" author="custom">
+        <createTable tableName="pet" remarks="ペットマスタ">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(50)">
+            <column name="name" type="varchar(50)" remarks="お名前">
                 <constraints nullable="false"/>
             </column>
-            <column name="name_kana" type="varchar(50)">
+            <column name="name_kana" type="varchar(50)" remarks="お名前（かな）">
                 <constraints nullable="true"/>
             </column>
-            <column name="user_id" type="varchar(50)">
+            <column name="user_id" type="varchar(50)" remarks="ユーザID">
                 <constraints nullable="false"/>
             </column>
-            <column name="kind" type="varchar(50)">
+            <column name="kind" type="varchar(50)" remarks="種類">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="varchar(50)">
+            <column name="type" type="varchar(50)" remarks="品種">
                 <constraints nullable="false"/>
             </column>
-            <column name="color" type="varchar(50)">
+            <column name="color" type="varchar(50)" remarks="毛色">
                 <constraints nullable="false"/>
             </column>
-            <column name="blood" type="varchar(50)">
+            <column name="blood" type="varchar(50)" remarks="血液型">
                 <constraints nullable="true"/>
             </column>
-            <column name="sex" type="varchar(10)">
+            <column name="sex" type="varchar(10)" remarks="性別">
                 <constraints nullable="true"/>
             </column>
-            <column name="microchip_no" type="varchar(50)">
+            <column name="microchip_no" type="varchar(50)" remarks="マイクロチップ番号">
                 <constraints nullable="true"/>
             </column>
-            <column name="microchip_date" type="timestamp">
+            <column name="microchip_date" type="datetime" remarks="マイクロチップ設定日">
                 <constraints nullable="true"/>
             </column>
-            <column name="birth_date" type="timestamp">
+            <column name="birth_date" type="datetime" remarks="生年月日">
                 <constraints nullable="true"/>
             </column>
-            <column name="rabid_register_no" type="varchar(50)">
+            <column name="rabid_register_no" type="varchar(50)" remarks="狂犬病登録番号">
                 <constraints nullable="true"/>
             </column>
-            <column name="injection_report_no" type="varchar(50)">
+            <column name="injection_report_no" type="varchar(50)" remarks="注射済票番号">
                 <constraints nullable="true"/>
             </column>
-            <column name="neutral" type="boolean">
+            <column name="neutral" type="boolean" remarks="去勢手術フラグ">
                 <constraints nullable="true"/>
             </column>
-            <column name="dead" type="boolean">
+            <column name="dead" type="boolean" remarks="死亡フラグ">
                 <constraints nullable="true"/>
             </column>
-            <column name="profile" type="varchar(2000)">
+            <column name="profile" type="varchar(2000)" remarks="プロフィール">
                 <constraints nullable="true"/>
             </column>
-            <column name="allergia" type="varchar(2000)">
+            <column name="allergia" type="varchar(2000)" remarks="アレルギー">
                 <constraints nullable="true"/>
             </column>
-            <column name="drug" type="varchar(2000)">
+            <column name="drug" type="varchar(2000)" remarks="薬剤注意">
                 <constraints nullable="true"/>
             </column>
-            <column name="other" type="varchar(2000)">
+            <column name="other" type="varchar(2000)" remarks="その他">
                 <constraints nullable="true"/>
             </column>
-            <column name="image" type="varchar(200)">
+            <column name="image" type="varchar(200)" remarks="画像パス">
                 <constraints nullable="true"/>
             </column>
-            <column name="created_by" type="varchar(50)">
+            <column name="created_by" type="varchar(50)" remarks="作成者">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" type="timestamp">
+            <column name="created_date" type="datetime" remarks="作成日">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="timestamp"/>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_pet_index" author="custom">
+    <changeSet id="000_pet_index" author="custom">
         <createIndex indexName="idx1_pet"
                      tableName="pet">
             <column name="name" type="varchar(50)"/>
@@ -110,12 +110,12 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="000000000000_pet_tag" author="custom">
-        <createTable tableName="pet_tag">
-            <column name="pet_id" type="varchar(50)">
+    <changeSet id="000_pet_tag" author="custom">
+        <createTable tableName="pet_tag" remarks="ペットタグマスタ">
+            <column name="pet_id" type="varchar(50)" remarks="ペットID">
                 <constraints nullable="false"/>
             </column>
-            <column name="tag_name" type="varchar(50)">
+            <column name="tag_name" type="varchar(50)" remarks="タグ名">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -124,7 +124,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_pet_tag_index" author="custom">
+    <changeSet id="000_pet_tag_index" author="custom">
         <addPrimaryKey columnNames="pet_id, tag_name" tableName="pet_tag"/>
     </changeSet>
 </databaseChangeLog>

@@ -7,7 +7,7 @@
     <!-- 動物病院が管理する検査マスタ（こちらが各動物病院が自由に利用カスタマイズして利用できるマスタ） -->
 
     <changeSet id="001_clinic_inspection" author="custom">
-        <createTable tableName="clinic_inspection">
+        <createTable tableName="clinic_inspection" remarks="動物病院診察マスタ">
             <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

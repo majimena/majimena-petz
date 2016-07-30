@@ -4,41 +4,41 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000000_clinic_invitation" author="custom">
-        <createTable tableName="clinic_invitation">
-            <column name="id" type="varchar(50)">
+    <changeSet id="000_clinic_invitation" author="custom">
+        <createTable tableName="clinic_invitation" remarks="動物病院招待トラン">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="clinic_id" type="varchar(50)">
+            <column name="clinic_id" type="varchar(50)" remarks="動物病院ID">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="varchar(50)">
+            <column name="user_id" type="varchar(50)" remarks="招待送信ユーザID">
                 <constraints nullable="false"/>
             </column>
-            <column name="invited_user_id" type="varchar(50)">
+            <column name="invited_user_id" type="varchar(50)" remarks="招待受信ユーザID">
                 <constraints nullable="true"/>
             </column>
-            <column name="email" type="varchar(50)">
+            <column name="email" type="varchar(50)" remarks="招待先メールアドレス">
                 <constraints nullable="false"/>
             </column>
-            <column name="activation_key" type="varchar(20)">
+            <column name="activation_key" type="varchar(20)" remarks="アクティベーションキー">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_by" type="varchar(50)">
+            <column name="created_by" type="varchar(50)" remarks="作成者">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" type="timestamp">
+            <column name="created_date" type="datetime" remarks="作成日">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="timestamp"/>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_clinic_invitation_ticket" author="custom">
+    <changeSet id="000_clinic_invitation_ticket" author="custom">
         <createIndex indexName="idx1_clinic_invitation"
                      tableName="clinic_invitation">
             <column name="activation_key" type="varchar(20)"/>

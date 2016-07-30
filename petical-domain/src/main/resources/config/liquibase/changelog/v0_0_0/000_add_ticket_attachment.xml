@@ -4,41 +4,41 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000000_ticket_attachment" author="custom">
-        <createTable tableName="ticket_attachment">
-            <column name="id" type="varchar(50)">
+    <changeSet id="000_ticket_attachment" author="custom">
+        <createTable tableName="ticket_attachment" remarks="チケット添付トラン">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="ticket_id" type="varchar(50)">
+            <column name="ticket_id" type="varchar(50)" remarks="チケットID">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="varchar(50)">
+            <column name="name" type="varchar(50)" remarks="添付ファイル名">
                 <constraints nullable="false"/>
             </column>
-            <column name="memo" type="text">
+            <column name="memo" type="text" remarks="メモ">
                 <constraints nullable="true"/>
             </column>
-            <column name="url" type="varchar(200)">
+            <column name="url" type="varchar(200)" remarks="添付ファイルURL">
                 <constraints nullable="false"/>
             </column>
-            <column name="removed" type="boolean">
+            <column name="removed" type="boolean" remarks="削除フラグ">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_by" type="varchar(50)">
+            <column name="created_by" type="varchar(50)" remarks="作成者">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" type="timestamp">
+            <column name="created_date" type="datetime" remarks="作成日">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="timestamp"/>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_ticket_attachment_index" author="custom">
+    <changeSet id="000_ticket_attachment_index" author="custom">
         <createIndex indexName="idx1_ticket_attachment"
                      tableName="ticket_attachment">
             <column name="ticket_id" type="varchar(50)"/>

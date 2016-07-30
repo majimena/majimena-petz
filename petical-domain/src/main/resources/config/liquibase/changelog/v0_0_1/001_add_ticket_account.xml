@@ -8,7 +8,7 @@
 
     <changeSet id="001_ticket_account" author="custom">
         <createTable tableName="ticket_account" remarks="チケット会計トラン">
-            <column name="id" type="varchar(50)" remarks="チケット会計ID">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="ticket_id" type="varchar(50)" remarks="チケットID">

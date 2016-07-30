@@ -7,28 +7,28 @@
     <!-- 保険請求するための診断結果マスタ（システムセットアップのため、ユーザーによる編集は不可） -->
 
     <changeSet id="001_diagnosis" author="custom">
-        <createTable tableName="diagnosis">
-            <column name="id" type="varchar(50)">
+        <createTable tableName="diagnosis" remarks="診断マスタ">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="type" type="varchar(50)">
+            <column name="type" type="varchar(50)" remarks="診断区分">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="varchar(50)">
+            <column name="name" type="varchar(50)" remarks="診断名">
                 <constraints nullable="false"/>
             </column>
-            <column name="anicom_code" type="varchar(50)">
+            <column name="anicom_code" type="varchar(50)" remarks="アニコムコード">
                 <constraints nullable="true"/>
             </column>
             <!-- 保険会社を追加するかも -->
-            <column name="created_by" type="varchar(50)">
+            <column name="created_by" type="varchar(50)" remarks="作成者">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" type="datetime">
+            <column name="created_date" type="datetime" remarks="作成日">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="datetime"/>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>

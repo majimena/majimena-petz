@@ -7,17 +7,17 @@
     <!-- クリニックが使用する医薬品を管理するためのひも付けマスタ -->
 
     <changeSet id="001_clinic_medicine" author="custom">
-        <createTable tableName="clinic_medicine">
-            <column name="id" type="varchar(50)">
+        <createTable tableName="clinic_medicine" remarks="動物病院医薬品マスタ">
+            <column name="id" type="varchar(50)" remarks="ID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="clinic_id" type="varchar(50)">
+            <column name="clinic_id" type="varchar(50)" remarks="動物病院ID">
                 <constraints nullable="false"/>
             </column>
-            <column name="medicine_id" type="varchar(50)">
+            <column name="medicine_id" type="varchar(50)" remarks="医薬品ID">
                 <constraints nullable="false"/>
             </column>
-            <column name="display" type="boolean">
+            <column name="display" type="boolean" remarks="表示有無">
                 <constraints nullable="false"/>
             </column>
             <!--<column name="用法（当面は自由入力）" type="varchar(50)">-->
@@ -26,14 +26,14 @@
             <!--<column name="用量（当面は自由入力）" type="numeric(9,0)">-->
                 <!--<constraints nullable="false"/>-->
             <!--</column>-->
-            <column name="created_by" type="varchar(50)">
+            <column name="created_by" type="varchar(50)" remarks="作成者">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" type="datetime">
+            <column name="created_date" type="datetime" remarks="作成日">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="datetime"/>
+            <column name="last_modified_by" type="varchar(50)" remarks="最終更新者"/>
+            <column name="last_modified_date" type="datetime" remarks="最終更新日"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>

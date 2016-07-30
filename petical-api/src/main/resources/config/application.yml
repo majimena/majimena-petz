@@ -94,3 +94,8 @@ aws:
         region: ap-northeast-1
         bucket: images.petical.io
         type: image/jpeg
+
+# App
+app:
+    mail:
+        user-activation-url: https://console.petical.io/#!/signup/activate

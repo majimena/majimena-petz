@@ -4,8 +4,8 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="001_nval_item" author="custom">
-        <createTable tableName="nval_item">
+    <changeSet id="001_wk_nval_item" author="custom">
+        <createTable tableName="wk_nval_item">
             <column name="id" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -107,9 +107,9 @@
         </modifySql>
     </changeSet>
 
-    <changeSet id="001_nval_item_index" author="custom">
-        <createIndex indexName="idx1_nval_item"
-                     tableName="nval_item">
+    <changeSet id="001_wk_nval_item_index" author="custom">
+        <createIndex indexName="idx1_wk_nval_item"
+                     tableName="wk_nval_item">
             <column name="nval_id" type="varchar(255)"/>
         </createIndex>
     </changeSet>

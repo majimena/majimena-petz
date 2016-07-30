@@ -14,7 +14,7 @@
             <column name="ticket_id" type="varchar(50)" remarks="チケットID">
                 <constraints nullable="false"/>
             </column>
-            <column name="clinic_inspection_id" type="varchar(50)" remarks="動物病院検査ID">
+            <column name="clinic_inspection_id" type="varchar(50)" remarks="動物病院診察料ID">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="varchar(50)" remarks="検査名称">

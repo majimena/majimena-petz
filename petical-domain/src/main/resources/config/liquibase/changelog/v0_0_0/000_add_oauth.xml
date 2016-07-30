@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="000000000000_oauth_client_details" author="custom">
+    <changeSet id="000_oauth_client_details" author="custom">
         <createTable tableName="oauth_client_details">
             <column name="client_id" type="varchar(255)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -25,7 +25,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_oauth_client_token" author="custom">
+    <changeSet id="000_oauth_client_token" author="custom">
         <createTable tableName="oauth_client_token">
             <column name="token_id" type="varchar(255)"/>
             <column name="token" type="BLOB"/>
@@ -38,7 +38,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_oauth_access_token" author="custom">
+    <changeSet id="000_oauth_access_token" author="custom">
         <createTable tableName="oauth_access_token">
             <column name="token_id" type="varchar(255)"/>
             <column name="token" type="BLOB"/>
@@ -53,7 +53,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_oauth_refresh_token" author="custom">
+    <changeSet id="000_oauth_refresh_token" author="custom">
         <createTable tableName="oauth_refresh_token">
             <column name="token_id" type="varchar(255)"/>
             <column name="token" type="BLOB"/>
@@ -64,7 +64,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_oauth_code" author="custom">
+    <changeSet id="000_oauth_code" author="custom">
         <createTable tableName="oauth_code">
             <column name="code" type="varchar(255)"/>
         </createTable>
@@ -73,14 +73,14 @@
         </modifySql>
     </changeSet>
 
-    <changeSet id="000000000000_oauth_approvals" author="custom">
+    <changeSet id="000_oauth_approvals" author="custom">
         <createTable tableName="oauth_approvals">
             <column name="userId" type="varchar(255)"/>
             <column name="clientId" type="varchar(255)"/>
             <column name="scope" type="varchar(255)"/>
             <column name="status" type="varchar(255)"/>
-            <column name="expiresAt" type="timestamp"/>
-            <column name="lastModifiedAt" type="timestamp"/>
+            <column name="expiresAt" type="datetime"/>
+            <column name="lastModifiedAt" type="datetime"/>
         </createTable>
         <modifySql dbms="mysql">
             <append value="ENGINE=INNODB CHARSET=UTF8"/>

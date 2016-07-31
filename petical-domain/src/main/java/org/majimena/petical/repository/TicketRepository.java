@@ -22,7 +22,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String>, JpaSpec
      * @return 日付文字列（yyyy-MM-dd形式）、売上高、チケット数のオブジェクト配列
      */
     @Query(value = "" +
-            "select date_format(end_date_time, '%Y-%m-%d') as date, coalesce(sum(total),0) as sales, count(id) as cnt " +
+            "select date_format(end_date_time, '%Y-%m-%d') as date, coalesce(sum(total - discount),0) as sales, count(id) as cnt " +
             "from ticket " +
             "where clinic_id=:clinicId and end_date_time between :startDateTime and :endDateTime " +
             "group by date_format(end_date_time, '%Y-%m-%d')", nativeQuery = true)
@@ -37,7 +37,7 @@ public interface TicketRepository extends JpaRepository<Ticket, String>, JpaSpec
      * @return 日付文字列（yyyy-MM形式）、売上高、チケット数のオブジェクト配列
      */
     @Query(value = "" +
-            "select date_format(end_date_time, '%Y-%m') as date, coalesce(sum(total),0) as sales, count(id) as cnt " +
+            "select date_format(end_date_time, '%Y-%m') as date, coalesce(sum(total - discount),0) as sales, count(id) as cnt " +
             "from ticket " +
             "where clinic_id=:clinicId and end_date_time between :startDateTime and :endDateTime " +
             "group by date_format(end_date_time, '%Y-%m')", nativeQuery = true)

@@ -98,4 +98,7 @@ public class Chart extends AbstractAuditingEntity implements Serializable {
     @Convert(converter = LocalDateTimePersistenceConverter.class)
     @Column(name = "creation_date", nullable = true)
     private LocalDateTime creationDate;
+
+    @Column(name = "removed", nullable = false)
+    private Boolean removed = Boolean.FALSE;
 }

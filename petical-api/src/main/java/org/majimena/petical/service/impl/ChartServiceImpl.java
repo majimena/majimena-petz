@@ -144,6 +144,7 @@ public class ChartServiceImpl implements ChartService {
         chart.setClinic(clinic);
         chart.setCustomer(customer);
         chart.setPet(pet);
+        chart.setRemoved(Boolean.FALSE);
         return chartRepository.save(chart);
     }
 

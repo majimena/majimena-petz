@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +48,11 @@ public class CustomAuditEventRepository {
             }
 
             @Override
+            public List<AuditEvent> find(String s, Date date, String s1) {
+                return Arrays.asList();
+            }
+
+            @Override
             @Transactional(propagation = Propagation.REQUIRES_NEW)
             public void add(AuditEvent event) {
                 PersistentAuditEvent persistentAuditEvent = new PersistentAuditEvent();
@@ -56,6 +62,11 @@ public class CustomAuditEventRepository {
                 persistentAuditEvent.setData(auditEventConverter.convertDataToStrings(event.getData()));
 
                 persistenceAuditEventRepository.save(persistentAuditEvent);
+            }
+
+            @Override
+            public List<AuditEvent> find(Date date) {
+                return Arrays.asList();
             }
         };
     }

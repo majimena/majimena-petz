@@ -36,4 +36,5 @@
     <include file="classpath:config/liquibase/changelog/v0_0_1/001_add_ticket_account.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/v0_0_1/001_add_ticket_payment.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/v0_0_1/001_load_data.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/v0_0_1/001_mod_clinic_invitation.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

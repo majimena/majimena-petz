@@ -37,7 +37,7 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "nval_item")
+@Table(name = "wk_nval_item")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NvalItem extends AbstractAuditingEntity implements Serializable {
     @Id

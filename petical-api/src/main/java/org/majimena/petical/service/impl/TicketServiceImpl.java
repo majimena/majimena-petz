@@ -7,18 +7,15 @@ import org.majimena.petical.datatype.TicketState;
 import org.majimena.petical.datetime.L10nDateTimeProvider;
 import org.majimena.petical.domain.Chart;
 import org.majimena.petical.domain.Clinic;
-import org.majimena.petical.domain.Examination;
 import org.majimena.petical.domain.Ticket;
 import org.majimena.petical.domain.TicketActivity;
 import org.majimena.petical.domain.TicketAttachment;
 import org.majimena.petical.domain.errors.ErrorCode;
-import org.majimena.petical.domain.graph.Graph;
 import org.majimena.petical.domain.ticket.ClinicChartTicketCriteria;
 import org.majimena.petical.domain.ticket.TicketCriteria;
 import org.majimena.petical.repository.ChartRepository;
 import org.majimena.petical.repository.ClinicRepository;
 import org.majimena.petical.repository.CustomerRepository;
-import org.majimena.petical.repository.ExaminationRepository;
 import org.majimena.petical.repository.PetRepository;
 import org.majimena.petical.repository.TicketActivityRepository;
 import org.majimena.petical.repository.TicketAttachmentRepository;
@@ -30,12 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,11 +73,6 @@ public class TicketServiceImpl implements TicketService {
     @Inject
     private ChartRepository chartRepository;
 
-    /**
-     * 診察リポジトリ.
-     */
-    @Inject
-    private ExaminationRepository examinationRepository;
     @Inject
     private TicketAttachmentRepository ticketAttachmentRepository;
 
@@ -196,13 +183,6 @@ public class TicketServiceImpl implements TicketService {
         // 削除対象のチケットがあるかチェック
         Ticket one = ticketRepository.findOne(ticketId);
         ExceptionUtils.throwIfNull(one);
-
-        // 先に関連する診察情報を全て論理削除する
-        List<Examination> examinations = examinationRepository.findByTicketId(ticketId);
-        examinations.stream().forEach(examination -> {
-            examination.setRemoved(Boolean.TRUE);
-            examinationRepository.save(examination);
-        });
 
         // 関連する添付ファイルを論理削除する
         List<TicketAttachment> attachments = ticketAttachmentRepository.findByTicketId(ticketId);

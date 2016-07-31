@@ -33,7 +33,7 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "nval_item_component")
+@Table(name = "wk_nval_item_component")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NvalItemComponent extends AbstractAuditingEntity implements Serializable {
     @Id

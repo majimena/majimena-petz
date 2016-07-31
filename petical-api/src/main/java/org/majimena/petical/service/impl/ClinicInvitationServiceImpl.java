@@ -64,7 +64,6 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
         invitations.forEach(invitation -> {
             // lazy loading other entities
             invitation.getClinic().getId();
-            invitation.getInvitedUser().getId();
             invitation.getUser().getId();
         });
         return invitations;
@@ -96,6 +95,9 @@ public class ClinicInvitationServiceImpl implements ClinicInvitationService {
         emails.stream().forEach(email -> {
             // 招待先が既存ユーザーならユーザーを取得
             Optional<User> invited = userRepository.findOneByActivatedIsTrueAndLogin(email);
+
+            // 古い招待状があるかもしれないので削除する
+            clinicInvitationRepository.deleteByEmail(email);
 
             // クリニック招待状を作成する
             String activationKey = RandomUtils.generateActivationKey();

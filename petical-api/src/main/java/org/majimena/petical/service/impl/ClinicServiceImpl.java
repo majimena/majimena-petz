@@ -14,12 +14,10 @@ import org.majimena.petical.domain.chart.ChartCriteria;
 import org.majimena.petical.domain.clinic.ClinicCriteria;
 import org.majimena.petical.domain.clinic.ClinicOutline;
 import org.majimena.petical.domain.clinic.ClinicOutlineCriteria;
-import org.majimena.petical.repository.ClinicInspectionRepository;
-import org.majimena.petical.repository.InspectionRepository;
 import org.majimena.petical.repository.ChartRepository;
+import org.majimena.petical.repository.ClinicInspectionRepository;
 import org.majimena.petical.repository.ClinicRepository;
 import org.majimena.petical.repository.ClinicStaffRepository;
-import org.majimena.petical.repository.InvoiceRepository;
 import org.majimena.petical.repository.TicketRepository;
 import org.majimena.petical.repository.UserRepository;
 import org.majimena.petical.repository.spec.ChartSpecs;
@@ -76,12 +74,6 @@ public class ClinicServiceImpl implements ClinicService {
     private ChartRepository chartRepository;
 
     /**
-     * インヴォイスリポジトリ.
-     */
-    @Inject
-    private InvoiceRepository invoiceRepository;
-
-    /**
      * 動物病院向け検査リポジトリ.
      */
     @Inject
@@ -135,14 +127,12 @@ public class ClinicServiceImpl implements ClinicService {
         // 本日の売上金額
         LocalDateTime from = DateTimeUtils.from(criteria.getYear(), criteria.getMonth(), criteria.getDay());
         LocalDateTime to = DateTimeUtils.to(criteria.getYear(), criteria.getMonth(), criteria.getDay());
-        Object result = invoiceRepository.sumTotal(criteria.getClinicId(), from, to);
-        Object[] results = (Object[]) result;
 
         return Optional.of(ClinicOutline.builder()
                 .reserve(BigDecimal.valueOf(reserve))
                 .chart(BigDecimal.valueOf(chart))
                 .examinated(BigDecimal.valueOf(examinated))
-                .sales((BigDecimal) results[0])
+                .sales(BigDecimal.ZERO)
                 .build());
     }
 

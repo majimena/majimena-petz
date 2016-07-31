@@ -17,7 +17,6 @@ import org.majimena.petical.domain.ticket.TicketCriteria;
 import org.majimena.petical.repository.ChartRepository;
 import org.majimena.petical.repository.ClinicRepository;
 import org.majimena.petical.repository.CustomerRepository;
-import org.majimena.petical.repository.ExaminationRepository;
 import org.majimena.petical.repository.PetRepository;
 import org.majimena.petical.repository.TicketActivityRepository;
 import org.majimena.petical.repository.TicketAttachmentRepository;
@@ -68,8 +67,6 @@ public class TicketServiceImplTest {
         private CustomerRepository customerRepository;
         @Injectable
         private ChartRepository chartRepository;
-        @Injectable
-        private ExaminationRepository examinationRepository;
         @Injectable
         private TicketAttachmentRepository ticketAttachmentRepository;
 

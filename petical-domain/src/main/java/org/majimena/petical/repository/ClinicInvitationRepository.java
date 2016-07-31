@@ -18,4 +18,10 @@ public interface ClinicInvitationRepository extends JpaRepository<ClinicInvitati
      * @return 該当するクリニックの招待状の一覧
      */
     List<ClinicInvitation> findByInvitedUserIdOrEmailOrderByCreatedDateAsc(String userId, String email);
+
+    /**
+     * メールアドレスをもとに古い招待状を削除する.
+     * @param email メールアドレス
+     */
+    void deleteByEmail(String email);
 }

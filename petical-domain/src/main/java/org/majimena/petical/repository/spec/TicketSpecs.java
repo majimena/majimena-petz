@@ -2,6 +2,7 @@ package org.majimena.petical.repository.spec;
 
 import org.majimena.petical.common.utils.DateTimeUtils;
 import org.majimena.petical.datatype.TicketState;
+import org.majimena.petical.datatype.TimeZone;
 import org.majimena.petical.domain.clinic.ClinicOutlineCriteria;
 import org.majimena.petical.domain.ticket.ClinicChartTicketCriteria;
 import org.majimena.petical.domain.ticket.TicketCriteria;
@@ -9,7 +10,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,6 +42,8 @@ public class TicketSpecs {
                 .and(Optional.ofNullable(criteria.getPetId()).map(TicketSpecs::equalPetId).orElse(null))
                 .and(Optional.ofNullable(criteria.getUserId()).map(TicketSpecs::equalUserId).orElse(null))
                 .and(Optional.ofNullable(criteria.getState()).map(TicketSpecs::equalState).orElse(null))
+                .and(Optional.ofNullable(criteria.getNot()).map(TicketSpecs::notIn).orElse(null))
+                .and(Optional.ofNullable(criteria.getTo()).map(TicketSpecs::before).orElse(null))
                 .and(betweenStartDateTimeAndEndDateTime(criteria.getYear(), criteria.getMonth(), criteria.getDay()));
     }
 
@@ -96,6 +105,18 @@ public class TicketSpecs {
 
     public static Specification equalState(TicketState status) {
         return (root, query, cb) -> cb.equal(root.get("state"), status);
+    }
+
+    private static Specification notIn(List<TicketState> states) {
+        return (root, query, cb) -> cb.not(root.get("state").in(states));
+    }
+
+    private static Specification before(LocalDate date) {
+        LocalDateTime temp = LocalDateTime.of(date, LocalTime.MIN);
+        ZonedDateTime jp = temp.atZone(TimeZone.ASIA_TOKYO.getZoneId());
+        ZonedDateTime zoned = jp.withZoneSameInstant(TimeZone.UTC.getZoneId());
+        LocalDateTime dateTime = zoned.toLocalDateTime();
+        return (root, query, cb) -> cb.lessThan(root.get("startDateTime"), dateTime);
     }
 
     private static Specification betweenStartDateTimeAndEndDateTime(Integer year, Integer month, Integer day) {

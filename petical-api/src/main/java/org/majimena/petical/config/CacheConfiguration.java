@@ -2,8 +2,7 @@ package org.majimena.petical.config;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ehcache.InstrumentedEhcache;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -21,12 +20,14 @@ import javax.persistence.metamodel.EntityType;
 import java.util.Set;
 import java.util.SortedSet;
 
+/**
+ * キャッシュのコンフィグレーション.
+ */
+@Slf4j
 @Configuration
 @EnableCaching
-@AutoConfigureAfter(value = {MetricsConfiguration.class, SpringDataConfiguration.class})
+@AutoConfigureAfter(value = {SpringDataConfiguration.class})
 public class CacheConfiguration {
-
-    private final Logger log = LoggerFactory.getLogger(CacheConfiguration.class);
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -51,7 +52,7 @@ public class CacheConfiguration {
     @Bean
     public CacheManager cacheManager() {
         log.debug("Starting Ehcache");
-        cacheManager = net.sf.ehcache.CacheManager.create();
+        net.sf.ehcache.CacheManager cacheManager = net.sf.ehcache.CacheManager.create();
         cacheManager.getConfiguration().setMaxBytesLocalHeap(env.getProperty("cache.ehcache.maxBytesLocalHeap", String.class, "16M"));
         log.debug("Registering Ehcache Metrics gauges");
         Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
@@ -70,6 +71,7 @@ public class CacheConfiguration {
                 cacheManager.replaceCacheWithDecoratedCache(cache, decoratedCache);
             }
         }
+
         EhCacheCacheManager ehCacheManager = new EhCacheCacheManager();
         ehCacheManager.setCacheManager(cacheManager);
         return ehCacheManager;

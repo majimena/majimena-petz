@@ -1,10 +1,9 @@
-package org.majimena.petical.config.apidoc;
+package org.majimena.petical.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 /**
@@ -14,7 +13,7 @@ import org.springframework.core.env.Environment;
  * case, you can use a specific Spring profile for this class, so that only front-end developers
  * have access to the Swagger view.
  */
-@Configuration
+//@Configuration
 //@EnableSwagger
 public class SwaggerConfiguration implements EnvironmentAware {
 

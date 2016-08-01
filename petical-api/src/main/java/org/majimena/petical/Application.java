@@ -2,7 +2,6 @@ package org.majimena.petical;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Joiner;
-import org.majimena.petical.config.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 @SpringBootApplication
-@EnableSwagger2
+//@EnableSwagger2
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
 public class Application {
@@ -95,8 +94,8 @@ public class Application {
      */
     public static void main(String[] args) throws UnknownHostException {
         SpringApplication app = new SpringApplication(Application.class);
-        SimpleCommandLinePropertySource source = new SimpleCommandLinePropertySource(args);
-        addDefaultProfile(app, source);
+        app.setWebEnvironment(true);
+
         addLiquibaseScanPackages();
         Environment env = app.run(args).getEnvironment();
         log.info("Access URLs:\n----------------------------------------------------------\n\t" +
@@ -106,17 +105,6 @@ public class Application {
             InetAddress.getLocalHost().getHostAddress(),
             env.getProperty("server.port"));
 
-    }
-
-    /**
-     * If no profile has been configured, set by default the "dev" profile.
-     */
-    private static void addDefaultProfile(SpringApplication app, SimpleCommandLinePropertySource source) {
-        if (!source.containsProperty("spring.profiles.active") &&
-            !System.getenv().containsKey("SPRING_PROFILES_ACTIVE")) {
-
-            app.setAdditionalProfiles(Constants.SPRING_PROFILE_DEVELOPMENT);
-        }
     }
 
     /**
@@ -132,79 +120,79 @@ public class Application {
             "liquibase.ext", "liquibase.changelog"));
     }
 
-    @Bean
-    public Docket petApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-            .select()
-            .apis(RequestHandlerSelectors.any())
-            .paths(PathSelectors.any())
-            .build()
-            .pathMapping("/")
-            .directModelSubstitute(LocalDate.class,
-                String.class)
-            .genericModelSubstitutes(ResponseEntity.class)
-            .alternateTypeRules(
-                newRule(typeResolver.resolve(DeferredResult.class,
-                    typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
-                    typeResolver.resolve(WildcardType.class)))
-            .useDefaultResponseMessages(false)
-            .globalResponseMessage(RequestMethod.GET,
-                newArrayList(new ResponseMessageBuilder()
-                    .code(500)
-                    .message("500 message")
-                    .responseModel(new ModelRef("Error"))
-                    .build()))
-            .securitySchemes(newArrayList(apiKey()))
-            .securityContexts(newArrayList(securityContext()))
-            .enableUrlTemplating(true)
-            .globalOperationParameters(
-                newArrayList(new ParameterBuilder()
-                    .name("someGlobalParameter")
-                    .description("Description of someGlobalParameter")
-                    .modelRef(new ModelRef("string"))
-                    .parameterType("query")
-                    .required(true)
-                    .build()))
-            ;
-    }
-
-    @Autowired
-    private TypeResolver typeResolver;
-
-    private ApiKey apiKey() {
-        return new ApiKey("mykey", "api_key", "header");
-    }
-
-    private SecurityContext securityContext() {
-        return SecurityContext.builder()
-            .securityReferences(defaultAuth())
-            .forPaths(PathSelectors.regex("/anyPath.*"))
-            .build();
-    }
-
-    List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope
-            = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return newArrayList(
-            new SecurityReference("mykey", authorizationScopes));
-    }
-
-    @Bean
-    SecurityConfiguration security() {
-        return new SecurityConfiguration(
-            "test-app-client-id",
-            "test-app-client-secret",
-            "test-app-realm",
-            "test-app",
-            "apiKey",
-            ApiKeyVehicle.HEADER,
-            "," /*scope separator*/);
-    }
-
-    @Bean
-    UiConfiguration uiConfig() {
-        return new UiConfiguration("validatorUrl");
-    }
+//    @Bean
+//    public Docket petApi() {
+//        return new Docket(DocumentationType.SWAGGER_2)
+//            .select()
+//            .apis(RequestHandlerSelectors.any())
+//            .paths(PathSelectors.any())
+//            .build()
+//            .pathMapping("/")
+//            .directModelSubstitute(LocalDate.class,
+//                String.class)
+//            .genericModelSubstitutes(ResponseEntity.class)
+//            .alternateTypeRules(
+//                newRule(typeResolver.resolve(DeferredResult.class,
+//                    typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
+//                    typeResolver.resolve(WildcardType.class)))
+//            .useDefaultResponseMessages(false)
+//            .globalResponseMessage(RequestMethod.GET,
+//                newArrayList(new ResponseMessageBuilder()
+//                    .code(500)
+//                    .message("500 message")
+//                    .responseModel(new ModelRef("Error"))
+//                    .build()))
+//            .securitySchemes(newArrayList(apiKey()))
+//            .securityContexts(newArrayList(securityContext()))
+//            .enableUrlTemplating(true)
+//            .globalOperationParameters(
+//                newArrayList(new ParameterBuilder()
+//                    .name("someGlobalParameter")
+//                    .description("Description of someGlobalParameter")
+//                    .modelRef(new ModelRef("string"))
+//                    .parameterType("query")
+//                    .required(true)
+//                    .build()))
+//            ;
+//    }
+//
+//    @Autowired
+//    private TypeResolver typeResolver;
+//
+//    private ApiKey apiKey() {
+//        return new ApiKey("mykey", "api_key", "header");
+//    }
+//
+//    private SecurityContext securityContext() {
+//        return SecurityContext.builder()
+//            .securityReferences(defaultAuth())
+//            .forPaths(PathSelectors.regex("/anyPath.*"))
+//            .build();
+//    }
+//
+//    List<SecurityReference> defaultAuth() {
+//        AuthorizationScope authorizationScope
+//            = new AuthorizationScope("global", "accessEverything");
+//        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+//        authorizationScopes[0] = authorizationScope;
+//        return newArrayList(
+//            new SecurityReference("mykey", authorizationScopes));
+//    }
+//
+//    @Bean
+//    SecurityConfiguration security() {
+//        return new SecurityConfiguration(
+//            "test-app-client-id",
+//            "test-app-client-secret",
+//            "test-app-realm",
+//            "test-app",
+//            "apiKey",
+//            ApiKeyVehicle.HEADER,
+//            "," /*scope separator*/);
+//    }
+//
+//    @Bean
+//    UiConfiguration uiConfig() {
+//        return new UiConfiguration("validatorUrl");
+//    }
 }

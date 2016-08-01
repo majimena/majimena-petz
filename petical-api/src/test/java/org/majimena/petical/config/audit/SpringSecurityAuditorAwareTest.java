@@ -1,4 +1,4 @@
-package org.majimena.petical.security.audit;
+package org.majimena.petical.config.audit;
 
 import org.junit.Test;
 import org.majimena.petical.security.authentication.PetzUser;

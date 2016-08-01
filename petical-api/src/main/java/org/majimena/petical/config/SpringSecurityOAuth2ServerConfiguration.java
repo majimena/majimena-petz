@@ -26,7 +26,7 @@ import javax.inject.Inject;
 import javax.sql.DataSource;
 
 @Configuration
-public class OAuth2ServerConfiguration {
+public class SpringSecurityOAuth2ServerConfiguration {
 
     @Configuration
     @EnableResourceServer

@@ -1,7 +1,7 @@
-package org.majimena.petical.repository;
+package org.majimena.petical.config.audit;
 
-import org.majimena.petical.config.audit.AuditEventConverter;
 import org.majimena.petical.domain.PersistentAuditEvent;
+import org.majimena.petical.repository.PersistenceAuditEventRepository;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.actuate.audit.AuditEventRepository;
 import org.springframework.context.annotation.Bean;

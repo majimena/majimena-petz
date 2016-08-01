@@ -2,7 +2,6 @@ package org.majimena.petical.batch.runner;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.majimena.petical.batch.scraping.websites.NvalScraperImpl;
-import org.majimena.petical.config.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -70,7 +69,7 @@ public class MedicineSynchronousRunner implements CommandLineRunner, Initializin
     private static void addDefaultProfile(SpringApplication app, SimpleCommandLinePropertySource source) {
         // SpringConfigが設定されていない場合は、開発モードで起動する
         if (!source.containsProperty("spring.profiles.active") && !System.getenv().containsKey("SPRING_PROFILES_ACTIVE")) {
-            app.setAdditionalProfiles(Constants.SPRING_PROFILE_DEVELOPMENT);
+            app.setAdditionalProfiles("dev");
         }
     }
 

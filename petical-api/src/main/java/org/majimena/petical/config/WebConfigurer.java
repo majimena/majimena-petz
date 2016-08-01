@@ -1,15 +1,10 @@
 package org.majimena.petical.config;
 
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.servlet.InstrumentedFilter;
-import com.codahale.metrics.servlets.MetricsServlet;
+import lombok.extern.slf4j.Slf4j;
 import org.majimena.petical.common.factory.JsonFactory;
-import org.majimena.petical.web.filter.CachingHttpHeadersFilter;
 import org.majimena.petical.web.filter.CrossOriginResourceSharingFilter;
 import org.majimena.petical.web.filter.gzip.GZipServletFilter;
 import org.majimena.petical.web.servlet.filter.AccessLogFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
@@ -19,7 +14,6 @@ import org.springframework.boot.context.embedded.MimeMappings;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.inject.Inject;
@@ -36,19 +30,18 @@ import java.util.Map;
 /**
  * Configuration of web application with Servlet 3.0 APIs.
  */
+@Slf4j
 @Configuration
 @AutoConfigureAfter(CacheConfiguration.class)
 public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInitializer implements ServletContextInitializer, EmbeddedServletContainerCustomizer {
 
-    private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
-
     @Inject
     private Environment env;
 
-    @Autowired(required = false)
-    private MetricRegistry metricRegistry;
+//    @Autowired(required = false)
+//    private MetricRegistry metricRegistry;
 
-    @Autowired
+    @Autowired(required = false)
     private JsonFactory jsonFactory;
 
     private RelaxedPropertyResolver propertyResolver;
@@ -63,13 +56,13 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         init();
 
         // initialize metric filter
-        EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
-        initMetrics(servletContext, disps);
+//        EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
+//        initMetrics(servletContext, disps);
 
         // initialize gzip filter
-        if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
-            initGzipFilter(servletContext, disps);
-        }
+//        if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
+//            initGzipFilter(servletContext, disps);
+//        }
 
         // initialize logging and cors filters
         initCrossOriginResourceSharingFilter(servletContext);
@@ -93,9 +86,9 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
     public void customize(ConfigurableEmbeddedServletContainer container) {
         MimeMappings mappings = new MimeMappings(MimeMappings.DEFAULT);
         // IE issue, see https://github.com/jhipster/generator-jhipster/pull/711
-        mappings.add("html", "text/html;charset=utf-8");
+//        mappings.add("html", "text/html;charset=utf-8");
         // CloudFoundry issue, see https://github.com/cloudfoundry/gorouter/issues/64
-        mappings.add("json", "text/html;charset=utf-8");
+//        mappings.add("json", "text/html;charset=utf-8");
         container.setMimeMappings(mappings);
     }
 
@@ -114,51 +107,51 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
 //        compressingFilter.addMappingForUrlPatterns(disps, true, "*.svg");
 //        compressingFilter.addMappingForUrlPatterns(disps, true, "*.ttf");
         compressingFilter.addMappingForUrlPatterns(disps, true, "/api/*");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "/metrics/*");
+//        compressingFilter.addMappingForUrlPatterns(disps, true, "/metrics/*");
         compressingFilter.setAsyncSupported(true);
     }
 
     /**
      * Initializes the cachig HTTP Headers Filter.
      */
-    @Deprecated
-    private void initCachingHttpHeadersFilter(ServletContext servletContext,
-                                              EnumSet<DispatcherType> disps) {
-        log.debug("Registering Caching HTTP Headers Filter");
-        FilterRegistration.Dynamic cachingHttpHeadersFilter =
-                servletContext.addFilter("cachingHttpHeadersFilter",
-                        new CachingHttpHeadersFilter(env));
-
-        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/assets/*");
-        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
-        cachingHttpHeadersFilter.setAsyncSupported(true);
-    }
+//    @Deprecated
+//    private void initCachingHttpHeadersFilter(ServletContext servletContext,
+//                                              EnumSet<DispatcherType> disps) {
+//        log.debug("Registering Caching HTTP Headers Filter");
+//        FilterRegistration.Dynamic cachingHttpHeadersFilter =
+//                servletContext.addFilter("cachingHttpHeadersFilter",
+//                        new CachingHttpHeadersFilter(env));
+//
+//        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/assets/*");
+//        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
+//        cachingHttpHeadersFilter.setAsyncSupported(true);
+//    }
 
     /**
      * Initializes Metrics.
      */
-    private void initMetrics(ServletContext servletContext, EnumSet<DispatcherType> disps) {
-        log.debug("Initializing Metrics registries");
-        servletContext.setAttribute(InstrumentedFilter.REGISTRY_ATTRIBUTE,
-                metricRegistry);
-        servletContext.setAttribute(MetricsServlet.METRICS_REGISTRY,
-                metricRegistry);
-
-        log.debug("Registering Metrics Filter");
-        FilterRegistration.Dynamic metricsFilter = servletContext.addFilter("webappMetricsFilter",
-                new InstrumentedFilter());
-
-        metricsFilter.addMappingForUrlPatterns(disps, true, "/*");
-        metricsFilter.setAsyncSupported(true);
-
-        log.debug("Registering Metrics Servlet");
-        ServletRegistration.Dynamic metricsAdminServlet =
-                servletContext.addServlet("metricsServlet", new MetricsServlet());
-
-        metricsAdminServlet.addMapping("/metrics/metrics/*");
-        metricsAdminServlet.setAsyncSupported(true);
-        metricsAdminServlet.setLoadOnStartup(2);
-    }
+//    private void initMetrics(ServletContext servletContext, EnumSet<DispatcherType> disps) {
+//        log.debug("Initializing Metrics registries");
+//        servletContext.setAttribute(InstrumentedFilter.REGISTRY_ATTRIBUTE,
+//                metricRegistry);
+//        servletContext.setAttribute(MetricsServlet.METRICS_REGISTRY,
+//                metricRegistry);
+//
+//        log.debug("Registering Metrics Filter");
+//        FilterRegistration.Dynamic metricsFilter = servletContext.addFilter("webappMetricsFilter",
+//                new InstrumentedFilter());
+//
+//        metricsFilter.addMappingForUrlPatterns(disps, true, "/*");
+//        metricsFilter.setAsyncSupported(true);
+//
+//        log.debug("Registering Metrics Servlet");
+//        ServletRegistration.Dynamic metricsAdminServlet =
+//                servletContext.addServlet("metricsServlet", new MetricsServlet());
+//
+//        metricsAdminServlet.addMapping("/metrics/metrics/*");
+//        metricsAdminServlet.setAsyncSupported(true);
+//        metricsAdminServlet.setLoadOnStartup(2);
+//    }
 
     private void initAccessLogFilter(ServletContext context) {
         AccessLogFilter filter = new AccessLogFilter();
@@ -178,14 +171,6 @@ public class WebConfigurer extends AbstractAnnotationConfigDispatcherServletInit
         filter.setMaxAge(propertyResolver.getRequiredProperty("max-age", Integer.class));
 
         FilterRegistration registration = context.addFilter("crossOriginResourceSharingFilter", filter);
-        registration.addMappingForUrlPatterns(null, false, "/*");
-    }
-
-    @Deprecated
-    // see spring.jpa.openInView property
-    private void initOpenEntityManagerInViewFilter(ServletContext context) {
-        OpenEntityManagerInViewFilter filter = new OpenEntityManagerInViewFilter();
-        FilterRegistration registration = context.addFilter("openEntityManagerInViewFilter", filter);
         registration.addMappingForUrlPatterns(null, false, "/*");
     }
 

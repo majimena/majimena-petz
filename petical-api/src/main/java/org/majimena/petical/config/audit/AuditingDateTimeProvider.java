@@ -1,4 +1,4 @@
-package org.majimena.petical.security.audit;
+package org.majimena.petical.config.audit;
 
 import org.majimena.petical.datetime.L10nDateTimeProvider;
 import org.springframework.data.auditing.DateTimeProvider;

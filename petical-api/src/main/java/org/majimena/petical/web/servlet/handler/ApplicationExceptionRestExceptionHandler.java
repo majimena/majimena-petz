@@ -4,6 +4,7 @@ import cz.jirutka.spring.exhandler.messages.ErrorMessage;
 import cz.jirutka.spring.exhandler.messages.ValidationErrorMessage;
 import org.majimena.petical.common.exceptions.ApplicationException;
 import org.majimena.petical.domain.errors.ErrorCode;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,8 +14,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ApplicationExceptionRestExceptionHandler extends AbstractCustomRestExceptionHandler<ApplicationException> {
 
-    public ApplicationExceptionRestExceptionHandler() {
+    public ApplicationExceptionRestExceptionHandler(MessageSource messageSource) {
         super(ApplicationException.class, HttpStatus.BAD_REQUEST);
+        setMessageSource(messageSource);
     }
 
     @Override

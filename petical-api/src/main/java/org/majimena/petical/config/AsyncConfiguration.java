@@ -17,6 +17,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 
+/**
+ * 非同期処理のコンフィグレーション.
+ */
 @Configuration
 @EnableAsync
 @EnableScheduling

@@ -4,7 +4,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.petical.Application;
+import org.majimena.petical.WebApplication;
 import org.majimena.petical.common.exceptions.ApplicationException;
 import org.majimena.petical.common.exceptions.ResourceNotFoundException;
 import org.majimena.petical.common.exceptions.SystemException;
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertThat;
 public class UserServiceImplIT {
 
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class GetUserByUserIdTest extends AbstractSpringDBUnitTest {
 
         @Inject
@@ -61,7 +61,7 @@ public class UserServiceImplIT {
     }
 
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class PatchUserTest extends AbstractSpringDBUnitTest {
 
         @Inject
@@ -93,7 +93,7 @@ public class UserServiceImplIT {
     }
 
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class SaveUserTest extends AbstractSpringDBUnitTest {
 
         @Inject
@@ -132,7 +132,7 @@ public class UserServiceImplIT {
     }
 
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class ChangePasswordTest extends AbstractSpringDBUnitTest {
 
         @Inject

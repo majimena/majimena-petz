@@ -4,7 +4,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.petical.Application;
+import org.majimena.petical.WebApplication;
 import org.majimena.petical.domain.Chart;
 import org.majimena.petical.domain.Clinic;
 import org.majimena.petical.domain.Color;
@@ -29,7 +29,7 @@ import static org.junit.Assert.assertThat;
 public class ChartServiceImplIT {
 
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class SaveChartTest extends AbstractSpringDBUnitTest {
 
         @Inject

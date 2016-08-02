@@ -4,7 +4,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.petical.Application;
+import org.majimena.petical.WebApplication;
 import org.majimena.petical.domain.Clinic;
 import org.majimena.petical.domain.ClinicStaff;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertThat;
 public class ClinicStaffRepositoryIT {
 
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class FindClinicsByUserIdTest extends AbstractSpringDBUnitTest {
 
         @Inject
@@ -47,7 +47,7 @@ public class ClinicStaffRepositoryIT {
     }
 
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class FindByClinicIdTest extends AbstractSpringDBUnitTest {
 
         @Inject
@@ -79,7 +79,7 @@ public class ClinicStaffRepositoryIT {
     }
 
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class FindByClinicIdAndUserIdTest extends AbstractSpringDBUnitTest {
 
         @Inject
@@ -107,7 +107,7 @@ public class ClinicStaffRepositoryIT {
     }
 
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class DeleteByClinicIdTest extends AbstractSpringDBUnitTest {
 
         @Inject

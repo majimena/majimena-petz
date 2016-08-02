@@ -3,7 +3,7 @@ package org.majimena.petical.service;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.majimena.petical.Application;
+import org.majimena.petical.WebApplication;
 import org.majimena.petical.common.utils.RandomUtils;
 import org.majimena.petical.datatype.LangKey;
 import org.majimena.petical.domain.User;
@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see UserServiceImpl
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringApplicationConfiguration(classes = WebApplication.class)
 @WebAppConfiguration
 @IntegrationTest
 @Transactional

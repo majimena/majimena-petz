@@ -2,6 +2,7 @@ server:
     port: 8080
 
 endpoints:
+    # CORS Configuration
     cors:
         allow-credentials: true
         allowed-origins: http://localhost:9001
@@ -11,22 +12,21 @@ endpoints:
         max-age: 3600
 
 spring:
-    profiles:
-        active: dev
+    # DataSource Configuration
     datasource:
         dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
         url: jdbc:mysql://localdb.petical.io:3307/peticaldb?useUnicode=true&characterEncoding=utf8
-        databaseName:
-        serverName:
-        username: root
-        password: password
-        cachePrepStmts: true
-        prepStmtCacheSize: 250
-        prepStmtCacheSqlLimit: 2048
+        username: peticalapps
+        password: peticalapps
+        connectionTestQuery: select 1
+        connectionTimeout: 30000
+        maximumPoolSize: 10
+        maxLifetime: 18000000
+        minimumIdle: 2
         useServerPrepStmts: true
-
-# security configuration (this key should be unique for your application, and kept secret)
-#jhipster.security.rememberme.key: 001d26f638de5f7b9754c0af140055c7f8774d7f
+        cachePrepStmts: true
+        prepStmtCacheSize: 100
+        prepStmtCacheSqlLimit: 250
 
 authentication:
     oauth:

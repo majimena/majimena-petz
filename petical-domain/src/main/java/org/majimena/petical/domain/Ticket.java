@@ -85,8 +85,6 @@ public class Ticket extends AbstractAuditingEntity implements Serializable {
      * 診察開始日時.
      */
     @NotNull
-    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
     @Convert(converter = LocalDateTimePersistenceConverter.class)
     @Column(name = "start_date_time", nullable = false)
     private LocalDateTime startDateTime;
@@ -95,8 +93,6 @@ public class Ticket extends AbstractAuditingEntity implements Serializable {
      * 診察終了日時.
      */
     @NotNull
-    @JsonSerialize(using = ISO8601LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = ISO8601LocalDateTimeDeserializer.class)
     @Convert(converter = LocalDateTimePersistenceConverter.class)
     @Column(name = "end_date_time", nullable = false)
     private LocalDateTime endDateTime;

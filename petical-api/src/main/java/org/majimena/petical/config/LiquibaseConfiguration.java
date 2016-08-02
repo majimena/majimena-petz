@@ -1,39 +1,30 @@
 package org.majimena.petical.config;
 
 import liquibase.integration.spring.SpringLiquibase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
-import org.springframework.context.EnvironmentAware;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
 
+/**
+ * Liquibaseのコンフィグレーション.
+ */
+@Slf4j
 @Configuration
-public class LiquibaseConfiguration implements EnvironmentAware {
+public class LiquibaseConfiguration {
 
-    private final Logger logger = LoggerFactory.getLogger(LiquibaseConfiguration.class);
-
-    private RelaxedPropertyResolver propertyResolver;
-
-    private Environment env;
-
-    @Override
-    public void setEnvironment(Environment env) {
-        this.env = env;
-        this.propertyResolver = new RelaxedPropertyResolver(env, "spring.datasource.");
-    }
+    @Autowired
+    private DataSource dataSource;
 
     @Bean
-    public SpringLiquibase liquibase(DataSource dataSource) {
+    public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog("classpath:config/liquibase/master.xml");
         liquibase.setContexts("development, production");
-        logger.debug("Configuring Liquibase");
+        log.debug("Configuring Liquibase");
         return liquibase;
     }
-
 }

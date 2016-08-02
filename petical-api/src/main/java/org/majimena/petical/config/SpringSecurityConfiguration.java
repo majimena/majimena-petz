@@ -39,7 +39,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers(HttpMethod.OPTIONS, "/*/**")
-                .antMatchers(HttpMethod.GET, "/swagger-ui.html")
+//                .antMatchers(HttpMethod.GET, "/swagger-ui.html")
                 .antMatchers(HttpMethod.GET, "/health")
                 .antMatchers(HttpMethod.DELETE, "/api/v1/password")
                 .antMatchers(HttpMethod.POST, "/api/v1/password")

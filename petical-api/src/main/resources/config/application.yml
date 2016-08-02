@@ -26,6 +26,10 @@ management:
             enabled: false
 
 spring:
+    # DEFAULT PROFILE
+    profiles:
+        active: dev
+
     jpa:
         database-platform: org.hibernate.dialect.MySQLInnoDBDialect
         database: MYSQL
@@ -79,13 +83,6 @@ endpoints.jolokia.enabled: false
 #    license: CC BY-NC
 #    licenseUrl: https://creativecommons.org/licenses/by-nc/4.0/legalcode
 
-# Mail Configuration
-email:
-    provider: SES
-    name: ペティカル (petical.io)
-    from: no-reply@petical.io
-    charset: ISO-2022-JP
-
 # Amazon Web Service Configuration
 aws:
     ses:
@@ -95,7 +92,10 @@ aws:
         bucket: images.petical.io
         type: image/jpeg
 
-# App
 app:
+    # Mail Configuration
     mail:
+        name: ペティカル (petical.io)
+        from: no-reply@petical.io
+        charset: ISO-2022-JP
         user-activation-url: https://console.petical.io/#!/signup/activate

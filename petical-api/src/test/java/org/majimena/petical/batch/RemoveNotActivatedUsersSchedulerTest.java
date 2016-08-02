@@ -2,7 +2,7 @@ package org.majimena.petical.batch;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.majimena.petical.Application;
+import org.majimena.petical.WebApplication;
 import org.majimena.petical.domain.User;
 import org.majimena.petical.repository.UserRepository;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Created by todoken on 2015/07/06.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringApplicationConfiguration(classes = WebApplication.class)
 @WebAppConfiguration
 public class RemoveNotActivatedUsersSchedulerTest {
 

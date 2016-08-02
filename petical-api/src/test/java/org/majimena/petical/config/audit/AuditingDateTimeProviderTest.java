@@ -1,4 +1,4 @@
-package org.majimena.petical.security.audit;
+package org.majimena.petical.config.audit;
 
 import mockit.Mocked;
 import mockit.NonStrictExpectations;

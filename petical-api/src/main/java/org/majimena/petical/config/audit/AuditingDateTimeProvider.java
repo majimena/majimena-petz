@@ -1,6 +1,7 @@
-package org.majimena.petical.security.audit;
+package org.majimena.petical.config.audit;
 
 import org.majimena.petical.datetime.L10nDateTimeProvider;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.auditing.DateTimeProvider;
 
 import javax.inject.Named;
@@ -11,7 +12,7 @@ import java.util.GregorianCalendar;
 /**
  * Audit用に現在日時を返すプロバイダ.
  */
-@Named("auditingDateTimeProvider")
+@ComponentScan
 public class AuditingDateTimeProvider implements DateTimeProvider {
     /**
      * {@inheritDoc}

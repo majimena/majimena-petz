@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.petical.Application;
+import org.majimena.petical.WebApplication;
 import org.majimena.petical.TestUtils;
 import org.majimena.petical.WebAppTestConfiguration;
 import org.majimena.petical.config.SpringMvcConfiguration;
@@ -273,7 +273,7 @@ public class ClinicCustomerControllerTest {
 
     @RunWith(SpringJUnit4ClassRunner.class)
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class PutTest {
 
         private MockMvc mockMvc;

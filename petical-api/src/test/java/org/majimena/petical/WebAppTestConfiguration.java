@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  */
 @Configuration
 @ComponentScan(
-        basePackageClasses = Application.class,
+        basePackageClasses = WebApplication.class,
         useDefaultFilters = false,
         includeFilters = @ComponentScan.Filter(ControllerAdvice.class))
 public class WebAppTestConfiguration extends WebMvcConfigurationSupport {

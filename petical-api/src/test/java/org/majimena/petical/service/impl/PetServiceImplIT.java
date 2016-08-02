@@ -1,16 +1,14 @@
 package org.majimena.petical.service.impl;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.google.common.collect.Sets;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.majimena.petical.Application;
+import org.majimena.petical.WebApplication;
 import org.majimena.petical.common.exceptions.ResourceNotFoundException;
 import org.majimena.petical.datatype.SexType;
 import org.majimena.petical.domain.Color;
 import org.majimena.petical.domain.Pet;
-import org.majimena.petical.domain.Tag;
 import org.majimena.petical.domain.Type;
 import org.majimena.petical.domain.User;
 import org.majimena.petical.domain.pet.PetCriteria;
@@ -39,7 +37,7 @@ public class PetServiceImplIT {
 
     @Transactional
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class GetPetsByPetCriteriaTest extends AbstractSpringDBUnitTest {
 
         @Inject
@@ -82,7 +80,7 @@ public class PetServiceImplIT {
 
     @Transactional
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class FindPetByPetIdTest extends AbstractSpringDBUnitTest {
 
         @Inject
@@ -112,7 +110,7 @@ public class PetServiceImplIT {
 
     @Transactional
     @WebAppConfiguration
-    @SpringApplicationConfiguration(classes = Application.class)
+    @SpringApplicationConfiguration(classes = WebApplication.class)
     public static class SavePetTest extends AbstractSpringDBUnitTest {
 
         @Inject

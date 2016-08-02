@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableJpaRepositories({"org.majimena.petical.repository", "org.majimena.petical.config.audit"})
-@EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware", dateTimeProviderRef = "auditingDateTimeProvider")
+@EnableJpaAuditing
 @EnableTransactionManagement
 public class SpringDataConfiguration {
 }
